@@ -1,0 +1,203 @@
+<script>
+import { required } from "vuelidate/lib/validators";
+import { notificationMethods } from "@/state/helpers";
+import { api } from '@/api';
+
+export default {
+  data() {
+    return {
+      loginData: {
+				email: "member1@gmail.com",
+        password: "password"
+			},
+      submitted: false,
+      authError: null,
+      tryingToLogIn: false,
+      isAuthError: false,
+      loginSuccess: false,
+      registerSuccess: this.$route.params.registerSuccess,
+    };
+  },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    }
+  },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
+  validations: {
+    loginData: {
+      email: { required },
+      password: { required }
+    }
+  },
+  methods: {
+    ...notificationMethods,
+    // Try to log the user in with the email
+    // and password they provided.
+    tryToLogIn() {
+      this.submitted = true;
+      // stop here if form is invalid
+      this.$v.$touch();
+
+      if (this.$v.$invalid) {
+        return;
+      } else {
+        this.tryingToLogIn = true;
+        // Reset the authError if it existed.
+        this.authError = null;
+        return (
+          api.login(this.loginData)
+            // eslint-disable-next-line no-unused-vars
+            .then(response => {
+              this.tryingToLogIn = false;
+              this.isAuthError = false;
+              this.loginSuccess = true;
+
+              this.$store.commit('LOGGED_USER', response.data)
+              // Redirect to the originally requested page, or to the home page
+              this.$router.push(
+                this.$route.query.redirectFrom || { name: "home" }
+              );
+            })
+            .catch(error => {
+              this.tryingToLogIn = false;
+              this.authError = error ? error : "";
+              this.isAuthError = true;
+            })
+        );
+      }
+    }
+  }
+};
+</script>
+
+<template>
+  <div>
+    <div class="home-btn d-none d-sm-block">
+      <a href="/">
+        <i class="mdi mdi-home-variant h2 text-white"></i>
+      </a>
+    </div>
+    <div>
+      <div class="container-fluid p-0">
+        <div class="row no-gutters">
+          <div class="col-lg-4">
+            <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
+              <div class="w-100">
+                <div class="row justify-content-center">
+                  <div class="col-lg-9">
+                    <div>
+                      <div class="text-center">
+                        <div>
+                          <a href="/" class="logo">
+                            <img src="@/assets/logo-lab.png" height="80" alt="logo" />
+                          </a>
+                        </div>
+
+                        <h4 class="font-size-18 mt-4">Welcome Back !</h4>
+                        <p class="text-muted">Sign in to continue to Impulse.</p>
+                      </div>
+
+                      <div class="p-2 mt-5">
+                        <b-alert
+                          v-model="registerSuccess"
+                          class="mt-3"
+                          variant="success"
+                          dismissible
+                        >Register completed successfully!</b-alert>
+
+                        <b-alert
+                          v-model="isAuthError"
+                          class="mt-3"
+                          variant="danger"
+                          dismissible
+                        >{{authError}}</b-alert>
+
+                        <b-alert
+                          variant="danger"
+                          class="mt-3"
+                          v-if="notification.message"
+                          show
+                          dismissible
+                        >{{notification.message}}</b-alert>
+
+                        <form class="form-horizontal" @submit.prevent="tryToLogIn">
+                          <div class="form-group auth-form-group-custom mb-4">
+                            <i class="ri-user-3-line auti-custom-input-icon"></i>
+                            <label for="email">NIM/NIP</label>
+                            <input
+                              type="text"
+                              v-model="loginData.email"
+                              class="form-control"
+                              id="email"
+                              placeholder="Enter NIM/NIP"
+                              :class="{ 'is-invalid': submitted && $v.loginData.email.$error }"
+                            />
+                            <div 
+                            v-if="submitted && !$v.loginData.email.required" 
+                            class="invalid-feedback">
+                              NIM/NIP is required.
+                            </div>
+                          </div>
+
+                          <div class="form-group auth-form-group-custom mb-4">
+                            <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                            <label for="userpassword">Password</label>
+                            <input
+                              v-model="loginData.password"
+                              type="password"
+                              class="form-control"
+                              id="userpassword"
+                              placeholder="Enter password"
+                              :class="{ 'is-invalid': submitted && $v.loginData.password.$error }"
+                            />
+                            <div
+                              v-if="submitted && !$v.loginData.password.required"
+                              class="invalid-feedback"
+                            >Password is required.</div>
+                          </div>
+
+                          <div class="mt-4 text-center">
+                            <button
+                              class="btn btn-primary w-md waves-effect waves-light"
+                              type="submit"
+                            >Log In</button>
+                          </div>
+
+                          <div class="mt-4 text-center">
+                            <router-link tag="a" to="/forgot-password" class="text-muted">
+                              <i class="mdi mdi-lock mr-1"></i> Forgot your password?
+                            </router-link>
+                          </div>
+                        </form>
+                      </div>
+
+                      <div class="mt-5 text-center">
+                        <p>
+                          Don't have an account ?
+                          <router-link
+                            tag="a"
+                            to="/register"
+                            class="font-weight-medium text-primary"
+                          >Register</router-link>
+                        </p>
+                        <p>
+                          © 2021 Informatics Lab.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-8">
+            <div class="item authentication-bg"><div class="bg-overlay"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
