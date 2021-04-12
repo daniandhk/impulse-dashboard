@@ -4,13 +4,14 @@
 - set your .env settings
 - yarn serve
 
-# TO DO (catatan minor tasks yang belum)
+# TO DO
+## catatan minor tasks yang belum
 - carousel di Login, Register, Forgot Password
 - connect Laboran ke backend
 - tampilan dashboard
 
-## Commit Summary to master: vYY.MM.DD.XX [XX = date's version start from 00]
-# v21.04.12.00
+# Commit Summary to master: vYY.MM.DD.XX [XX = date's version start from 00]
+## v21.04.12.00
 - Init
 - Page Login, Register, Forgot Password
 - Page Laboran
