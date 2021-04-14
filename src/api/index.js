@@ -2,6 +2,7 @@ import httpAxios from '@/httpAxios.js';
 
 export const api = {
     login,
+    validateUser,
     register,
     inputStudent,
     inputStaff,
@@ -9,9 +10,16 @@ export const api = {
 
 function login(data){
     return httpAxios({
-        url: '/login',
+        url: '/auth/login',
         method: 'POST',
         data: data
+    })
+}
+
+function validateUser(){
+    return httpAxios({
+        url: '/me',
+        method: 'GET'
     })
 }
 

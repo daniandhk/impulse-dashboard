@@ -4,6 +4,7 @@ import VueMeta from 'vue-meta'
 
 import routes from './routes'
 import store from '@/store'
+import { api } from '@/api'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta, {
@@ -41,7 +42,11 @@ router.beforeEach((routeTo, routeFrom, next) => {
     // Get logged user
     let loggedUser = store.getters.getLoggedUser
     // If auth is required and the user is logged in...
-    if (loggedUser) return next()
+    if (loggedUser){
+      return api.validateUser().then(response => {
+        response ? next() : redirectToLogin()
+      })
+    }
 
     // If auth is required and the user is NOT currently logged in,
     // redirect to login.

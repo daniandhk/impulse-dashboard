@@ -7,8 +7,8 @@ export default {
   data() {
     return {
       loginData: {
-				email: "member1@gmail.com",
-        password: "password"
+				username: "admin",
+        password: "admin"
 			},
       submitted: false,
       authError: null,
@@ -28,13 +28,13 @@ export default {
   },
   validations: {
     loginData: {
-      email: { required },
+      username: { required },
       password: { required }
     }
   },
   methods: {
     ...notificationMethods,
-    // Try to log the user in with the email
+    // Try to log the user in with the username
     // and password they provided.
     tryToLogIn() {
       this.submitted = true;
@@ -55,7 +55,7 @@ export default {
               this.isAuthError = false;
               this.loginSuccess = true;
 
-              this.$store.commit('LOGGED_USER', response.data)
+              this.$store.commit('LOGGED_USER', response.data.data)
               // Redirect to the originally requested page, or to the home page
               this.$router.push(
                 this.$route.query.redirectFrom || { name: "home" }
@@ -126,17 +126,17 @@ export default {
                         <form class="form-horizontal" @submit.prevent="tryToLogIn">
                           <div class="form-group auth-form-group-custom mb-4">
                             <i class="ri-user-3-line auti-custom-input-icon"></i>
-                            <label for="email">NIM/NIP</label>
+                            <label for="username">NIM/NIP</label>
                             <input
                               type="text"
-                              v-model="loginData.email"
+                              v-model="loginData.username"
                               class="form-control"
-                              id="email"
+                              id="username"
                               placeholder="Enter NIM/NIP"
-                              :class="{ 'is-invalid': submitted && $v.loginData.email.$error }"
+                              :class="{ 'is-invalid': submitted && $v.loginData.username.$error }"
                             />
                             <div 
-                            v-if="submitted && !$v.loginData.email.required" 
+                            v-if="submitted && !$v.loginData.username.required" 
                             class="invalid-feedback">
                               NIM/NIP is required.
                             </div>
