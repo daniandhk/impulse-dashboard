@@ -1,4 +1,5 @@
 import httpAxios from '@/httpAxios.js';
+// import store from '@/store'
 
 export const api = {
     login,
@@ -19,7 +20,10 @@ function login(data){
 function validateUser(){
     return httpAxios({
         url: '/me',
-        method: 'GET'
+        method: 'GET',
+        // headers: {
+        //     Authorization: 'Bearer ' + store.getters.getLoggedUser.token,
+        // },
     })
 }
 

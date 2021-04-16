@@ -44,7 +44,14 @@ router.beforeEach((routeTo, routeFrom, next) => {
     // If auth is required and the user is logged in...
     if (loggedUser){
       return api.validateUser().then(response => {
-        response ? next() : redirectToLogin()
+        // console.log(response.data.data)
+        response.data.data.token = store.getters.getLoggedUser.token
+        store.commit('LOGGED_USER', response.data.data)
+        next()
+      })
+      .catch(error => {
+        console.log(error)
+        redirectToLogin("expired")
       })
     }
 
@@ -54,10 +61,17 @@ router.beforeEach((routeTo, routeFrom, next) => {
 
     // eslint-disable-next-line no-unused-vars
     // eslint-disable-next-line no-inner-declarations
-    function redirectToLogin() {
+    function redirectToLogin(status) {
       // Pass the original route to the login component
       //next({ name: 'login', query: { redirectFrom: routeTo.fullPath } })
-      next({ name: 'login' })
+
+      switch(status) {
+        case "expired":
+          next({ name: 'login', params: { tokenExpired: true } })
+          break;
+        default:
+          next({ name: 'login' })
+      }
     }
 })
 

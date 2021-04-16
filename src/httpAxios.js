@@ -17,6 +17,11 @@ if (store.getters.getLoggedUser) {
 service.interceptors.request.use(config => {
     store.dispatch('displayLoader', true)
 
+    // Set Token
+    if (store.getters.getLoggedUser) {
+        config.headers["Authorization"] = 'Bearer ' + store.getters.getLoggedUser.token;
+    }
+
     return config
 }, error => {
     store.dispatch('displayLoader', false)

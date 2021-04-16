@@ -15,7 +15,7 @@ export default {
       tryingToLogIn: false,
       isAuthError: false,
       loginSuccess: false,
-      registerSuccess: this.$route.params.registerSuccess,
+      tokenExpired: this.$route.params.tokenExpired
     };
   },
   computed: {
@@ -63,7 +63,7 @@ export default {
             })
             .catch(error => {
               this.tryingToLogIn = false;
-              this.authError = error ? error : "";
+              this.authError = error.response.data.message;
               this.isAuthError = true;
             })
         );
@@ -102,11 +102,11 @@ export default {
 
                       <div class="p-2 mt-5">
                         <b-alert
-                          v-model="registerSuccess"
+                          v-model="tokenExpired"
                           class="mt-3"
-                          variant="success"
+                          variant="danger"
                           dismissible
-                        >Register completed successfully!</b-alert>
+                        >Your login has expired.</b-alert>
 
                         <b-alert
                           v-model="isAuthError"
@@ -165,24 +165,10 @@ export default {
                               type="submit"
                             >Log In</button>
                           </div>
-
-                          <div class="mt-4 text-center">
-                            <router-link tag="a" to="/forgot-password" class="text-muted">
-                              <i class="mdi mdi-lock mr-1"></i> Forgot your password?
-                            </router-link>
-                          </div>
                         </form>
                       </div>
 
                       <div class="mt-5 text-center">
-                        <p>
-                          Don't have an account ?
-                          <router-link
-                            tag="a"
-                            to="/register"
-                            class="font-weight-medium text-primary"
-                          >Register</router-link>
-                        </p>
                         <p>
                           © 2021 Informatics Lab.
                         </p>
