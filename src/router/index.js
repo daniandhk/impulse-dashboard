@@ -4,6 +4,7 @@ import VueMeta from 'vue-meta'
 
 import routes from './routes'
 import store from '@/store'
+import { api } from '@/api'
 
 Vue.use(VueRouter)
 Vue.use(VueMeta, {
@@ -41,7 +42,18 @@ router.beforeEach((routeTo, routeFrom, next) => {
     // Get logged user
     let loggedUser = store.getters.getLoggedUser
     // If auth is required and the user is logged in...
-    if (loggedUser) return next()
+    if (loggedUser){
+      return api.validateUser().then(response => {
+        // console.log(response.data.data)
+        response.data.data.token = store.getters.getLoggedUser.token
+        store.commit('LOGGED_USER', response.data.data)
+        next()
+      })
+      .catch(error => {
+        console.log(error)
+        redirectToLogin("expired")
+      })
+    }
 
     // If auth is required and the user is NOT currently logged in,
     // redirect to login.
@@ -49,10 +61,17 @@ router.beforeEach((routeTo, routeFrom, next) => {
 
     // eslint-disable-next-line no-unused-vars
     // eslint-disable-next-line no-inner-declarations
-    function redirectToLogin() {
+    function redirectToLogin(status) {
       // Pass the original route to the login component
       //next({ name: 'login', query: { redirectFrom: routeTo.fullPath } })
-      next({ name: 'login' })
+
+      switch(status) {
+        case "expired":
+          next({ name: 'login', params: { tokenExpired: true } })
+          break;
+        default:
+          next({ name: 'login' })
+      }
     }
 })
 

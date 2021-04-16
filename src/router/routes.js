@@ -1,4 +1,5 @@
 import store from '@/store'
+import { api } from '@/api'
 
 export default [
     {
@@ -8,43 +9,19 @@ export default [
         meta: {
             beforeResolve(routeTo, routeFrom, next) {
                 // If the user is already logged in
-                if (store.getters['auth/loggedIn']) {
+                if (store.getters.getLoggedUser) {
                     // Redirect to the home page instead
-                    next({ name: 'home' })
-                } else {
-                    // Continue to the login page
-                    next()
-                }
-            },
-        },
-    },
-    {
-        path: '/register',
-        name: 'register',
-        component: () => import('../views/pages/auth/register'),
-        meta: {
-            beforeResolve(routeTo, routeFrom, next) {
-                // If the user is already logged in
-                if (store.getters['auth/loggedIn']) {
-                    // Redirect to the home page instead
-                    next({ name: 'home' })
-                } else {
-                    // Continue to the login page
-                    next()
-                }
-            },
-        },
-    },
-    {
-        path: '/forgot-password',
-        name: 'Forgot-password',
-        component: () => import('../views/pages/auth/forgot-password'),
-        meta: {
-            beforeResolve(routeTo, routeFrom, next) {
-                // If the user is already logged in
-                if (store.getters['auth/loggedIn']) {
-                    // Redirect to the home page instead
-                    next({ name: 'home' })
+                    return api.validateUser().then(response => {
+                        // console.log(response.data.data)
+                        response.data.data.token = store.getters.getLoggedUser.token
+                        store.commit('LOGGED_USER', response.data.data)
+                        next({ name: 'home' })
+                    })
+                    .catch(error => {
+                        console.log(error)
+                        next({params: { tokenExpired: true }})
+                    })
+                    
                 } else {
                     // Continue to the login page
                     next()

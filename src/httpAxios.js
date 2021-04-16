@@ -10,12 +10,17 @@ const service = axios.create({
 
 // Token
 if (store.getters.getLoggedUser) {
-    service.defaults.headers.common['Authorization'] = 'Bearer ' + store.getters.getLoggedUser.access_token
+    service.defaults.headers.common['Authorization'] = 'Bearer ' + store.getters.getLoggedUser.token
 }
 
 // Request Interceptor
 service.interceptors.request.use(config => {
     store.dispatch('displayLoader', true)
+
+    // Set Token
+    if (store.getters.getLoggedUser) {
+        config.headers["Authorization"] = 'Bearer ' + store.getters.getLoggedUser.token;
+    }
 
     return config
 }, error => {

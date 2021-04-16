@@ -7,15 +7,15 @@ export default {
   data() {
     return {
       loginData: {
-				email: "member1@gmail.com",
-        password: "password"
+				username: "admin",
+        password: "admin"
 			},
       submitted: false,
       authError: null,
       tryingToLogIn: false,
       isAuthError: false,
       loginSuccess: false,
-      registerSuccess: this.$route.params.registerSuccess,
+      tokenExpired: this.$route.params.tokenExpired
     };
   },
   computed: {
@@ -28,13 +28,13 @@ export default {
   },
   validations: {
     loginData: {
-      email: { required },
+      username: { required },
       password: { required }
     }
   },
   methods: {
     ...notificationMethods,
-    // Try to log the user in with the email
+    // Try to log the user in with the username
     // and password they provided.
     tryToLogIn() {
       this.submitted = true;
@@ -55,7 +55,7 @@ export default {
               this.isAuthError = false;
               this.loginSuccess = true;
 
-              this.$store.commit('LOGGED_USER', response.data)
+              this.$store.commit('LOGGED_USER', response.data.data)
               // Redirect to the originally requested page, or to the home page
               this.$router.push(
                 this.$route.query.redirectFrom || { name: "home" }
@@ -63,7 +63,7 @@ export default {
             })
             .catch(error => {
               this.tryingToLogIn = false;
-              this.authError = error ? error : "";
+              this.authError = error.response.data.message;
               this.isAuthError = true;
             })
         );
@@ -102,11 +102,11 @@ export default {
 
                       <div class="p-2 mt-5">
                         <b-alert
-                          v-model="registerSuccess"
+                          v-model="tokenExpired"
                           class="mt-3"
-                          variant="success"
+                          variant="danger"
                           dismissible
-                        >Register completed successfully!</b-alert>
+                        >Your login has expired.</b-alert>
 
                         <b-alert
                           v-model="isAuthError"
@@ -126,17 +126,17 @@ export default {
                         <form class="form-horizontal" @submit.prevent="tryToLogIn">
                           <div class="form-group auth-form-group-custom mb-4">
                             <i class="ri-user-3-line auti-custom-input-icon"></i>
-                            <label for="email">NIM/NIP</label>
+                            <label for="username">NIM/NIP</label>
                             <input
                               type="text"
-                              v-model="loginData.email"
+                              v-model="loginData.username"
                               class="form-control"
-                              id="email"
+                              id="username"
                               placeholder="Enter NIM/NIP"
-                              :class="{ 'is-invalid': submitted && $v.loginData.email.$error }"
+                              :class="{ 'is-invalid': submitted && $v.loginData.username.$error }"
                             />
                             <div 
-                            v-if="submitted && !$v.loginData.email.required" 
+                            v-if="submitted && !$v.loginData.username.required" 
                             class="invalid-feedback">
                               NIM/NIP is required.
                             </div>
@@ -165,24 +165,10 @@ export default {
                               type="submit"
                             >Log In</button>
                           </div>
-
-                          <div class="mt-4 text-center">
-                            <router-link tag="a" to="/forgot-password" class="text-muted">
-                              <i class="mdi mdi-lock mr-1"></i> Forgot your password?
-                            </router-link>
-                          </div>
                         </form>
                       </div>
 
                       <div class="mt-5 text-center">
-                        <p>
-                          Don't have an account ?
-                          <router-link
-                            tag="a"
-                            to="/register"
-                            class="font-weight-medium text-primary"
-                          >Register</router-link>
-                        </p>
                         <p>
                           © 2021 Informatics Lab.
                         </p>
