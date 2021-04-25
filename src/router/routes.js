@@ -50,7 +50,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/dashboard/kalender')
+        component: () => import('../views/pages/dashboard/index')
     },
     {
         path: '/laboran/student',
