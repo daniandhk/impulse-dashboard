@@ -1,38 +1,14 @@
 <script>
 import simplebar from "simplebar-vue";
 import i18n from "../i18n";
+import store from '@/store';
 
 export default {
   data() {
     return {
-      languages: [
-        {
-          flag: require("@/assets/images/flags/us.jpg"),
-          language: "en",
-          title: "English"
-        },
-        {
-          flag: require("@/assets/images/flags/french.jpg"),
-          language: "fr",
-          title: "French"
-        },
-        {
-          flag: require("@/assets/images/flags/spain.jpg"),
-          language: "es",
-          title: "spanish"
-        },
-        {
-          flag: require("@/assets/images/flags/chaina.png"),
-          language: "zh",
-          title: "Chinese"
-        },
-        {
-          flag: require("@/assets/images/flags/arabic.png"),
-          language: "ar",
-          title: "Arabic"
-        }
-      ],
-      current_language: "en"
+      current_language: "en",
+      getRole: store.getters.getRoleUser,
+      user: store.getters.getLoggedUser
     };
   },
   components: { simplebar },
@@ -67,12 +43,32 @@ export default {
         }
       }
     },
-    toggleRightSidebar() {
-      this.$parent.toggleRightSidebar();
-    },
     setLanguage(locale) {
       i18n.locale = locale;
       this.current_language = i18n.locale;
+    },
+    setRole(role){
+      switch(role) {
+        case "staff":
+          return "Staff"
+        case "aslab":
+          return "Asisten Lab"
+        case "asprak":
+          return "Asisten Praktikum"
+        case "student":
+          return "Praktikan"
+        case "laboran":
+          return "Laboran"
+        default:
+          return role
+      }
+    },
+    changeRole(role){
+      if(role != this.getRole){
+        store.commit('ROLE_USER', role)
+        location.reload()
+      }
+      this.$refs.dropdown.visible = false
     }
   }
 };
@@ -115,48 +111,20 @@ export default {
         <b-dropdown
           variant="black"
           toggle-class="header-item"
+          ref="dropdown"
         >
           <template v-slot:button-content>
-            {{ $t('navbar.dropdown.megamenu.text') }}
+            {{setRole(getRole)}}
             <i class="mdi mdi-chevron-down"></i>
           </template>
           <div class="col-md-12">
-                  <h5 class="font-size-14 mt-0">{{ $t('navbar.dropdown.megamenu.uicontent.title') }}</h5>
+                  <h5 class="font-size-14 mt-0">{{ $t('navbar.dropdown.roles.text') }}</h5>
                   <ul class="list-unstyled megamenu-list">
-                    <li>
+                    <li v-for="(role, index) in user.roles" :key="index">
                       <a
+                        @click="changeRole(role)"
                         href="javascript:void(0);"
-                      >{{ $t('navbar.dropdown.megamenu.uicontent.list.lightbox') }}</a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:void(0);"
-                      >{{ $t('navbar.dropdown.megamenu.uicontent.list.rangeslider') }}</a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:void(0);"
-                      >{{ $t('navbar.dropdown.megamenu.uicontent.list.sweetalert') }}</a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:void(0);"
-                      >{{ $t('navbar.dropdown.megamenu.uicontent.list.rating') }}</a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:void(0);"
-                      >{{ $t('navbar.dropdown.megamenu.uicontent.list.forms') }}</a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:void(0);"
-                      >{{ $t('navbar.dropdown.megamenu.uicontent.list.tables') }}</a>
-                    </li>
-                    <li>
-                      <a
-                        href="javascript:void(0);"
-                      >{{ $t('navbar.dropdown.megamenu.uicontent.list.charts') }}</a>
+                      >{{setRole(role)}}</a>
                     </li>
                   </ul>
                 </div>
@@ -290,39 +258,24 @@ export default {
           class="d-inline-block user-dropdown"
         >
           <template v-slot:button-content>
-            <img
-              class="rounded-circle header-profile-user"
-              src="@/assets/images/users/avatar-2.jpg"
-              alt="Header Avatar"
-            />
-            <span class="d-none d-xl-inline-block ml-1">{{ $t('navbar.dropdown.kevin.text')}}</span>
+            <span class="d-none d-xl-inline-block ml-1">Hello, {{user.name}}</span>
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
           </template>
           <!-- item-->
           <a class="dropdown-item" href="#">
             <i class="ri-user-line align-middle mr-1"></i>
-            {{ $t('navbar.dropdown.kevin.list.profile') }}
+            Profile
           </a>
           <a class="dropdown-item d-block" href="#">
             <i class="ri-settings-2-line align-middle mr-1"></i>
-            {{ $t('navbar.dropdown.kevin.list.settings') }}
+            Settings
           </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="/logout">
             <i class="ri-shut-down-line align-middle mr-1 text-danger"></i>
-            {{ $t('navbar.dropdown.kevin.list.logout') }}
+            Logout
           </a>
         </b-dropdown>
-
-        <div class="dropdown d-inline-block">
-          <button
-            type="button"
-            class="btn header-item noti-icon right-bar-toggle waves-effect toggle-right"
-            @click="toggleRightSidebar"
-          >
-            <i class="ri-settings-2-line toggle-right"></i>
-          </button>
-        </div>
       </div>
     </div>
   </header>

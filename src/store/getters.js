@@ -10,7 +10,16 @@ const getLoggedUser = (state) => {
 	return user
 }
 
+const getRoleUser = (state) => {
+    let role = state.roleUser
+    if(role) {
+        role = JSON.parse(role)
+    }
+	return role
+}
+
 export default {
     getDisplayLoader,
-    getLoggedUser
+    getLoggedUser,
+    getRoleUser
 }

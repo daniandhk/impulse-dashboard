@@ -11,13 +11,22 @@ const LOGGED_USER = (state, user) => {
     state.loggedUser = JSON.stringify(user)
 }
 
+const ROLE_USER = (state, role) => {
+    localStorage.setItem('roleUser', JSON.stringify(role))
+    state.roleUser = JSON.stringify(role)
+}
+
 const REMOVE_LOGGED_USER = (state) => {
     state.loggedUser = null
     localStorage.removeItem('loggedUser')
+    
+    state.roleUser = null
+    localStorage.removeItem('roleUser')
 }
 
 export default {
     DISPLAY_LOADER,
     LOGGED_USER,
-    REMOVE_LOGGED_USER
+    REMOVE_LOGGED_USER,
+    ROLE_USER
 }

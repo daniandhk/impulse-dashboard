@@ -47,9 +47,15 @@ router.beforeEach((routeTo, routeFrom, next) => {
         // console.log(response.data.data)
         response.data.data.token = store.getters.getLoggedUser.token
         store.commit('LOGGED_USER', response.data.data)
+        
+        let role = store.getters.getRoleUser
+        if (!role) {
+            store.commit('ROLE_USER', response.data.data.roles[0])
+        }
         next()
       })
       .catch(error => {
+        store.dispatch('logOut')
         console.log(error)
         redirectToLogin("expired")
       })

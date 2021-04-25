@@ -2,13 +2,14 @@
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
+import $ from 'jquery';
 
 export default {
   data() {
     return {
       loginData: {
-				username: "admin",
-        password: "admin"
+				username: "laboran",
+        password: "laboran"
 			},
       submitted: false,
       authError: null,
@@ -26,6 +27,11 @@ export default {
   created() {
     document.body.classList.add("auth-body-bg");
   },
+  mounted: function() {
+    var rand = Math.floor(Math.random()*4);
+    var visibleDiv = $('.background')[rand];
+    $(visibleDiv).show();
+  },
   validations: {
     loginData: {
       username: { required },
@@ -37,11 +43,13 @@ export default {
     // Try to log the user in with the username
     // and password they provided.
     tryToLogIn() {
+      loading();
       this.submitted = true;
       // stop here if form is invalid
       this.$v.$touch();
 
       if (this.$v.$invalid) {
+        loading();
         return;
       } else {
         this.tryingToLogIn = true;
@@ -55,15 +63,17 @@ export default {
               this.isAuthError = false;
               this.loginSuccess = true;
 
-              this.$store.commit('LOGGED_USER', response.data.data)
+              this.$store.commit('LOGGED_USER', response.data.data);
+              loading();
               // Redirect to the originally requested page, or to the home page
               this.$router.push(
                 this.$route.query.redirectFrom || { name: "home" }
               );
             })
             .catch(error => {
+              loading();
               this.tryingToLogIn = false;
-              this.authError = error.response.data.message;
+              this.authError = error.response ? error.response.data.message : error;
               this.isAuthError = true;
             })
         );
@@ -71,18 +81,29 @@ export default {
     }
   }
 };
+function loading() {
+  var x = document.getElementById("loading");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+}
 </script>
 
 <template>
   <div>
     <div class="home-btn d-none d-sm-block">
-      <a href="/">
+      <a href="https://informatics.labs.telkomuniversity.ac.id/">
         <i class="mdi mdi-home-variant h2 text-white"></i>
       </a>
     </div>
     <div>
       <div class="container-fluid p-0">
         <div class="row no-gutters">
+          <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+          </div>
           <div class="col-lg-4">
             <div class="authentication-page-content p-4 d-flex align-items-center min-vh-100">
               <div class="w-100">
@@ -180,7 +201,10 @@ export default {
             </div>
           </div>
           <div class="col-lg-8">
-            <div class="item authentication-bg"><div class="bg-overlay"></div></div>
+            <div style="display:none;" class="background item authentication-bg"><div class="bg-overlay"></div></div>
+            <div style="display:none;" class="background item authentication-bg-1"><div class="bg-overlay"></div></div>
+            <div style="display:none;" class="background item authentication-bg-2"><div class="bg-overlay"></div></div>
+            <div style="display:none;" class="background item authentication-bg-3"><div class="bg-overlay"></div></div>
           </div>
         </div>
       </div>
