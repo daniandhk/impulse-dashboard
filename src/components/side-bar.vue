@@ -4,7 +4,8 @@ import { layoutComputed } from "@/state/helpers";
 
 import MetisMenu from "metismenujs/dist/metismenujs";
 
-import { menuItems } from "./menu";
+import { menuItems, laboranItems, staffItems, aslabItems, asprakItems, praktikanItems } from "./menu";
+import store from '@/store';
 
 export default {
   components: {
@@ -26,14 +27,33 @@ export default {
   },
   data() {
     return {
-      //get role, case of role -> add berdasarkan id menuItems
       menuItems: menuItems,
+      getRole: store.getters.getRoleUser,
     };
   },
   computed: {
     ...layoutComputed,
   },
   mounted: function () {
+    switch(this.getRole) {
+      case "staff":
+        this.menuItems = staffItems
+        break;
+      case "aslab":
+        this.menuItems = aslabItems
+        break;
+      case "asprak":
+        this.menuItems = asprakItems
+        break;
+      case "laboran":
+        this.menuItems = laboranItems
+        break;
+      case "student":
+        this.menuItems = praktikanItems
+        break;
+      default:
+        this.menuItems = menuItems
+    }
     // eslint-disable-next-line no-unused-vars
     var menuRef = new MetisMenu("#side-menu");
     var links = document.getElementsByClassName("side-nav-link-ref");

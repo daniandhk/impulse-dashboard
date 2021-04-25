@@ -10,8 +10,13 @@ const logOut = context => {
 	context.commit('REMOVE_LOGGED_USER')
 }
 
+const roleUser = (context, role) => {
+	context.commit('ROLE_USER', role)
+}
+
 export default {
 	displayLoader,
 	loggedUser,
-	logOut
+	logOut,
+	roleUser
 }
