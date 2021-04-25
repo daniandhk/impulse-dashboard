@@ -10,7 +10,8 @@ import modules from '@/state/modules'
 
 const state = {
 	displayLoader: false,
-	loggedUser: localStorage.getItem('loggedUser') || null
+	loggedUser: localStorage.getItem('loggedUser') || null,
+	roleUser: localStorage.getItem('roleUser') || null
 }
 
 export default new Vuex.Store({

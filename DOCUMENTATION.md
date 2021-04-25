@@ -6,9 +6,16 @@
 
 # TO DO
 ## catatan minor tasks yang belum
-- carousel di Login, Register, Forgot Password
 - connect Laboran ke backend
 - tampilan dashboard
+
+## unused files
+- horizontal-menu.js
+- horizontal-navbar.vue
+- horizontal-topbar.vue
+- right-sidebar.vue
+- register.vue
+- forgot-password.vue
 
 # Commit Summary to master: 
 # vYY.MM.DD.XX [XX = date's version start from 00]
@@ -18,3 +25,13 @@
 - Page Laboran
     - Page Student Data (View, Input)
     - Page Staff Data (View, Input)
+
+## v21.04.16.00
+- Changed login API
+- Removed items from topbar
+
+## v21.04.25.00
+- Updated Login background
+- Added Roles Menu
+- Updated topbar
+- Removed unused components
