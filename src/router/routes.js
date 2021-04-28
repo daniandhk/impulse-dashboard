@@ -77,5 +77,13 @@ export default [
     {
         path :'*',
         component: () => import('../views/pages/utility/error-404')
-    }
+    },
+    {
+        path: '/aslab/jadwal',
+        name: 'aslab-jadwal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/aslab/kalender')
+    },
 ]

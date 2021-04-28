@@ -255,9 +255,36 @@ export default {
               </div>
             </div>
           </div>
+
           <div class="col-12">
             <div class="form-group">
-              <label class="control-label">Category</label>
+              <label class="control-label">Ruangan</label>
+              <select
+                v-model="event.category"
+                class="form-control"
+                name="category"
+                :class="{ 'is-invalid': submitted && $v.event.category.errors }"
+              >
+                <option
+                  v-for="option in categories"
+                  :key="option.backgroundColor"
+                  :value="`${option.value}`"
+                >
+                  {{ option.name }}
+                </option>
+              </select>
+              <div
+                v-if="submitted && !$v.event.category.required"
+                class="invalid-feedback"
+              >
+                This value is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="col-12">
+            <div class="form-group">
+              <label class="control-label">Kelas</label>
               <select
                 v-model="event.category"
                 class="form-control"
