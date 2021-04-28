@@ -331,7 +331,7 @@ export default {
               </b-tab>
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">Input Staff</a>
+                  <a class="font-weight-bold active">Input Staff(s)</a>
                 </template>
                 <div div class="row mt-4">
                 <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputStaff">
