@@ -66,7 +66,14 @@ export default {
     changeRole(role){
       if(role != this.getRole){
         store.commit('ROLE_USER', role)
-        location.reload()
+
+        if(this.$route.name != 'home'){
+          this.$router.push(
+            this.$route.query.redirectFrom || { name: "home" }
+          );
+        } else{
+          location.reload()
+        }  
       }
       this.$refs.dropdown.visible = false
     }
