@@ -34,7 +34,7 @@ export default {
   computed: {
     ...layoutComputed,
   },
-  mounted: function () {
+  beforeMount: function () {
     switch(this.getRole) {
       case "staff":
         this.menuItems = staffItems

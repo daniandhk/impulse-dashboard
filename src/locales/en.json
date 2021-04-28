@@ -55,7 +55,13 @@
       "text": "Asisten Praktikum"
     },
     "praktikan": {
-      "text": "Praktikan"
+      "text": "Praktikan",
+      "list": {
+        "jadwal": "Jadwal",
+        "nilai": "Nilai",
+        "kalender": "Kalender",
+        "matakuliah":"MataKuliah"
+      }
     }
   }
 }

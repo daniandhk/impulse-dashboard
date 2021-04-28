@@ -77,5 +77,30 @@ export default [
     {
         path :'*',
         component: () => import('../views/pages/utility/error-404')
-    }
+    },
+    //path praktikan
+    {
+        path: '/praktikan/jadwal',
+        name: 'praktikan-jadwal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/jadwal')
+    },
+    {
+        path: '/praktikan/matakuliah',
+        name: 'praktikan-matakuliah',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/matakuliah')
+    },
+    {
+        path: '/praktikan/nilai',
+        name: 'praktikan-nilai',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/nilai')
+    },
 ]
