@@ -265,6 +265,11 @@ export default {
           class="d-inline-block user-dropdown"
         >
           <template v-slot:button-content>
+            <img
+              class="rounded-circle header-profile-user"
+              src="@/assets/images/users/default-avatar.png"
+              alt="Header Avatar"
+            />
             <span class="d-none d-xl-inline-block ml-1">Hello, {{user.name}}</span>
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
           </template>

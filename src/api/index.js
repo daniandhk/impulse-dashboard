@@ -7,6 +7,7 @@ export const api = {
     register,
     inputStudent,
     inputStaff,
+    getAllStudents,
 };
 
 function login(data){
@@ -48,5 +49,12 @@ function inputStaff(data){
         url: '/staff/register',
         method: 'POST',
         data: data
+    })
+}
+
+function getAllStudents(){
+    return httpAxios({
+        url: '/laboran/student',
+        method: 'GET'
     })
 }
