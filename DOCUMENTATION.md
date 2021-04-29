@@ -41,3 +41,7 @@
 
 ## v21.04.29.00
 - Added dashboard based on role
+
+## v21.04.30.0
+- Added default avatar topbar
+- Added API get all students
