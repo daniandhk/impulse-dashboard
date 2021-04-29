@@ -10,10 +10,10 @@
 - tampilan dashboard
 
 ## unused files
-- horizontal-menu.js
-- horizontal-navbar.vue
-- horizontal-topbar.vue
-- right-sidebar.vue
+- horizontal-menu.js        (ada scss nya)
+- horizontal-navbar.vue     (ada scss nya)
+- horizontal-topbar.vue     (ada scss nya)
+- right-sidebar.vue         (ada scss nya)
 - register.vue
 - forgot-password.vue
 
@@ -35,3 +35,9 @@
 - Added Roles Menu
 - Updated topbar
 - Removed unused components
+
+## v21.04.28.00
+- Updated sidebar when changing role
+
+## v21.04.29.00
+- Added dashboard based on role
