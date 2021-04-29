@@ -34,7 +34,7 @@ export default {
   computed: {
     ...layoutComputed,
   },
-  beforeMount: function () {
+  beforeMount: function(){
     switch(this.getRole) {
       case "staff":
         this.menuItems = staffItems
@@ -54,6 +54,8 @@ export default {
       default:
         this.menuItems = menuItems
     }
+  },
+  mounted: function () {
     // eslint-disable-next-line no-unused-vars
     var menuRef = new MetisMenu("#side-menu");
     var links = document.getElementsByClassName("side-nav-link-ref");
