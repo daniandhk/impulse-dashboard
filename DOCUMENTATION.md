@@ -36,12 +36,18 @@
 - Updated topbar
 - Removed unused components
 
+## PR 3 by Figo
+- Added Kalender at dashboard folder
+
 ## v21.04.28.00
 - Updated sidebar when changing role
 
 ## v21.04.29.00
 - Added dashboard based on role
 
-## v21.04.30.0
+## v21.04.30.00
 - Added default avatar topbar
 - Added API get all students
+
+## PR 8 by Edgar
+- Added some menus for praktikan
