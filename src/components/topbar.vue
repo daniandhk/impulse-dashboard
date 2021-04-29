@@ -270,7 +270,7 @@ export default {
               src="@/assets/images/users/default-avatar.png"
               alt="Header Avatar"
             />
-            <span class="d-none d-xl-inline-block ml-1">Hello, {{user.name}}</span>
+            <span class="d-none d-xl-inline-block ml-1">{{user.name}}</span>
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
           </template>
           <!-- item-->

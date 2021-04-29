@@ -51,3 +51,6 @@
 
 ## PR 8 by Edgar
 - Added some menus for praktikan
+
+## v21.04.30.01
+- Removed Hello from topbar
