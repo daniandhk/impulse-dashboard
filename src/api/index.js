@@ -8,6 +8,7 @@ export const api = {
     inputStudent,
     inputStaff,
     getAllStudents,
+    deleteStudent,
 };
 
 function login(data){
@@ -52,9 +53,10 @@ function inputStaff(data){
     })
 }
 
-function getAllStudents(){
-    return httpAxios({
-        url: '/laboran/student',
-        method: 'GET'
-    })
+function getAllStudents(params){
+    return httpAxios.get('/laboran/student', { params })
 }
+
+function deleteStudent(id) {
+    return httpAxios.delete(`/laboran/student/${id}`);
+  }
