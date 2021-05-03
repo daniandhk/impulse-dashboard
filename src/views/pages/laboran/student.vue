@@ -4,6 +4,7 @@ import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
 import InputStudent from "./input-student";
+import OtherStudent from "./other-student";
 import Swal from "sweetalert2";
 
 /**
@@ -13,7 +14,8 @@ export default {
   components: {
     Layout,
     PageHeader,
-    InputStudent
+    InputStudent,
+    OtherStudent
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -53,7 +55,7 @@ export default {
         { key: "staff_code", sortable: true, label: "Kode Dosen" },
         { key: "academic_year", sortable: true, label: "Tahun Ajaran" },
         { key: "semester", sortable: true, label: "Semester" },
-        { key: "action" }
+        { key: "action", sortable: false }
       ],
     };
   },
@@ -114,7 +116,7 @@ export default {
     },
     fetchData(){
       this.isFentchingData = true;
-      console.log("fentching")
+      console.log("fentching data")
 
       const params = this.getRequestParams(
         this.filter,
@@ -335,7 +337,18 @@ export default {
                   </div>
                 </div>
               </b-tab>
-              <InputStudent/>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Input Student(s)</a>
+                  </template>
+                  <InputStudent/>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Other Data</a>
+                  </template>
+                  <OtherStudent/>
+              </b-tab>
             </b-tabs>
           </div>
         </div>
