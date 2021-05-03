@@ -58,3 +58,7 @@
 ## v21.05.01.00
 - Connected students data Laboran to API
 - Added import excel Student Data
+- !! Input student form Laboran not fixed yet
+
+## v21.05.03.00
+- Fixed input student form Laboran
