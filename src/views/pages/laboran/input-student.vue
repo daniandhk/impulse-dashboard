@@ -113,7 +113,6 @@ export default {
       } else {
           this.tryingToInput = true;
           this.inputError = null;
-          console.log(this.dataStudent);
           return (
               api.inputStudent(this.dataStudent)
                 .then(response => {
@@ -122,7 +121,6 @@ export default {
                     this.inputSuccess = true;
                 
                     if (this.inputSuccess) {
-                        console.log(response)
                         this.clearForm();
                         this.submitted = false;
                         Swal.fire("Submitted!", "The form submitted successfully.", "success");
@@ -358,7 +356,7 @@ export default {
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="fullname">Full Name</label>
+                                <label for="fullname">Nama Mahasiswa</label>
                                 <input 
                                 v-model="dataStudent.name"
                                 id="fullname" 
@@ -370,7 +368,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.name.required"
                                 class="invalid-feedback"
-                                >Full Name is required.</div>
+                                >Nama Mahasiswa is required.</div>
                             </div>
                         </div>
                     </div>
@@ -378,7 +376,7 @@ export default {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                            <label class="control-label">Gender</label>
+                            <label class="control-label">Jenis Kelamin</label>
                             <multiselect
                                 v-model="dataStudent.gender"
                                 :options="genderData"
@@ -387,13 +385,13 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.gender.required"
                                 class="invalid-feedback"
-                                >Gender is required.</div>
+                                >Jenis Kelamin is required.</div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
                             <div class="form-group">
-                            <label class="control-label">Religion</label>
+                            <label class="control-label">Agama</label>
                             <multiselect
                                 v-model="dataStudent.religion"
                                 :options="religionData"
@@ -402,7 +400,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.religion.required"
                                 class="invalid-feedback"
-                                >Religion is required.</div>
+                                >Agama is required.</div>
                             </div>
                         </div>
                     </div>
@@ -410,20 +408,20 @@ export default {
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                            <label class="control-label">Kode Dosen Mata Kuliah</label>
+                            <label class="control-label">Kelas Mata Kuliah</label>
                             <multiselect
-                                v-model="staff_data"
-                                :options="dosenData"
-                                label="code"
-                                track-by="code"
-                                @select="setStaff"
-                                @remove="removeStaff"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.staff_code.$error }" 
+                                v-model="class_data"
+                                :options="kelasData"
+                                label="name"
+                                track-by="name"
+                                @select="setKelas"
+                                @remove="removeKelas"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.class_name.$error }" 
                             ></multiselect>
                                 <div
-                                v-if="submitted && !$v.dataStudent.staff_code.required"
+                                v-if="submitted && !$v.dataStudent.class_name.required"
                                 class="invalid-feedback"
-                                >Kode Dosen Mata Kuliah is required.</div>
+                                >Kelas Mata Kuliah is required.</div>
                             </div>
                         </div>
 
@@ -470,20 +468,20 @@ export default {
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                            <label class="control-label">Kelas Mata Kuliah</label>
+                            <label class="control-label">Kode Dosen Mata Kuliah</label>
                             <multiselect
-                                v-model="class_data"
-                                :options="kelasData"
-                                label="name"
-                                track-by="name"
-                                @select="setKelas"
-                                @remove="removeKelas"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.class_name.$error }" 
+                                v-model="staff_data"
+                                :options="dosenData"
+                                label="code"
+                                track-by="code"
+                                @select="setStaff"
+                                @remove="removeStaff"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.staff_code.$error }" 
                             ></multiselect>
                                 <div
-                                v-if="submitted && !$v.dataStudent.class_name.required"
+                                v-if="submitted && !$v.dataStudent.staff_code.required"
                                 class="invalid-feedback"
-                                >Kelas Mata Kuliah is required.</div>
+                                >Kode Dosen Mata Kuliah is required.</div>
                             </div>
                         </div>
 
