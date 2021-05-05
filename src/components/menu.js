@@ -27,7 +27,34 @@ export const menuItems = [
         icon: 'ri-group-fill',
         link: 'laboran-staff'
     },
-    
+    {
+        id: 6,
+        label: "menuitems.praktikan.text",
+        isTitle: true
+    },
+    {
+        id: 7,
+        label: 'menuitems.praktikan.list.jadwal',
+        icon: 'ri-calendar-todo-fill',
+        subItems: [
+            {
+                id: 8,
+                label: 'menuitems.praktikan.list.kalender',
+                link: 'praktikan-jadwal'
+            },
+            {
+                id: 9,
+                label: 'menuitems.praktikan.list.matakuliah',
+                link: 'praktikan-matakuliah'
+            }
+        ]
+    },
+    {
+        id: 10,
+        label: 'menuitems.praktikan.list.nilai',
+        icon: 'ri-bar-chart-grouped-fill',
+        link: 'praktikan-nilai'
+    },
 ]
 
 export const laboranItems = [
@@ -160,12 +187,27 @@ export const praktikanItems = [
         label: "menuitems.praktikan.text",
         isTitle: true
     },
+    {
+        id: 4,
+        label: 'menuitems.praktikan.list.jadwal',
+        icon: 'ri-calendar-todo-fill',
+        subItems: [
+            {
+                id: 5,
+                label: 'menuitems.praktikan.list.kalender',
+                link: 'praktikan-jadwal'
+            },
+            {
+                id: 6,
+                label: 'menuitems.praktikan.list.matakuliah',
+                link: 'praktikan-matakuliah'
+            }
+        ]
+    },
+    {
+        id: 7,
+        label: 'menuitems.praktikan.list.nilai',
+        icon: 'ri-bar-chart-grouped-fill',
+        link: 'praktikan-nilai'
+    },
 ]
-
-// {
-//     id: 5,
-//     label: 'menuitems.laboran-staff.list.view',
-//     link: "laboran-list",
-//     hasParams: true,
-//     params: "staff"
-// },
