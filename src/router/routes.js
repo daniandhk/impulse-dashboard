@@ -85,6 +85,7 @@ export default [
             authRequired: true,
         },
         component: () => import('../views/pages/aslab/kalender')
+    },
     //path praktikan
     {
         path: '/praktikan/jadwal',
