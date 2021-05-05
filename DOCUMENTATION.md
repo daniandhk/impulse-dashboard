@@ -6,7 +6,6 @@
 
 # TO DO
 ## catatan minor tasks yang belum
-- connect Laboran ke backend
 - tampilan dashboard
 
 ## unused files
@@ -62,3 +61,7 @@
 
 ## v21.05.03.00
 - Fixed input student form Laboran
+
+## v21.05.06.00
+- Added Staff Data in Laboran
+- Cleaned codes in Laboran folder
