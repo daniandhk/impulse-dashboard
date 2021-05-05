@@ -198,26 +198,43 @@ export default {
 };
 </script>
 
+
 <template>
   <Layout>
     <PageHeader :title="title" :items="items" />
-      <div class="row ">
-        <div class="col-12">
-          <div class="card">
-            <div class="card-body">
-                     
-              <div class="app-calendar" >
-                <FullCalendar
-                  ref="fullCalendar"
-                  :options="calendarOptions"
-                ></FullCalendar>
-              </div>
-                            
-            </div>
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body pt-0">
+            <b-tabs nav-class="nav-tabs-custom">
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Kalender</a>
+                </template>
+                  <div class="row ">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="app-calendar" >
+                            <FullCalendar
+                              ref="fullCalendar"
+                              :options="calendarOptions"
+                            ></FullCalendar>
+                          </div>          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Input Jadwal</a>
+                </template>
+              </b-tab>
+            </b-tabs>
           </div>
-                        
         </div>
       </div>
-                    
+    </div>
   </Layout>
 </template>
