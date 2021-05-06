@@ -21,6 +21,7 @@ export const api = {
     //classroom
     getAllClassrooms,
     getListClassrooms,
+    getByNameClassrooms,
     inputClassroom,
     deleteClassroom,
 
@@ -95,6 +96,9 @@ function getAllClassrooms(params) {
 }
 function getListClassrooms(params) {
     return httpAxios.get('/classroom/getall', { params })
+}
+function getByNameClassrooms() {
+    return httpAxios.get('/classroom/byname')
 }
 function deleteClassroom(id) {
     return httpAxios.delete(`/classroom/${id}`);

@@ -51,19 +51,20 @@ export default {
       isInputError: false,
       inputSuccess: false,
       isInputCanceled: false,
+      isFentchingData: false,
+      isKelasNotSelected: true,
 
       //dropdown list data
       religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
       genderData: ['male', 'female'],
       dosenData: [],
-      totalRowsStaff: 0,
       courseData: [],
       kelasData: [],
+      namaKelasData: [],
 
       //v-model dropdown value = array of objects
-      staff_data: null,
-      course_data: null,
-      class_data: null,
+      course_data: "",
+      class_data: "",
 
       //dropzone
       seen: false,
@@ -100,6 +101,15 @@ export default {
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
+    },
+    loadDosenData() {
+        return this.dosenData;
+    },
+    loadKelasData() {
+        return this.kelasData;
+    },
+    loadCourseData() {
+        return this.courseData;
     }
   },
   methods: {
@@ -168,17 +178,26 @@ export default {
         this.dataStudent.academic_year = "";
         this.dataStudent.semester = "";
 
-        this.staff_data = null,
-        this.course_data = null,
-        this.class_data = null
+        this.courseData = [];
+        this.course_data = "",
+        this.class_data = ""
     },
 
-    getDataStaffs(params){
+    getRequestParams(search) {
+      let params = {};
+
+      if (search) {
+        params["search"] = search;
+      }
+
+      return params;
+    },
+
+    getClassroomNames(){
         return (
-            api.getAllStaffs(params)
+            api.getByNameClassrooms()
             .then(response => {
-                this.totalRowsStaff = response.data.meta.pagination.total;
-                this.dosenData = response.data.data;
+                this.namaKelasData = response.data.classes;
             })
             .catch(error => {
                 console.log(error)
@@ -186,73 +205,100 @@ export default {
         )
     },
 
-    getDataClassrooms(){
-        return (
-            api.getListClassrooms()
+    async getDataClassrooms(namaKelasData){
+        const params = this.getRequestParams(
+                namaKelasData.name
+        );
+        return api.getListClassrooms(params)
             .then(response => {
                 this.kelasData = response.data.classes;
             })
             .catch(error => {
                 console.log(error)
             })
-        )
     },
 
-    getDataCourses(){
-        return (
-            api.getListCourses()
+    async getDataCourses(kelasData){
+        return new Promise((resolve, reject) => {
+            kelasData.forEach((element, index, array) => {
+                const params = this.getRequestParams(
+                    element.course_id
+                );
+                api.getListCourses(params)
+                    .then(response => {
+                        this.courseData = response.data.courses
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                if (index === array.length -1) resolve();
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    },
+
+    async setDataClassroom(kelasData, course_id){
+        let data = kelasData.find(data => data.course_id === course_id);
+        this.dataStudent.academic_year = data.academic_year;
+        this.dataStudent.semester = data.semester;
+
+        const params = this.getRequestParams(
+                data.staff_id
+        );
+        return api.getListStaffs(params)
             .then(response => {
-                this.courseData = response.data.courses;
+                let staffs = response.data.staffs;
+                let staff = staffs.find(item => item.id === data.staff_id);
+                this.dataStudent.staff_code = staff.code;
             })
             .catch(error => {
                 console.log(error)
-            })
-        )
+            });
     },
 
     loadDataDropdown(){
-        //list staff
-        const params = {};
-        this.getDataStaffs(params);
-        params["per_page"] = this.totalRowsStaff;
-        this.getDataStaffs(params);
-
-        //list course
-        this.getDataCourses();
-
-        //list classroom
-        this.getDataClassrooms();
+        this.getClassroomNames();
     },
 
-    //get value inside object in array of objects
-    setStaff(value){
-        this.dataStudent.staff_code = value.code;
+    async setKelas(value){
+        this.isFentchingData = true;
+
+        this.removeCourse();
+        this.dataStudent.class_name = value.name;
+        await this.getDataClassrooms(value);
+        await this.getDataCourses(this.kelasData);
+
+        this.isKelasNotSelected = false;
+        this.isFentchingData = false;
     },
 
-    setCourse(value){
+    async setCourse(value){
+        this.isFentchingData = true;
+
         this.dataStudent.course_name = value.name;
         this.dataStudent.course_code = value.code;
-    },
+        await this.setDataClassroom(this.kelasData, value.id);
 
-    setKelas(value){
-        this.dataStudent.class_name = value.name;
-        this.dataStudent.academic_year = value.academic_year;
-        this.dataStudent.semester = value.semester;
-    },
-
-    removeStaff(){
-        this.dataStudent.staff_code = "";
-    },
-
-    removeCourse(){
-        this.dataStudent.course_name = "";
-        this.dataStudent.course_code = "";
+        this.isFentchingData = false;
     },
 
     removeKelas(){
+        this.isKelasNotSelected = true;
+        this.class_data = "";
         this.dataStudent.class_name = "";
+        this.courseData = [];
+        this.removeCourse();
+    },
+
+    removeCourse(){
+        this.course_data = "";
+        this.dataStudent.course_name = "";
+        this.dataStudent.course_code = "";
         this.dataStudent.academic_year = "";
         this.dataStudent.semester = "";
+        this.dataStudent.staff_code = "";
     },
   }
 };
@@ -411,7 +457,7 @@ export default {
                             <label class="control-label">Kelas Mata Kuliah</label>
                             <multiselect
                                 v-model="class_data"
-                                :options="kelasData"
+                                :options="namaKelasData"
                                 label="name"
                                 track-by="name"
                                 @select="setKelas"
@@ -430,7 +476,8 @@ export default {
                             <label class="control-label">Nama Mata Kuliah</label>
                             <multiselect
                                 v-model="course_data"
-                                :options="courseData"
+                                :options="loadCourseData"
+                                :disabled="isKelasNotSelected"
                                 label="name"
                                 track-by="name"
                                 @select="setCourse"
@@ -468,16 +515,17 @@ export default {
                     <div class="row">
                         <div class="col-sm-4">
                             <div class="form-group">
-                            <label class="control-label">Kode Dosen Mata Kuliah</label>
-                            <multiselect
-                                v-model="staff_data"
-                                :options="dosenData"
-                                label="code"
-                                track-by="code"
-                                @select="setStaff"
-                                @remove="removeStaff"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.staff_code.$error }" 
-                            ></multiselect>
+                                <label for="staff_code">Kode Dosen Mata Kuliah</label>
+                                <input
+                                    v-model="dataStudent.staff_code"
+                                    :disabled="true"
+                                    id="staff_code"
+                                    name="staff_code"
+                                    type="text"
+                                    style="background-color: #F0F4F6;"
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataStudent.staff_code.$error }"
+                                />
                                 <div
                                 v-if="submitted && !$v.dataStudent.staff_code.required"
                                 class="invalid-feedback"

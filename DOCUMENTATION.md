@@ -65,3 +65,6 @@
 ## v21.05.06.00
 - Added Staff Data in Laboran
 - Cleaned codes in Laboran folder
+
+## v21.05.06.01
+- Fixed input student Laboran
