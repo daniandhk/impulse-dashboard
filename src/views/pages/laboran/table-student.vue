@@ -280,7 +280,6 @@ export default {
         :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
-          <center>
           <a
             href="javascript:void(0);"
             @click=onClickDelete(data)
@@ -290,7 +289,6 @@ export default {
           >
             <i class="mdi mdi-trash-can font-size-18"></i>
           </a>
-          </center>
         </template>
       </b-table>
     </div>

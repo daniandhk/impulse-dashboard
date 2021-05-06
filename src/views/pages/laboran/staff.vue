@@ -55,7 +55,7 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Staff</a>
+                  <a class="font-weight-bold active">All Staffs</a>
                 </template>
                 <TableStaff ref='TableStaff'/>
               </b-tab>
