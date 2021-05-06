@@ -68,3 +68,6 @@
 
 ## v21.05.06.01
 - Fixed input student Laboran
+
+## v21.05.06.02
+- Added course data in Laboran

@@ -22,8 +22,8 @@ export default {
   },
   data() {
     return {
-      //input student
-      title: "Student Data",
+      //input staff
+      title: "Staff Data",
       dataStaff: { 
           name: "", 
           nip: "", 

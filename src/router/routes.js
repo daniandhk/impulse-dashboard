@@ -75,8 +75,20 @@ export default [
         component: () => import('../views/pages/laboran/staff')
     },
     {
-        path :'*',
-        component: () => import('../views/pages/utility/error-404')
+        path: '/laboran/course',
+        name: 'laboran-course',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/course')
+    },
+    {
+        path: '/laboran/class',
+        name: 'laboran-class',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/classroom')
     },
     //path praktikan
     {
@@ -102,5 +114,11 @@ export default [
             authRequired: true,
         },
         component: () => import('../views/pages/student/nilai')
+    },
+
+    //ini paling bawah
+    {
+        path :'*',
+        component: () => import('../views/pages/utility/error-404')
     },
 ]
