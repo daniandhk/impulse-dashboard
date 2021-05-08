@@ -51,7 +51,10 @@
       "text": "Staff"
     },
     "aslab": {
-      "text": "Asisten Lab"
+      "text": "Asisten Lab",
+      "list":{
+        "jadwal": "Jadwal"
+      }
     },
     "asprak": {
       "text": "Asisten Praktikum"

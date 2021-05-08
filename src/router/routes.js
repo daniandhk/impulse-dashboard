@@ -90,6 +90,14 @@ export default [
         },
         component: () => import('../views/pages/laboran/classroom')
     },
+    {
+        path: '/aslab/jadwal',
+        name: 'aslab-jadwal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/aslab/kalender')
+    },
     //path praktikan
     {
         path: '/praktikan/jadwal',

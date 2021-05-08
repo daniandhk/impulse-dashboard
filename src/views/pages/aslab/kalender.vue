@@ -1,6 +1,4 @@
 <script>
-import Layout from "../../layouts/main";
-import PageHeader from "@/components/page-header";
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -11,6 +9,8 @@ import listPlugin from "@fullcalendar/list";
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
 
+import Layout from "../../layouts/main";
+import PageHeader from "@/components/page-header";
 
 import { calendarEvents, categories } from "./data-kalender";
 
@@ -19,28 +19,18 @@ import { calendarEvents, categories } from "./data-kalender";
  */
 export default {
   page: {
-    title: "Calendar",
+    title: "Kalender ",
     meta: [{ name: "description" }],
   },
   components: { FullCalendar, Layout, PageHeader },
   data() {
     return {
-      title: "Calendar",
-      items: [
-        {
-          text: "Nazox",
-        },
-        {
-          text: "Calendar",
-          active: true,
-        },
-      ],
       calendarEvents: calendarEvents,
       calendarOptions: {
         headerToolbar: {
           left: "prev,next today",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+          right: "",
         },
         plugins: [
           dayGridPlugin,
@@ -209,119 +199,42 @@ export default {
 </script>
 
 
-
 <template>
   <Layout>
     <PageHeader :title="title" :items="items" />
-      <div class="row">
-      <div class="col-12">
+    <div class="row">
+      <div class="col-lg-12">
         <div class="card">
-          <div class="card-body">
-            <div class="app-calendar">
-              <FullCalendar
-                ref="fullCalendar"
-                :options="calendarOptions"
-              ></FullCalendar>
-            </div>
+          <div class="card-body pt-0">
+            <b-tabs nav-class="nav-tabs-custom">
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Kalender</a>
+                </template>
+                  <div class="row ">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-body">
+                          <div class="app-calendar" >
+                            <FullCalendar
+                              ref="fullCalendar"
+                              :options="calendarOptions"
+                            ></FullCalendar>
+                          </div>          
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Input Jadwal</a>
+                </template>
+              </b-tab>
+            </b-tabs>
           </div>
         </div>
       </div>
     </div>
-    <b-modal
-      v-model="showModal"
-      title="Add New Event"
-      title-class="text-black font-18"
-      body-class="p-3"
-      hide-footer
-    >
-      <form @submit.prevent="handleSubmit">
-        <div class="row">
-          <div class="col-12">
-            <div class="form-group">
-              <label for="name">Event Name</label>
-              <input
-                id="name"
-                v-model="event.title"
-                type="text"
-                class="form-control"
-                placeholder="Insert Event name"
-                :class="{ 'is-invalid': submitted && $v.event.title.$error }"
-              />
-              <div
-                v-if="submitted && !$v.event.title.required"
-                class="invalid-feedback"
-              >
-                This value is required.
-              </div>
-            </div>
-          </div>
-          <div class="col-12">
-            <div class="form-group">
-              <label class="control-label">Category</label>
-              <select
-                v-model="event.category"
-                class="form-control"
-                name="category"
-                :class="{ 'is-invalid': submitted && $v.event.category.errors }"
-              >
-                <option
-                  v-for="option in categories"
-                  :key="option.backgroundColor"
-                  :value="`${option.value}`"
-                >
-                  {{ option.name }}
-                </option>
-              </select>
-              <div
-                v-if="submitted && !$v.event.category.required"
-                class="invalid-feedback"
-              >
-                This value is required.
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="text-right pt-5 mt-3">
-          <b-button variant="light" @click="hideModal">Close</b-button>
-          <b-button type="submit" variant="success" class="ml-1"
-            >Create event</b-button
-          >
-        </div>
-      </form>
-    </b-modal>
-
-    <!-- Edit Modal -->
-    <b-modal
-      v-model="eventModal"
-      title="Edit Event"
-      title-class="text-black font-18"
-      hide-footer
-      body-class="p-0"
-    >
-      <form @submit.prevent="editSubmit">
-        <div class="p-3">
-          <label>Change event name</label>
-          <div class="input-group m-b-15">
-            <input
-              v-model="editevent.editTitle"
-              class="form-control"
-              type="text"
-            />
-            <span class="input-group-append">
-              <button type="submit" class="btn btn-success btn-md">
-                <i class="fa fa-check"></i> Save
-              </button>
-            </span>
-          </div>
-        </div>
-        <div class="text-right p-3">
-          <b-button variant="light" @click="closeModal">Close</b-button>
-          <b-button class="ml-1" variant="danger" @click="deleteEvent"
-            >Delete</b-button
-          >
-        </div>
-      </form>
-    </b-modal>
   </Layout>
 </template>

@@ -167,6 +167,12 @@ export const aslabItems = [
         label: "menuitems.aslab.text",
         isTitle: true
     },
+    {
+        id: 4,
+        label: 'menuitems.aslab.list.jadwal',
+        icon: 'ri-calendar-2-line',
+        link: 'aslab-jadwal'
+    },
 ]
 
 export const asprakItems = [
