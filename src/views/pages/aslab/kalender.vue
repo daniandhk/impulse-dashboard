@@ -23,6 +23,9 @@ export default {
     meta: [{ name: "description" }],
   },
   components: { FullCalendar, Layout, PageHeader },
+  mounted(){
+    this.$refs.fullCalendar.render()
+  },
   data() {
     return {
       calendarEvents: calendarEvents,
@@ -206,17 +209,12 @@ export default {
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom">
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Kalender</a>
-                </template>
-                  <div class="row ">
+                  <div class="row"> 
                     <div class="col-12">
                       <div class="card">
                         <div class="card-body">
                           <div class="app-calendar" >
-                            <FullCalendar
+                            <FullCalendar 
                               ref="fullCalendar"
                               :options="calendarOptions"
                             ></FullCalendar>
@@ -225,13 +223,6 @@ export default {
                       </div>
                     </div>
                   </div>
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Input Jadwal</a>
-                </template>
-              </b-tab>
-            </b-tabs>
           </div>
         </div>
       </div>
