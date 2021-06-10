@@ -170,8 +170,19 @@ export const aslabItems = [
     {
         id: 4,
         label: 'menuitems.aslab.list.jadwal',
-        icon: 'ri-calendar-2-line',
-        link: 'aslab-jadwal'
+        icon: 'ri-calendar-todo-fill',
+        subItems: [
+            {
+                id: 5,
+                label: 'menuitems.aslab.list.kalender',
+                link: 'aslab-jadwal'
+            },
+            {
+                id: 6,
+                label: 'menuitems.aslab.list.inputjadwal',
+                link: 'aslab-input-jadwal'
+            }
+        ]
     },
 ]
 
