@@ -98,6 +98,15 @@ export default [
         },
         component: () => import('../views/pages/aslab/kalender')
     },
+
+    {
+        path: '/aslab/input-jadwal',
+        name: 'aslab-input-jadwal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/aslab/input-jadwal')
+    },
     //path praktikan
     {
         path: '/praktikan/jadwal',
