@@ -107,6 +107,16 @@ export default [
         },
         component: () => import('../views/pages/aslab/input-jadwal')
     },
+
+    //path asprak
+    {
+        path: '/asprak/input-jurnal',
+        name: 'asprak-input-jurnal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/input-jurnal')
+    },
     //path praktikan
     {
         path: '/praktikan/jadwal',

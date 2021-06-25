@@ -61,7 +61,11 @@
     "asprak": {
       "text": "Asisten Praktikum",
       "list": {
-        "praktikum": "Praktikum"
+        "praktikum": "Praktikum",
+        "input-soal": "Input Soal",
+        "input-tesawal": "Input Tes Awal",
+        "input-jurnal": "Input Jurnal",
+        "input-tesakhir": "Input Tes Akhir"
       }
     },
     "praktikan": {

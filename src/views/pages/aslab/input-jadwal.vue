@@ -101,6 +101,11 @@ export default {
             <h4 class="card-title">Input Jadwal Praktikum</h4>
             <p class="card-title-desc">Examples of bootstrap datepicker.</p>
 
+            <div class="form-group mb-3">
+                <label>Praktikum</label>
+                <multiselect v-model="value" :options="options"></multiselect>
+            </div>
+
             <div>
               <div class="form-group mb-3">
                 <label>Tanggal</label>

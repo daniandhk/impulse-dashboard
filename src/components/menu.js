@@ -203,6 +203,18 @@ export const asprakItems = [
         label: "menuitems.asprak.text",
         isTitle: true
     },
+    {
+        id: 4,
+        label: 'menuitems.asprak.list.input-soal',
+        icon: 'ri-calendar-todo-fill',
+        subItems: [
+            {
+                id: 5,
+                label: 'menuitems.asprak.list.input-jurnal',
+                link: 'aprak-input-jurnal'
+            },
+        ]
+    },
 ]
 
 export const praktikanItems = [
