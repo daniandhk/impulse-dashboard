@@ -2,6 +2,7 @@
 import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
 import Swal from "sweetalert2";
+import { required } from "vuelidate/lib/validators";
 
 /**
  * Orders Component
@@ -9,6 +10,13 @@ import Swal from "sweetalert2";
 export default {
   components: {
 
+  },
+  validations: {
+    dataEdit: {
+      nip: { required },
+      name: { required },
+      code: { required },
+    },
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -32,6 +40,15 @@ export default {
         { key: "code", sortable: true, label: "Kode Dosen" },
         { key: "action", sortable: false }
       ],
+
+      //modal edit
+      idDataEdit: "",
+      dataEdit: { 
+          nip: "",
+          code: "", 
+          name: "",
+          },
+      submitted: false,
     };
   },
   computed: {
@@ -171,8 +188,6 @@ export default {
       return (
         api.deleteStaff(id)
           .then(response => {
-            console.log(response)
-
             Swal.fire("Deleted!", nip + " has been deleted.", "success");
             this.fetchData();
           })
@@ -188,37 +203,48 @@ export default {
       )
     },
 
-    //export to excel
-    getDate(){
-      const d = new Date();
-      const date = d.getDate();
-      const month = d.getMonth() + 1;
-      const year = d.getFullYear();
-          
-      this.todayDate = "[" + date + "/" + month + "/" + year + "]";
+    onClickEdit(data){
+      this.idDataEdit = data.item.id;
+      this.dataEdit.nip = data.item.nip;
+      this.dataEdit.code = data.item.code;
+      this.dataEdit.name = data.item.name;
+      this.$bvModal.show('modal-edit');
     },
-    
-    getAllData(){
-      this.getDate();
-      console.log("All Dataaa")
-      const params = this.getRequestParams(
-        null,
-        1,
-        this.totalRows,
-        this.sortBy,
-        this.sortDesc
-      );
-      return (
-        api.getAllStaffs(params)
-          .then(response => {
-            this.allDatasArray = response.data.data;
-          })
-          .catch(error => {
-            console.log(error)
-            this.allDatasArray = [];
-          })
-      )
-    }
+
+    editStaff(){
+      this.submitted = true;
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      } 
+      else {
+        return (
+          api.editStaff(this.idDataEdit, this.dataEdit)
+            .then(response => {
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
+              this.fetchData();
+            })
+            .catch(error => {
+              console.log(error)
+
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+              })
+            })
+        )
+      }
+    },
+
+    hideModal(){
+      this.$bvModal.hide('modal-edit');
+    },
   }
 };
 </script>
@@ -275,6 +301,15 @@ export default {
         <template v-slot:cell(action)="data">
           <a
             href="javascript:void(0);"
+            @click=onClickEdit(data)
+            class="mr-3 text-primary"
+            v-b-tooltip.hover
+            title="Edit"
+          >
+            <i class="mdi mdi-pencil font-size-18"></i>
+          </a>
+          <a
+            href="javascript:void(0);"
             @click=onClickDelete(data)
             class="text-danger"
             v-b-tooltip.hover
@@ -299,6 +334,74 @@ export default {
           </ul>
         </div>
       </div>
+    </div>
+    <div name="modalEdit">
+      <b-modal centered id="modal-edit" title="Edit Course" hide-footer title-class="font-18">
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStaff">
+          <div class="tab-pane" id="metadata">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="nip">NIP</label>
+                    <input 
+                    style="background-color: #F0F4F6;"
+                    :disabled="true"
+                    v-model="dataEdit.nip"
+                    id="nip" 
+                    name="nip" 
+                    type="number" 
+                    class="form-control"
+                    :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }" />
+
+                    <div
+                    v-if="submitted && !$v.dataEdit.nip.required"
+                    class="invalid-feedback"
+                    >NIP is required.</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="nama">Nama Dosen</label>
+                    <input 
+                    v-model="dataEdit.name"
+                    id="nama" 
+                    name="nama" 
+                    type="text" 
+                    class="form-control"
+                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
+
+                    <div
+                    v-if="submitted && !$v.dataEdit.name.required"
+                    class="invalid-feedback"
+                    >Nama Dosen is required.</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="code">Kode Dosen</label>
+                    <input
+                        v-model="dataEdit.code"
+                        id="code"
+                        name="code"
+                        type="text"
+                        class="form-control"
+                        :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
+                    />
+                    <div
+                    v-if="submitted && !$v.dataEdit.code.required"
+                    class="invalid-feedback"
+                    >Kode Mata Kuliah is required.</div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button
+                type="submit"
+                class="btn btn-primary mr-2 waves-effect waves-light"
+                >Save Changes</button>
+                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </b-modal>
     </div>
   </div>
 </template>

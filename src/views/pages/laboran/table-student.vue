@@ -194,38 +194,6 @@ export default {
           })
       )
     },
-
-    //export to excel
-    getDate(){
-      const d = new Date();
-      const date = d.getDate();
-      const month = d.getMonth() + 1;
-      const year = d.getFullYear();
-          
-      this.todayDate = "[" + date + "/" + month + "/" + year + "]";
-    },
-    
-    getAllData(){
-      this.getDate();
-      console.log("All Dataaa")
-      const params = this.getRequestParams(
-        null,
-        1,
-        this.totalRows,
-        this.sortBy,
-        this.sortDesc
-      );
-      return (
-        api.getAllStudents(params)
-          .then(response => {
-            this.allDatasArray = response.data.data;
-          })
-          .catch(error => {
-            console.log(error)
-            this.allDatasArray = [];
-          })
-      )
-    }
   }
 };
 </script>

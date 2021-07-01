@@ -71,3 +71,12 @@
 
 ## v21.05.06.02
 - Added course data in Laboran
+
+## PR 17 by Figo
+- Menu Kalender
+- Menu input jadwal
+
+## v21.07.02.00
+- Added Edit data Laboran
+- Added popup error input data Laboran
+- Added Classroom data

@@ -138,10 +138,18 @@ export default {
                 })
                 .catch(error => {
                     //pop up
+                    this.submitted = false;
                     console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
+
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        footer: error
+                    })
                 })
           );
       }
@@ -179,8 +187,8 @@ export default {
         this.dataStudent.semester = "";
 
         this.courseData = [];
-        this.course_data = "",
-        this.class_data = ""
+        this.course_data = "";
+        this.class_data = "";
     },
 
     getRequestParams(search) {
@@ -197,7 +205,9 @@ export default {
         return (
             api.getByNameClassrooms()
             .then(response => {
-                this.namaKelasData = response.data.classes;
+                if(response.data.classes){
+                    this.namaKelasData = response.data.classes;
+                }
             })
             .catch(error => {
                 console.log(error)
@@ -211,7 +221,9 @@ export default {
         );
         return api.getListClassrooms(params)
             .then(response => {
-                this.kelasData = response.data.classes;
+                if (response.data.classes){
+                    this.kelasData = response.data.classes;
+                }
             })
             .catch(error => {
                 console.log(error)
@@ -226,7 +238,9 @@ export default {
                 );
                 api.getListCourses(params)
                     .then(response => {
-                        this.courseData = response.data.courses
+                        if (response.data.courses){
+                            this.courseData = response.data.courses
+                        }
                     })
                     .catch(error => {
                         console.log(error)
@@ -249,9 +263,11 @@ export default {
         );
         return api.getListStaffs(params)
             .then(response => {
-                let staffs = response.data.staffs;
-                let staff = staffs.find(item => item.id === data.staff_id);
-                this.dataStudent.staff_code = staff.code;
+                if (response.data.staffs){
+                    let staffs = response.data.staffs;
+                    let staff = staffs.find(item => item.id === data.staff_id);
+                    this.dataStudent.staff_code = staff.code;
+                }
             })
             .catch(error => {
                 console.log(error)
@@ -402,11 +418,11 @@ export default {
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="fullname">Nama Mahasiswa</label>
+                                <label for="nama">Nama Mahasiswa</label>
                                 <input 
                                 v-model="dataStudent.name"
-                                id="fullname" 
-                                name="fullname" 
+                                id="nama" 
+                                name="nama" 
                                 type="text" 
                                 class="form-control"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }" />
