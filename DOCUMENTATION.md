@@ -80,3 +80,7 @@
 - Added Edit data Laboran
 - Added popup error input data Laboran
 - Added Classroom data
+
+## v21.07.02.01
+- Changed Student to Student Class in Laboran
+- Changed icon in Laboran
