@@ -2,8 +2,8 @@
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableStudent from "./table-student";
-import InputStudent from "./input-student";
+import TableStudent from "./table-student-class";
+import InputStudent from "./input-student-class";
 
 export default {
   components: {
@@ -17,13 +17,13 @@ export default {
   },
   data() {
     return {
-      title: "Student Data",
+      title: "Student Class Data",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Student Data",
+          text: "Student Class Data",
           active: true
         }
       ],
@@ -55,13 +55,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Students</a>
+                  <a class="font-weight-bold active">All Classes</a>
                 </template>
                 <TableStudent ref='TableStudent'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Student(s)</a>
+                      <a class="font-weight-bold active">Input Class(s)</a>
                   </template>
                   <InputStudent/>
               </b-tab>

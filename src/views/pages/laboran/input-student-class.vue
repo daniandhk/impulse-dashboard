@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       //input student
-      title: "Student Data",
+      title: "Student Class Data",
       dataStudent: { 
           name: "", 
           nim: "", 
@@ -363,7 +363,7 @@ export default {
             <!-- <div title="Student Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Student</h4>
+                    <h4 class="card-title">Add Student Class</h4>
                     <p class="card-title-desc">Fill all information below</p>
                     
                     <div>
