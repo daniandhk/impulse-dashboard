@@ -2,13 +2,14 @@
 import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
 import Swal from "sweetalert2";
+import Multiselect from "vue-multiselect";
 
 /**
  * Orders Component
  */
 export default {
   components: {
-
+    Multiselect,
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -30,8 +31,6 @@ export default {
         { key: "nim", sortable: true, label: "NIM" },
         { key: "name", sortable: true, label: "Name" },
         { key: "class_name", sortable: true, label: "Kelas MK" },
-        { key: "gender", sortable: true, label: "Gender" },
-        { key: "religion", sortable: true, label: "Religion" },
         { key: "course_code", sortable: true, label: "Kode MK" },
         { key: "course_name", sortable: true, label: "Nama MK" },
         { key: "staff_code", sortable: true, label: "Kode Dosen" },
@@ -39,6 +38,18 @@ export default {
         { key: "semester", sortable: true, label: "Semester" },
         { key: "action", sortable: false }
       ],
+
+      courseData: [],
+      kelasData: [],
+      namaKelasData: [],
+      isKelasNotSelected: true,
+
+      //v-model dropdown value = array of objects
+      course_data: "",
+      class_data: "",
+
+      filter_course: "",
+      filter_class: "",
     };
   },
   computed: {
@@ -54,10 +65,15 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
+    loadCourseData() {
+        return this.courseData;
+    }
   },
   mounted() {
     // Set the initial number of items
     this.fetchData();
+
+    this.loadDataDropdown();
   },
   methods: {
     ...notificationMethods,
@@ -69,11 +85,19 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(search, page, pageSize, orderBy, sortDesc) {
+    getRequestParams(search, kelas, course, page, pageSize, orderBy, sortDesc) {
       let params = {};
 
       if (search) {
         params["search"] = search;
+      }
+
+      if (kelas) {
+        params["kelas"] = kelas;
+      }
+
+      if (course) {
+        params["course"] = course;
       }
 
       if (page) {
@@ -100,8 +124,13 @@ export default {
       this.isFentchingData = true;
       console.log("fentching data")
 
+      let class_name = (this.class_data) ? this.class_data.name : "";
+      let course_name = (this.course_data) ? this.course_data.name : "";
+
       const params = this.getRequestParams(
         this.filter,
+        class_name,
+        course_name,
         this.currentPage,
         this.perPage,
         this.sortBy,
@@ -194,6 +223,89 @@ export default {
           })
       )
     },
+
+    loadDataDropdown(){
+        this.getClassroomNames();
+    },
+
+    getClassroomNames(){
+        return (
+            api.getByNameClassrooms()
+            .then(response => {
+                if(response.data.classes){
+                    this.namaKelasData = response.data.classes;
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
+        )
+    },
+
+    async getDataClassrooms(namaKelasData){
+        const params = this.getRequestParams(
+                namaKelasData.name
+        );
+        return api.getListClassrooms(params)
+            .then(response => {
+                if (response.data.classes){
+                    this.kelasData = response.data.classes;
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    },
+
+    async getDataCourses(kelasData){
+        return new Promise((resolve, reject) => {
+            kelasData.forEach((element, index, array) => {
+                const params = this.getRequestParams(
+                    element.course_id
+                );
+                api.getListCourses(params)
+                    .then(response => {
+                        if (response.data.courses){
+                            this.courseData = response.data.courses
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
+                if (index === array.length -1) resolve();
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    },
+
+    async setKelas(value){
+        this.class_data = value;
+        this.removeCourse();
+
+        await this.getDataClassrooms(value);
+        await this.getDataCourses(this.kelasData);
+
+        this.isKelasNotSelected = false;
+    },
+
+    async setCourse(value){
+        this.course_data = value;
+        this.fetchData();
+    },
+
+    removeKelas(){
+        this.isKelasNotSelected = true;
+        this.class_data = "";
+        this.courseData = [];
+        this.removeCourse();
+    },
+
+    removeCourse(){
+        this.course_data = "";
+        this.fetchData();
+    },
   }
 };
 </script>
@@ -201,6 +313,42 @@ export default {
 <template>
   <div>
     <div class="row mt-4">
+      <div class="col-sm-12 col-md-12">
+        <label class="d-inline-flex align-items-center">
+          Filter:
+        </label>
+      </div>
+      <div class="row col-sm-12 col-md-12">
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <multiselect
+                placeholder="Kelas"
+                v-model="class_data"
+                :options="namaKelasData"
+                label="name"
+                track-by="name"
+                @select="setKelas"
+                @remove="removeKelas"
+            ></multiselect>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <multiselect
+                placeholder="Nama Mata Kuliah"
+                v-model="course_data"
+                :options="loadCourseData"
+                :disabled="isKelasNotSelected"
+                label="name"
+                track-by="name"
+                @select="setCourse"
+                @remove="removeCourse"
+            ></multiselect>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
       <div class="col-sm-12 col-md-6">
         <div id="tickets-table_length" class="dataTables_length">
           <label class="d-inline-flex align-items-center">
