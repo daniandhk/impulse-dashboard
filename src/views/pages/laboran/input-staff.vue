@@ -156,6 +156,7 @@ export default {
                             <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel:</p>
                             <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                                 - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
+                                - Pastikan hanya ada <b>satu sheet</b>,<br>
                                 - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
                             </p>
                             <img src="@/assets/images/staff-excel-example.png" style="box-sizing: border-box; 

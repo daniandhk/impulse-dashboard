@@ -170,6 +170,7 @@ export default {
                             <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                                 - Pastikan kode dosen yang digunakan tersedia di <b>Staff Data</b>,<br>
                                 - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
+                                - Pastikan hanya ada <b>satu sheet</b>,<br>
                                 - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
                             </p>
                             <img src="@/assets/images/student-excel-example.png" style="box-sizing: border-box; width: 100%;"/>
