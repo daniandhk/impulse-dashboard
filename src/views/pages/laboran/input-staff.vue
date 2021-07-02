@@ -158,9 +158,14 @@ export default {
                                 - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
                                 - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
                             </p>
-                            <img src="@/assets/images/staff-excel-example.png" class="mb-4" style="box-sizing: border-box; 
+                            <img src="@/assets/images/staff-excel-example.png" style="box-sizing: border-box; 
                                                                                                     width: 25%; 
                                                                                                     margin: auto;"/>
+                            <div class="mb-4 mt-2">
+                                <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                                    Contoh file Excel: <a href="/files/staffdummy.xlsx" download>staffdummy.xlsx</a><br>
+                                </p>
+                            </div>
                             <!-- file upload -->
                             <vue-dropzone
                                 id="dropzone"
