@@ -51,6 +51,14 @@ export default [
         },
     },
     {
+        path: '/profile',
+        name: 'profile',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/auth/profile')
+    },
+    {
         path: '/',
         name: 'home',
         meta: {
@@ -58,6 +66,7 @@ export default [
         },
         component: () => import('../views/pages/dashboard/index')
     },
+
     {
         path: '/laboran/student',
         name: 'laboran-student',
@@ -117,6 +126,7 @@ export default [
         },
         component: () => import('../views/pages/asprak/input-jurnal')
     },
+
     //path praktikan
     {
         path: '/praktikan/jadwal',

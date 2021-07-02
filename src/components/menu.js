@@ -211,7 +211,7 @@ export const asprakItems = [
             {
                 id: 5,
                 label: 'menuitems.asprak.list.input-jurnal',
-                link: 'aprak-input-jurnal'
+                link: 'asprak-input-jurnal'
             },
         ]
     },
