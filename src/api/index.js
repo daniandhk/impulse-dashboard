@@ -7,6 +7,12 @@ export const api = {
     validateUser,
     register,
 
+    //student class
+    getAllStudentClasses,
+    inputStudentClass,
+    deleteStudentClass,
+    editStudentClass,
+
     //student
     getAllStudents,
     inputStudent,
@@ -61,15 +67,15 @@ function register(data){
     })
 }
 
-//student
-function inputStudent(data){
+//student class
+function inputStudentClass(data){
     return httpAxios({
         url: '/laboran/student',
         method: 'POST',
         data: data
     })
 }
-function getAllStudents(params) {
+function getAllStudentClasses(params) {
     if (params){
         return httpAxios.get('/laboran/student', { params })
     }
@@ -77,12 +83,39 @@ function getAllStudents(params) {
         return httpAxios.get('/laboran/student')
     }
 }
-function deleteStudent(id) {
+function deleteStudentClass(id) {
     return httpAxios.delete(`/laboran/student/${id}`);
+}
+function editStudentClass(id, data){
+    return httpAxios({
+        url: `/laboran/student/${id}`,
+        method: 'PUT',
+        data: data
+    })
+}
+
+//student
+function inputStudent(data){
+    return httpAxios({
+        url: '/student',
+        method: 'POST',
+        data: data
+    })
+}
+function getAllStudents(params) {
+    if (params){
+        return httpAxios.get('/student', { params })
+    }
+    else{
+        return httpAxios.get('/student')
+    }
+}
+function deleteStudent(id) {
+    return httpAxios.delete(`/student/${id}`);
 }
 function editStudent(id, data){
     return httpAxios({
-        url: `/laboran/student/${id}`,
+        url: `/student/${id}`,
         method: 'PUT',
         data: data
     })
