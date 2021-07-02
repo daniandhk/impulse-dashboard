@@ -84,3 +84,6 @@
 ## v21.07.02.01
 - Changed Student to Student Class in Laboran
 - Changed icon in Laboran
+
+## v21.07.02.02
+- Added filter student-class

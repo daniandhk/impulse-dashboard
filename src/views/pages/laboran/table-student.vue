@@ -2,6 +2,7 @@
 import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
 import Swal from "sweetalert2";
+import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
 
 /**
@@ -9,14 +10,22 @@ import Multiselect from "vue-multiselect";
  */
 export default {
   components: {
-    Multiselect,
+      Multiselect,
+  },
+  validations: {
+    dataEdit: {
+      nim: { required },
+      name: { required },
+      gender: { required },
+      religion: { required },
+    },
   },
   created() {
     document.body.classList.add("auth-body-bg");
   },
   data() {
     return {
-      //list students
+      //list student
       isFentchingData: false,
       dataStudents: [],
       totalRows: 1,
@@ -30,26 +39,23 @@ export default {
       fields: [
         { key: "nim", sortable: true, label: "NIM" },
         { key: "name", sortable: true, label: "Name" },
-        { key: "class_name", sortable: true, label: "Kelas MK" },
-        { key: "course_code", sortable: true, label: "Kode MK" },
-        { key: "course_name", sortable: true, label: "Nama MK" },
-        { key: "staff_code", sortable: true, label: "Kode Dosen" },
-        { key: "semester", sortable: true, label: "Semester" },
-        { key: "academic_year", sortable: true, label: "Tahun Akademik" },
+        { key: "gender", sortable: true, label: "Gender" },
+        { key: "religion", sortable: true, label: "Religion" },
         { key: "action", sortable: false }
       ],
 
-      courseData: [],
-      kelasData: [],
-      namaKelasData: [],
-      isKelasNotSelected: true,
+      //modal edit
+      idDataEdit: "",
+      dataEdit: { 
+          nim: "",
+          name: "",
+          gender: "",
+          religion: "",
+          },
+      submitted: false,
 
-      //v-model dropdown value = array of objects
-      course_data: "",
-      class_data: "",
-
-      filter_course: "",
-      filter_class: "",
+      religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
+      genderData: ['male', 'female'],
     };
   },
   computed: {
@@ -65,15 +71,10 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
-    loadCourseData() {
-        return this.courseData;
-    }
   },
   mounted() {
     // Set the initial number of items
     this.fetchData();
-
-    this.loadDataDropdown();
   },
   methods: {
     ...notificationMethods,
@@ -85,19 +86,11 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(search, kelas, course, page, pageSize, orderBy, sortDesc) {
+    getRequestParams(search, page, pageSize, orderBy, sortDesc) {
       let params = {};
 
       if (search) {
         params["search"] = search;
-      }
-
-      if (kelas) {
-        params["kelas"] = kelas;
-      }
-
-      if (course) {
-        params["course"] = course;
       }
 
       if (page) {
@@ -124,20 +117,15 @@ export default {
       this.isFentchingData = true;
       console.log("fentching data")
 
-      let class_name = (this.class_data) ? this.class_data.name : "";
-      let course_name = (this.course_data) ? this.course_data.name : "";
-
       const params = this.getRequestParams(
         this.filter,
-        class_name,
-        course_name,
         this.currentPage,
         this.perPage,
         this.sortBy,
         this.sortDesc
       );
       return (
-        api.getAllStudentClasses(params)
+        api.getAllStudents(params)
           .then(response => {
             this.isFentchingData = false;
 
@@ -205,10 +193,8 @@ export default {
 
     deleteStudent(id, nim){
       return (
-        api.deleteStudentClass(id)
+        api.deleteStudent(id)
           .then(response => {
-            console.log(response)
-
             Swal.fire("Deleted!", nim + " has been deleted.", "success");
             this.fetchData();
           })
@@ -224,87 +210,48 @@ export default {
       )
     },
 
-    loadDataDropdown(){
-        this.getClassroomNames();
+    onClickEdit(data){
+      this.idDataEdit = data.item.id;
+      this.dataEdit.nim = data.item.nim;
+      this.dataEdit.name = data.item.name;
+      this.dataEdit.gender = data.item.gender;
+      this.dataEdit.religion = data.item.religion;
+      this.$bvModal.show('modal-edit');
     },
 
-    getClassroomNames(){
+    editStudent(){
+      this.submitted = true;
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      } 
+      else {
         return (
-            api.getByNameClassrooms()
+          api.editStudent(this.idDataEdit, this.dataEdit)
             .then(response => {
-                if(response.data.classes){
-                    this.namaKelasData = response.data.classes;
-                }
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire("Edited!", this.dataEdit.nim + " has been edited.", "success");
+              this.fetchData();
             })
             .catch(error => {
-                console.log(error)
+              console.log(error)
+
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+              })
             })
         )
+      }
     },
 
-    async getDataClassrooms(namaKelasData){
-        const params = this.getRequestParams(
-                namaKelasData.name
-        );
-        return api.getListClassrooms(params)
-            .then(response => {
-                if (response.data.classes){
-                    this.kelasData = response.data.classes;
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    },
-
-    async getDataCourses(kelasData){
-        return new Promise((resolve, reject) => {
-            kelasData.forEach((element, index, array) => {
-                const params = this.getRequestParams(
-                    element.course_id
-                );
-                api.getListCourses(params)
-                    .then(response => {
-                        if (response.data.courses){
-                            this.courseData = response.data.courses
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                if (index === array.length -1) resolve();
-            });
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    },
-
-    async setKelas(value){
-        this.class_data = value;
-        this.removeCourse();
-
-        await this.getDataClassrooms(value);
-        await this.getDataCourses(this.kelasData);
-
-        this.isKelasNotSelected = false;
-    },
-
-    async setCourse(value){
-        this.course_data = value;
-        this.fetchData();
-    },
-
-    removeKelas(){
-        this.isKelasNotSelected = true;
-        this.class_data = "";
-        this.courseData = [];
-        this.removeCourse();
-    },
-
-    removeCourse(){
-        this.course_data = "";
-        this.fetchData();
+    hideModal(){
+      this.$bvModal.hide('modal-edit');
     },
   }
 };
@@ -313,42 +260,6 @@ export default {
 <template>
   <div>
     <div class="row mt-4">
-      <div class="col-sm-12 col-md-12">
-        <label class="d-inline-flex align-items-center">
-          Filter:
-        </label>
-      </div>
-      <div class="row col-sm-12 col-md-12">
-        <div class="col-sm-12 col-md-3">
-          <div class="form-group">
-            <multiselect
-                placeholder="Kelas"
-                v-model="class_data"
-                :options="namaKelasData"
-                label="name"
-                track-by="name"
-                @select="setKelas"
-                @remove="removeKelas"
-            ></multiselect>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-3">
-          <div class="form-group">
-            <multiselect
-                placeholder="Mata Kuliah"
-                v-model="course_data"
-                :options="loadCourseData"
-                :disabled="isKelasNotSelected"
-                label="name"
-                track-by="name"
-                @select="setCourse"
-                @remove="removeCourse"
-            ></multiselect>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row mt-2">
       <div class="col-sm-12 col-md-6">
         <div id="tickets-table_length" class="dataTables_length">
           <label class="d-inline-flex align-items-center">
@@ -398,6 +309,15 @@ export default {
         <template v-slot:cell(action)="data">
           <a
             href="javascript:void(0);"
+            @click=onClickEdit(data)
+            class="mr-3 text-primary"
+            v-b-tooltip.hover
+            title="Edit"
+          >
+            <i class="mdi mdi-pencil font-size-18"></i>
+          </a>
+          <a
+            href="javascript:void(0);"
             @click=onClickDelete(data)
             class="text-danger"
             v-b-tooltip.hover
@@ -422,6 +342,85 @@ export default {
           </ul>
         </div>
       </div>
+    </div>
+    <div name="modalEdit">
+      <b-modal centered id="modal-edit" title="Edit Course" hide-footer title-class="font-18">
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStudent">
+          <div class="tab-pane" id="metadata">
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="nim">NIM</label>
+                    <input 
+                    style="background-color: #F0F4F6;"
+                    :disabled="true"
+                    v-model="dataEdit.nim"
+                    id="nip" 
+                    name="nip" 
+                    type="number" 
+                    class="form-control"
+                    :class="{ 'is-invalid': submitted && $v.dataEdit.nim.$error }" />
+
+                    <div
+                    v-if="submitted && !$v.dataEdit.nim.required"
+                    class="invalid-feedback"
+                    >NIM is required.</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="nama">Nama Mahasiswa</label>
+                    <input 
+                    v-model="dataEdit.name"
+                    id="nama" 
+                    name="nama" 
+                    type="text" 
+                    class="form-control"
+                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
+
+                    <div
+                    v-if="submitted && !$v.dataEdit.name.required"
+                    class="invalid-feedback"
+                    >Nama Dosen is required.</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label">Jenis Kelamin</label>
+                    <multiselect
+                        v-model="dataEdit.gender"
+                        :options="genderData"
+                        :class="{ 'is-invalid': submitted && $v.dataEdit.gender.$error }" 
+                    ></multiselect>
+                        <div
+                        v-if="submitted && !$v.dataEdit.gender.required"
+                        class="invalid-feedback"
+                        >Jenis Kelamin is required.</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label class="control-label">Agama</label>
+                    <multiselect
+                        v-model="dataEdit.religion"
+                        :options="religionData"
+                        :class="{ 'is-invalid': submitted && $v.dataEdit.religion.$error }" 
+                    ></multiselect>
+                        <div
+                        v-if="submitted && !$v.dataEdit.religion.required"
+                        class="invalid-feedback"
+                        >Agama is required.</div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button
+                type="submit"
+                class="btn btn-primary mr-2 waves-effect waves-light"
+                >Save Changes</button>
+                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+            </div>
+          </div>
+        </form>
+      </b-modal>
     </div>
   </div>
 </template>

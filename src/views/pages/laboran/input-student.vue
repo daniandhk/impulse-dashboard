@@ -21,29 +21,17 @@ export default {
       nim: { required },
       gender: { required },
       religion: { required },
-      class_name: { required },
-      course_code: { required },
-      course_name: { required },
-      staff_code: { required },
-      academic_year: { required },
-      semester: { required },
     },
   },
   data() {
     return {
       //input student
-      title: "Student Class Data",
+      title: "Student Data",
       dataStudent: { 
           name: "", 
           nim: "", 
           gender: "", 
-          religion: "", 
-          class_name: "", 
-          course_code: "", 
-          course_name: "", 
-          staff_code: "", 
-          academic_year: "", 
-          semester: "",
+          religion: "",
           },
       submitted: false,
       inputError: null,
@@ -52,19 +40,10 @@ export default {
       inputSuccess: false,
       isInputCanceled: false,
       isFentchingData: false,
-      isKelasNotSelected: true,
 
       //dropdown list data
       religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
       genderData: ['male', 'female'],
-      dosenData: [],
-      courseData: [],
-      kelasData: [],
-      namaKelasData: [],
-
-      //v-model dropdown value = array of objects
-      course_data: "",
-      class_data: "",
 
       //dropzone
       seen: false,
@@ -102,15 +81,6 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
-    loadDosenData() {
-        return this.dosenData;
-    },
-    loadKelasData() {
-        return this.kelasData;
-    },
-    loadCourseData() {
-        return this.courseData;
-    }
   },
   methods: {
     ...notificationMethods,
@@ -124,7 +94,7 @@ export default {
           this.tryingToInput = true;
           this.inputError = null;
           return (
-              api.inputStudentClass(this.dataStudent)
+              api.inputStudent(this.dataStudent)
                 .then(response => {
                     this.tryingToInput = false;
                     this.isInputError = false;
@@ -179,142 +149,6 @@ export default {
         this.dataStudent.nim = "";
         this.dataStudent.gender = "";
         this.dataStudent.religion = "";
-        this.dataStudent.class_name = "";
-        this.dataStudent.course_code = "";
-        this.dataStudent.course_name = "";
-        this.dataStudent.staff_code = "";
-        this.dataStudent.academic_year = "";
-        this.dataStudent.semester = "";
-
-        this.courseData = [];
-        this.course_data = "";
-        this.class_data = "";
-    },
-
-    getRequestParams(search) {
-      let params = {};
-
-      if (search) {
-        params["search"] = search;
-      }
-
-      return params;
-    },
-
-    getClassroomNames(){
-        return (
-            api.getByNameClassrooms()
-            .then(response => {
-                if(response.data.classes){
-                    this.namaKelasData = response.data.classes;
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            })
-        )
-    },
-
-    async getDataClassrooms(namaKelasData){
-        const params = this.getRequestParams(
-                namaKelasData.name
-        );
-        return api.getListClassrooms(params)
-            .then(response => {
-                if (response.data.classes){
-                    this.kelasData = response.data.classes;
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            })
-    },
-
-    async getDataCourses(kelasData){
-        return new Promise((resolve, reject) => {
-            kelasData.forEach((element, index, array) => {
-                const params = this.getRequestParams(
-                    element.course_id
-                );
-                api.getListCourses(params)
-                    .then(response => {
-                        if (response.data.courses){
-                            this.courseData = response.data.courses
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                if (index === array.length -1) resolve();
-            });
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    },
-
-    async setDataClassroom(kelasData, course_id){
-        let data = kelasData.find(data => data.course_id === course_id);
-        this.dataStudent.academic_year = data.academic_year;
-        this.dataStudent.semester = data.semester;
-
-        const params = this.getRequestParams(
-                data.staff_id
-        );
-        return api.getListStaffs(params)
-            .then(response => {
-                if (response.data.staffs){
-                    let staffs = response.data.staffs;
-                    let staff = staffs.find(item => item.id === data.staff_id);
-                    this.dataStudent.staff_code = staff.code;
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            });
-    },
-
-    loadDataDropdown(){
-        this.getClassroomNames();
-    },
-
-    async setKelas(value){
-        this.isFentchingData = true;
-
-        this.removeCourse();
-        this.dataStudent.class_name = value.name;
-        await this.getDataClassrooms(value);
-        await this.getDataCourses(this.kelasData);
-
-        this.isKelasNotSelected = false;
-        this.isFentchingData = false;
-    },
-
-    async setCourse(value){
-        this.isFentchingData = true;
-
-        this.dataStudent.course_name = value.name;
-        this.dataStudent.course_code = value.code;
-        await this.setDataClassroom(this.kelasData, value.id);
-
-        this.isFentchingData = false;
-    },
-
-    removeKelas(){
-        this.isKelasNotSelected = true;
-        this.class_data = "";
-        this.dataStudent.class_name = "";
-        this.courseData = [];
-        this.removeCourse();
-    },
-
-    removeCourse(){
-        this.course_data = "";
-        this.dataStudent.course_name = "";
-        this.dataStudent.course_code = "";
-        this.dataStudent.academic_year = "";
-        this.dataStudent.semester = "";
-        this.dataStudent.staff_code = "";
     },
   }
 };
@@ -363,7 +197,7 @@ export default {
             <!-- <div title="Student Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Student Class</h4>
+                    <h4 class="card-title">Add Student</h4>
                     <p class="card-title-desc">Fill all information below</p>
                     
                     <div>
@@ -463,129 +297,6 @@ export default {
                                 v-if="submitted && !$v.dataStudent.religion.required"
                                 class="invalid-feedback"
                                 >Agama is required.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                            <label class="control-label">Kelas Mata Kuliah</label>
-                            <multiselect
-                                v-model="class_data"
-                                :options="namaKelasData"
-                                label="name"
-                                track-by="name"
-                                @select="setKelas"
-                                @remove="removeKelas"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.class_name.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.class_name.required"
-                                class="invalid-feedback"
-                                >Kelas Mata Kuliah is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                            <label class="control-label">Nama Mata Kuliah</label>
-                            <multiselect
-                                v-model="course_data"
-                                :options="loadCourseData"
-                                :disabled="isKelasNotSelected"
-                                label="name"
-                                track-by="name"
-                                @select="setCourse"
-                                @remove="removeCourse"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.course_name.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.course_name.required"
-                                class="invalid-feedback"
-                                >Nama Mata Kuliah is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="course_code">Kode Mata Kuliah</label>
-                                <input
-                                    v-model="dataStudent.course_code"
-                                    :disabled="true"
-                                    id="course_code"
-                                    name="course_code"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.course_code.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.course_code.required"
-                                class="invalid-feedback"
-                                >Kode Mata Kuliah is required.</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="staff_code">Kode Dosen Mata Kuliah</label>
-                                <input
-                                    v-model="dataStudent.staff_code"
-                                    :disabled="true"
-                                    id="staff_code"
-                                    name="staff_code"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.staff_code.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.staff_code.required"
-                                class="invalid-feedback"
-                                >Kode Dosen Mata Kuliah is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="academic_year">Tahun Akademik</label>
-                                <input
-                                    v-model="dataStudent.academic_year"
-                                    :disabled="true"
-                                    id="academic_year"
-                                    name="academic_year"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.academic_year.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.academic_year.required"
-                                class="invalid-feedback"
-                                >Tahun Akademik is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="semester">Semester</label>
-                                <input
-                                    v-model="dataStudent.semester"
-                                    :disabled="true"
-                                    id="semester"
-                                    name="semester"
-                                    type="number"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.semester.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.semester.required"
-                                class="invalid-feedback"
-                                >Semester is required.</div>
                             </div>
                         </div>
                     </div>
