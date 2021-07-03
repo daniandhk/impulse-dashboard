@@ -2,6 +2,7 @@
 import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
 import Swal from "sweetalert2";
+import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
 
 /**
@@ -10,6 +11,17 @@ import Multiselect from "vue-multiselect";
 export default {
   components: {
     Multiselect,
+  },
+  validations: {
+    dataEdit: {
+      student_id: { required },
+      class_id: { required },
+    },
+    dataEditDetail: {
+      nim: { required },
+      class_name: { required },
+      course_name: { required },
+    },
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -50,6 +62,35 @@ export default {
 
       filter_course: "",
       filter_class: "",
+
+      //edit data
+      dataEdit: { 
+          student_id: "",
+          class_id: "",
+          },
+      dataEditDetail: { 
+          nim: "",
+          class_name: "",
+          course_name: "",
+          },
+      submitted: false,
+      isKelasEditNotSelected: true,
+      course_dataEdit: "",
+      class_dataEdit: "",
+
+      //edit role
+      roleData: ['asprak', 'aslab'],
+      role_data: [],
+      dataEditRole: {
+          no_induk: "",
+          student: 0,
+          asprak: 0,
+          aslab: 0,
+          staff: 0,
+          laboran: 0,
+          dosen: 0,
+      },
+      main_role: "student",
     };
   },
   computed: {
@@ -121,6 +162,7 @@ export default {
       return params;
     },
     fetchData(){
+      this.loadDataDropdown();
       this.isFentchingData = true;
       console.log("fentching data")
 
@@ -198,7 +240,7 @@ export default {
           confirmButtonText: "Yes, delete it!"
       }).then(result => {
           if (result.value) {
-              this.deleteStudent(data.item.id, data.item.nim);
+              this.deleteStudent(data.item.student_id, data.item.nim);
           }
       });
     },
@@ -263,7 +305,19 @@ export default {
                 const params = this.getRequestParams(
                     element.course_id
                 );
-                api.getListCourses(params)
+                this.getListCourses(params).then(()=>{
+                  if (index === array.length -1) resolve();
+                })
+            });
+        })
+        .catch(error => {
+            console.log(error)
+        });
+    },
+
+    async getListCourses(params){
+      return (
+        api.getListCourses(params)
                     .then(response => {
                         if (response.data.courses){
                             this.courseData = response.data.courses
@@ -272,12 +326,7 @@ export default {
                     .catch(error => {
                         console.log(error)
                     })
-                if (index === array.length -1) resolve();
-            });
-        })
-        .catch(error => {
-            console.log(error)
-        });
+      )
     },
 
     async setKelas(value){
@@ -305,6 +354,172 @@ export default {
     removeCourse(){
         this.course_data = "";
         this.fetchData();
+    },
+
+    async onClickEdit(data){
+      //edit data
+      this.dataEdit.student_id = data.item.student_id;
+      this.dataEdit.class_id = data.item.class_id;
+      this.dataEditDetail.nim = data.item.nim;
+      await this.setKelasEdit(data.item);
+
+      //edit role
+      this.dataEditRole.no_induk = data.item.nim;
+      this.getRoles(this.dataEditRole.no_induk);
+      this.setRoles(this.role_data, this.dataEditRole);
+
+      this.$bvModal.show('modal-edit');
+    },
+
+    setStudentClass(){
+      console.log(this.dataEdit)
+      this.submitted = true;
+      this.$v.$touch();
+      if (this.$v.$invalid) {
+        return;
+      } 
+      else {
+        return (
+          api.setStudentClass(this.dataEdit)
+            .then(response => {
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire("Edited!", this.dataEditDetail.nim + " has been edited.", "success");
+              this.fetchData();
+            })
+            .catch(error => {
+              console.log(error)
+
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+              })
+            })
+        )
+      }
+    },
+
+    async setKelasEdit(value){
+        this.dataEditDetail.class_name = value.name;
+        this.removeCourseEdit();
+
+        let data = {};
+        data['name'] = value.class_name;
+
+        await this.getDataClassrooms(data);
+        await this.getDataCourses(this.kelasData)
+          .then(() =>{
+              let kelas = {};
+              if (value.class_name){
+                kelas = this.kelasData.find(data => data.name === value.class_name);
+                let course = this.courseData.find(data => data.id === kelas.course_id);
+
+                this.setCourseEdit(course);
+              }
+              else {
+                kelas = this.kelasData.find(data => data.name === value.name);
+              }
+              this.class_dataEdit = kelas;
+              this.dataEdit.class_id = kelas.id;
+
+              this.isKelasEditNotSelected = false;
+          })
+    },
+
+    async setCourseEdit(value){
+        this.dataEditDetail.course_name = value.name;
+        let data = this.courseData.find(data => data.id === value.id);
+        this.course_dataEdit = data;
+    },
+
+    removeKelasEdit(){
+        this.isKelasEditNotSelected = true;
+        this.class_dataEdit = "";
+        this.courseData = [];
+        this.removeCourseEdit();
+    },
+
+    removeCourseEdit(){
+        this.course_dataEdit = "";
+    },
+
+    getRoles(no_induk){
+        return (
+          api.getRoles(no_induk)
+            .then(response => {
+              if(response.data.data){
+                  this.role_data = response.data.data.roles
+              }
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        )
+    },
+
+    setRoles(role_data, dataEditRole){
+        if (role_data.includes("student") == false){
+            role_data.push("student");
+        }
+        role_data.forEach((element, index, array) => {
+            if (element == "student") {
+                dataEditRole.student = 1
+            }
+            if (element == "asprak") {
+                dataEditRole.asprak = 1
+            }
+            if (element == "aslab") {
+                dataEditRole.aslab = 1
+            }
+            if (element == "staff") {
+                dataEditRole.staff = 1
+            }
+            if (element == "laboran") {
+                dataEditRole.laboran = 1
+            }
+            if (element == "dosen") {
+                dataEditRole.dosen = 1
+            }
+        });
+    },
+
+    editRole(){
+        this.setRoles(this.role_data, this.dataEditRole);
+        return (
+          api.setRoles(this.dataEditRole)
+            .then(response => {
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
+              this.fetchData();
+            })
+            .catch(error => {
+              console.log(error)
+
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+              })
+            })
+        )
+    },
+
+    removeRole(value){
+        if (value == "student") {
+            this.role_data.push("student");
+        }
+    },
+
+    hideModal(){
+      this.$bvModal.hide('modal-edit');
     },
   }
 };
@@ -398,6 +613,15 @@ export default {
         <template v-slot:cell(action)="data">
           <a
             href="javascript:void(0);"
+            @click=onClickEdit(data)
+            class="mr-3 text-primary"
+            v-b-tooltip.hover
+            title="Edit"
+          >
+            <i class="mdi mdi-pencil font-size-18"></i>
+          </a>
+          <a
+            href="javascript:void(0);"
             @click=onClickDelete(data)
             class="text-danger"
             v-b-tooltip.hover
@@ -422,6 +646,123 @@ export default {
           </ul>
         </div>
       </div>
+    </div>
+    <div name="modalEdit">
+      <b-modal centered id="modal-edit" title="Edit Student" hide-footer title-class="font-18">
+        <div class="card">
+          <div class="card-body pt-0">
+            <b-tabs nav-class="nav-tabs-custom">
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Edit Data</a>
+                </template>
+                <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="setStudentClass">
+                        <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="nim">NIM</label>
+                                    <input 
+                                    style="background-color: #F0F4F6;"
+                                    :disabled="true"
+                                    v-model="dataEditDetail.nim"
+                                    id="nip" 
+                                    name="nip" 
+                                    type="number" 
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nim.$error }" />
+
+                                    <div
+                                    v-if="submitted && !$v.dataEdit.nim.required"
+                                    class="invalid-feedback"
+                                    >NIM is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                  <label class="control-label">Kelas Mata Kuliah</label>
+                                  <multiselect
+                                      v-model="class_dataEdit"
+                                      :options="namaKelasData"
+                                      label="name"
+                                      track-by="name"
+                                      @select="setKelasEdit"
+                                      @remove="removeKelasEdit"
+                                      :class="{ 'is-invalid': submitted && $v.dataEditDetail.class_name.$error }" 
+                                  ></multiselect>
+                                      <div
+                                      v-if="submitted && !$v.dataEditDetail.class_name.required"
+                                      class="invalid-feedback"
+                                      >Kelas Mata Kuliah is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                  <label class="control-label">Nama Mata Kuliah</label>
+                                  <multiselect
+                                      v-model="course_dataEdit"
+                                      :options="loadCourseData"
+                                      :disabled="isKelasEditNotSelected"
+                                      label="name"
+                                      track-by="name"
+                                      @select="setCourseEdit"
+                                      @remove="removeCourseEdit"
+                                      :class="{ 'is-invalid': submitted && $v.dataEditDetail.course_name.$error }" 
+                                  ></multiselect>
+                                      <div
+                                      v-if="submitted && !$v.dataEditDetail.course_name.required"
+                                      class="invalid-feedback"
+                                      >Nama Mata Kuliah is required.</div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Edit Roles</a>
+                  </template>
+                  <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
+                        <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Roles</label>
+                                    <multiselect
+                                        v-model="role_data"
+                                        :options="roleData"
+                                        :multiple="true"
+                                        @remove="removeRole"
+                                    ></multiselect>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+            </b-tabs>
+          </div>
+        </div>
+      </b-modal>
     </div>
   </div>
 </template>

@@ -11,7 +11,7 @@ export const api = {
     getAllStudentClasses,
     inputStudentClass,
     deleteStudentClass,
-    editStudentClass,
+    setStudentClass,
 
     //student
     getAllStudents,
@@ -90,10 +90,10 @@ function getAllStudentClasses(params) {
 function deleteStudentClass(id) {
     return httpAxios.delete(`/laboran/student/${id}`);
 }
-function editStudentClass(id, data){
+function setStudentClass(data){
     return httpAxios({
-        url: `/laboran/student/${id}`,
-        method: 'PUT',
+        url: '/laboran/student/classes',
+        method: 'POST',
         data: data
     })
 }
