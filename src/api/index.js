@@ -40,6 +40,10 @@ export const api = {
     deleteCourse,
     inputCourse,
     editCourse,
+
+    //roles
+    getRoles,
+    setRoles,
 };
 
 //auth
@@ -210,6 +214,18 @@ function editCourse(id, data){
     return httpAxios({
         url: `/course/${id}`,
         method: 'PUT',
+        data: data
+    })
+}
+
+//roles
+function getRoles(no_induk){
+    return httpAxios.get(`/laboran/role/${no_induk}`);
+}
+function setRoles(data){
+    return httpAxios({
+        url: '/laboran/role',
+        method: 'POST',
         data: data
     })
 }

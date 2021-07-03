@@ -75,7 +75,7 @@ export default {
     };
   },
   mounted() {
-      this.loadDataDropdown();
+      
   },
   computed: {
     notification() {

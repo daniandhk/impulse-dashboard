@@ -56,6 +56,20 @@ export default {
 
       religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
       genderData: ['male', 'female'],
+
+      //edit role
+      roleData: ['asprak', 'aslab'],
+      role_data: [],
+      dataEditRole: {
+          no_induk: "",
+          student: 0,
+          asprak: 0,
+          aslab: 0,
+          staff: 0,
+          laboran: 0,
+          dosen: 0,
+      },
+      main_role: "student",
     };
   },
   computed: {
@@ -211,11 +225,18 @@ export default {
     },
 
     onClickEdit(data){
+      //edit data
       this.idDataEdit = data.item.id;
       this.dataEdit.nim = data.item.nim;
       this.dataEdit.name = data.item.name;
       this.dataEdit.gender = data.item.gender;
       this.dataEdit.religion = data.item.religion;
+
+      //edit role
+      this.dataEditRole.no_induk = data.item.nim;
+      this.getRoles(this.dataEditRole.no_induk);
+      this.setRoles(this.role_data, this.dataEditRole);
+
       this.$bvModal.show('modal-edit');
     },
 
@@ -248,6 +269,77 @@ export default {
             })
         )
       }
+    },
+
+    getRoles(no_induk){
+        return (
+          api.getRoles(no_induk)
+            .then(response => {
+              if(response.data.data){
+                  this.role_data = response.data.data.roles
+              }
+            })
+            .catch(error => {
+              console.log(error)
+            })
+        )
+    },
+
+    setRoles(role_data, dataEditRole){
+        if (role_data.includes("student") == false){
+            role_data.push("student");
+        }
+        role_data.forEach((element, index, array) => {
+            if (element == "student") {
+                dataEditRole.student = 1
+            }
+            if (element == "asprak") {
+                dataEditRole.asprak = 1
+            }
+            if (element == "aslab") {
+                dataEditRole.aslab = 1
+            }
+            if (element == "staff") {
+                dataEditRole.staff = 1
+            }
+            if (element == "laboran") {
+                dataEditRole.laboran = 1
+            }
+            if (element == "dosen") {
+                dataEditRole.dosen = 1
+            }
+        });
+    },
+
+    editRole(){
+        this.setRoles(this.role_data, this.dataEditRole);
+        return (
+          api.setRoles(this.dataEditRole)
+            .then(response => {
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire("Edited!", this.dataEdit.nim + " has been edited.", "success");
+              this.fetchData();
+            })
+            .catch(error => {
+              console.log(error)
+
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire({
+                type: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+              })
+            })
+        )
+    },
+
+    removeRole(value){
+        if (value == "student") {
+            this.role_data.push("student");
+        }
     },
 
     hideModal(){
@@ -344,82 +436,129 @@ export default {
       </div>
     </div>
     <div name="modalEdit">
-      <b-modal centered id="modal-edit" title="Edit Course" hide-footer title-class="font-18">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStudent">
-          <div class="tab-pane" id="metadata">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nim">NIM</label>
-                    <input 
-                    style="background-color: #F0F4F6;"
-                    :disabled="true"
-                    v-model="dataEdit.nim"
-                    id="nip" 
-                    name="nip" 
-                    type="number" 
-                    class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.nim.$error }" />
+      <b-modal centered id="modal-edit" title="Edit Student" hide-footer title-class="font-18">
+        <div class="card">
+          <div class="card-body pt-0">
+            <b-tabs nav-class="nav-tabs-custom">
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Edit Data</a>
+                </template>
+                <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStudent">
+                        <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="nim">NIM</label>
+                                    <input 
+                                    style="background-color: #F0F4F6;"
+                                    :disabled="true"
+                                    v-model="dataEdit.nim"
+                                    id="nip" 
+                                    name="nip" 
+                                    type="number" 
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nim.$error }" />
 
-                    <div
-                    v-if="submitted && !$v.dataEdit.nim.required"
-                    class="invalid-feedback"
-                    >NIM is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nama">Nama Mahasiswa</label>
-                    <input 
-                    v-model="dataEdit.name"
-                    id="nama" 
-                    name="nama" 
-                    type="text" 
-                    class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
+                                    <div
+                                    v-if="submitted && !$v.dataEdit.nim.required"
+                                    class="invalid-feedback"
+                                    >NIM is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="nama">Nama Mahasiswa</label>
+                                    <input 
+                                    v-model="dataEdit.name"
+                                    id="nama" 
+                                    name="nama" 
+                                    type="text" 
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
 
-                    <div
-                    v-if="submitted && !$v.dataEdit.name.required"
-                    class="invalid-feedback"
-                    >Nama Dosen is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="control-label">Jenis Kelamin</label>
-                    <multiselect
-                        v-model="dataEdit.gender"
-                        :options="genderData"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.gender.$error }" 
-                    ></multiselect>
-                        <div
-                        v-if="submitted && !$v.dataEdit.gender.required"
-                        class="invalid-feedback"
-                        >Jenis Kelamin is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="control-label">Agama</label>
-                    <multiselect
-                        v-model="dataEdit.religion"
-                        :options="religionData"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.religion.$error }" 
-                    ></multiselect>
-                        <div
-                        v-if="submitted && !$v.dataEdit.religion.required"
-                        class="invalid-feedback"
-                        >Agama is required.</div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <button
-                type="submit"
-                class="btn btn-primary mr-2 waves-effect waves-light"
-                >Save Changes</button>
-                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-            </div>
+                                    <div
+                                    v-if="submitted && !$v.dataEdit.name.required"
+                                    class="invalid-feedback"
+                                    >Nama Dosen is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Jenis Kelamin</label>
+                                    <multiselect
+                                        v-model="dataEdit.gender"
+                                        :options="genderData"
+                                        :class="{ 'is-invalid': submitted && $v.dataEdit.gender.$error }" 
+                                    ></multiselect>
+                                        <div
+                                        v-if="submitted && !$v.dataEdit.gender.required"
+                                        class="invalid-feedback"
+                                        >Jenis Kelamin is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Agama</label>
+                                    <multiselect
+                                        v-model="dataEdit.religion"
+                                        :options="religionData"
+                                        :class="{ 'is-invalid': submitted && $v.dataEdit.religion.$error }" 
+                                    ></multiselect>
+                                        <div
+                                        v-if="submitted && !$v.dataEdit.religion.required"
+                                        class="invalid-feedback"
+                                        >Agama is required.</div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Edit Roles</a>
+                  </template>
+                  <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
+                        <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Roles</label>
+                                    <multiselect
+                                        v-model="role_data"
+                                        :options="roleData"
+                                        :multiple="true"
+                                        @remove="removeRole"
+                                    ></multiselect>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+            </b-tabs>
           </div>
-        </form>
+        </div>
+        
       </b-modal>
     </div>
   </div>
