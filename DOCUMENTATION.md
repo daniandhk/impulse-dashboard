@@ -92,3 +92,8 @@
 ## v21.07.03.00
 - Added edit role Student in Laboran
 - Added excel example
+
+## v21.07.03.01
+- Added edit Student Class (setStudentClass) in Laboran
+- !! API Edit Student Class (setStudentClass) not fixed
+- !! API Delete Student Class not fixed

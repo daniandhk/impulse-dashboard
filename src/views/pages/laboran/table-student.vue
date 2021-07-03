@@ -558,7 +558,6 @@ export default {
             </b-tabs>
           </div>
         </div>
-        
       </b-modal>
     </div>
   </div>
