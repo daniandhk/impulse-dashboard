@@ -71,3 +71,29 @@
 
 ## v21.05.06.02
 - Added course data in Laboran
+
+## PR 17 by Figo
+- Menu Kalender
+- Menu input jadwal
+
+## v21.07.02.00
+- Added Edit data Laboran
+- Added popup error input data Laboran
+- Added Classroom data
+
+## v21.07.02.01
+- Changed Student to Student Class in Laboran
+- Changed icon in Laboran
+
+## v21.07.02.02
+- Added filter student-class
+- Added Student Data Laboran
+
+## v21.07.03.00
+- Added edit role Student in Laboran
+- Added excel example
+
+## v21.07.03.01
+- Added edit Student Class (setStudentClass) in Laboran
+- !! API Edit Student Class (setStudentClass) not fixed
+- !! API Delete Student Class not fixed

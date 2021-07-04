@@ -42,9 +42,10 @@
       "text": "Laboran",
       "list": {
         "student": "Student Data",
+        "studentclass": "Student Class Data",
         "staff": "Staff Data",
         "course": "Course Data",
-        "class": "Class Data"
+        "classroom": "Classroom Data"
       }
     },
     "staff": {

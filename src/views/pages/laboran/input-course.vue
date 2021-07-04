@@ -65,10 +65,18 @@ export default {
                 })
                 .catch(error => {
                     //pop up
+                    this.submitted = false;
                     console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
+
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        footer: error
+                    })
                 })
           );
       }
@@ -162,11 +170,11 @@ export default {
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="fullname">Nama Mata Kuliah</label>
+                                <label for="nama">Nama Mata Kuliah</label>
                                 <input 
                                 v-model="dataCourse.name"
-                                id="fullname" 
-                                name="fullname" 
+                                id="nama" 
+                                name="nama" 
                                 type="text" 
                                 class="form-control"
                                 :class="{ 'is-invalid': submitted && $v.dataCourse.name.$error }" />

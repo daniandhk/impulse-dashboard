@@ -96,10 +96,18 @@ export default {
                 })
                 .catch(error => {
                     //pop up
+                    this.submitted = false;
                     console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
+
+                    Swal.fire({
+                        type: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        footer: error
+                    })
                 })
           );
       }
@@ -148,11 +156,17 @@ export default {
                             <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel:</p>
                             <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                                 - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
+                                - Pastikan hanya ada <b>satu sheet</b>,<br>
                                 - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
                             </p>
-                            <img src="@/assets/images/staff-excel-example.png" class="mb-4" style="box-sizing: border-box; 
+                            <img src="@/assets/images/staff-excel-example.png" style="box-sizing: border-box; 
                                                                                                     width: 25%; 
                                                                                                     margin: auto;"/>
+                            <div class="mb-4 mt-2">
+                                <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                                    Contoh file Excel: <a href="/files/staffdummy.xlsx" download>staffdummy.xlsx</a><br>
+                                </p>
+                            </div>
                             <!-- file upload -->
                             <vue-dropzone
                                 id="dropzone"
@@ -232,11 +246,11 @@ export default {
 
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label for="fullname">Nama Dosen</label>
+                                <label for="nama">Nama Dosen</label>
                                 <input 
                                 v-model="dataStaff.name"
-                                id="fullname" 
-                                name="fullname" 
+                                id="nama" 
+                                name="nama" 
                                 type="text" 
                                 class="form-control"
                                 :class="{ 'is-invalid': submitted && $v.dataStaff.name.$error }" />

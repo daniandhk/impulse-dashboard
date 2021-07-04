@@ -68,6 +68,14 @@ export default [
     },
 
     {
+        path: '/laboran/student-class',
+        name: 'laboran-studentclass',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/student-class')
+    },
+    {
         path: '/laboran/student',
         name: 'laboran-student',
         meta: {
@@ -92,8 +100,8 @@ export default [
         component: () => import('../views/pages/laboran/course')
     },
     {
-        path: '/laboran/class',
-        name: 'laboran-class',
+        path: '/laboran/classroom',
+        name: 'laboran-classroom',
         meta: {
             authRequired: true,
         },
