@@ -402,6 +402,11 @@ export const menuItems = [
                         id: 75,
                         label: 'menuitems.utility.list.error500',
                         link: '/pages/error-500'
+                    },
+                    {
+                        id: 75,
+                        label: 'menuitems.utility.list.aboutus',
+                        link: '/pages/about-us'
                     }
                 ]
             }
