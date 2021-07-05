@@ -140,10 +140,54 @@ export default [
         },
         component: () => import('../views/pages/student/nilai')
     },
-
+    {
+        path: '/praktikan/praktikum',
+        name: 'praktikan-praktikum',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/praktikum')
+    },
+    {
+        path: '/praktikan/jurnal',
+        name: 'praktikan-jurnal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/jurnal')
+    },
+    {
+        path: '/praktikan/tes_awal',
+        name: 'praktikan-tes_awal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/tes_awal')
+    },
+    {
+        path: '/praktikan/tes_akhir',
+        name: 'praktikan-tes_akhir',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/tes_akhir')
+    },
+    {
+        path: '/praktikan/pengaturan',      
+        name: 'praktikan-pengaturan',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/student/pengaturan')
+    },
     //ini paling bawah
     {
         path :'*',
         component: () => import('../views/pages/utility/error-404')
+    },
+    {
+        path :'about-us',
+        name: 'about-us',
+        component: () => import('../views/pages/utility/about-us')
     },
 ]

@@ -19,7 +19,7 @@ import { calendarEvents, categories } from "./data-calendar";
  */
 export default {
   page: {
-    title: "Kalender ",
+    title: "Jadwal Kalender ",
     meta: [{ name: "description" }],
   },
   components: { FullCalendar, Layout, PageHeader },
@@ -102,7 +102,6 @@ export default {
           end: this.newEventData.date,
           classNames: [category],
         });
-        this.successmsg();
         this.showModal = false;
         this.newEventData = {};
       }
@@ -185,15 +184,7 @@ export default {
     /**
      * Show successfull Save Dialog
      */
-    successmsg() {
-      Swal.fire({
-        position: "center",
-        icon: "success",
-        title: "Event has been saved",
-        showConfirmButton: false,
-        timer: 1000,
-      });
-    },
+   
   },
 };
 </script>
@@ -218,82 +209,18 @@ export default {
                         
                       </div>
                     </div>
-                    
-                      <b-modal
-                      v-model="showModal"
-                      title="Add New Event"
-                      title-class="text-black font-18"
-                      body-class="p-3"
-                      hide-footer
-                    >
-                      <form @submit.prevent="handleSubmit">
-                        <div class="row">
-                          <div class="col-12">
-                            <div class="form-group">
-                              <label for="name">Event Name</label>
-                              <input
-                                id="name"
-                                v-model="event.title"
-                                type="text"
-                                class="form-control"
-                                placeholder="Insert Event name"
-                                :class="{ 'is-invalid': submitted && $v.event.title.$error }"
-                              />
-                              <div
-                                v-if="submitted && !$v.event.title.required"
-                                class="invalid-feedback"
-                              >
-                                This value is required.
-                              </div>
-                            </div>
-                          </div>
-                          <div class="col-12">
-                            <div class="form-group">
-                              <label class="control-label">Category</label>
-                              <select
-                                v-model="event.category"
-                                class="form-control"
-                                name="category"
-                                :class="{ 'is-invalid': submitted && $v.event.category.errors }"
-                              >
-                                <option
-                                  v-for="option in categories"
-                                  :key="option.backgroundColor"
-                                  :value="`${option.value}`"
-                                >
-                                  {{ option.name }}
-                                </option>
-                              </select>
-                              <div
-                                v-if="submitted && !$v.event.category.required"
-                                class="invalid-feedback"
-                              >
-                                This value is required.
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div class="text-right pt-5 mt-3">
-                          <b-button variant="light" @click="hideModal">Close</b-button>
-                          <b-button type="submit" variant="success" class="ml-1"
-                            >Create event</b-button
-                          >
-                        </div>
-                      </form>
-                    </b-modal>
-
+                                                    
                     <!-- Edit Modal -->
                     <b-modal
                       v-model="eventModal"
-                      title="Edit Event"
+                      title="Kalender"
                       title-class="text-black font-18"
                       hide-footer
                       body-class="p-0"
                     >
                       <form @submit.prevent="editSubmit">
                         <div class="p-3">
-                          <label>Change event name</label>
+                          <label>Mata Kuliah</label>
                           <div class="input-group m-b-15">
                             <input
                               v-model="editevent.editTitle"
@@ -302,17 +229,19 @@ export default {
                             />
                             <span class="input-group-append">
                               <button type="submit" class="btn btn-success btn-md">
-                                <i class="fa fa-check"></i> Save
+                                <!-- <i class="fa "></i> Mulai Praktikum -->
+                                <router-link
+                                  tag="a"
+                                  to="/praktikan/praktikum"
+                                  class="font-weight-medium"
+                                  href="javascript:void(0);"
+                                  style="color: white;"
+                                >Mulai Praktikum</router-link>
                               </button>
                             </span>
                           </div>
                         </div>
-                        <div class="text-right p-3">
-                          <b-button variant="light" @click="closeModal">Close</b-button>
-                          <b-button class="ml-1" variant="danger" @click="deleteEvent"
-                            >Delete</b-button
-                          >
-                        </div>
+                        
                       </form>
                     </b-modal>
                   </Layout>

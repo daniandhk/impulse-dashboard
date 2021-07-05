@@ -9,6 +9,10 @@ import Swal from "sweetalert2";
  * Orders Component
  */
 export default {
+  page: {
+    title: "Jadwal Mata Kuliah",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     PageHeader,

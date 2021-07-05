@@ -257,4 +257,34 @@ export const praktikanItems = [
         icon: 'ri-bar-chart-grouped-fill',
         link: 'praktikan-nilai'
     },
+    // {
+    //     id: 8,
+    //     label: 'menuitems.praktikan.list.praktikum',
+    //     icon: ' ri-suitcase-line',
+    //     subItems: [
+    //         {
+    //             id: 9,
+    //             label: 'menuitems.praktikan.list.jurnal',
+    //             icon: 'ri-checkbox-blank-circle-line',
+    //             link: 'praktikan-jurnal'
+    //         },
+    //         {
+    //             id: 10,
+    //             label: 'menuitems.praktikan.list.tes_awal',
+    //             link: 'praktikan-tes_awal'
+    //         },
+    //         {
+    //             id: 11,
+    //             label: 'menuitems.praktikan.list.tes_akhir',
+    //             link: 'praktikan-tes_akhir'
+    //         }
+    //     ]
+    // },
+    {
+        id: 12,
+        label: 'menuitems.praktikan.list.pengaturan',
+        icon: 'ri-settings-2-line',
+        link: 'praktikan-pengaturan'
+    },
+    
 ]
