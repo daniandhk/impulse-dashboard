@@ -34,13 +34,10 @@ export default {
   <Layout>
     <PageHeader :title="title" :items="items" />
     <div class="row">
-      <div class="col-xl-6">
+      <div class="col-xl-4">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Username</h4>
-            <p class="card-title-desc">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. In, maxime?
-            </p>
+            <h4 class="card-title">Foto Profil</h4>
             <div class>
               <img src="@/assets/images/small/img-2.jpg" class="img-fluid" alt="Responsive image" />
             </div>
@@ -48,37 +45,32 @@ export default {
         </div>
       </div>
 
-      <div class="col-xl-6">
+      <div class="col-xl-8">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Username</h4>
-            <p class="card-title-desc">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. In, maxime?
-            </p>
+            <h4 class="card-title">Data Profil</h4>
             <div class>
               <form class="form-horizontal" role="form">
                   <b-form-group
-                    id="example text"
+                    id="Nama"
                     label-cols-sm="2"
                     label-cols-lg="2"
-                    label="Text"
-                    label-for="text"
+                    label="Nama"
+                    label-for="Nama"
                   >
-                    <b-form-input for="text" value="Artisanal kale"></b-form-input>
+                    <b-form-input for="Nama" value="Artisanal kale"></b-form-input>
                   </b-form-group>
 
                   <b-form-group
-                    id="example-search"
+                    id="nim"
                     label-cols-sm="2"
                     label-cols-lg="2"
-                    label="Search"
-                    label-for="search"
+                    label="Nim"
+                    label-for="nim"
                   >
                     <b-form-input
-                      id="search"
-                      value="How do I shoot web"
-                      type="search"
-                      name="search"
+                      id="nim"
+                      value="1301112112"
                     ></b-form-input>
                   </b-form-group>
 
@@ -93,16 +85,6 @@ export default {
                   </b-form-group>
 
                   <b-form-group
-                    id="example-url"
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="URL"
-                    label-for="url"
-                  >
-                    <b-form-input id="url" value="https://getbootstrap.com" type="url" name="url"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
                     id="example-tel"
                     label-cols-sm="2"
                     label-cols-lg="2"
@@ -110,16 +92,6 @@ export default {
                     label-for="tele"
                   >
                     <b-form-input id="tele" value="1-(555)-555-5555" type="tel" name="tel"></b-form-input>
-                  </b-form-group>
-
-                  <b-form-group
-                    id="example-password"
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Password"
-                    label-for="pwd"
-                  >
-                    <b-form-input id="pwd" type="password" value="hunter2"></b-form-input>
                   </b-form-group>
                 </form>
             </div>
