@@ -74,8 +74,13 @@
       "list": {
         "jadwal": "Jadwal",
         "nilai": "Nilai",
-        "kalender": "Kalender",
-        "matakuliah":"Mata Kuliah"
+        "kalender": "1. Kalender",
+        "matakuliah":"2. Mata Kuliah",
+        "praktikum":"Praktikum",
+        "pengaturan":"Pengaturan",
+        "jurnal":"1. Jurnal",
+        "tes_awal":"2. Tes Awal",
+        "tes_akhir":"3. Tes Akhir"
       }
     }
   }
