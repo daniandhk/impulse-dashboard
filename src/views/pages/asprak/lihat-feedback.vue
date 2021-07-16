@@ -9,20 +9,21 @@ import { tableData } from "./dataAdvancedtable";
  */
 export default {
   page: {
-    title: "Forms Elements",
+    title: "Lihat Feedback",
     meta: [{ name: "description", content: appConfig.description }]
   },
   components: { Layout, PageHeader },
   data() {
     return {
-      title: "Forms Elements",
+      tableData: tableData,
+      title: "Lihat Feedback",
       items: [
         {
-          text: "Forms",
+          text: "Feedback",
           href: "/"
         },
         {
-          text: "Forms Elements",
+          text: "Lihat Feedback",
           active: true
         }
       ],
@@ -38,12 +39,8 @@ export default {
       sortBy: "age",
       sortDesc: false,
       fields: [
-        { key: "name", sortable: true },
-        { key: "position", sortable: true },
-        { key: "office", sortable: true },
-        { key: "age", sortable: true },
-        { key: "date", sortable: true },
-        { key: "salary", sortable: true }
+        { key: "Modul", sortable: true },
+        { key: "Feedback", sortable: true },
       ]
     };
   },
@@ -79,20 +76,12 @@ export default {
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Textual inputs</h4>
-            <p class="card-title-desc">
-              Here are examples of
-              <code>.form-control</code> applied to each
-              textual HTML5
-              <code>&lt;input&gt;</code>
-              <code>type</code>.
-            </p>
-
+            <h4 class="card-title">Modul Praktikum</h4>
             <div class="row">
               <div class="col-12">
                 <form class="form-horizontal" role="form">
                   <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Select</label>
+                    <label class="col-md-2 col-form-label">Modul</label>
                     <div class="col-md-10">
                       <select class="form-control">
                         <option>Select</option>
@@ -113,11 +102,11 @@ export default {
     </div>
     <!-- end row -->
 
-    <div class="row">
+     <div class="row">
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Data Table</h4>
+            <h4 class="card-title">Feedback</h4>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
@@ -172,5 +161,7 @@ export default {
         </div>
       </div>
     </div>
+
+   
   </Layout>
 </template>
