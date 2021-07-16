@@ -227,6 +227,12 @@ export const asprakItems = [
             },
         ]
     },
+    {
+        id: 6,
+        label: 'menuitems.asprak.list.lihat-feedback',
+        icon: 'ri-calendar-todo-fill',
+        link: 'asprak-lihat-feedback'
+    },
 ]
 
 export const praktikanItems = [

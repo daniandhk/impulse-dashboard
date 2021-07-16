@@ -135,6 +135,15 @@ export default [
         component: () => import('../views/pages/asprak/input-jurnal')
     },
 
+    {
+        path: '/asprak/lihat-feedback',
+        name: 'asprak-lihat-feedback',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/lihat-feedback')
+    },
+
     //path praktikan
     {
         path: '/praktikan/jadwal',
