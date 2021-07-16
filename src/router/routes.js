@@ -51,6 +51,14 @@ export default [
         },
     },
     {
+        path: '/profile',
+        name: 'profile',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/auth/profile')
+    },
+    {
         path: '/',
         name: 'home',
         meta: {
@@ -58,6 +66,7 @@ export default [
         },
         component: () => import('../views/pages/dashboard/index')
     },
+
     {
         path: '/laboran/student-class',
         name: 'laboran-studentclass',
@@ -115,6 +124,35 @@ export default [
         },
         component: () => import('../views/pages/aslab/input-jadwal')
     },
+
+    //path asprak
+    {
+        path: '/asprak/input-jurnal',
+        name: 'asprak-input-jurnal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/input-jurnal')
+    },
+
+    {
+        path: '/asprak/lihat-feedback',
+        name: 'asprak-lihat-feedback',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/lihat-feedback')
+    },
+
+    {
+        path: '/asprak/absensi-asprak',
+        name: 'asprak-absensi-asprak',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/absensi-asprak')
+    },
+
     //path praktikan
     {
         path: '/praktikan/jadwal',

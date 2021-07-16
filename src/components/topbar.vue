@@ -274,7 +274,7 @@ export default {
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
           </template>
           <!-- item-->
-          <a class="dropdown-item" href="#">
+          <a class="dropdown-item" href="/profile">
             <i class="ri-user-line align-middle mr-1"></i>
             Profile
           </a>
