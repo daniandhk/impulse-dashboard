@@ -218,7 +218,7 @@ export const asprakItems = [
     {
         id: 4,
         label: 'menuitems.asprak.list.input-soal',
-        icon: 'ri-calendar-todo-fill',
+        icon: 'ri-profile-line',
         subItems: [
             {
                 id: 5,
@@ -230,8 +230,14 @@ export const asprakItems = [
     {
         id: 6,
         label: 'menuitems.asprak.list.lihat-feedback',
-        icon: 'ri-calendar-todo-fill',
+        icon: 'ri-chat-1-line',
         link: 'asprak-lihat-feedback'
+    },
+    {
+        id: 7,
+        label: 'menuitems.asprak.list.absensi-asprak',
+        icon: 'ri-account-circle-line',
+        link: 'asprak-absensi-asprak'
     },
 ]
 

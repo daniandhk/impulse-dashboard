@@ -3,7 +3,7 @@ import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
 
-import { tableData } from "./data-feedback";
+import { tableData } from "./data-absen";
 /**
  * Form-element component
  */
@@ -16,14 +16,14 @@ export default {
   data() {
     return {
       tableData: tableData,
-      title: "Lihat Feedback",
+      title: "Absensi Asprak",
       items: [
         {
-          text: "Feedback",
+          text: "Absensi",
           href: "/"
         },
         {
-          text: "Lihat Feedback",
+          text: "Absensi Asprak",
           active: true
         }
       ],
@@ -39,8 +39,12 @@ export default {
       sortBy: "age",
       sortDesc: false,
       fields: [
+        { key: "Nama", sortable: true },
+        { key: "Kelas", sortable: true },
         { key: "Modul", sortable: true },
-        { key: "Feedback", sortable: true },
+        { key: "Tanggal_Absen", sortable: true },
+        { key: "Jam_Absen", sortable: true },
+        { key: "Tipe_Jaga", sortable: true },
       ]
     };
   },
@@ -76,7 +80,7 @@ export default {
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Modul Praktikum</h4>
+            <h4 class="card-title">Input Absen</h4>
             <div class="row">
               <div class="col-12">
                 <form class="form-horizontal" role="form">
@@ -91,6 +95,31 @@ export default {
                     </div>
                   </div>
                 </form>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Kelas</label>
+                    <div class="col-md-10">
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>Large select</option>
+                        <option>Small select</option>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+                <form class="form-horizontal" role="form">
+                  <div class="form-group row">
+                    <label class="col-md-2 col-form-label">Tipe Jaga</label>
+                    <div class="col-md-10">
+                      <select class="form-control">
+                        <option>Select</option>
+                        <option>Large select</option>
+                        <option>Small select</option>
+                      </select>
+                    </div>
+                  </div>
+                </form>
+                <b-button variant="success">Absen</b-button>
               </div>
             </div>
             <!-- end row -->
@@ -106,7 +135,7 @@ export default {
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Feedback</h4>
+            <h4 class="card-title">Data Absensi</h4>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">

@@ -144,6 +144,15 @@ export default [
         component: () => import('../views/pages/asprak/lihat-feedback')
     },
 
+    {
+        path: '/asprak/absensi-asprak',
+        name: 'asprak-absensi-asprak',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/absensi-asprak')
+    },
+
     //path praktikan
     {
         path: '/praktikan/jadwal',
