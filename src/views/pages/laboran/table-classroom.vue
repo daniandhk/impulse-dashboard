@@ -3,20 +3,17 @@ import { notificationMethods } from "@/state/helpers";
 import { api } from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
-import Multiselect from "vue-multiselect";
 
 /**
  * Orders Component
  */
 export default {
   components: {
-      Multiselect,
+    //
   },
   validations: {
     dataEdit: {
       name: { required },
-      staff_id: { required },
-      course_id: { required },
       academic_year: { required },
       semester: { required },
     },
@@ -39,10 +36,6 @@ export default {
       sortDesc: false,
       fields: [
         { key: "name", sortable: true, label: "Nama Kelas" },
-        { key: "course_data.code", sortable: true, label: "Kode MK" },
-        { key: "course_data.name", sortable: true, label: "Nama MK" },
-        { key: "staff_data.code", sortable: true, label: "Kode Dosen" },
-        { key: "staff_data.name", sortable: true, label: "Nama Dosen" },
         { key: "semester", sortable: true, label: "Semester" },
         { key: "academic_year", sortable: true, label: "Tahun Akademik" },
         { key: "action", sortable: false }
@@ -52,24 +45,10 @@ export default {
       idDataEdit: "",
       dataEdit: { 
           name: "",
-          staff_id: "", 
-          course_id: "",
           academic_year: "", 
           semester: "",
           },
       submitted: false,
-      dataDetail: {
-          staff_name: "",
-          course_name: "",
-      },
-
-      //dropdown list data
-      staffData: [],
-      courseData: [],
-
-      //v-model dropdown value = array of objects
-      staff_data: "",
-      course_data: "",
     };
   },
   computed: {
@@ -157,35 +136,6 @@ export default {
       )
     },
 
-    async setData(data){
-      return new Promise((resolve, reject) => {
-        data.forEach((element, index, array) => {
-            this.getStaff(element.staff_id);
-            element.staff_data = this.staff_data;
-
-            this.getCourse(element.course_id);
-            element.course_data = this.course_data;
-
-            if (index === array.length -1) resolve();
-        });
-        this.staff_data = "";
-        this.course_data = "";
-      })
-      .catch(error => {
-          console.log(error)
-      });
-    },
-
-    getStaff(id){
-      let data = this.staffData.find(data => data.id === id);
-      this.staff_data = data;
-    },
-
-    getCourse(id){
-      let data = this.courseData.find(data => data.id === id);
-      this.course_data = data;
-    },
-
     handlePageChange(value) {
       this.currentPage = value;
       this.fetchData();
@@ -260,16 +210,8 @@ export default {
     onClickEdit(data){
       this.idDataEdit = data.item.id;
       this.dataEdit.name = data.item.name;
-      this.dataEdit.staff_id = data.item.staff_id;
-      this.dataEdit.course_id = data.item.course_id;
       this.dataEdit.academic_year = data.item.academic_year;
       this.dataEdit.semester = data.item.semester;
-
-      this.staff_data = data.item.staff_data;
-      this.course_data = data.item.course_data;
-
-      this.dataDetail.staff_name = data.item.staff_data.name;
-      this.dataDetail.course_name = data.item.course_data.name;
 
       this.$bvModal.show('modal-edit');
     },
@@ -307,61 +249,6 @@ export default {
 
     hideModal(){
       this.$bvModal.hide('modal-edit');
-    },
-
-    getStaffDatas(){
-        return (
-            api.getListStaffs()
-            .then(response => {
-                if(response.data.staffs){
-                    this.staffData = response.data.staffs;
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            })
-        )
-    },
-
-    getCourseDatas(){
-        return (
-            api.getListCourses()
-            .then(response => {
-                if(response.data.courses){
-                    this.courseData = response.data.courses;
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            })
-        )
-    },
-
-    loadDataDropdown(){
-        this.getStaffDatas();
-        this.getCourseDatas();
-    },
-
-    setStaff(value){
-        this.dataEdit.staff_id = value.id;
-        this.dataDetail.staff_name = value.name;
-    },
-
-    removeStaff(){
-        this.dataEdit.staff_id = "";
-        this.dataDetail.staff_name = "";
-        this.staff_data = "";
-    },
-
-    setCourse(value){
-        this.dataEdit.course_id = value.id;
-        this.dataDetail.course_name = value.name;
-    },
-
-    removeCourse(){
-        this.dataEdit.course_id = "";
-        this.dataDetail.course_name = "";
-        this.course_data = "";
     },
   }
 };
@@ -509,68 +396,6 @@ export default {
                     v-if="submitted && !$v.dataEdit.academic_year.required"
                     class="invalid-feedback"
                     >Tahun Akademik is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="control-label">Mata Kuliah</label>
-                    <multiselect
-                        v-model="course_data"
-                        :options="courseData"
-                        label="code"
-                        track-by="id"
-                        @select="setCourse"
-                        @remove="removeCourse"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.course_id.$error }" 
-                    ></multiselect>
-                    <div
-                    v-if="submitted && !$v.dataEdit.course_id.required"
-                    class="invalid-feedback"
-                    >Mata Kuliah is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="course_name">Nama Mata Kuliah</label>
-                    <input 
-                    :disabled="true"
-                    style="background-color: #F0F4F6;"
-                    v-model="dataDetail.course_name"
-                    id="course_name" 
-                    name="course_name" 
-                    type="text"
-                    class="form-control"/>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label class="control-label">Dosen</label>
-                    <multiselect
-                        v-model="staff_data"
-                        :options="staffData"
-                        label="code"
-                        track-by="id"
-                        @select="setStaff"
-                        @remove="removeStaff"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.staff_id.$error }" 
-                    ></multiselect>
-                    <div
-                    v-if="submitted && !$v.dataEdit.staff_id.required"
-                    class="invalid-feedback"
-                    >Dosen is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="staff_name">Nama Dosen</label>
-                    <input 
-                    :disabled="true"
-                    style="background-color: #F0F4F6;"
-                    v-model="dataDetail.staff_name"
-                    id="staff_name" 
-                    name="staff_name" 
-                    type="text"
-                    class="form-control"/>
                 </div>
             </div>
             <div class="text-center mt-4">
