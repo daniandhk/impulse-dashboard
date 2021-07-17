@@ -98,6 +98,18 @@ export default [
         },
         component: () => import('../views/pages/laboran/classroom')
     },
+    
+    //path temp
+    {
+        path: '/temp/create-test',
+        name: 'create-test',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/temp/create-test')
+    },
+
+    //aslab
     {
         path: '/aslab/jadwal',
         name: 'aslab-jadwal',
@@ -115,6 +127,7 @@ export default [
         },
         component: () => import('../views/pages/aslab/input-jadwal')
     },
+
     //path praktikan
     {
         path: '/praktikan/jadwal',
@@ -180,6 +193,7 @@ export default [
         },
         component: () => import('../views/pages/student/pengaturan')
     },
+
     //ini paling bawah
     {
         path :'*',

@@ -93,6 +93,11 @@
 - Added edit role Student in Laboran
 - Added excel example
 
+## v21.07.03.01
+- Added edit Student Class (setStudentClass) in Laboran
+- !! API Edit Student Class (setStudentClass) not fixed
+- !! API Delete Student Class not fixed
+
 ## Edgar Commited to Main
 ## v21.07.05.01
 - Added footer about Impulse
@@ -104,5 +109,3 @@
 - Added Page Tes Akhir (blank)
 - Include Mulai praktikum di klik di page Jadwal Kalender, pilih hari lalu Mulai Praktikum
 - PDF Viewer (blank)
-
-## v21.07.03.02
