@@ -237,6 +237,30 @@ export const asprakItems = [
         label: "menuitems.asprak.text",
         isTitle: true
     },
+    {
+        id: 4,
+        label: 'menuitems.asprak.list.input-soal',
+        icon: 'ri-profile-line',
+        subItems: [
+            {
+                id: 5,
+                label: 'menuitems.asprak.list.input-jurnal',
+                link: 'asprak-input-jurnal'
+            },
+        ]
+    },
+    {
+        id: 6,
+        label: 'menuitems.asprak.list.lihat-feedback',
+        icon: 'ri-chat-1-line',
+        link: 'asprak-lihat-feedback'
+    },
+    {
+        id: 7,
+        label: 'menuitems.asprak.list.absensi-asprak',
+        icon: 'ri-account-circle-line',
+        link: 'asprak-absensi-asprak'
+    },
 ]
 
 export const praktikanItems = [
