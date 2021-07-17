@@ -73,7 +73,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/student-class')
+        component: () => import('../views/pages/laboran/student-class/student-class')
     },
     {
         path: '/laboran/student',
@@ -81,7 +81,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/student')
+        component: () => import('../views/pages/laboran/student/student')
     },
     {
         path: '/laboran/staff',
@@ -89,7 +89,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/staff')
+        component: () => import('../views/pages/laboran/staff/staff')
     },
     {
         path: '/laboran/course',
@@ -97,7 +97,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/course')
+        component: () => import('../views/pages/laboran/course/course')
     },
     {
         path: '/laboran/classroom',
@@ -105,7 +105,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/classroom')
+        component: () => import('../views/pages/laboran/classroom/classroom')
     },
     
     //path temp
