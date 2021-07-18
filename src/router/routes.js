@@ -67,6 +67,7 @@ export default [
         component: () => import('../views/pages/dashboard/index')
     },
 
+    //laboran
     {
         path: '/laboran/student-class',
         name: 'laboran-studentclass',
@@ -106,6 +107,14 @@ export default [
             authRequired: true,
         },
         component: () => import('../views/pages/laboran/classroom/classroom')
+    },
+    {
+        path: '/laboran/class-course',
+        name: 'laboran-classcourse',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/class-course/class-course')
     },
     
     //path temp
@@ -237,7 +246,7 @@ export default [
         component: () => import('../views/pages/utility/error-404')
     },
     {
-        path :'about-us',
+        path :'/about-us',
         name: 'about-us',
         component: () => import('../views/pages/utility/about-us')
     },

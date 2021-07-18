@@ -41,6 +41,12 @@ export const api = {
     inputCourse,
     editCourse,
 
+    //class-course
+    getAllClassCourses,
+    deleteClassCourse,
+    inputClassCourse,
+    getClassCourseStaffYear,
+
     //roles
     getRoles,
     setRoles,
@@ -216,6 +222,24 @@ function editCourse(id, data){
         method: 'PUT',
         data: data
     })
+}
+
+//class-course
+function getAllClassCourses(params) {
+    return httpAxios.get('/laboran/class-course', { params })
+}
+function deleteClassCourse(id) {
+    return httpAxios.delete(`/laboran/class-course/${id}`);
+}
+function inputClassCourse(data){
+    return httpAxios({
+        url: '/laboran/class-course',
+        method: 'POST',
+        data: data
+    })
+}
+function getClassCourseStaffYear() {
+    return httpAxios.get('/laboran/dropdown/classcoursestaffyear')
 }
 
 //roles
