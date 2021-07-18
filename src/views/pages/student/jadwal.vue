@@ -231,7 +231,6 @@ export default {
                               <button type="submit" class="btn btn-success btn-md">
                                 <!-- <i class="fa "></i> Mulai Praktikum -->
                                 <router-link
-                                  tag="a"
                                   to="/praktikan/praktikum"
                                   class="font-weight-medium"
                                   href="javascript:void(0);"

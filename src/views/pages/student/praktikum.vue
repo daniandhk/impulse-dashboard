@@ -164,7 +164,6 @@ export default {
                   <h5 class="text-left font-size-15 text-uppercase mt-4"> </h5>
                 <button type="submit" class="btn btn-success" >
                   <router-link
-                                  tag="a"
                                   to="/praktikan/tes_awal"
                                   class="font-weight-medium"
                                   href="javascript:void(0);"
@@ -203,7 +202,6 @@ export default {
                   <h5 class="text-left font-size-15 text-uppercase mt-4"> </h5>
                 <button type="submit" class="btn btn-success" >
                   <router-link
-                                  tag="a"
                                   to="/praktikan/jurnal"
                                   class="font-weight-medium"
                                   href="javascript:void(0);"
@@ -241,7 +239,6 @@ export default {
                   <h5 class="text-left font-size-15 text-uppercase mt-4"> </h5>
                 <button type="submit" class="btn btn-success" >
                   <router-link
-                                  tag="a"
                                   to="/praktikan/tes_akhir"
                                   class="font-weight-medium"
                                   href="javascript:void(0);"
