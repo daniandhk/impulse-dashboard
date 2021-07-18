@@ -96,7 +96,6 @@ export default {
           <ul class="navbar-nav">
             <li class="nav-item dropdown" v-for="(item, index) of menuItems" :key="index">
               <router-link
-                tag="a"
                 v-if="!item.subItems"
                 :to="item.link"
                 class="nav-link dropdown-toggle arrow-none"

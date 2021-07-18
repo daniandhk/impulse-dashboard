@@ -118,7 +118,6 @@ export default {
                         <p>
                           Don't have an account ?
                           <router-link
-                            tag="a"
                             to="/register"
                             class="font-weight-medium text-primary"
                           >Register</router-link>

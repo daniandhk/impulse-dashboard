@@ -13,7 +13,6 @@
               About Impulse
             </a> -->
             <router-link
-                            tag="a"
                             to="about-us"
                             class="font-weight-medium"
                             href="javascript:void(0);"
