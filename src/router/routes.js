@@ -67,13 +67,14 @@ export default [
         component: () => import('../views/pages/dashboard/index')
     },
 
+    //laboran
     {
         path: '/laboran/student-class',
         name: 'laboran-studentclass',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/student-class')
+        component: () => import('../views/pages/laboran/student-class/student-class')
     },
     {
         path: '/laboran/student',
@@ -81,7 +82,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/student')
+        component: () => import('../views/pages/laboran/student/student')
     },
     {
         path: '/laboran/staff',
@@ -89,7 +90,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/staff')
+        component: () => import('../views/pages/laboran/staff/staff')
     },
     {
         path: '/laboran/course',
@@ -97,7 +98,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/course')
+        component: () => import('../views/pages/laboran/course/course')
     },
     {
         path: '/laboran/classroom',
@@ -105,7 +106,15 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/laboran/classroom')
+        component: () => import('../views/pages/laboran/classroom/classroom')
+    },
+    {
+        path: '/laboran/class-course',
+        name: 'laboran-classcourse',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/class-course/class-course')
     },
     
     //path temp
@@ -237,7 +246,7 @@ export default [
         component: () => import('../views/pages/utility/error-404')
     },
     {
-        path :'about-us',
+        path :'/about-us',
         name: 'about-us',
         component: () => import('../views/pages/utility/about-us')
     },
