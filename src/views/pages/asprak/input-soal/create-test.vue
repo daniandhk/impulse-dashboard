@@ -19,7 +19,8 @@ export default {
         meta: [{ name: "description", content: appConfig.description }],
         items: [
             {
-            text: "Temp"
+            text: "Input Soal"
+
             },
             {
             text: "Create Test",
@@ -38,6 +39,11 @@ export default {
         isPretestSelected: false,
         isJurnalSelected: false,
         isPosttestSelected: false,
+
+        selected_soal: "",
+        soal_types: ["Mutiple Choice", "Essay"],
+        isMutiplechoiceSelected: false,
+        isEssaySelected: false,
 
         dataTest: {
             test: {
@@ -69,6 +75,20 @@ export default {
           }
           
       },
+
+       selectTypeSoal(value){
+          console.log(value)
+          if (value == "Mutiple Choice") {
+            this.isMutiplechoiceSelected = true;
+            this.isJurnalSelected = false;
+          } 
+          else if (value == "Essay") {
+            this.isEssaySelected = true;
+            this.isMutiplechoiceSelected = false;
+          }
+          
+      },
+
       removeType(){
           this.isPretestSelected = false;
           this.isJurnalSelected = false;
@@ -152,102 +172,166 @@ export default {
                     </div>
                 </div>
                 <div v-if="isPretestSelected || isPosttestSelected" class="mb-4">
-                    <h4 class="card-title">Multiple Choices</h4>
-                    <div class="col-sm-12" v-for="(question, index) in dataTest.question" :key="index">
-                        <div class="row">
-                            <div class="text-center col-sm-1">
-                                <b-button 
-                                class="m-1"
-                                style="min-width: 75px;" 
-                                variant="outline-secondary"
-                                >{{index+1}}
-                                </b-button>
-                                <b-button 
-                                class="m-1" 
-                                size="sm" 
-                                style="min-width: 75px;" 
-                                variant="danger"
-                                v-on:click="removeMultiple(dataTest.question, index)"
-                                >remove
-                                </b-button>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-sm-12">
+                                <div class="form-group mt-3">
+                                    <multiselect
+                                        class="text-center"
+                                        placeholder="Test Type"
+                                        v-model="selected_soal"
+                                        :options="soal_types"
+                                        @select="selectTypeSoal"
+                                    ></multiselect>
+                                </div>
                             </div>
-                            <div class="card col-sm-11 mt-1">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <label for="text">Pertanyaan</label>
-                                            <div class="form-group">
-                                                <textarea
-                                                rows=2 
-                                                v-model="question.text"
-                                                id="text" 
-                                                name="text" 
-                                                type="text" 
-                                                class="form-control"
-                                                placeholder="Masukkan pertanyaan disini"
-                                                />
+                        </div>
+                    </div>
+                    <div v-if="isMutiplechoiceSelected" class="mb-4">
+                        <h4 class="card-title">Multiple Choices</h4>
+                        <div class="col-sm-12" v-for="(question, index) in dataTest.question" :key="index">
+                            <div class="row">
+                                <div class="text-center col-sm-1">
+                                    <b-button 
+                                    class="m-1"
+                                    style="min-width: 75px;" 
+                                    variant="outline-secondary"
+                                    >{{index+1}}
+                                    </b-button>
+                                    <b-button 
+                                    class="m-1" 
+                                    size="sm" 
+                                    style="min-width: 75px;" 
+                                    variant="danger"
+                                    v-on:click="removeMultiple(dataTest.question, index)"
+                                    >remove
+                                    </b-button>
+                                </div>
+                                <div class="card col-sm-11 mt-1">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label for="text">Pertanyaan</label>
+                                                <div class="form-group">
+                                                    <textarea
+                                                    rows=2 
+                                                    v-model="question.text"
+                                                    id="text" 
+                                                    name="text" 
+                                                    type="text" 
+                                                    class="form-control"
+                                                    placeholder="Masukkan pertanyaan disini"
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-12">
-                                            <label for="text">Jawaban Benar: {{printCorrectAnswers(question)}}</label>
-                                            <hr class="m-4">
-                                        </div>
-                                        <div class="col col-sm-12">
-                                            <div class="row">
-                                                <label class="col-9">Pilihan</label>
-                                                <label class="col-3 text-right">Jawaban</label>
+                                            <div class="col-12">
+                                                <label for="text">Jawaban Benar: {{printCorrectAnswers(question)}}</label>
+                                                <hr class="m-4">
                                             </div>
-                                            <div v-for="(answer, index) in question.answers" :key="index">
-                                                <div class="row mb-2">
-                                                    <div class="col-sm-1 col-md-2 col-lg-1 text-center">
-                                                        <b-button 
-                                                        size="sm" 
-                                                        class="mt-1 mr-1" 
-                                                        style="min-width: 75px;" 
-                                                        variant="light"
-                                                        >{{String.fromCharCode(index+1 + 64)}}
-                                                        </b-button>
-                                                        <b-button
-                                                        v-if="index != 0 && index != 1"
-                                                        size="sm" 
-                                                        class="mt-1 mr-1" 
-                                                        style="min-width: 75px;" 
-                                                        variant="danger"
-                                                        v-on:click="removeAnswer(question, index)"
-                                                        >remove
-                                                        </b-button>
-                                                    </div>
-                                                    <div class="col-sm-10 col-md-9 col-lg-10 mt-1">
-                                                        <div class="form-group">
-                                                            <textarea
-                                                            rows=2 
-                                                            v-model="answer.answer"
-                                                            id="text" 
-                                                            name="text" 
-                                                            type="text" 
-                                                            class="form-control"
-                                                            placeholder="Masukkan jawaban disini"
-                                                            />
+                                            <div class="col col-sm-12">
+                                                <div class="row">
+                                                    <label class="col-9">Pilihan</label>
+                                                    <label class="col-3 text-right">Jawaban</label>
+                                                </div>
+                                                <div v-for="(answer, index) in question.answers" :key="index">
+                                                    <div class="row mb-2">
+                                                        <div class="col-sm-1 col-md-2 col-lg-1 text-center">
+                                                            <b-button 
+                                                            size="sm" 
+                                                            class="mt-1 mr-1" 
+                                                            style="min-width: 75px;" 
+                                                            variant="light"
+                                                            >{{String.fromCharCode(index+1 + 64)}}
+                                                            </b-button>
+                                                            <b-button
+                                                            v-if="index != 0 && index != 1"
+                                                            size="sm" 
+                                                            class="mt-1 mr-1" 
+                                                            style="min-width: 75px;" 
+                                                            variant="danger"
+                                                            v-on:click="removeAnswer(question, index)"
+                                                            >remove
+                                                            </b-button>
+                                                        </div>
+                                                        <div class="col-sm-10 col-md-9 col-lg-10 mt-1">
+                                                            <div class="form-group">
+                                                                <textarea
+                                                                rows=2 
+                                                                v-model="answer.answer"
+                                                                id="text" 
+                                                                name="text" 
+                                                                type="text" 
+                                                                class="form-control"
+                                                                placeholder="Masukkan jawaban disini"
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-1 col-md-1 col-lg-1 mt-1 text-right">
+                                                            <input class="form-check-input" type="checkbox" v-model="answer.is_answer" id="defaultCheck1" />
+                                                            <label for="checkbox" style="min-width: 35px;">{{answer.is_answer}}</label>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-1 col-md-1 col-lg-1 mt-1 text-right">
-                                                        <input class="form-check-input" type="checkbox" v-model="answer.is_answer" id="defaultCheck1" />
-                                                        <label for="checkbox" style="min-width: 35px;">{{answer.is_answer}}</label>
-                                                    </div>
+                                                    <hr>
                                                 </div>
-                                                <hr>
-                                            </div>
-                                            <div class="text-left">
-                                                <b-button v-on:click="addAnswer(question)" size=sm variant="secondary">Tambah Pilihan</b-button>
+                                                <div class="text-left">
+                                                    <b-button v-on:click="addAnswer(question)" size=sm variant="secondary">Tambah Pilihan</b-button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        <div class="text-center">
+                            <b-button v-on:click="addMultiple(dataTest.question)" variant="secondary">Tambah Soal</b-button>
+                        </div>
                     </div>
-                    <div class="text-center">
-                        <b-button v-on:click="addMultiple(dataTest.question)" variant="secondary">Tambah Soal</b-button>
+                    <div  v-if="isEssaySelected" class="mb-4">
+                        <h4 class="card-title">Essay</h4>
+                        <div class="col-sm-12" v-for="(question, index) in dataTest.question" :key="index">
+                            <div class="row">
+                                <div class="text-center col-sm-1">
+                                    <b-button 
+                                    class="m-1"
+                                    style="min-width: 75px;" 
+                                    variant="outline-secondary"
+                                    >{{index+1}}
+                                    </b-button>
+                                    <b-button 
+                                    class="m-1" 
+                                    size="sm" 
+                                    style="min-width: 75px;" 
+                                    variant="danger"
+                                    v-on:click="removeMultiple(dataTest.question, index)"
+                                    >remove
+                                    </b-button>
+                                </div>
+                                <div class="card col-sm-11 mt-1">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-12">
+                                                <label for="text">Pertanyaan</label>
+                                                <div class="form-group">
+                                                    <textarea
+                                                    rows=2 
+                                                    v-model="question.text"
+                                                    id="text" 
+                                                    name="text" 
+                                                    type="text" 
+                                                    class="form-control"
+                                                    placeholder="Masukkan pertanyaan disini"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <b-button v-on:click="addMultiple(dataTest.question)" variant="secondary">Tambah Soal</b-button>
+                        </div>
+
                     </div>
                 </div>
                 <div v-if="isJurnalSelected" class="mb-4">

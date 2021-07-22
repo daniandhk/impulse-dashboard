@@ -94,13 +94,14 @@ export default {
                     </div>
                   </div>
                 </form>
-                <b-button type="submit" variant="success"><router-link
-                                  to="/input-soal/create-test"
-                                  class="font-weight-medium"
-                                  href="javascript:void(0);"
-                                  style="color: white;"
-                                >Input soal</router-link>
-                </b-button>
+                <div class="text-center">
+                  <b-button type="submit" variant="success"><router-link
+                                    to="/input-soal/create-test"
+                                    class="font-weight-medium"
+                                    style="color: white;"
+                                  >Input soal</router-link>
+                  </b-button>
+                </div>
               </div>
             </div>
             <!-- end row -->
