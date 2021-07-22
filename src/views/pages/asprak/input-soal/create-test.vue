@@ -112,6 +112,15 @@ export default {
           }
           questions.push(data)
       },
+
+      addEssay: function (questions) {
+          let data = {
+            text: "",
+            type: "essay",
+          }
+          questions.push(data)
+      }, 
+
       removeMultiple: function (questions, index) {
           Vue.delete(questions, index);
       },
@@ -329,7 +338,7 @@ export default {
                             </div>
                         </div>
                         <div class="text-center">
-                            <b-button v-on:click="addMultiple(dataTest.question)" variant="secondary">Tambah Soal</b-button>
+                            <b-button v-on:click="addEssay(dataTest.question)" variant="secondary">Tambah Soal</b-button>
                         </div>
 
                     </div>
