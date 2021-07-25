@@ -175,12 +175,21 @@ export default [
     },
 
     {
-        path: '/asprak/absensi-asprak',
+        path: '/absen/absensi-asprak',
         name: 'asprak-absensi-asprak',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/asprak/absensi-asprak')
+        component: () => import('../views/pages/asprak/absen/absensi-asprak')
+    },
+
+    {
+        path: '/absen/berita-acara',
+        name: 'berita-acara-asprak',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/absen/berita-acara')
     },
 
     //path praktikan
