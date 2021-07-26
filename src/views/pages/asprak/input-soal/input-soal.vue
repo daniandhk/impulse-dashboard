@@ -8,7 +8,7 @@ import appConfig from "@/app.config";
  */
 export default {
   page: {
-    title: "Lihat Feedback",
+    title: "Input Soal",
     meta: [{ name: "description", content: appConfig.description }]
   },
   components: { Layout, PageHeader },
