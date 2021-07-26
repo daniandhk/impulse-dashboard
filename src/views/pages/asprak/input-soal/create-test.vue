@@ -56,104 +56,114 @@ export default {
     };
   },
   methods: {
-      selectType(value){
-          console.log(value)
-          if (value == "Pretest") {
-            this.isPretestSelected = true;
-            this.isJurnalSelected = false;
-            this.isPosttestSelected = false;
-          } 
-          else if (value == "Jurnal") {
-            this.isJurnalSelected = true;
-            this.isPretestSelected = false;
-            this.isPosttestSelected = false;
-          }
-          else if (value == "Posttest") {
-            this.isPosttestSelected = true;
-            this.isPretestSelected = false;
-            this.isJurnalSelected = false;
-          }
-          
-      },
+        selectType(value){
+            console.log(value)
+            if (value == "Pretest") {
+                this.isPretestSelected = true;
+                this.isJurnalSelected = false;
+                this.isPosttestSelected = false;
+            } 
+            else if (value == "Jurnal") {
+                this.isJurnalSelected = true;
+                this.isPretestSelected = false;
+                this.isPosttestSelected = false;
+            }
+            else if (value == "Posttest") {
+                this.isPosttestSelected = true;
+                this.isPretestSelected = false;
+                this.isJurnalSelected = false;
+            }
+            
+        },
 
-       selectTypeSoal(value){
-          console.log(value)
-          if (value == "Mutiple Choice") {
-            this.isMutiplechoiceSelected = true;
+        selectTypeSoal(value){
+            console.log(value)
+            if (value == "Mutiple Choice") {
+                this.isMutiplechoiceSelected = true;
+                this.isEssaySelected = false;
+            } 
+            else if (value == "Essay") {
+                this.isEssaySelected = true;
+                this.isMutiplechoiceSelected = false;
+            }
+            
+        },
+
+        removeType(){
+            this.isPretestSelected = false;
             this.isJurnalSelected = false;
-          } 
-          else if (value == "Essay") {
-            this.isEssaySelected = true;
+            this.isPosttestSelected = false;
+        },
+
+        removeTypeSoal(){
+            this.isEssaySelected = false;
             this.isMutiplechoiceSelected = false;
-          }
-          
-      },
+        },
 
-      removeType(){
-          this.isPretestSelected = false;
-          this.isJurnalSelected = false;
-          this.isPosttestSelected = false;
-      },
+        addMultiple: function (questions) {
+            let data = {
+                text: "",
+                type: "multiple_choice",
+                answers: [
+                    {
+                        answer: "",
+                        is_answer: false,
+                    },
+                    {
+                        answer: "",
+                        is_answer: false,
+                    }
+                ],
+            }
+            questions.push(data)
+        },
 
-      addMultiple: function (questions) {
-          let data = {
-            text: "",
-            type: "multiple_choice",
-            answers: [
-                {
-                    answer: "",
-                    is_answer: false,
-                },
-                {
-                    answer: "",
-                    is_answer: false,
+        addEssay: function (questions) {
+            let data = {
+                text: "",
+                type: "essay",
+            }
+            questions.push(data)
+        }, 
+
+        removeMultiple: function (questions, index) {
+            Vue.delete(questions, index);
+        },
+
+        removeEssay: function (questions, index) {
+            Vue.delete(questions, index);
+        },
+
+        addAnswer: function (question) {
+            let data = {
+                answer: "",
+                is_answer: false,
+            }
+            question.answers.push(data)
+        },
+
+        removeAnswer: function (question, index) {
+            Vue.delete(question.answers, index);
+        },
+
+        correctAnswers(question) {
+            let data = [];
+            question.answers.forEach((element, index, array) => {
+                if (element.is_answer){
+                    data.push(String.fromCharCode(index+1 + 64))
                 }
-            ],
-          }
-          questions.push(data)
-      },
+            });
+            return data;
+        },
 
-      addEssay: function (questions) {
-          let data = {
-            text: "",
-            type: "essay",
-          }
-          questions.push(data)
-      }, 
-
-      removeMultiple: function (questions, index) {
-          Vue.delete(questions, index);
-      },
-
-      addAnswer: function (question) {
-          let data = {
-              answer: "",
-              is_answer: false,
-          }
-          question.answers.push(data)
-      },
-      removeAnswer: function (question, index) {
-          Vue.delete(question.answers, index);
-      },
-
-      correctAnswers(question) {
-          let data = [];
-          question.answers.forEach((element, index, array) => {
-              if (element.is_answer){
-                  data.push(String.fromCharCode(index+1 + 64))
-              }
-          });
-          return data;
-      },
-
-      printCorrectAnswers(question) {
-          if (this.correctAnswers(question).length){
-              return this.correctAnswers(question).toString().replace("[", "").replace("]", "").replace(",", ", ");
-          }
-          else {
-              return "( harap centang jawaban yang benar )"
-          }
-      }
+        printCorrectAnswers(question) {
+            if (this.correctAnswers(question).length){
+                return this.correctAnswers(question).toString().replace("[", "").replace("]", "").replace(",", ", ");
+            }
+            else {
+                return "( harap centang jawaban yang benar )"
+            }
+        }
       
   }
 };
@@ -187,10 +197,11 @@ export default {
                                 <div class="form-group mt-3">
                                     <multiselect
                                         class="text-center"
-                                        placeholder="Test Type"
+                                        placeholder="Question's Type"
                                         v-model="selected_soal"
                                         :options="soal_types"
                                         @select="selectTypeSoal"
+                                        @remove="removeTypeSoal"
                                     ></multiselect>
                                 </div>
                             </div>
@@ -295,7 +306,7 @@ export default {
                             <b-button v-on:click="addMultiple(dataTest.question)" variant="secondary">Tambah Soal</b-button>
                         </div>
                     </div>
-                    <div  v-if="isEssaySelected" class="mb-4">
+                    <div v-if="isEssaySelected" class="mb-4">
                         <h4 class="card-title">Essay</h4>
                         <div class="col-sm-12" v-for="(question, index) in dataTest.question" :key="index">
                             <div class="row">
@@ -311,7 +322,7 @@ export default {
                                     size="sm" 
                                     style="min-width: 75px;" 
                                     variant="danger"
-                                    v-on:click="removeMultiple(dataTest.question, index)"
+                                    v-on:click="removeEssay(dataTest.question, index)"
                                     >remove
                                     </b-button>
                                 </div>
