@@ -109,3 +109,10 @@
 - Added Page Tes Akhir (blank)
 - Include Mulai praktikum di klik di page Jadwal Kalender, pilih hari lalu Mulai Praktikum
 - PDF Viewer (blank)
+
+## Edgar Commited to Main
+## v21.07.26.01
+- Fixed Page Tes Awal
+- Fixed Page Tes Jurnal
+- Fixed Page Tes Akhir
+
