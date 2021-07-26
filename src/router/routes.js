@@ -232,7 +232,7 @@ export default [
         component: () => import('../views/pages/student/tes_akhir')
     },
     {
-        path: '/praktikan/pengaturan',      
+        path: '/pengaturan',      
         name: 'praktikan-pengaturan',
         meta: {
             authRequired: true,
