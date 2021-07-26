@@ -338,11 +338,5 @@ export const praktikanItems = [
     //         }
     //     ]
     // },
-    {
-        id: 12,
-        label: 'menuitems.praktikan.list.pengaturan',
-        icon: 'ri-settings-2-line',
-        link: 'praktikan-pengaturan'
-    },
-    
+   
 ]
