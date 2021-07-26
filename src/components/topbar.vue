@@ -278,7 +278,7 @@ export default {
             <i class="ri-user-line align-middle mr-1"></i>
             Profile
           </a>
-          <a class="dropdown-item d-block" href="#">
+          <a class="dropdown-item d-block" href="/pengaturan">
             <i class="ri-settings-2-line align-middle mr-1"></i>
             Settings
           </a>
