@@ -148,12 +148,21 @@ export default [
 
     //path asprak
     {
-        path: '/asprak/input-jurnal',
-        name: 'asprak-input-jurnal',
+        path: '/asprak/input-soal',
+        name: 'asprak-input-soal',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/asprak/input-jurnal')
+        component: () => import('../views/pages/asprak/input-soal/input-soal')
+    },
+
+    {
+        path: '/input-soal/create-test',
+        name: 'asprak-input-soal',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/asprak/input-soal/create-test')
     },
 
     {

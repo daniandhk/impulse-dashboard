@@ -32,6 +32,7 @@
     "pdfjs-dist": "^2.5.207",
     "simplebar-vue": "^1.6.0",
     "sweetalert2": "^10.10.1",
+    "v-bar": "^3.0.0",
     "v-click-outside": "^3.1.2",
     "v-mask": "^2.2.3",
     "vue": "^2.6.12",
