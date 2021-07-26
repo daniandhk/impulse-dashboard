@@ -1,17 +1,17 @@
 <script>
 import pdf from 'vue-pdf'
-var loadingTask = pdf.createLoadingTask('./pdf/SoalJurnal.pdf');
 /**
  * Dashboard component
  */
 export default {
   components: {
-    pdf     
+    pdf
   },
   data() {
     return {
-    src: loadingTask,
-		numPages: undefined,
+      currentPage: 0,
+      pageCount: 0,
+      page: 1,
     }
   },
   mounted() {
@@ -24,13 +24,14 @@ export default {
 </script>
 
 <template>
-  <div class="wrapper">
+  <div>
+    <input type="number" v-model.number="page"> / {{pageCount}}
 		<pdf
-			v-for="i in numPages"
-			:key="i"
-			:src="src"
-			:page="i"
-			style="height: 100%"
+			src="pdf/SoalJurnal.pdf"
+      @num-pages="pageCount = $event"
+			@page-loaded="currentPage = $event"
+      :page="page"
+      style="height: 100%"
 		></pdf>
 	</div>
 </template>
