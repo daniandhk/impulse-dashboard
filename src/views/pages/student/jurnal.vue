@@ -4,7 +4,7 @@ import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
 import pdf from 'vue-pdf'
-var loadingTask = pdf.createLoadingTask('./pdf/SoalJurnal.pdf');
+
 /**
  * Form wizard component
  */
@@ -16,7 +16,10 @@ export default {
   components: { Layout, PageHeader,pdf },
   data() {
     return {
-    src: loadingTask,
+    currentPage: 0,
+    pageCount: 0,
+    page: 1,
+    src:"",
 		numPages: undefined,
     title: "Jurnal",
     items: [
@@ -32,10 +35,7 @@ export default {
     }
     },
   mounted() {
-  this.src.promise.then(pdf => {
-
-        this.numPages = pdf.numPages;
-  });
+  this.src = pdf.createLoadingTask('../pdf/SoalJurnal.pdf');
   }
 };
 </script>
@@ -43,15 +43,21 @@ export default {
 <template>
   <Layout>
     <PageHeader :title="title" :items="items" />
-      <div class="wrapper">
-      <pdf
-        v-for="i in numPages"
-        :key="i"
-        :src="src"
-        :page="i"
-        style="height: 100%"
-      ></pdf>
-      </div>
+		<pdf
+			:src="src"
+      @num-pages="pageCount = $event"
+			@page-loaded="currentPage = $event"
+      :page="page"
+      style="height: 100%"
+      hidden
+		></pdf>
+    <pdf
+			:src="src"
+      v-for="i in pageCount"
+      :key="i"
+      :page="i"
+      style="height: 100%"
+		></pdf>
   </Layout>
 </template>
 
