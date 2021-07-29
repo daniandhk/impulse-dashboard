@@ -54,6 +54,13 @@ export default {
       isFentchingData: false,
       isKelasNotSelected: true,
 
+      //mahasiswa
+      isNimNotAvailable: true,
+      isNimFound: false,
+      disabled_bg: {
+			backgroundColor: "#F0F4F6",
+		},
+
       //dropdown list data
       religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
       genderData: ['male', 'female'],
@@ -316,6 +323,54 @@ export default {
         this.dataStudent.semester = "";
         this.dataStudent.staff_code = "";
     },
+
+    checkNim(){
+        this.submitted = true;
+        this.$v.dataStudent.nim.$touch();
+        if (this.$v.dataStudent.nim.$invalid) {
+            this.submitted = false;
+            return;
+        }
+        return api.showStudent(this.dataStudent.nim)
+            .then(response => {
+                if (response.data.data){
+                    this.isNimFound = true;
+                    this.setMahasiswa(response.data.data)
+                }
+                else{
+                    this.isNimFound = false;
+                    this.disabled_bg.backgroundColor = "";
+                    this.isNimNotAvailable = false;
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            });
+    },
+
+    isNimChanged(){
+        this.disabled_bg.backgroundColor = "#F0F4F6";
+        this.isNimNotAvailable = true;
+        this.submitted = false;
+        this.removeMahasiswa();
+    },
+
+    setMahasiswa(data){
+        this.dataStudent.name = data.name
+        this.dataStudent.gender = data.gender
+        this.dataStudent.religion = data.religion
+    },
+
+    removeMahasiswa(){
+        this.dataStudent.name = "";
+        this.dataStudent.gender = "";
+        this.dataStudent.religion = "";
+    }
   }
 };
 </script>
@@ -404,25 +459,46 @@ export default {
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-6">
+                        <div class="col-sm-8">
                             <div class="form-group">
                                 <label for="nim">NIM</label>
-                                <input
-                                    v-model="dataStudent.nim"
-                                    id="nim"
-                                    name="nim"
-                                    type="number"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.nim.required"
-                                class="invalid-feedback"
-                                >NIM is required.</div>
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <input
+                                            v-model="dataStudent.nim"
+                                            id="nim"
+                                            name="nim"
+                                            type="number"
+                                            class="form-control"
+                                            @input="isNimChanged"
+                                            :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
+                                        />
+                                        <div
+                                        v-if="submitted && !$v.dataStudent.nim.required"
+                                        class="invalid-feedback"
+                                        >NIM is required.</div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <b-button variant="success" @click="checkNim"
+                                        :class="{ 
+                                            'is-invalid': submitted && !isNimFound,
+                                            'is-valid': submitted && isNimFound }">Check NIM</b-button>
+                                        <div
+                                        v-if="!isNimFound"
+                                        class="invalid-feedback"
+                                        >NIM is not available, please input Name, Gender, and Religion.</div>
+                                        <div
+                                        v-if="isNimFound"
+                                        class="valid-feedback"
+                                        >NIM is available.</div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="col-sm-6">
+                    <div class="row">
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="nama">Nama Mahasiswa</label>
                                 <input 
@@ -431,6 +507,8 @@ export default {
                                 name="nama" 
                                 type="text" 
                                 class="form-control"
+                                :disabled="isNimNotAvailable"
+                                v-bind:style="disabled_bg"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }" />
 
                                 <div
@@ -439,14 +517,13 @@ export default {
                                 >Nama Mahasiswa is required.</div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                             <label class="control-label">Jenis Kelamin</label>
                             <multiselect
                                 v-model="dataStudent.gender"
+                                :disabled="isNimNotAvailable"
                                 :options="genderData"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
                             ></multiselect>
@@ -457,11 +534,12 @@ export default {
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                             <label class="control-label">Agama</label>
                             <multiselect
                                 v-model="dataStudent.religion"
+                                :disabled="isNimNotAvailable"
                                 :options="religionData"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
                             ></multiselect>

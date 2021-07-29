@@ -18,6 +18,7 @@ export const api = {
     inputStudent,
     deleteStudent,
     editStudent,
+    showStudent,
 
     //staff
     getAllStaffs,
@@ -129,6 +130,9 @@ function editStudent(id, data){
         method: 'PUT',
         data: data
     })
+}
+function showStudent(nim) {
+    return httpAxios.get(`/student/${nim}`);
 }
 
 //staff
