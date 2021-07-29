@@ -116,16 +116,6 @@ export default [
         },
         component: () => import('../views/pages/laboran/class-course/class-course')
     },
-    
-    //path temp
-    {
-        path: '/temp/create-test',
-        name: 'create-test',
-        meta: {
-            authRequired: true,
-        },
-        component: () => import('../views/pages/temp/create-test')
-    },
 
     //aslab
     {

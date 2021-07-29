@@ -115,17 +115,6 @@ export const laboranItems = [
         icon: 'mdi mdi-book-open-page-variant',
         link: 'laboran-course'
     },
-    {
-        id: 11,
-        label: "menuitems.laboran.temp",
-        isTitle: true
-    },
-    {
-        id: 12,
-        label: 'menuitems.laboran.list.create-test',
-        icon: 'ri-file-edit-line',
-        link: 'create-test'
-    },
     
 ]
 
@@ -186,17 +175,6 @@ export const staffItems = [
         label: 'menuitems.laboran.list.course',
         icon: 'mdi mdi-book-open-page-variant',
         link: 'laboran-course'
-    },
-    {
-        id: 11,
-        label: "menuitems.laboran.temp",
-        isTitle: true
-    },
-    {
-        id: 12,
-        label: 'menuitems.laboran.list.create-test',
-        icon: 'ri-file-edit-line',
-        link: 'create-test'
     },
     
 ]
