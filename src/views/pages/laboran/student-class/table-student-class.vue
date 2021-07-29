@@ -649,119 +649,41 @@ export default {
     </div>
     <div name="modalEdit">
       <b-modal centered id="modal-edit" title="Edit Student" hide-footer title-class="font-18">
-        <div class="card">
-          <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom">
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Edit Data</a>
-                </template>
-                <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="setStudentClass">
-                        <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="nim">NIM</label>
-                                    <input 
-                                    style="background-color: #F0F4F6;"
-                                    :disabled="true"
-                                    v-model="dataEditDetail.nim"
-                                    id="nip" 
-                                    name="nip" 
-                                    type="number" 
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nim.$error }" />
-
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.nim.required"
-                                    class="invalid-feedback"
-                                    >NIM is required.</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                  <label class="control-label">Kelas Mata Kuliah</label>
-                                  <multiselect
-                                      v-model="class_dataEdit"
-                                      :options="namaKelasData"
-                                      label="name"
-                                      track-by="name"
-                                      @select="setKelasEdit"
-                                      @remove="removeKelasEdit"
-                                      :class="{ 'is-invalid': submitted && $v.dataEditDetail.class_name.$error }" 
-                                  ></multiselect>
-                                      <div
-                                      v-if="submitted && !$v.dataEditDetail.class_name.required"
-                                      class="invalid-feedback"
-                                      >Kelas Mata Kuliah is required.</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                  <label class="control-label">Nama Mata Kuliah</label>
-                                  <multiselect
-                                      v-model="course_dataEdit"
-                                      :options="loadCourseData"
-                                      :disabled="isKelasEditNotSelected"
-                                      label="name"
-                                      track-by="name"
-                                      @select="setCourseEdit"
-                                      @remove="removeCourseEdit"
-                                      :class="{ 'is-invalid': submitted && $v.dataEditDetail.course_name.$error }" 
-                                  ></multiselect>
-                                      <div
-                                      v-if="submitted && !$v.dataEditDetail.course_name.required"
-                                      class="invalid-feedback"
-                                      >Nama Mata Kuliah is required.</div>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Save Changes</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                </template>
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Edit Roles</a>
-                  </template>
-                  <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
-                        <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label">Roles</label>
-                                    <multiselect
-                                        v-model="role_data"
-                                        :options="roleData"
-                                        :multiple="true"
-                                        @remove="removeRole"
-                                    ></multiselect>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Save Changes</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                </template>
-              </b-tab>
-            </b-tabs>
-          </div>
+        <div class="col-sm-12">
+            <div class="form-group col-sm-12">
+                <label for="nim">NIM</label>
+                <input 
+                style="background-color: #F0F4F6;"
+                :disabled="true"
+                v-model="dataEditDetail.nim"
+                id="nip" 
+                name="nip" 
+                type="number" 
+                class="form-control"/>
+            </div>
         </div>
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
+          <div class="tab-pane" id="metadata">
+              <div class="col-sm-12">
+                  <div class="form-group">
+                      <label class="control-label">Roles</label>
+                      <multiselect
+                          v-model="role_data"
+                          :options="roleData"
+                          :multiple="true"
+                          @remove="removeRole"
+                      ></multiselect>
+                  </div>
+              </div>
+              <div class="text-center mt-4">
+                  <button
+                  type="submit"
+                  class="btn btn-primary mr-2 waves-effect waves-light"
+                  >Save Changes</button>
+                  <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+              </div>
+          </div>
+        </form>
       </b-modal>
     </div>
   </div>
