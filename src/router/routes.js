@@ -116,15 +116,13 @@ export default [
         },
         component: () => import('../views/pages/laboran/class-course/class-course')
     },
-    
-    //path temp
     {
-        path: '/temp/create-test',
-        name: 'create-test',
+        path: '/laboran/asprak-class',
+        name: 'laboran-asprakclass',
         meta: {
             authRequired: true,
         },
-        component: () => import('../views/pages/temp/create-test')
+        component: () => import('../views/pages/laboran/asprak-class/asprak-class')
     },
 
     //aslab

@@ -2,28 +2,28 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableStudent from "./table-student";
-import InputStudent from "./input-student";
+import TableAsprak from "./table-asprak-class";
+import InputAsprak from "./input-asprak-class";
 
 export default {
   components: {
     Layout,
     PageHeader,
-    TableStudent,
-    InputStudent,
+    TableAsprak,
+    InputAsprak,
   },
   created() {
     document.body.classList.add("auth-body-bg");
   },
   data() {
     return {
-      title: "Student Data",
+      title: "Asprak Class Data",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Student Data",
+          text: "Asprak Class Data",
           active: true
         }
       ],
@@ -38,7 +38,7 @@ export default {
     ...notificationMethods,
 
     refreshData(){
-        this.$refs.TableStudent.refreshData();
+        this.$refs.TableAsprak.refreshData();
     }
   }
 };
@@ -55,15 +55,15 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Students</a>
+                  <a class="font-weight-bold active">All Classes</a>
                 </template>
-                <TableStudent ref='TableStudent'/>
+                <TableAsprak ref='TableAsprak'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Student</a>
+                      <a class="font-weight-bold active">Input Class</a>
                   </template>
-                  <InputStudent/>
+                  <InputAsprak/>
               </b-tab>
             </b-tabs>
           </div>

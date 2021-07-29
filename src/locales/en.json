@@ -46,6 +46,7 @@
       "list": {
         "student": "Student Data",
         "studentclass": "Student Class",
+        "asprakclass": "Asprak Class",
         "staff": "Staff Data",
         "course": "Course Data",
         "classroom": "Classroom Data",
