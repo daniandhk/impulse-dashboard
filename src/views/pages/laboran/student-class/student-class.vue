@@ -4,6 +4,7 @@ import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
 import TableStudent from "./table-student-class";
 import InputStudent from "./input-student-class";
+import ImportStudent from "./import-student-class";
 
 export default {
   components: {
@@ -11,6 +12,7 @@ export default {
     PageHeader,
     TableStudent,
     InputStudent,
+    ImportStudent
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -61,9 +63,15 @@ export default {
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Class(s)</a>
+                      <a class="font-weight-bold active">Input Class</a>
                   </template>
                   <InputStudent/>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Import Excel</a>
+                  </template>
+                  <ImportStudent/>
               </b-tab>
             </b-tabs>
           </div>

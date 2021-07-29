@@ -61,7 +61,7 @@ export default {
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Student(s)</a>
+                      <a class="font-weight-bold active">Input Student</a>
                   </template>
                   <InputStudent/>
               </b-tab>
