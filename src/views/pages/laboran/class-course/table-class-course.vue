@@ -154,22 +154,6 @@ export default {
       this.fetchData();
     },
 
-    handleSortingChange(value){
-      if(value.sortBy !== this.sortBy) {
-        this.sortDesc = false
-      } 
-      else {
-        if(this.sortDesc) {
-          this.sortDesc = false
-        } 
-        else {
-          this.sortDesc = true
-        }
-      }
-      this.sortBy = value.sortBy;
-      this.fetchData();
-    },
-
     refreshData(){
       this.filter = "";
       this.fetchData();
@@ -262,7 +246,6 @@ export default {
         :per-page="0"
         :busy.sync="isFentchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
         :filter-included-fields="filterOn"
