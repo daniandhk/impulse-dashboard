@@ -17,13 +17,13 @@ export default {
   },
   data() {
     return {
-      title: "Class Course Data",
+      title: "Course Class Data",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Class Course Data",
+          text: "Course Class Data",
           active: true
         }
       ],
@@ -55,13 +55,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Class Courses</a>
+                  <a class="font-weight-bold active">All Course Classes</a>
                 </template>
                 <TableClassCourse ref='TableClassCourse'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Class Course</a>
+                      <a class="font-weight-bold active">Input Course Class</a>
                   </template>
                   <InputClassCourse/>
               </b-tab>
