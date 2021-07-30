@@ -109,6 +109,14 @@ export default [
         component: () => import('../views/pages/laboran/classroom/classroom')
     },
     {
+        path: '/laboran/room',
+        name: 'laboran-room',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../views/pages/laboran/room/room')
+    },
+    {
         path: '/laboran/class-course',
         name: 'laboran-classcourse',
         meta: {
