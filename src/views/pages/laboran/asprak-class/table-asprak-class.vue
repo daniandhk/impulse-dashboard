@@ -648,7 +648,13 @@ export default {
       </div>
     </div>
     <div name="modalEdit">
-      <b-modal centered id="modal-edit" title="Edit Student" hide-footer title-class="font-18">
+      <b-modal 
+        size="lg" 
+        id="modal-edit" 
+        title="Edit Student" 
+        hide-footer 
+        title-class="font-18"
+      >
         <div class="col-sm-12">
             <div class="form-group col-sm-12">
                 <label for="nim">NIM</label>
