@@ -231,7 +231,6 @@ export default {
             Search:
             <b-form-input
               v-model="filter_search"
-              @input="handleSearch"
               type="search"
               class="form-control form-control-sm ml-2"
             ></b-form-input>

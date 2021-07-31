@@ -68,7 +68,6 @@ export default {
   mounted() {
     // Set the initial number of items
     this.fetchData();
-    this.loadDataDropdown();
   },
   methods: {
     ...notificationMethods,
@@ -125,9 +124,6 @@ export default {
 
             this.totalRows = response.data.meta.pagination.total;
             this.dataClassrooms = response.data.data;
-            if (this.dataClassrooms){
-                this.setData(this.dataClassrooms);
-            }
           })
           .catch(error => {
             this.isFentchingData = false;
