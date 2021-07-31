@@ -83,13 +83,13 @@ export const laboranItems = [
     {
         id: 5,
         label: 'menuitems.laboran.list.asprakclass',
-        icon: 'mdi mdi-school',
+        icon: 'mdi mdi-assistant',
         link: 'laboran-asprakclass'
     },
     {
         id: 6,
         label: 'menuitems.laboran.list.class-course',
-        icon: 'mdi mdi-school',
+        icon: 'ri-book-read-fill',
         link: 'laboran-classcourse'
     },
     {
@@ -112,7 +112,7 @@ export const laboranItems = [
     {
         id: 10,
         label: 'menuitems.laboran.list.classroom',
-        icon: 'ri-home-6-line',
+        icon: 'mdi mdi-google-classroom',
         link: 'laboran-classroom'
     },
     {
@@ -124,7 +124,7 @@ export const laboranItems = [
     {
         id: 12,
         label: 'menuitems.laboran.list.room',
-        icon: 'mdi mdi-book-open-page-variant',
+        icon: 'ri-home-6-line',
         link: 'laboran-room'
     },
     
@@ -156,13 +156,13 @@ export const staffItems = [
     {
         id: 5,
         label: 'menuitems.laboran.list.asprakclass',
-        icon: 'mdi mdi-school',
+        icon: 'mdi mdi-assistant',
         link: 'laboran-asprakclass'
     },
     {
         id: 6,
         label: 'menuitems.laboran.list.class-course',
-        icon: 'mdi mdi-school',
+        icon: 'ri-book-read-fill',
         link: 'laboran-classcourse'
     },
     {
@@ -185,7 +185,7 @@ export const staffItems = [
     {
         id: 10,
         label: 'menuitems.laboran.list.classroom',
-        icon: 'ri-home-6-line',
+        icon: 'mdi mdi-google-classroom',
         link: 'laboran-classroom'
     },
     {
@@ -197,7 +197,7 @@ export const staffItems = [
     {
         id: 12,
         label: 'menuitems.laboran.list.room',
-        icon: 'mdi mdi-book-open-page-variant',
+        icon: 'ri-home-6-line',
         link: 'laboran-room'
     },
     
