@@ -25,15 +25,16 @@ export default {
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
       filter: "",
+      filter_search: "",
       filterOn: [],
       sortBy: "class.name",
       sortDesc: false,
       fields: [
-        { key: "class.name", label: "Nama Kelas" },
-        { key: "course.name", label: "Nama MK" },
-        { key: "staff.name", label: "Nama Dosen" },
-        { key: "academic_year.semester", label: "Semester" },
-        { key: "academic_year.name", label: "Tahun Akademik" },
+        { key: "class.name", sortable: true, label: "Nama Kelas" },
+        { key: "course.name", sortable: true, label: "Nama MK" },
+        { key: "staff.name", sortable: true, label: "Nama Dosen" },
+        { key: "academic_year.semester", sortable: true, label: "Semester" },
+        { key: "academic_year.name", sortable: true, label: "Tahun Akademik" },
         { key: "action", sortable: false }
       ],
 
@@ -48,7 +49,7 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataTable;
+      return this.dataClassCourses;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -93,7 +94,6 @@ export default {
             if (response.data.data){
               this.totalRows = response.data.data.length;
               this.dataClassCourses = response.data.data;
-              this.setData(this.dataClassCourses);
             }
             this.isFentchingData = false;
           })
@@ -102,17 +102,6 @@ export default {
             this.isFentchingData = false;
           })
       )
-    },
-
-    setData(dataClassCourses){
-        //paginate
-        this.dataTable = this.paginate(dataClassCourses);
-    },
-
-    paginate(array) {
-        const start = this.currentPage * this.perPage - this.perPage;
-        const end = start + this.perPage;
-        return array.slice(start, end);
     },
 
     setKelas(value) {
@@ -235,6 +224,21 @@ export default {
           </label>
         </div>
       </div>
+      <!-- Search -->
+      <div class="col-sm-12 col-md-6">
+        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+          <label class="d-inline-flex align-items-center">
+            Search:
+            <b-form-input
+              v-model="filter_search"
+              @input="handleSearch"
+              type="search"
+              class="form-control form-control-sm ml-2"
+            ></b-form-input>
+          </label>
+        </div>
+      </div>
+      <!-- End search -->
     </div>
     <div class="table-responsive">
       <b-table
@@ -243,11 +247,12 @@ export default {
         :items="datas"
         :fields="fields"
         responsive="sm"
-        :per-page="0"
+        :per-page="perPage"
         :busy.sync="isFentchingData"
         :current-page="currentPage"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
+        :filter="filter_search"
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
         :headVariant="'dark'"

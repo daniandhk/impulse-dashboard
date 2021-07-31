@@ -27,7 +27,6 @@ export default {
       //list room
       isFentchingData: false,
       dataRooms: [],
-      dataTable: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
@@ -37,10 +36,10 @@ export default {
       sortBy: "name",
       sortDesc: false,
       fields: [
-        { key: "name", label: "Nama Ruangan" },
-        { key: "desc", label: "Deskripsi" },
-        { key: "msteam_link", label: "Link MS Teams" },
-        { key: "msteam_code", label: "Kode MS Teams" },
+        { key: "name", sortable: true, label: "Nama Ruangan" },
+        { key: "desc", sortable: true, label: "Deskripsi" },
+        { key: "msteam_link", sortable: true, label: "Link MS Teams" },
+        { key: "msteam_code", sortable: true, label: "Kode MS Teams" },
         { key: "action", sortable: false }
       ],
 
@@ -63,7 +62,7 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataTable;
+      return this.dataRooms;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -93,7 +92,6 @@ export default {
             if (response.data.rooms){
               this.totalRows = response.data.rooms.length;
               this.dataRooms = response.data.rooms;
-              this.setData(this.dataRooms);
             }
             this.isFentchingData = false;
           })
@@ -102,17 +100,6 @@ export default {
             console.log(error)
           })
       )
-    },
-
-    setData(dataRooms){
-        //paginate
-        this.dataTable = this.paginate(dataRooms);
-    },
-
-    paginate(array) {
-        const start = this.currentPage * this.perPage - this.perPage;
-        const end = start + this.perPage;
-        return array.slice(start, end);
     },
 
     handlePageChange(value) {
@@ -228,6 +215,21 @@ export default {
           </label>
         </div>
       </div>
+      <!-- Search -->
+      <div class="col-sm-12 col-md-6">
+        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+          <label class="d-inline-flex align-items-center">
+            Search:
+            <b-form-input
+              v-model="filter"
+              @input="handleSearch"
+              type="search"
+              class="form-control form-control-sm ml-2"
+            ></b-form-input>
+          </label>
+        </div>
+      </div>
+      <!-- End search -->
     </div>
     <div class="table-responsive">
       <b-table
@@ -236,11 +238,12 @@ export default {
         :items="datas"
         :fields="fields"
         responsive="sm"
-        :per-page="0"
+        :per-page="perPage"
         :busy.sync="isFentchingData"
         :current-page="currentPage"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
+        :filter="filter"
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
         :headVariant="'dark'"
