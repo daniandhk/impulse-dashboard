@@ -44,6 +44,7 @@ export default {
           semester: "",
           },
       submitted: false,
+      submitted_nim: false,
       inputError: null,
       tryingToInput: false,
       isInputError: false,
@@ -145,6 +146,7 @@ export default {
             if (result.value) {
                 this.clearForm();
                 this.submitted = false;
+                this.submitted_nim = false;
                 this.isInputCanceled = true;
                 Swal.fire("Canceled!", "The form has been left blank.", "success");
             }
@@ -166,6 +168,10 @@ export default {
         this.courseData = [];
         this.course_data = "";
         this.class_data = "";
+        this.submitted = false;
+        this.submitted_nim = false;
+        this.nimChanged();
+        this.isNimNotAvailable = true;
     },
 
     getRequestParams(search) {
@@ -295,10 +301,9 @@ export default {
     },
 
     checkNim(){
-        this.submitted = true;
+        this.submitted_nim = true;
         this.$v.dataStudent.nim.$touch();
         if (this.$v.dataStudent.nim.$invalid) {
-            this.submitted = false;
             return;
         }
         return api.showStudent(this.dataStudent.nim)
@@ -323,10 +328,10 @@ export default {
             });
     },
 
-    isNimChanged(){
+    nimChanged(){
         this.disabled_bg.backgroundColor = "#F0F4F6";
         this.isNimNotAvailable = true;
-        this.submitted = false;
+        this.submitted_nim = false;
         this.removeMahasiswa();
     },
 
@@ -397,19 +402,19 @@ export default {
                                             name="nim"
                                             type="number"
                                             class="form-control"
-                                            @input="isNimChanged"
-                                            :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
+                                            @input="nimChanged"
+                                            :class="{ 'is-invalid': submitted_nim && $v.dataStudent.nim.$error }"
                                         />
                                         <div
-                                        v-if="submitted && !$v.dataStudent.nim.required"
+                                        v-if="submitted_nim && !$v.dataStudent.nim.required"
                                         class="invalid-feedback"
                                         >NIM is required.</div>
                                     </div>
                                     <div class="col-sm-4">
                                         <b-button variant="success" @click="checkNim"
                                         :class="{ 
-                                            'is-invalid': submitted && !isNimFound,
-                                            'is-valid': submitted && isNimFound }">Check NIM</b-button>
+                                            'is-invalid': submitted_nim && !isNimFound,
+                                            'is-valid': submitted_nim && isNimFound }">Check NIM</b-button>
                                         <div
                                         v-if="!isNimFound"
                                         class="invalid-feedback"
