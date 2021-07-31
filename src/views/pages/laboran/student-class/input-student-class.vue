@@ -65,7 +65,7 @@ export default {
       genderData: ['male', 'female'],
       dosenData: [],
       courseData: [],
-      kelasData: [],
+      classCourseData: [],
       namaKelasData: [],
 
       //v-model dropdown value = array of objects
@@ -79,12 +79,6 @@ export default {
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
-    },
-    loadDosenData() {
-        return this.dosenData;
-    },
-    loadKelasData() {
-        return this.kelasData;
     },
     loadCourseData() {
         return this.courseData;
@@ -174,11 +168,14 @@ export default {
         this.isNimNotAvailable = true;
     },
 
-    getRequestParams(search) {
+    getRequestParams(search, kelas) {
       let params = {};
 
       if (search) {
         params["search"] = search;
+      }
+      if (kelas) {
+        params["kelas"] = kelas;
       }
 
       return params;
@@ -198,14 +195,15 @@ export default {
         )
     },
 
-    async getDataClassrooms(namaKelasData){
+    async getDataClassCourses(namaKelasData){
         const params = this.getRequestParams(
+                null,
                 namaKelasData.name
         );
-        return api.getListClassrooms(params)
+        return api.getAllClassCourses(params)
             .then(response => {
-                if (response.data.classes){
-                    this.kelasData = response.data.classes;
+                if (response.data.data){
+                    this.classCourseData = response.data.data;
                 }
             })
             .catch(error => {
@@ -213,48 +211,11 @@ export default {
             })
     },
 
-    async getDataCourses(kelasData){
-        return new Promise((resolve, reject) => {
-            kelasData.forEach((element, index, array) => {
-                const params = this.getRequestParams(
-                    element.course_id
-                );
-                api.getListCourses(params)
-                    .then(response => {
-                        if (response.data.courses){
-                            this.courseData = response.data.courses
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-                if (index === array.length -1) resolve();
-            });
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    },
-
-    async setDataClassroom(kelasData, course_id){
-        let data = kelasData.find(data => data.course_id === course_id);
-        this.dataStudent.academic_year = data.academic_year;
-        this.dataStudent.semester = data.semester;
-
-        const params = this.getRequestParams(
-                data.staff_id
-        );
-        return api.getListStaffs(params)
-            .then(response => {
-                if (response.data.staffs){
-                    let staffs = response.data.staffs;
-                    let staff = staffs.find(item => item.id === data.staff_id);
-                    this.dataStudent.staff_code = staff.code;
-                }
-            })
-            .catch(error => {
-                console.log(error)
-            });
+    async setDataClassroom(classCourseData, course_id){
+        let data = classCourseData.find(data => data.course.id === course_id);
+        this.dataStudent.academic_year = data.academic_year.name;
+        this.dataStudent.semester = data.academic_year.semester;
+        this.dataStudent.staff_code = data.staff.code;
     },
 
     loadDataDropdown(){
@@ -266,8 +227,10 @@ export default {
 
         this.removeCourse();
         this.dataStudent.class_name = value.name;
-        await this.getDataClassrooms(value);
-        await this.getDataCourses(this.kelasData);
+        await this.getDataClassCourses(value);
+        this.classCourseData.forEach((element, index, array) => {
+            this.courseData.push(element.course)
+        });
 
         this.isKelasNotSelected = false;
         this.isFentchingData = false;
@@ -278,7 +241,7 @@ export default {
 
         this.dataStudent.course_name = value.name;
         this.dataStudent.course_code = value.code;
-        await this.setDataClassroom(this.kelasData, value.id);
+        await this.setDataClassroom(this.classCourseData, value.id);
 
         this.isFentchingData = false;
     },
@@ -629,7 +592,7 @@ export default {
                                     :disabled="true"
                                     id="semester"
                                     name="semester"
-                                    type="number"
+                                    type="text"
                                     style="background-color: #F0F4F6;"
                                     class="form-control"
                                     :class="{ 'is-invalid': submitted && $v.dataStudent.semester.$error }"

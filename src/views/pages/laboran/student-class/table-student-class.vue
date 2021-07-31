@@ -52,7 +52,7 @@ export default {
       ],
 
       courseData: [],
-      kelasData: [],
+      classCourseData: [],
       namaKelasData: [],
       isKelasNotSelected: true,
 
@@ -284,14 +284,15 @@ export default {
         )
     },
 
-    async getDataClassrooms(namaKelasData){
+    async getDataClassCourses(namaKelasData){
         const params = this.getRequestParams(
+                null,
                 namaKelasData.name
         );
-        return api.getListClassrooms(params)
+        return api.getAllClassCourses(params)
             .then(response => {
-                if (response.data.classes){
-                    this.kelasData = response.data.classes;
+                if (response.data.data){
+                    this.classCourseData = response.data.data;
                 }
             })
             .catch(error => {
@@ -299,42 +300,14 @@ export default {
             })
     },
 
-    async getDataCourses(kelasData){
-        return new Promise((resolve, reject) => {
-            kelasData.forEach((element, index, array) => {
-                const params = this.getRequestParams(
-                    element.course_id
-                );
-                this.getListCourses(params).then(()=>{
-                  if (index === array.length -1) resolve();
-                })
-            });
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    },
-
-    async getListCourses(params){
-      return (
-        api.getListCourses(params)
-                    .then(response => {
-                        if (response.data.courses){
-                            this.courseData = response.data.courses
-                        }
-                    })
-                    .catch(error => {
-                        console.log(error)
-                    })
-      )
-    },
-
     async setKelas(value){
         this.class_data = value;
         this.removeCourse();
 
-        await this.getDataClassrooms(value);
-        await this.getDataCourses(this.kelasData);
+        await this.getDataClassCourses(value);
+        this.classCourseData.forEach((element, index, array) => {
+            this.courseData.push(element.course)
+        });
 
         this.isKelasNotSelected = false;
     },
@@ -361,7 +334,6 @@ export default {
       this.dataEdit.student_id = data.item.student_id;
       this.dataEdit.class_id = data.item.class_id;
       this.dataEditDetail.nim = data.item.nim;
-      await this.setKelasEdit(data.item);
 
       //edit role
       this.dataEditRole.no_induk = data.item.nim;
@@ -401,50 +373,6 @@ export default {
             })
         )
       }
-    },
-
-    async setKelasEdit(value){
-        this.dataEditDetail.class_name = value.name;
-        this.removeCourseEdit();
-
-        let data = {};
-        data['name'] = value.class_name;
-
-        await this.getDataClassrooms(data);
-        await this.getDataCourses(this.kelasData)
-          .then(() =>{
-              let kelas = {};
-              if (value.class_name){
-                kelas = this.kelasData.find(data => data.name === value.class_name);
-                let course = this.courseData.find(data => data.id === kelas.course_id);
-
-                this.setCourseEdit(course);
-              }
-              else {
-                kelas = this.kelasData.find(data => data.name === value.name);
-              }
-              this.class_dataEdit = kelas;
-              this.dataEdit.class_id = kelas.id;
-
-              this.isKelasEditNotSelected = false;
-          })
-    },
-
-    async setCourseEdit(value){
-        this.dataEditDetail.course_name = value.name;
-        let data = this.courseData.find(data => data.id === value.id);
-        this.course_dataEdit = data;
-    },
-
-    removeKelasEdit(){
-        this.isKelasEditNotSelected = true;
-        this.class_dataEdit = "";
-        this.courseData = [];
-        this.removeCourseEdit();
-    },
-
-    removeCourseEdit(){
-        this.course_dataEdit = "";
     },
 
     getRoles(no_induk){
