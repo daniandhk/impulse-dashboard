@@ -336,7 +336,13 @@ export default {
       </div>
     </div>
     <div name="modalEdit">
-      <b-modal centered id="modal-edit" title="Edit Staff" hide-footer title-class="font-18">
+      <b-modal 
+        size="lg" 
+        id="modal-edit" 
+        title="Edit Staff" 
+        hide-footer 
+        title-class="font-18"
+      >
         <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStaff">
           <div class="tab-pane" id="metadata">
             <div class="col-sm-12">

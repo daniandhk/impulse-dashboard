@@ -42,6 +42,12 @@ export const api = {
     inputCourse,
     editCourse,
 
+    //room
+    getAllRooms,
+    deleteRoom,
+    inputRoom,
+    editRoom,
+
     //class-course
     getAllClassCourses,
     deleteClassCourse,
@@ -223,6 +229,28 @@ function inputCourse(data){
 function editCourse(id, data){
     return httpAxios({
         url: `/course/${id}`,
+        method: 'PUT',
+        data: data
+    })
+}
+
+//room
+function getAllRooms() {
+    return httpAxios.get('/room')
+}
+function deleteRoom(id) {
+    return httpAxios.delete(`/room/${id}`);
+}
+function inputRoom(data){
+    return httpAxios({
+        url: '/room',
+        method: 'POST',
+        data: data
+    })
+}
+function editRoom(id, data){
+    return httpAxios({
+        url: `/room/${id}`,
         method: 'PUT',
         data: data
     })

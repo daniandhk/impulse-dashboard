@@ -13,8 +13,10 @@ export default {
   },
   validations: {
     dataEdit: {
-      code: { required },
+      desc: { required },
       name: { required },
+      msteam_link: { required },
+      msteam_code: { required },
     },
   },
   created() {
@@ -22,28 +24,32 @@ export default {
   },
   data() {
     return {
-      //list course
+      //list room
       isFentchingData: false,
-      dataCourses: [],
+      dataRooms: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
       filter: "",
       filterOn: [],
-      sortBy: "code",
+      sortBy: "name",
       sortDesc: false,
       fields: [
-        { key: "code", sortable: true, label: "Kode Mata Kuliah" },
-        { key: "name", sortable: true, label: "Nama Mata Kuliah" },
+        { key: "name", sortable: true, label: "Nama Ruangan" },
+        { key: "desc", sortable: true, label: "Deskripsi" },
+        { key: "msteam_link", sortable: true, label: "Link MS Teams" },
+        { key: "msteam_code", sortable: true, label: "Kode MS Teams" },
         { key: "action", sortable: false }
       ],
 
       //modal edit
       idDataEdit: "",
       dataEdit: { 
-          code: "", 
+          desc: "", 
           name: "",
+          desmsteam_linkc: "", 
+          msteam_code: "",
           },
       submitted: false,
     };
@@ -56,7 +62,7 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataCourses;
+      return this.dataRooms;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -76,51 +82,18 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(search, page, pageSize, orderBy, sortDesc) {
-      let params = {};
-
-      if (search) {
-        params["search"] = search;
-      }
-
-      if (page) {
-        params["page"] = page;
-      }
-
-      if (pageSize) {
-        params["per_page"] = pageSize;
-      }
-
-      if (orderBy) {
-        params["orderBy"] = orderBy;
-      }
-
-      if (sortDesc) {
-        params["sortedBy"] = "DESC";
-      } else {
-        params["sortedBy"] = "ASC";
-      }
-
-      return params;
-    },
     fetchData(){
       this.isFentchingData = true;
       console.log("fentching data")
 
-      const params = this.getRequestParams(
-        this.filter,
-        this.currentPage,
-        this.perPage,
-        this.sortBy,
-        this.sortDesc
-      );
       return (
-        api.getAllCourses(params)
+        api.getAllRooms()
           .then(response => {
+            if (response.data.rooms){
+              this.totalRows = response.data.rooms.length;
+              this.dataRooms = response.data.rooms;
+            }
             this.isFentchingData = false;
-
-            this.totalRows = response.data.meta.pagination.total;
-            this.dataCourses = response.data.data;
           })
           .catch(error => {
             this.isFentchingData = false;
@@ -140,27 +113,6 @@ export default {
       this.fetchData();
     },
 
-    handleSortingChange(value){
-      if(value.sortBy !== this.sortBy) {
-        this.sortDesc = false
-      } 
-      else {
-        if(this.sortDesc) {
-          this.sortDesc = false
-        } 
-        else {
-          this.sortDesc = true
-        }
-      }
-      this.sortBy = value.sortBy;
-      this.fetchData();
-    },
-
-    handleSearch(value){
-      this.filter = value;
-      this.fetchData();
-    },
-
     refreshData(){
       this.fetchData();
     },
@@ -168,7 +120,7 @@ export default {
     onClickDelete(data){
       Swal.fire({
           title: "Are you sure?",
-          text: data.item.code + " will be deleted!",
+          text: data.item.name + " will be deleted!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
@@ -176,16 +128,16 @@ export default {
           confirmButtonText: "Yes, delete it!"
       }).then(result => {
           if (result.value) {
-              this.deleteCourse(data.item.id, data.item.code);
+              this.deleteRoom(data.item.id, data.item.name);
           }
       });
     },
 
-    deleteCourse(id, code){
+    deleteRoom(id, name){
       return (
-        api.deleteCourse(id)
+        api.deleteRoom(id)
           .then(response => {
-            Swal.fire("Deleted!", code + " has been deleted.", "success");
+            Swal.fire("Deleted!", name + " has been deleted.", "success");
             this.fetchData();
           })
           .catch(error => {
@@ -202,12 +154,14 @@ export default {
 
     onClickEdit(data){
       this.idDataEdit = data.item.id;
-      this.dataEdit.code = data.item.code;
+      this.dataEdit.desc = data.item.desc;
       this.dataEdit.name = data.item.name;
+      this.dataEdit.msteam_link = data.item.msteam_link;
+      this.dataEdit.msteam_code = data.item.msteam_code;
       this.$bvModal.show('modal-edit');
     },
 
-    editCourse(){
+    editRoom(){
       this.submitted = true;
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -215,11 +169,11 @@ export default {
       } 
       else {
         return (
-          api.editCourse(this.idDataEdit, this.dataEdit)
+          api.editRoom(this.idDataEdit, this.dataEdit)
             .then(response => {
               this.submitted = false;
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.code + " has been edited.", "success");
+              Swal.fire("Edited!", this.dataEdit.name + " has been edited.", "success");
               this.fetchData();
             })
             .catch(error => {
@@ -284,12 +238,12 @@ export default {
         :items="datas"
         :fields="fields"
         responsive="sm"
-        :per-page="0"
+        :per-page="perPage"
         :busy.sync="isFentchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
+        :filter="filter"
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
         :headVariant="'dark'"
@@ -333,46 +287,80 @@ export default {
     </div>
     <div name="modalEdit">
       <b-modal 
-        size="lg"
+        size="lg" 
         id="modal-edit" 
-        title="Edit Course" 
+        title="Edit Room" 
         hide-footer 
         title-class="font-18"
       >
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editCourse">
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRoom">
           <div class="tab-pane" id="metadata">
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label for="nim">Kode Mata Kuliah</label>
+                    <label for="nim">Nama Ruangan</label>
                     <input
-                        v-model="dataEdit.code"
-                        id="code"
-                        name="code"
+                        v-model="dataEdit.name"
+                        id="name"
+                        name="name"
                         type="text"
                         class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
+                        :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }"
                     />
                     <div
-                    v-if="submitted && !$v.dataEdit.code.required"
+                    v-if="submitted && !$v.dataEdit.name.required"
                     class="invalid-feedback"
-                    >Kode Mata Kuliah is required.</div>
+                    >Nama Ruangan is required.</div>
                 </div>
             </div>
             <div class="col-sm-12">
                 <div class="form-group">
-                    <label for="nama">Nama Mata Kuliah</label>
+                    <label for="nama">Deskripsi</label>
                     <input 
-                    v-model="dataEdit.name"
-                    id="nama" 
-                    name="nama" 
+                    v-model="dataEdit.desc"
+                    id="desc" 
+                    name="desc" 
                     type="text" 
                     class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
+                    :class="{ 'is-invalid': submitted && $v.dataEdit.desc.$error }" />
 
                     <div
-                    v-if="submitted && !$v.dataEdit.name.required"
+                    v-if="submitted && !$v.dataEdit.desc.required"
                     class="invalid-feedback"
-                    >Nama Mata Kuliah is required.</div>
+                    >Deskripsi is required.</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="nim">Link MS Teams</label>
+                    <input
+                        v-model="dataEdit.msteam_link"
+                        id="msteam_link"
+                        name="msteam_link"
+                        type="text"
+                        class="form-control"
+                        :class="{ 'is-invalid': submitted && $v.dataEdit.msteam_link.$error }"
+                    />
+                    <div
+                    v-if="submitted && !$v.dataEdit.msteam_link.required"
+                    class="invalid-feedback"
+                    >Link MS Teams is required.</div>
+                </div>
+            </div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="nama">Kode MS Teams</label>
+                    <input 
+                    v-model="dataEdit.msteam_code"
+                    id="msteam_code" 
+                    name="msteam_code" 
+                    type="text" 
+                    class="form-control"
+                    :class="{ 'is-invalid': submitted && $v.dataEdit.msteam_code.$error }" />
+
+                    <div
+                    v-if="submitted && !$v.dataEdit.msteam_code.required"
+                    class="invalid-feedback"
+                    >Kode MS Teams is required.</div>
                 </div>
             </div>
             <div class="text-center mt-4">

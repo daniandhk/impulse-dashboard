@@ -121,6 +121,12 @@ export const laboranItems = [
         icon: 'mdi mdi-book-open-page-variant',
         link: 'laboran-course'
     },
+    {
+        id: 12,
+        label: 'menuitems.laboran.list.room',
+        icon: 'mdi mdi-book-open-page-variant',
+        link: 'laboran-room'
+    },
     
 ]
 
@@ -187,6 +193,12 @@ export const staffItems = [
         label: 'menuitems.laboran.list.course',
         icon: 'mdi mdi-book-open-page-variant',
         link: 'laboran-course'
+    },
+    {
+        id: 12,
+        label: 'menuitems.laboran.list.room',
+        icon: 'mdi mdi-book-open-page-variant',
+        link: 'laboran-room'
     },
     
 ]

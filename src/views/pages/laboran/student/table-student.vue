@@ -436,7 +436,13 @@ export default {
       </div>
     </div>
     <div name="modalEdit">
-      <b-modal centered id="modal-edit" title="Edit Student" hide-footer title-class="font-18">
+      <b-modal 
+        size="lg" 
+        id="modal-edit" 
+        title="Edit Student" 
+        hide-footer 
+        title-class="font-18"
+      >
         <div class="card">
           <div class="card-body pt-0">
             <b-tabs nav-class="nav-tabs-custom">
