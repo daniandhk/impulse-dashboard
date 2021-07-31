@@ -445,15 +445,17 @@ export default {
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4" v-if="isNimNotAvailable">
                             <div class="form-group">
-                            <label class="control-label">Jenis Kelamin</label>
-                            <multiselect
-                                v-model="dataStudent.gender"
-                                :disabled="isNimNotAvailable"
-                                :options="genderData"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
-                            ></multiselect>
+                                <label class="control-label">Jenis Kelamin</label>
+                                <input
+                                    v-model="dataStudent.gender"
+                                    :disabled="isNimNotAvailable"
+                                    type="text" 
+                                    class="form-control"
+                                    v-bind:style="disabled_bg"
+                                    :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
+                                >
                                 <div
                                 v-if="submitted && !$v.dataStudent.gender.required"
                                 class="invalid-feedback"
@@ -461,15 +463,49 @@ export default {
                             </div>
                         </div>
 
-                        <div class="col-md-4">
+                        <div class="col-md-4" v-if="isNimNotAvailable">
                             <div class="form-group">
-                            <label class="control-label">Agama</label>
-                            <multiselect
-                                v-model="dataStudent.religion"
-                                :disabled="isNimNotAvailable"
-                                :options="religionData"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
-                            ></multiselect>
+                                <label class="control-label">Agama</label>
+                                <input
+                                    v-model="dataStudent.religion"
+                                    :disabled="isNimNotAvailable"
+                                    type="text" 
+                                    class="form-control"
+                                    v-bind:style="disabled_bg"
+                                    :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
+                                >
+                                <div
+                                v-if="submitted && !$v.dataStudent.religion.required"
+                                class="invalid-feedback"
+                                >Agama is required.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" v-if="!isNimNotAvailable">
+                            <div class="form-group">
+                                <label class="control-label">Jenis Kelamin</label>
+                                <multiselect
+                                    v-model="dataStudent.gender"
+                                    :disabled="isNimNotAvailable"
+                                    :options="genderData"
+                                    :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
+                                ></multiselect>
+                                <div
+                                v-if="submitted && !$v.dataStudent.gender.required"
+                                class="invalid-feedback"
+                                >Jenis Kelamin is required.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4" v-if="!isNimNotAvailable">
+                            <div class="form-group">
+                                <label class="control-label">Agama</label>
+                                <multiselect
+                                    v-model="dataStudent.religion"
+                                    :disabled="isNimNotAvailable"
+                                    :options="religionData"
+                                    :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
+                                ></multiselect>
                                 <div
                                 v-if="submitted && !$v.dataStudent.religion.required"
                                 class="invalid-feedback"

@@ -126,7 +126,7 @@ export default {
 
 <template>
     <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12 mt-4" @submit.prevent="inputStudent">
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputStudent">
             <!-- <div title="Student Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
