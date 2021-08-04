@@ -257,7 +257,7 @@ export default {
           .catch(error => {
             console.log(error)
             Swal.fire({
-              type: 'error',
+              icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
               footer: error
@@ -393,7 +393,7 @@ export default {
               this.submitted = false;
               this.hideModal();
               Swal.fire({
-                type: 'error',
+                icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!',
                 footer: error
@@ -503,7 +503,7 @@ export default {
               this.submitted = false;
               this.hideModal();
               Swal.fire({
-                type: 'error',
+                icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!',
                 footer: error

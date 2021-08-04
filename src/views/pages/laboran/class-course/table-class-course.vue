@@ -174,7 +174,7 @@ export default {
           .catch(error => {
             console.log(error)
             Swal.fire({
-              type: 'error',
+              icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
               footer: error

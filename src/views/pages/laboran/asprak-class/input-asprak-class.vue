@@ -122,7 +122,7 @@ export default {
                     this.isInputError = true;
 
                     Swal.fire({
-                        type: 'error',
+                        icon: 'error',
                         title: 'Oops...',
                         text: 'Something went wrong!',
                         footer: error
