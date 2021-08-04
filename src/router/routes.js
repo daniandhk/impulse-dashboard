@@ -24,7 +24,7 @@ export default [
                     })
                     .catch(error => {
                         store.dispatch('logOut')
-                        console.log(error)
+                        //console.log(error)
                         next({params: { tokenExpired: true }})
                     })
                     

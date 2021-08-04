@@ -105,7 +105,6 @@ export default {
     },
     fetchData(){
       this.isFentchingData = true;
-      console.log("fentching data")
 
       const params = this.getRequestParams(
         this.filter,
@@ -124,7 +123,13 @@ export default {
           })
           .catch(error => {
             this.isFentchingData = false;
-            console.log(error)
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
           })
       )
     },
@@ -189,7 +194,6 @@ export default {
             this.fetchData();
           })
           .catch(error => {
-            console.log(error)
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
@@ -223,10 +227,9 @@ export default {
               this.fetchData();
             })
             .catch(error => {
-              console.log(error)
-
               this.submitted = false;
               this.hideModal();
+              
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

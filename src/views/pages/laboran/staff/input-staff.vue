@@ -68,7 +68,6 @@ export default {
                 .catch(error => {
                     //pop up
                     this.submitted = false;
-                    console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;

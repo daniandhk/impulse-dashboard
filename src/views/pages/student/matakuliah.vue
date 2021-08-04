@@ -272,17 +272,22 @@ export default {
                     this.inputSuccess = true;
                 
                     if (this.inputSuccess) {
-                        console.log(response)
                         this.deleteForm();
                         Swal.fire("Submitted!", "The form submitted successfully.", "success");
                     }
                 })
                 .catch(error => {
                     //pop up
-                    console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        footer: error
+                    })
                 })
           );
       }

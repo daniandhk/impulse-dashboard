@@ -164,7 +164,6 @@ export default {
     fetchData(){
       this.loadDataDropdown();
       this.isFentchingData = true;
-      console.log("fentching data")
 
       let class_name = (this.class_data) ? this.class_data.name : "";
       let course_name = (this.course_data) ? this.course_data.name : "";
@@ -188,7 +187,13 @@ export default {
           })
           .catch(error => {
             this.isFentchingData = false;
-            console.log(error)
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
           })
       )
     },
@@ -249,13 +254,10 @@ export default {
       return (
         api.deleteStudentClass(id)
           .then(response => {
-            console.log(response)
-
             Swal.fire("Deleted!", nim + " has been deleted.", "success");
             this.fetchData();
           })
           .catch(error => {
-            console.log(error)
             Swal.fire({
               icon: 'error',
               title: 'Oops...',
@@ -279,7 +281,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
         )
     },
@@ -296,7 +303,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
     },
 
@@ -344,7 +356,6 @@ export default {
     },
 
     setStudentClass(){
-      console.log(this.dataEdit)
       this.submitted = true;
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -360,10 +371,9 @@ export default {
               this.fetchData();
             })
             .catch(error => {
-              console.log(error)
-
               this.submitted = false;
               this.hideModal();
+
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -384,7 +394,12 @@ export default {
               }
             })
             .catch(error => {
-              console.log(error)
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
             })
         )
     },
@@ -426,10 +441,9 @@ export default {
               this.fetchData();
             })
             .catch(error => {
-              console.log(error)
-
               this.submitted = false;
               this.hideModal();
+              
               Swal.fire({
                 icon: 'error',
                 title: 'Oops...',

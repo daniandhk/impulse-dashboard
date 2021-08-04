@@ -86,7 +86,6 @@ export default {
                 .catch(error => {
                     //pop up
                     this.submitted = false;
-                    console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
@@ -146,7 +145,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
         )
     },

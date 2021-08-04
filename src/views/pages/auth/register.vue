@@ -58,10 +58,16 @@ export default {
               }
             })
             .catch(error => {
-              console.log(error.response)
               this.tryingToRegister = false;
               this.regError = error.response.data.data.message;
               this.isRegisterError = true;
+
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
             })
         );
       }
