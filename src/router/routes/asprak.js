@@ -11,7 +11,7 @@ export default [
 
     {
         path: '/input-soal/create-test',
-        name: 'asprak-input-soal',
+        name: 'asprak-create-test',
         meta: {
             authRequired: true,
         },
