@@ -4,7 +4,7 @@ import VueMeta from 'vue-meta'
 
 import routes from './routes'
 import store from '@/store'
-import { api } from '@/api'
+import * as api from '@/api';
 
 Vue.use(VueRouter)
 Vue.use(VueMeta, {

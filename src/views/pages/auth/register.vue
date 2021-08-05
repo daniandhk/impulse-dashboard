@@ -2,7 +2,7 @@
 import { required, email } from "vuelidate/lib/validators";
 //import httpAxios from '@/httpAxios.js';
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 
 export default {
   data() {

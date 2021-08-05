@@ -1,5 +1,5 @@
 import store from '@/store'
-import { api } from '@/api'
+import * as api from '@/api';
 
 export default [
     {

@@ -1,7 +1,7 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
 import Multiselect from "vue-multiselect";

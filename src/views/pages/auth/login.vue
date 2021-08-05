@@ -1,15 +1,15 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import $ from 'jquery';
 
 export default {
   data() {
     return {
       loginData: {
-				username: "laboran",
-        password: "laboran"
+				username: "",
+        password: ""
 			},
       submitted: false,
       authError: null,
