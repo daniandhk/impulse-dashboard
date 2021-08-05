@@ -1,6 +1,6 @@
 <script>
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
@@ -129,7 +129,6 @@ export default {
     },
     fetchData(){
       this.isFentchingData = true;
-      console.log("fentching data")
 
       const params = this.getRequestParams(
         this.filter,
@@ -148,7 +147,13 @@ export default {
           })
           .catch(error => {
             this.isFentchingData = false;
-            console.log(error)
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
           })
       )
     },
@@ -213,9 +218,8 @@ export default {
             this.fetchData();
           })
           .catch(error => {
-            console.log(error)
             Swal.fire({
-              type: 'error',
+              icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
               footer: error
@@ -256,12 +260,11 @@ export default {
               this.fetchData();
             })
             .catch(error => {
-              console.log(error)
-
               this.submitted = false;
               this.hideModal();
+
               Swal.fire({
-                type: 'error',
+                icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!',
                 footer: error
@@ -280,7 +283,12 @@ export default {
               }
             })
             .catch(error => {
-              console.log(error)
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
             })
         )
     },
@@ -322,12 +330,11 @@ export default {
               this.fetchData();
             })
             .catch(error => {
-              console.log(error)
-
               this.submitted = false;
               this.hideModal();
+              
               Swal.fire({
-                type: 'error',
+                icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!',
                 footer: error

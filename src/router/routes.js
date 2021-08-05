@@ -1,5 +1,5 @@
 import store from '@/store'
-import { api } from '@/api'
+import * as api from '@/api';
 
 export default [
     {
@@ -24,7 +24,7 @@ export default [
                     })
                     .catch(error => {
                         store.dispatch('logOut')
-                        console.log(error)
+                        //console.log(error)
                         next({params: { tokenExpired: true }})
                     })
                     

@@ -2,7 +2,7 @@
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 
 /**
@@ -272,17 +272,22 @@ export default {
                     this.inputSuccess = true;
                 
                     if (this.inputSuccess) {
-                        console.log(response)
                         this.deleteForm();
                         Swal.fire("Submitted!", "The form submitted successfully.", "success");
                     }
                 })
                 .catch(error => {
                     //pop up
-                    console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        footer: error
+                    })
                 })
           );
       }

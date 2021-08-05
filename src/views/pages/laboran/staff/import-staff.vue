@@ -25,18 +25,25 @@ export default {
         maxFiles: 1,
         init: function() {
           this.on('addedfile', function(file) {
-            console.log(file)
             if (this.files.length > 1) {
-            this.removeFile(this.files[0]);
+              this.removeFile(this.files[0]);
             }
           });
           this.on('error', function(file, response){
-            console.log(response)
-            Swal.fire("Failed to upload your file!", "Cek kembali kesesuaian file dengan deskripsi.", "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to upload your file!',
+                text: 'Cek kembali kesesuaian file dengan deskripsi.',
+                footer: response
+            })
           });
           this.on('success', function(file, response){
-            console.log(response)
-            Swal.fire("Uploaded!", "Your file has been uploaded.", "success");
+            Swal.fire({
+                icon: 'success',
+                title: 'Uploaded!',
+                text: 'Your file has been uploaded.',
+                footer: response
+            })
           })
         }
       }
