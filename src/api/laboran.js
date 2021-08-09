@@ -174,20 +174,20 @@ export function editRoom(id, data){
 
 //class-course
 export function getAllClassCourses(params) {
-    return httpAxios.get('/laboran/class-course', { params })
+    return httpAxios.get('/classcourse', { params })
 }
 export function deleteClassCourse(id) {
-    return httpAxios.delete(`/laboran/class-course/${id}`);
+    return httpAxios.delete(`/classcourse/${id}`);
 }
 export function inputClassCourse(data){
     return httpAxios({
-        url: '/laboran/class-course',
+        url: '/classcourse',
         method: 'POST',
         data: data
     })
 }
 export function getClassCourseStaffYear() {
-    return httpAxios.get('/laboran/dropdown/classcoursestaffyear')
+    return httpAxios.get('/classcourse/dropdown/classcoursestaffyear')
 }
 
 //roles
