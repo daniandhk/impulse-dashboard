@@ -260,8 +260,8 @@ export default {
       this.dataFilter.course_name = this.class_course_data.course.name;
       this.dataFilter.academic_year_id = this.class_course_data.academic_year.id;
       this.$router.push({
-          name: 'aslab-input-jadwal', 
-          params: { dataFilter: this.dataFilter }
+          name: 'aslab-schedule-input', 
+          params: { dataFilter: this.dataFilter, id: this.schedule_data.id }
       });
     },
 

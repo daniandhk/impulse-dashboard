@@ -1,20 +1,29 @@
 export default [
     //aslab
     {
-        path: '/aslab/jadwal',
-        name: 'aslab-jadwal',
+        path: '/aslab/schedule/calendar',
+        name: 'aslab-schedule-calendar',
         meta: {
             authRequired: true,
         },
-        component: () => import('../../views/pages/aslab/calendar-jadwal')
+        component: () => import('../../views/pages/aslab/schedule-calendar')
     },
 
     {
-        path: '/aslab/input-jadwal',
-        name: 'aslab-input-jadwal',
+        path: '/aslab/schedule',
+        name: 'aslab-schedule',
         meta: {
             authRequired: true,
         },
-        component: () => import('../../views/pages/aslab/input-jadwal')
+        component: () => import('../../views/pages/aslab/schedule')
+    },
+
+    {
+        path: '/aslab/schedule/:id',
+        name: 'aslab-schedule-input',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../../views/pages/aslab/schedule-input')
     },
 ]
