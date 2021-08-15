@@ -176,6 +176,9 @@ export function editRoom(id, data){
 export function getAllClassCourses(params) {
     return httpAxios.get('/classcourse', { params })
 }
+export function showClassCourse(id) {
+    return httpAxios.get(`/classcourse/${id}`);
+}
 export function deleteClassCourse(id) {
     return httpAxios.delete(`/classcourse/${id}`);
 }

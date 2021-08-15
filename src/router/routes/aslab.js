@@ -6,7 +6,7 @@ export default [
         meta: {
             authRequired: true,
         },
-        component: () => import('../../views/pages/aslab/kalender')
+        component: () => import('../../views/pages/aslab/calendar-jadwal')
     },
 
     {
