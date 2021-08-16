@@ -239,6 +239,10 @@ export default {
         value,
       );
       const class_course_id = this.class_course_data.id;
+      this.schedule_data.title = "";
+      this.time_start = null;
+      this.time_end = null;
+      this.time_date = null;
 
       api.showSchedules(class_course_id, params)
           .then(response => {
