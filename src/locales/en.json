@@ -61,9 +61,8 @@
     "aslab": {
       "text": "Asisten Lab",
       "list":{
-        "jadwal": "Jadwal",
-        "kalender": "Kalender",
-        "inputjadwal":"Input Jadwal"
+        "jadwal": "Schedule",
+        "kalender": "Calendar"
       }
     },
     "asprak": {

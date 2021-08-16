@@ -39,7 +39,7 @@ export default [
     },
 
     {
-        path: '/aslab/schedule/:id',
+        path: '/aslab/schedule/edit/:id',
         name: 'aslab-schedule-input',
         meta: {
             authRequired: true,
