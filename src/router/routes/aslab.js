@@ -1,20 +1,58 @@
+import store from '@/store'
+
 export default [
     //aslab
     {
-        path: '/aslab/jadwal',
-        name: 'aslab-jadwal',
+        path: '/aslab/schedule/calendar',
+        name: 'aslab-schedule-calendar',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'aslab'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
-        component: () => import('../../views/pages/aslab/kalender')
+        component: () => import('../../views/pages/aslab/schedule-calendar')
     },
 
     {
-        path: '/aslab/input-jadwal',
-        name: 'aslab-input-jadwal',
+        path: '/aslab/schedule',
+        name: 'aslab-schedule',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'aslab'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
-        component: () => import('../../views/pages/aslab/input-jadwal')
+        component: () => import('../../views/pages/aslab/schedule')
+    },
+
+    {
+        path: '/aslab/schedule/:id',
+        name: 'aslab-schedule-input',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'aslab'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/aslab/schedule-input')
     },
 ]

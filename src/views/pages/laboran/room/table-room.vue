@@ -25,7 +25,7 @@ export default {
   data() {
     return {
       //list room
-      isFentchingData: false,
+      isFetchingData: false,
       dataRooms: [],
       totalRows: 1,
       currentPage: 1,
@@ -83,7 +83,7 @@ export default {
       this.currentPage = 1;
     },
     fetchData(){
-      this.isFentchingData = true;
+      this.isFetchingData = true;
 
       return (
         api.getAllRooms()
@@ -92,10 +92,10 @@ export default {
               this.totalRows = response.data.rooms.length;
               this.dataRooms = response.data.rooms;
             }
-            this.isFentchingData = false;
+            this.isFetchingData = false;
           })
           .catch(error => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
             
             Swal.fire({
                 icon: 'error',
@@ -241,7 +241,7 @@ export default {
         :fields="fields"
         responsive="sm"
         :per-page="perPage"
-        :busy.sync="isFentchingData"
+        :busy.sync="isFetchingData"
         :current-page="currentPage"
         :sort-by="sortBy"
         :sort-desc="sortDesc"

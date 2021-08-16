@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       //list classroom
-      isFentchingData: false,
+      isFetchingData: false,
       dataClassrooms: [],
       totalRows: 1,
       currentPage: 1,
@@ -107,7 +107,7 @@ export default {
       return params;
     },
     fetchData(){
-      this.isFentchingData = true;
+      this.isFetchingData = true;
 
       const params = this.getRequestParams(
         this.filter,
@@ -119,13 +119,13 @@ export default {
       return (
         api.getAllClassrooms(params)
           .then(response => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
 
             this.totalRows = response.data.meta.pagination.total;
             this.dataClassrooms = response.data.data;
           })
           .catch(error => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
             
             Swal.fire({
                 icon: 'error',
@@ -293,7 +293,7 @@ export default {
         :fields="fields"
         responsive="sm"
         :per-page="0"
-        :busy.sync="isFentchingData"
+        :busy.sync="isFetchingData"
         :current-page="currentPage"
         @sort-changed="handleSortingChange"
         :sort-by="sortBy"

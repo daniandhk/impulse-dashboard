@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       //list students
-      isFentchingData: false,
+      isFetchingData: false,
       dataStudents: [],
       totalRows: 1,
       currentPage: 1,
@@ -51,17 +51,17 @@ export default {
         { key: "action", sortable: false }
       ],
 
-      courseData: [],
-      classCourseData: [],
-      namaKelasData: [],
-      isKelasNotSelected: true,
-
-      //v-model dropdown value = array of objects
+      class_name: "",
+      course_name: "",
+      academic_year_id: "",
       course_data: "",
       class_data: "",
-
-      filter_course: "",
-      filter_class: "",
+      dataDropdown:{
+          classes: [],
+          courses: [],
+          staffs: [],
+          academic_year: [],
+      },
 
       //edit data
       dataEdit: { 
@@ -163,15 +163,12 @@ export default {
     },
     fetchData(){
       this.loadDataDropdown();
-      this.isFentchingData = true;
-
-      let class_name = (this.class_data) ? this.class_data.name : "";
-      let course_name = (this.course_data) ? this.course_data.name : "";
+      this.isFetchingData = true;
 
       const params = this.getRequestParams(
         this.filter,
-        class_name,
-        course_name,
+        this.class_name,
+        this.course_name,
         this.currentPage,
         this.perPage,
         this.sortBy,
@@ -180,13 +177,13 @@ export default {
       return (
         api.getAllStudentClasses(params)
           .then(response => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
 
             this.totalRows = response.data.meta.pagination.total;
             this.dataStudents = response.data.data;
           })
           .catch(error => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
             
             Swal.fire({
                 icon: 'error',
@@ -268,16 +265,16 @@ export default {
       )
     },
 
-    loadDataDropdown(){
-        this.getClassroomNames();
+    async loadDataDropdown(){
+        this.getDataDropdown();
     },
 
-    getClassroomNames(){
+    async getDataDropdown(){
         return (
-            api.getByNameClassrooms()
+            api.getClassCourseStaffYear()
             .then(response => {
-                if(response.data.classes){
-                    this.namaKelasData = response.data.classes;
+                if(response.data.data){
+                    this.setDataDropdown(response.data.data);
                 }
             })
             .catch(error => {
@@ -291,54 +288,31 @@ export default {
         )
     },
 
-    async getDataClassCourses(namaKelasData){
-        const params = this.getRequestParams(
-                null,
-                namaKelasData.name
-        );
-        return api.getAllClassCourses(params)
-            .then(response => {
-                if (response.data.data){
-                    this.classCourseData = response.data.data;
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: error
-                })
-            })
-    },
-
-    async setKelas(value){
-        this.class_data = value;
-        this.removeCourse();
-
-        await this.getDataClassCourses(value);
-        this.classCourseData.forEach((element, index, array) => {
-            this.courseData.push(element.course)
+    setDataDropdown(data){
+        data.academic_year.forEach((element, index, array) => {
+            element.year = String(element.year) + " / " + String(element.semester)
         });
-
-        this.isKelasNotSelected = false;
+        this.dataDropdown = data;
     },
 
-    async setCourse(value){
-        this.course_data = value;
-        this.fetchData();
+    async selectKelas(value){
+        this.class_name = value.name;
+        await this.fetchData();
     },
 
-    removeKelas(){
-        this.isKelasNotSelected = true;
-        this.class_data = "";
-        this.courseData = [];
-        this.removeCourse();
+    async removeKelas(){
+        this.class_name = "";
+        await this.fetchData();
     },
 
-    removeCourse(){
-        this.course_data = "";
-        this.fetchData();
+    async selectCourse(value){
+        this.course_name = value.name;
+        await this.fetchData();
+    },
+
+    async removeCourse(){
+        this.course_name = "";
+        await this.fetchData();
     },
 
     async onClickEdit(data){
@@ -481,10 +455,10 @@ export default {
             <multiselect
                 placeholder="Kelas"
                 v-model="class_data"
-                :options="namaKelasData"
+                :options="dataDropdown.classes"
                 label="name"
                 track-by="name"
-                @select="setKelas"
+                @select="selectKelas"
                 @remove="removeKelas"
             ></multiselect>
           </div>
@@ -494,11 +468,10 @@ export default {
             <multiselect
                 placeholder="Mata Kuliah"
                 v-model="course_data"
-                :options="loadCourseData"
-                :disabled="isKelasNotSelected"
+                :options="dataDropdown.courses"
                 label="name"
                 track-by="name"
-                @select="setCourse"
+                @select="selectCourse"
                 @remove="removeCourse"
             ></multiselect>
           </div>
@@ -543,7 +516,7 @@ export default {
         :fields="fields"
         responsive="sm"
         :per-page="0"
-        :busy.sync="isFentchingData"
+        :busy.sync="isFetchingData"
         :current-page="currentPage"
         @sort-changed="handleSortingChange"
         :sort-by="sortBy"

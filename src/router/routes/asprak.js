@@ -1,3 +1,5 @@
+import store from '@/store'
+
 export default [
     //path asprak
     {
@@ -5,6 +7,15 @@ export default [
         name: 'asprak-input-soal',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/asprak/input-soal/input-soal')
     },
@@ -14,6 +25,15 @@ export default [
         name: 'asprak-create-test',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/asprak/input-soal/create-test')
     },
@@ -23,6 +43,15 @@ export default [
         name: 'asprak-lihat-feedback',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/asprak/lihat-feedback')
     },
@@ -32,6 +61,15 @@ export default [
         name: 'asprak-absensi-asprak',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/asprak/absen/absensi-asprak')
     },
@@ -41,6 +79,15 @@ export default [
         name: 'berita-acara-asprak',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/asprak/absen/berita-acara')
     },

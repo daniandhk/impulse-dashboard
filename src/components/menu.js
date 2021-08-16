@@ -228,12 +228,12 @@ export const aslabItems = [
             {
                 id: 5,
                 label: 'menuitems.aslab.list.kalender',
-                link: 'aslab-jadwal'
+                link: 'aslab-schedule-calendar'
             },
             {
                 id: 6,
                 label: 'menuitems.aslab.list.inputjadwal',
-                link: 'aslab-input-jadwal'
+                link: 'aslab-schedule'
             }
         ]
     },
