@@ -224,8 +224,8 @@ export default {
         this.schedule_data.date = info.event.startStr;
       } 
       else{
-        this.schedule_data.start = moment(String(info.event.startStr)).format('YYYY-MM-DD hh:mm:ss');
-        this.schedule_data.end = moment(String(info.event.endStr)).format('YYYY-MM-DD hh:mm:ss');
+        this.schedule_data.start = moment(String(info.event.startStr)).format('YYYY-MM-DD HH:mm:ss');
+        this.schedule_data.end = moment(String(info.event.endStr)).format('YYYY-MM-DD HH:mm:ss');
         this.schedule_data.date = moment(String(info.event.startStr)).format('YYYY-MM-DD');
       }
 
