@@ -39,7 +39,7 @@ export default {
         },
       ],
       //list schedule
-      isFentchingData: false,
+      isFetchingData: false,
       dataSchedules: [],
       schedule_data: {
         id: "",
@@ -185,13 +185,13 @@ export default {
     },
 
     async fetchData(){
-      this.isFentchingData = true;
+      this.isFetchingData = true;
       //emptying data
       this.dataSchedules = [];
       await this.getSchedules();
       //await sleep(1000);
       this.calendarOptions.events = this.datas;
-      this.isFentchingData = false;
+      this.isFetchingData = false;
     },
 
     async getClassCourse(id){

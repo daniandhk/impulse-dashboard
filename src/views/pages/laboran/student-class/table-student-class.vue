@@ -29,7 +29,7 @@ export default {
   data() {
     return {
       //list students
-      isFentchingData: false,
+      isFetchingData: false,
       dataStudents: [],
       totalRows: 1,
       currentPage: 1,
@@ -163,7 +163,7 @@ export default {
     },
     fetchData(){
       this.loadDataDropdown();
-      this.isFentchingData = true;
+      this.isFetchingData = true;
 
       const params = this.getRequestParams(
         this.filter,
@@ -177,13 +177,13 @@ export default {
       return (
         api.getAllStudentClasses(params)
           .then(response => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
 
             this.totalRows = response.data.meta.pagination.total;
             this.dataStudents = response.data.data;
           })
           .catch(error => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
             
             Swal.fire({
                 icon: 'error',
@@ -516,7 +516,7 @@ export default {
         :fields="fields"
         responsive="sm"
         :per-page="0"
-        :busy.sync="isFentchingData"
+        :busy.sync="isFetchingData"
         :current-page="currentPage"
         @sort-changed="handleSortingChange"
         :sort-by="sortBy"

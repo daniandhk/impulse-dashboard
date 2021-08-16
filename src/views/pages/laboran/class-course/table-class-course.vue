@@ -17,7 +17,7 @@ export default {
   data() {
     return {
       //list class-course
-      isFentchingData: false,
+      isFetchingData: false,
       dataClassCourses: [],
       dataTable: [],
       totalRows: 1,
@@ -98,7 +98,7 @@ export default {
     },
     fetchData(){
       this.loadDataDropdown();
-      this.isFentchingData = true;
+      this.isFetchingData = true;
 
       const params = this.getRequestParams(
         this.class_name,
@@ -113,10 +113,10 @@ export default {
               this.totalRows = response.data.data.length;
               this.dataClassCourses = response.data.data;
             }
-            this.isFentchingData = false;
+            this.isFetchingData = false;
           })
           .catch(error => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
 
             Swal.fire({
                 icon: 'error',
@@ -305,7 +305,7 @@ export default {
         :fields="fields"
         responsive="sm"
         :per-page="perPage"
-        :busy.sync="isFentchingData"
+        :busy.sync="isFetchingData"
         :current-page="currentPage"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
