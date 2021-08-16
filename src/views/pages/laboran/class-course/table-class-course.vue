@@ -24,7 +24,6 @@ export default {
       currentPage: 1,
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
-      filter: "",
       filter_search: "",
       filterOn: [],
       sortBy: "class.name",
@@ -38,7 +37,17 @@ export default {
         { key: "action", sortable: false }
       ],
 
-      namaKelasData: [],
+      class_name: "",
+      course_name: "",
+      academic_year_id: "",
+      course_data: "",
+      class_data: "",
+      dataDropdown:{
+          classes: [],
+          courses: [],
+          staffs: [],
+          academic_year: [],
+      },
     };
   },
   computed: {
@@ -70,11 +79,19 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(kelas) {
+    getRequestParams(class_name, course_name, academic_year_id) {
       let params = {};
 
-      if (kelas) {
-        params["kelas"] = kelas;
+      if (class_name) {
+        params["class_name"] = class_name;
+      }
+
+      if (course_name) {
+        params["course_name"] = course_name;
+      }
+
+      if (academic_year_id) {
+        params["academic_year_id"] = academic_year_id;
       }
 
       return params;
@@ -84,7 +101,9 @@ export default {
       this.isFentchingData = true;
 
       const params = this.getRequestParams(
-        this.filter,
+        this.class_name,
+        this.course_name,
+        this.academic_year_id,
       );
 
       return (
@@ -109,26 +128,16 @@ export default {
       )
     },
 
-    setKelas(value) {
-      this.filter = value.name;
-      this.fetchData();
+    async loadDataDropdown(){
+        this.getDataDropdown();
     },
 
-    removeKelas() {
-      this.filter = "";
-      this.fetchData();
-    },
-
-    loadDataDropdown(){
-        this.getClassroomNames();
-    },
-
-    getClassroomNames(){
+    async getDataDropdown(){
         return (
-            api.getByNameClassrooms()
+            api.getClassCourseStaffYear()
             .then(response => {
-                if(response.data.classes){
-                    this.namaKelasData = response.data.classes;
+                if(response.data.data){
+                    this.setDataDropdown(response.data.data);
                 }
             })
             .catch(error => {
@@ -140,6 +149,33 @@ export default {
                 })
             })
         )
+    },
+
+    setDataDropdown(data){
+        data.academic_year.forEach((element, index, array) => {
+            element.year = String(element.year) + " / " + String(element.semester)
+        });
+        this.dataDropdown = data;
+    },
+
+    async selectKelas(value){
+        this.class_name = value.name;
+        await this.fetchData();
+    },
+
+    async removeKelas(){
+        this.class_name = "";
+        await this.fetchData();
+    },
+
+    async selectCourse(value){
+        this.course_name = value.name;
+        await this.fetchData();
+    },
+
+    async removeCourse(){
+        this.course_name = "";
+        await this.fetchData();
     },
 
     handlePageChange(value) {
@@ -208,12 +244,25 @@ export default {
           <div class="form-group">
             <multiselect
                 placeholder="Kelas"
-                v-model="filter"
-                :options="namaKelasData"
+                v-model="class_data"
+                :options="dataDropdown.classes"
                 label="name"
                 track-by="name"
-                @select="setKelas"
+                @select="selectKelas"
                 @remove="removeKelas"
+            ></multiselect>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <multiselect
+                placeholder="Mata Kuliah"
+                v-model="course_data"
+                :options="dataDropdown.courses"
+                label="name"
+                track-by="name"
+                @select="selectCourse"
+                @remove="removeCourse"
             ></multiselect>
           </div>
         </div>
