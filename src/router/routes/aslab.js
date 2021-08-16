@@ -1,3 +1,5 @@
+import store from '@/store'
+
 export default [
     //aslab
     {
@@ -5,6 +7,15 @@ export default [
         name: 'aslab-schedule-calendar',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'aslab'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/aslab/schedule-calendar')
     },
@@ -14,6 +25,15 @@ export default [
         name: 'aslab-schedule',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'aslab'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/aslab/schedule')
     },
@@ -23,6 +43,15 @@ export default [
         name: 'aslab-schedule-input',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'aslab'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/aslab/schedule-input')
     },
