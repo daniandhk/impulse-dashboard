@@ -8,8 +8,6 @@ import listPlugin from "@fullcalendar/list";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
-import store from '@/store';
-import { required } from "vuelidate/lib/validators";
 
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
@@ -21,22 +19,23 @@ import Multiselect from "vue-multiselect";
  * Calendar component
  */
 export default {
-  page: {
-    title: "Calendar",
-    meta: [{ name: "description" }],
-  },
   components: { FullCalendar, Layout, PageHeader, Multiselect, },
   data() {
     return {
       title: "Calendar",
       items: [
         {
-          text: "Aslab",
+          text: "Asisten Lab",
+          href: "/"
+        },
+        {
+          text: "Schedule",
+          href: "/aslab/schedule"
         },
         {
           text: "Calendar",
           active: true,
-        },
+        }
       ],
       //list schedule
       isFetchingData: false,
@@ -71,11 +70,6 @@ export default {
         academic_year: {
           name: "",
         }
-      },
-      dataFilter:{
-        class_name: "",
-        course_name: "",
-        academic_year_id: "",
       },
       class_name: "",
       course_name: "",
@@ -119,12 +113,6 @@ export default {
       currentEvents: [],
       eventModal: false,
     };
-  },
-  validations: {
-    event: {
-      title: { required },
-      category: { required },
-    },
   },
   computed: {
     datas() {
@@ -256,12 +244,9 @@ export default {
     },
 
     editModal(){
-      this.dataFilter.class_name = this.class_course_data.class.name;
-      this.dataFilter.course_name = this.class_course_data.course.name;
-      this.dataFilter.academic_year_id = this.class_course_data.academic_year.id;
       this.$router.push({
           name: 'aslab-schedule-input', 
-          params: { dataFilter: this.dataFilter, id: this.schedule_data.id }
+          params: { id: this.schedule_data.id }
       });
     },
 
