@@ -64,9 +64,12 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     },
   },
-  mounted() {
+  mounted: async function() {
     // Set the initial number of items
-    this.fetchData();
+    this.loading();
+    await this.fetchData().then(result=>{
+        this.loading();
+    });
     this.loadDataDropdown();
   },
   methods: {
@@ -160,38 +163,59 @@ export default {
 
     async selectKelas(value){
         this.class_name = value.name;
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async removeKelas(){
         this.class_name = "";
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async selectCourse(value){
         this.course_name = value.name;
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async removeCourse(){
         this.course_name = "";
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
-    handlePageChange(value) {
+    async handlePageChange(value) {
       this.currentPage = value;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    handlePageSizeChange(value) {
+    async handlePageSizeChange(value) {
       this.perPage = value;
       this.currentPage = 1;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    refreshData(){
+    async refreshData(){
       this.filter = "";
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
     onClickDelete(data){
@@ -210,12 +234,15 @@ export default {
       });
     },
 
-    deleteClassCourse(id, class_name, course_name){
+    async deleteClassCourse(id, class_name, course_name){
       return (
         api.deleteClassCourse(id)
           .then(response => {
             Swal.fire("Deleted!", class_name + " | " + course_name + " has been deleted.", "success");
-            this.fetchData();
+            this.loading();
+            this.fetchData().then(result=>{
+                this.loading();
+            });
           })
           .catch(error => {
             Swal.fire({
@@ -227,12 +254,30 @@ export default {
           })
       )
     },
+
+    loading() {
+      if(this.isLoading){
+        this.isLoading = false;
+      } else{
+        this.isLoading = true;
+      }
+
+      var x = document.getElementById("loading");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    },
   }
 };
 </script>
 
 <template>
   <div>
+    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
         <label class="d-inline-flex align-items-center">

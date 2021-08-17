@@ -123,7 +123,10 @@ export default {
     },
   },
   mounted: async function() {
-    await this.fetchData();
+    this.loading();
+    await this.fetchData().then(result=>{
+        this.loading();
+    });
     await this.loadDataDropdown();
   },
   methods: {
@@ -282,22 +285,49 @@ export default {
 
     async selectKelas(value){
         this.class_name = value.name;
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async removeKelas(){
         this.class_name = "";
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async selectCourse(value){
         this.course_name = value.name;
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async removeCourse(){
         this.course_name = "";
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    loading() {
+      if(this.isLoading){
+        this.isLoading = false;
+      } else{
+        this.isLoading = true;
+      }
+
+      var x = document.getElementById("loading");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
     },
   },
 };
@@ -312,6 +342,9 @@ function sleep(ms) {
 <template>
   <Layout>
     <PageHeader :title="title" :items="items" />
+    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    </div>
     <div class="row">
       <div class="col-12">
         <div class="card">
