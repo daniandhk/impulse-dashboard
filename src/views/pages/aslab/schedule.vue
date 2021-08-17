@@ -34,7 +34,6 @@ export default {
   },
   mounted: async function() {
     this.loading();
-    this.loadDataDropdown();
     await this.fetchData().then(result=>{
       this.loading();
     });
@@ -143,8 +142,8 @@ export default {
 
       return params;
     },
-    fetchData(){
-      this.loadDataDropdown();
+    async fetchData(){
+      await this.loadDataDropdown();
       this.isFetchingData = true;
 
       const params = this.getRequestParams(
@@ -207,33 +206,51 @@ export default {
 
     async selectKelas(value){
         this.class_name = value.name;
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async removeKelas(){
         this.class_name = "";
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async selectCourse(value){
         this.course_name = value.name;
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async removeCourse(){
         this.course_name = "";
-        await this.fetchData();
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
-    handlePageChange(value) {
-      this.currentPage = value;
-      this.fetchData();
+    async handlePageChange(value) {
+        this.currentPage = value;
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
-    handlePageSizeChange(value) {
-      this.perPage = value;
-      this.currentPage = 1;
-      this.fetchData();
+    async handlePageSizeChange(value) {
+        this.perPage = value;
+        this.currentPage = 1;
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async getClassCourse(id){

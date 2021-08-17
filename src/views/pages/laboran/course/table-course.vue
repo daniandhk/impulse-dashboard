@@ -62,9 +62,12 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     },
   },
-  mounted() {
+  mounted: async function() {
     // Set the initial number of items
-    this.fetchData();
+    this.loading();
+    await this.fetchData().then(result=>{
+        this.loading();
+    });
   },
   methods: {
     ...notificationMethods,
@@ -134,18 +137,24 @@ export default {
       )
     },
 
-    handlePageChange(value) {
+    async handlePageChange(value) {
       this.currentPage = value;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    handlePageSizeChange(value) {
+    async handlePageSizeChange(value) {
       this.perPage = value;
       this.currentPage = 1;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    handleSortingChange(value){
+    async handleSortingChange(value){
       if(value.sortBy !== this.sortBy) {
         this.sortDesc = false
       } 
@@ -158,16 +167,25 @@ export default {
         }
       }
       this.sortBy = value.sortBy;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    handleSearch(value){
+    async handleSearch(value){
       this.filter = value;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    refreshData(){
-      this.fetchData();
+    async refreshData(){
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
     onClickDelete(data){
@@ -191,7 +209,10 @@ export default {
         api.deleteCourse(id)
           .then(response => {
             Swal.fire("Deleted!", code + " has been deleted.", "success");
-            this.fetchData();
+            this.loading();
+            this.fetchData().then(result=>{
+                this.loading();
+            });
           })
           .catch(error => {
             Swal.fire({
@@ -224,7 +245,10 @@ export default {
               this.submitted = false;
               this.hideModal();
               Swal.fire("Edited!", this.dataEdit.code + " has been edited.", "success");
-              this.fetchData();
+              this.loading();
+              this.fetchData().then(result=>{
+                  this.loading();
+              });
             })
             .catch(error => {
               this.submitted = false;
@@ -244,12 +268,30 @@ export default {
     hideModal(){
       this.$bvModal.hide('modal-edit');
     },
+
+    loading() {
+      if(this.isLoading){
+        this.isLoading = false;
+      } else{
+        this.isLoading = true;
+      }
+
+      var x = document.getElementById("loading");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    },
   }
 };
 </script>
 
 <template>
   <div>
+    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
         <div id="tickets-table_length" class="dataTables_length">
