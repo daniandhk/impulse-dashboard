@@ -2,7 +2,7 @@
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import appConfig from "@/app.config";
 

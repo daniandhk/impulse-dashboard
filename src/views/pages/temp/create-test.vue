@@ -40,7 +40,6 @@ export default {
   },
   methods: {
       selectType(value){
-          console.log(value)
           if (value == "Pretest") {
             this.isPretestSelected = true;
             this.isJurnalSelected = false;

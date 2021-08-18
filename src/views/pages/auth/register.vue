@@ -2,7 +2,7 @@
 import { required, email } from "vuelidate/lib/validators";
 //import httpAxios from '@/httpAxios.js';
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 
 export default {
   data() {
@@ -58,10 +58,16 @@ export default {
               }
             })
             .catch(error => {
-              console.log(error.response)
               this.tryingToRegister = false;
               this.regError = error.response.data.data.message;
               this.isRegisterError = true;
+
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
             })
         );
       }

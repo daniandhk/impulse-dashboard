@@ -1,6 +1,6 @@
 <script>
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import Multiselect from "vue-multiselect";
 
@@ -25,15 +25,16 @@ export default {
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
       filter: "",
+      filter_search: "",
       filterOn: [],
       sortBy: "class.name",
       sortDesc: false,
       fields: [
-        { key: "class.name", label: "Nama Kelas" },
-        { key: "course.name", label: "Nama MK" },
-        { key: "staff.name", label: "Nama Dosen" },
-        { key: "academic_year.semester", label: "Semester" },
-        { key: "academic_year.name", label: "Tahun Akademik" },
+        { key: "class.name", sortable: true, label: "Nama Kelas" },
+        { key: "course.name", sortable: true, label: "Nama MK" },
+        { key: "staff.name", sortable: true, label: "Nama Dosen" },
+        { key: "academic_year.semester", sortable: true, label: "Semester" },
+        { key: "academic_year.name", sortable: true, label: "Tahun Akademik" },
         { key: "action", sortable: false }
       ],
 
@@ -48,7 +49,7 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataTable;
+      return this.dataClassCourses;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -81,7 +82,6 @@ export default {
     fetchData(){
       this.loadDataDropdown();
       this.isFentchingData = true;
-      console.log("fentching data")
 
       const params = this.getRequestParams(
         this.filter,
@@ -93,26 +93,20 @@ export default {
             if (response.data.data){
               this.totalRows = response.data.data.length;
               this.dataClassCourses = response.data.data;
-              this.setData(this.dataClassCourses);
             }
             this.isFentchingData = false;
           })
           .catch(error => {
-            console.log(error)
             this.isFentchingData = false;
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
           })
       )
-    },
-
-    setData(dataClassCourses){
-        //paginate
-        this.dataTable = this.paginate(dataClassCourses);
-    },
-
-    paginate(array) {
-        const start = this.currentPage * this.perPage - this.perPage;
-        const end = start + this.perPage;
-        return array.slice(start, end);
     },
 
     setKelas(value) {
@@ -138,7 +132,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
         )
     },
@@ -151,22 +150,6 @@ export default {
     handlePageSizeChange(value) {
       this.perPage = value;
       this.currentPage = 1;
-      this.fetchData();
-    },
-
-    handleSortingChange(value){
-      if(value.sortBy !== this.sortBy) {
-        this.sortDesc = false
-      } 
-      else {
-        if(this.sortDesc) {
-          this.sortDesc = false
-        } 
-        else {
-          this.sortDesc = true
-        }
-      }
-      this.sortBy = value.sortBy;
       this.fetchData();
     },
 
@@ -199,9 +182,8 @@ export default {
             this.fetchData();
           })
           .catch(error => {
-            console.log(error)
             Swal.fire({
-              type: 'error',
+              icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
               footer: error
@@ -251,6 +233,20 @@ export default {
           </label>
         </div>
       </div>
+      <!-- Search -->
+      <div class="col-sm-12 col-md-6">
+        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+          <label class="d-inline-flex align-items-center">
+            Search:
+            <b-form-input
+              v-model="filter_search"
+              type="search"
+              class="form-control form-control-sm ml-2"
+            ></b-form-input>
+          </label>
+        </div>
+      </div>
+      <!-- End search -->
     </div>
     <div class="table-responsive">
       <b-table
@@ -259,12 +255,12 @@ export default {
         :items="datas"
         :fields="fields"
         responsive="sm"
-        :per-page="0"
+        :per-page="perPage"
         :busy.sync="isFentchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
+        :filter="filter_search"
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
         :headVariant="'dark'"

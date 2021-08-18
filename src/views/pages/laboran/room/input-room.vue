@@ -1,5 +1,4 @@
 <script>
-import Multiselect from "vue-multiselect";
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
@@ -11,25 +10,25 @@ import store from '@/store';
  */
 export default {
   components: {
-    Multiselect,
+
   },
   validations: {
-    dataStudent: {
+    dataRoom: {
       name: { required },
-      nim: { required },
-      gender: { required },
-      religion: { required },
+      desc: { required },
+      msteam_code: { required },
+      msteam_link: { required },
     },
   },
   data() {
     return {
-      //input student
-      title: "Student Data",
-      dataStudent: { 
+      //input room
+      title: "Room Data",
+      dataRoom: { 
           name: "", 
-          nim: "", 
-          gender: "", 
-          religion: "",
+          desc: "", 
+          msteam_code: "",
+          msteam_link: "",
           },
       submitted: false,
       inputError: null,
@@ -37,25 +36,17 @@ export default {
       isInputError: false,
       inputSuccess: false,
       isInputCanceled: false,
-      isFentchingData: false,
-
-      //dropdown list data
-      religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
-      genderData: ['male', 'female'],
     };
-  },
-  mounted() {
-      
   },
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
-    },
+    }
   },
   methods: {
     ...notificationMethods,
     
-    inputStudent() {
+    inputRoom() {
         this.submitted = true;
         this.$v.$touch();
         if (this.$v.$invalid) {
@@ -64,7 +55,7 @@ export default {
           this.tryingToInput = true;
           this.inputError = null;
           return (
-              api.inputStudent(this.dataStudent)
+              api.inputRoom(this.dataRoom)
                 .then(response => {
                     this.tryingToInput = false;
                     this.isInputError = false;
@@ -114,10 +105,10 @@ export default {
     },
 
     clearForm(){
-        this.dataStudent.name = "";
-        this.dataStudent.nim = "";
-        this.dataStudent.gender = "";
-        this.dataStudent.religion = "";
+        this.dataRoom.name = "";
+        this.dataRoom.desc = "";
+        this.dataRoom.msteam_code = "";
+        this.dataRoom.msteam_link = "";
     },
   }
 };
@@ -125,11 +116,11 @@ export default {
 
 <template>
     <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputStudent">
-            <!-- <div title="Student Data"> -->
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputRoom">
+            <!-- <div title="Room Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Student</h4>
+                    <h4 class="card-title">Add Room</h4>
                     <p class="card-title-desc">Fill all information below</p>
                     
                     <div>
@@ -166,69 +157,75 @@ export default {
                     <div class="row">
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="nim">NIM</label>
-                                <input
-                                    v-model="dataStudent.nim"
-                                    id="nim"
-                                    name="nim"
-                                    type="number"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
-                                />
+                                <label for="nama">Nama Ruangan</label>
+                                <input 
+                                v-model="dataRoom.name"
+                                id="nama" 
+                                name="nama" 
+                                type="text" 
+                                class="form-control"
+                                :class="{ 'is-invalid': submitted && $v.dataRoom.name.$error }" />
+
                                 <div
-                                v-if="submitted && !$v.dataStudent.nim.required"
+                                v-if="submitted && !$v.dataRoom.name.required"
                                 class="invalid-feedback"
-                                >NIM is required.</div>
+                                >Nama Ruangan is required.</div>
                             </div>
                         </div>
 
                         <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="nama">Nama Mahasiswa</label>
-                                <input 
-                                v-model="dataStudent.name"
-                                id="nama" 
-                                name="nama" 
-                                type="text" 
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }" />
-
+                                <label for="nim">Deskripsi</label>
+                                <input
+                                    v-model="dataRoom.desc"
+                                    id="desc"
+                                    name="desc"
+                                    type="text"
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataRoom.desc.$error }"
+                                />
                                 <div
-                                v-if="submitted && !$v.dataStudent.name.required"
+                                v-if="submitted && !$v.dataRoom.desc.required"
                                 class="invalid-feedback"
-                                >Nama Mahasiswa is required.</div>
+                                >Deskripsi is required.</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                            <label class="control-label">Jenis Kelamin</label>
-                            <multiselect
-                                v-model="dataStudent.gender"
-                                :options="genderData"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
-                            ></multiselect>
+                                <label for="nim">Link MS Teams</label>
+                                <input
+                                    v-model="dataRoom.msteam_link"
+                                    id="msteam_link"
+                                    name="msteam_link"
+                                    type="text"
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataRoom.msteam_link.$error }"
+                                />
                                 <div
-                                v-if="submitted && !$v.dataStudent.gender.required"
+                                v-if="submitted && !$v.dataRoom.msteam_link.required"
                                 class="invalid-feedback"
-                                >Jenis Kelamin is required.</div>
+                                >Link MS Teams is required.</div>
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                            <label class="control-label">Agama</label>
-                            <multiselect
-                                v-model="dataStudent.religion"
-                                :options="religionData"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
-                            ></multiselect>
+                                <label for="nama">Kode MS Teams</label>
+                                <input 
+                                v-model="dataRoom.msteam_code"
+                                id="msteam_code" 
+                                name="msteam_code" 
+                                type="text" 
+                                class="form-control"
+                                :class="{ 'is-invalid': submitted && $v.dataRoom.msteam_code.$error }" />
+
                                 <div
-                                v-if="submitted && !$v.dataStudent.religion.required"
+                                v-if="submitted && !$v.dataRoom.msteam_code.required"
                                 class="invalid-feedback"
-                                >Agama is required.</div>
+                                >Kode MS Teams is required.</div>
                             </div>
                         </div>
                     </div>

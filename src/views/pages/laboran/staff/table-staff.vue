@@ -1,6 +1,6 @@
 <script>
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
 
@@ -108,7 +108,6 @@ export default {
     },
     fetchData(){
       this.isFentchingData = true;
-      console.log("fentching data")
 
       const params = this.getRequestParams(
         this.filter,
@@ -127,7 +126,13 @@ export default {
           })
           .catch(error => {
             this.isFentchingData = false;
-            console.log(error)
+            
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
           })
       )
     },
@@ -192,9 +197,8 @@ export default {
             this.fetchData();
           })
           .catch(error => {
-            console.log(error)
             Swal.fire({
-              type: 'error',
+              icon: 'error',
               title: 'Oops...',
               text: 'Something went wrong!',
               footer: error
@@ -227,12 +231,11 @@ export default {
               this.fetchData();
             })
             .catch(error => {
-              console.log(error)
-
               this.submitted = false;
               this.hideModal();
+              
               Swal.fire({
-                type: 'error',
+                icon: 'error',
                 title: 'Oops...',
                 text: 'Something went wrong!',
                 footer: error
@@ -336,7 +339,13 @@ export default {
       </div>
     </div>
     <div name="modalEdit">
-      <b-modal centered id="modal-edit" title="Edit Staff" hide-footer title-class="font-18">
+      <b-modal 
+        size="lg" 
+        id="modal-edit" 
+        title="Edit Staff" 
+        hide-footer 
+        title-class="font-18"
+      >
         <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStaff">
           <div class="tab-pane" id="metadata">
             <div class="col-sm-12">

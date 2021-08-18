@@ -1,7 +1,7 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
 
@@ -66,13 +66,12 @@ export default {
                 .catch(error => {
                     //pop up
                     this.submitted = false;
-                    console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
 
                     Swal.fire({
-                        type: 'error',
+                        icon: 'error',
                         title: 'Oops...',
                         text: 'Something went wrong!',
                         footer: error

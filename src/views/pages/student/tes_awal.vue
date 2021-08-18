@@ -378,7 +378,7 @@ export default {
                                             </div>
                                             </div>
                                             <div class="mt-2 ml-5 mb-3 text-left" v-for="(answers, index) in question.answers" :key="index">
-                                              <input class="form-check-input" type="checkbox" id="defaultCheck1" /> {{answers.answer}}
+                                              <input class="form-check-input" type="checkbox" id="customCheck2" /> {{answers.answer}}
                                              </div>
                                     </div>
                                     <b-button v-on:click="addAnswer(question)" v-b-modal.modal-backdrop variant="success mt-4" >Selesai</b-button>

@@ -57,7 +57,6 @@ export default {
   },
   methods: {
         selectType(value){
-            console.log(value)
             if (value == "Pretest") {
                 this.isPretestSelected = true;
                 this.isJurnalSelected = false;
@@ -77,7 +76,6 @@ export default {
         },
 
         selectTypeSoal(value){
-            console.log(value)
             if (value == "Mutiple Choice") {
                 this.isMutiplechoiceSelected = true;
                 this.isEssaySelected = false;

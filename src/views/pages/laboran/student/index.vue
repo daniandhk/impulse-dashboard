@@ -2,28 +2,28 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableClassCourse from "./table-class-course";
-import InputClassCourse from "./input-class-course";
+import TableStudent from "./table-student";
+import InputStudent from "./input-student";
 
 export default {
   components: {
     Layout,
     PageHeader,
-    TableClassCourse,
-    InputClassCourse,
+    TableStudent,
+    InputStudent,
   },
   created() {
     document.body.classList.add("auth-body-bg");
   },
   data() {
     return {
-      title: "Class Course Data",
+      title: "Student Data",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Class Course Data",
+          text: "Student Data",
           active: true
         }
       ],
@@ -38,7 +38,7 @@ export default {
     ...notificationMethods,
 
     refreshData(){
-        this.$refs.TableClassCourse.refreshData();
+        this.$refs.TableStudent.refreshData();
     }
   }
 };
@@ -55,15 +55,15 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Class Courses</a>
+                  <a class="font-weight-bold active">All Students</a>
                 </template>
-                <TableClassCourse ref='TableClassCourse'/>
+                <TableStudent ref='TableStudent'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Class Course</a>
+                      <a class="font-weight-bold active">Input Student</a>
                   </template>
-                  <InputClassCourse/>
+                  <InputStudent/>
               </b-tab>
             </b-tabs>
           </div>

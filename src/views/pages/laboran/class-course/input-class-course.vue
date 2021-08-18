@@ -1,7 +1,7 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import { api } from '@/api';
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
 import Multiselect from "vue-multiselect";
@@ -24,7 +24,7 @@ export default {
   data() {
     return {
       //input course
-      title: "Class Course Data",
+      title: "Course Class Data",
       dataInput: { 
           staff_id: "", 
           class_id: "",
@@ -86,13 +86,12 @@ export default {
                 .catch(error => {
                     //pop up
                     this.submitted = false;
-                    console.log(error.response)
                     this.tryingToInput = false;
                     this.inputError = error;
                     this.isInputError = true;
 
                     Swal.fire({
-                        type: 'error',
+                        icon: 'error',
                         title: 'Oops...',
                         text: 'Something went wrong!',
                         footer: error
@@ -146,7 +145,12 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
             })
         )
     },

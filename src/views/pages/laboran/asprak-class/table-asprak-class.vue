@@ -10,14 +10,17 @@ import Multiselect from "vue-multiselect";
  */
 export default {
   components: {
-      Multiselect,
+    Multiselect,
   },
   validations: {
     dataEdit: {
+      student_id: { required },
+      class_id: { required },
+    },
+    dataEditDetail: {
       nim: { required },
-      name: { required },
-      gender: { required },
-      religion: { required },
+      class_name: { required },
+      course_name: { required },
     },
   },
   created() {
@@ -25,7 +28,7 @@ export default {
   },
   data() {
     return {
-      //list student
+      //list students
       isFentchingData: false,
       dataStudents: [],
       totalRows: 1,
@@ -39,23 +42,41 @@ export default {
       fields: [
         { key: "nim", sortable: true, label: "NIM" },
         { key: "name", sortable: true, label: "Name" },
-        { key: "gender", sortable: true, label: "Gender" },
-        { key: "religion", sortable: true, label: "Religion" },
+        { key: "class_name", sortable: true, label: "Kelas MK" },
+        { key: "course_code", sortable: true, label: "Kode MK" },
+        { key: "course_name", sortable: true, label: "Nama MK" },
+        { key: "staff_code", sortable: true, label: "Kode Dosen" },
+        { key: "semester", sortable: true, label: "Semester" },
+        { key: "academic_year", sortable: true, label: "Tahun Akademik" },
         { key: "action", sortable: false }
       ],
 
-      //modal edit
-      idDataEdit: "",
+      courseData: [],
+      kelasData: [],
+      namaKelasData: [],
+      isKelasNotSelected: true,
+
+      //v-model dropdown value = array of objects
+      course_data: "",
+      class_data: "",
+
+      filter_course: "",
+      filter_class: "",
+
+      //edit data
       dataEdit: { 
+          student_id: "",
+          class_id: "",
+          },
+      dataEditDetail: { 
           nim: "",
-          name: "",
-          gender: "",
-          religion: "",
+          class_name: "",
+          course_name: "",
           },
       submitted: false,
-
-      religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
-      genderData: ['male', 'female'],
+      isKelasEditNotSelected: true,
+      course_dataEdit: "",
+      class_dataEdit: "",
 
       //edit role
       roleData: ['asprak', 'aslab'],
@@ -85,10 +106,15 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
+    loadCourseData() {
+        return this.courseData;
+    }
   },
   mounted() {
     // Set the initial number of items
     this.fetchData();
+
+    this.loadDataDropdown();
   },
   methods: {
     ...notificationMethods,
@@ -100,11 +126,19 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(search, page, pageSize, orderBy, sortDesc) {
+    getRequestParams(search, kelas, course, page, pageSize, orderBy, sortDesc) {
       let params = {};
 
       if (search) {
         params["search"] = search;
+      }
+
+      if (kelas) {
+        params["kelas"] = kelas;
+      }
+
+      if (course) {
+        params["course"] = course;
       }
 
       if (page) {
@@ -128,17 +162,23 @@ export default {
       return params;
     },
     fetchData(){
+      this.loadDataDropdown();
       this.isFentchingData = true;
+
+      let class_name = (this.class_data) ? this.class_data.name : "";
+      let course_name = (this.course_data) ? this.course_data.name : "";
 
       const params = this.getRequestParams(
         this.filter,
+        class_name,
+        course_name,
         this.currentPage,
         this.perPage,
         this.sortBy,
         this.sortDesc
       );
       return (
-        api.getAllStudents(params)
+        api.getAllStudentClasses(params)
           .then(response => {
             this.isFentchingData = false;
 
@@ -147,7 +187,6 @@ export default {
           })
           .catch(error => {
             this.isFentchingData = false;
-            
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -205,14 +244,14 @@ export default {
           confirmButtonText: "Yes, delete it!"
       }).then(result => {
           if (result.value) {
-              this.deleteStudent(data.item.id, data.item.nim);
+              this.deleteStudent(data.item.student_id, data.item.nim);
           }
       });
     },
 
     deleteStudent(id, nim){
       return (
-        api.deleteStudent(id)
+        api.deleteStudentClass(id)
           .then(response => {
             Swal.fire("Deleted!", nim + " has been deleted.", "success");
             this.fetchData();
@@ -228,13 +267,122 @@ export default {
       )
     },
 
-    onClickEdit(data){
+    loadDataDropdown(){
+        this.getClassroomNames();
+    },
+
+    getClassroomNames(){
+        return (
+            api.getByNameClassrooms()
+            .then(response => {
+                if(response.data.classes){
+                    this.namaKelasData = response.data.classes;
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            })
+        )
+    },
+
+    async getDataClassrooms(namaKelasData){
+        const params = this.getRequestParams(
+                namaKelasData.name
+        );
+        return api.getListClassrooms(params)
+            .then(response => {
+                if (response.data.classes){
+                    this.kelasData = response.data.classes;
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            })
+    },
+
+    async getDataCourses(kelasData){
+        return new Promise((resolve, reject) => {
+            kelasData.forEach((element, index, array) => {
+                const params = this.getRequestParams(
+                    element.course_id
+                );
+                this.getListCourses(params).then(()=>{
+                  if (index === array.length -1) resolve();
+                })
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
+        });
+    },
+
+    async getListCourses(params){
+      return (
+        api.getListCourses(params)
+                    .then(response => {
+                        if (response.data.courses){
+                            this.courseData = response.data.courses
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            footer: error
+                        })
+                    })
+      )
+    },
+
+    async setKelas(value){
+        this.class_data = value;
+        this.removeCourse();
+
+        await this.getDataClassrooms(value);
+        await this.getDataCourses(this.kelasData);
+
+        this.isKelasNotSelected = false;
+    },
+
+    async setCourse(value){
+        this.course_data = value;
+        this.fetchData();
+    },
+
+    removeKelas(){
+        this.isKelasNotSelected = true;
+        this.class_data = "";
+        this.courseData = [];
+        this.removeCourse();
+    },
+
+    removeCourse(){
+        this.course_data = "";
+        this.fetchData();
+    },
+
+    async onClickEdit(data){
       //edit data
-      this.idDataEdit = data.item.id;
-      this.dataEdit.nim = data.item.nim;
-      this.dataEdit.name = data.item.name;
-      this.dataEdit.gender = data.item.gender;
-      this.dataEdit.religion = data.item.religion;
+      this.dataEdit.student_id = data.item.student_id;
+      this.dataEdit.class_id = data.item.class_id;
+      this.dataEditDetail.nim = data.item.nim;
+      await this.setKelasEdit(data.item);
 
       //edit role
       this.dataEditRole.no_induk = data.item.nim;
@@ -244,7 +392,7 @@ export default {
       this.$bvModal.show('modal-edit');
     },
 
-    editStudent(){
+    setStudentClass(){
       this.submitted = true;
       this.$v.$touch();
       if (this.$v.$invalid) {
@@ -252,11 +400,11 @@ export default {
       } 
       else {
         return (
-          api.editStudent(this.idDataEdit, this.dataEdit)
+          api.setStudentClass(this.dataEdit)
             .then(response => {
               this.submitted = false;
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nim + " has been edited.", "success");
+              Swal.fire("Edited!", this.dataEditDetail.nim + " has been edited.", "success");
               this.fetchData();
             })
             .catch(error => {
@@ -272,6 +420,50 @@ export default {
             })
         )
       }
+    },
+
+    async setKelasEdit(value){
+        this.dataEditDetail.class_name = value.name;
+        this.removeCourseEdit();
+
+        let data = {};
+        data['name'] = value.class_name;
+
+        await this.getDataClassrooms(data);
+        await this.getDataCourses(this.kelasData)
+          .then(() =>{
+              let kelas = {};
+              if (value.class_name){
+                kelas = this.kelasData.find(data => data.name === value.class_name);
+                let course = this.courseData.find(data => data.id === kelas.course_id);
+
+                this.setCourseEdit(course);
+              }
+              else {
+                kelas = this.kelasData.find(data => data.name === value.name);
+              }
+              this.class_dataEdit = kelas;
+              this.dataEdit.class_id = kelas.id;
+
+              this.isKelasEditNotSelected = false;
+          })
+    },
+
+    async setCourseEdit(value){
+        this.dataEditDetail.course_name = value.name;
+        let data = this.courseData.find(data => data.id === value.id);
+        this.course_dataEdit = data;
+    },
+
+    removeKelasEdit(){
+        this.isKelasEditNotSelected = true;
+        this.class_dataEdit = "";
+        this.courseData = [];
+        this.removeCourseEdit();
+    },
+
+    removeCourseEdit(){
+        this.course_dataEdit = "";
     },
 
     getRoles(no_induk){
@@ -326,7 +518,7 @@ export default {
             .then(response => {
               this.submitted = false;
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nim + " has been edited.", "success");
+              Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
               this.fetchData();
             })
             .catch(error => {
@@ -359,6 +551,42 @@ export default {
 <template>
   <div>
     <div class="row mt-4">
+      <div class="col-sm-12 col-md-12">
+        <label class="d-inline-flex align-items-center">
+          Filter:
+        </label>
+      </div>
+      <div class="row col-sm-12 col-md-12">
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <multiselect
+                placeholder="Kelas"
+                v-model="class_data"
+                :options="namaKelasData"
+                label="name"
+                track-by="name"
+                @select="setKelas"
+                @remove="removeKelas"
+            ></multiselect>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <multiselect
+                placeholder="Mata Kuliah"
+                v-model="course_data"
+                :options="loadCourseData"
+                :disabled="isKelasNotSelected"
+                label="name"
+                track-by="name"
+                @select="setCourse"
+                @remove="removeCourse"
+            ></multiselect>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-2">
       <div class="col-sm-12 col-md-6">
         <div id="tickets-table_length" class="dataTables_length">
           <label class="d-inline-flex align-items-center">
@@ -450,127 +678,41 @@ export default {
         hide-footer 
         title-class="font-18"
       >
-        <div class="card">
-          <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom">
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Edit Data</a>
-                </template>
-                <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStudent">
-                        <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="nim">NIM</label>
-                                    <input 
-                                    style="background-color: #F0F4F6;"
-                                    :disabled="true"
-                                    v-model="dataEdit.nim"
-                                    id="nip" 
-                                    name="nip" 
-                                    type="number" 
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nim.$error }" />
-
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.nim.required"
-                                    class="invalid-feedback"
-                                    >NIM is required.</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="nama">Nama Mahasiswa</label>
-                                    <input 
-                                    v-model="dataEdit.name"
-                                    id="nama" 
-                                    name="nama" 
-                                    type="text" 
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
-
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.name.required"
-                                    class="invalid-feedback"
-                                    >Nama Dosen is required.</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label">Jenis Kelamin</label>
-                                    <multiselect
-                                        v-model="dataEdit.gender"
-                                        :options="genderData"
-                                        :class="{ 'is-invalid': submitted && $v.dataEdit.gender.$error }" 
-                                    ></multiselect>
-                                        <div
-                                        v-if="submitted && !$v.dataEdit.gender.required"
-                                        class="invalid-feedback"
-                                        >Jenis Kelamin is required.</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label">Agama</label>
-                                    <multiselect
-                                        v-model="dataEdit.religion"
-                                        :options="religionData"
-                                        :class="{ 'is-invalid': submitted && $v.dataEdit.religion.$error }" 
-                                    ></multiselect>
-                                        <div
-                                        v-if="submitted && !$v.dataEdit.religion.required"
-                                        class="invalid-feedback"
-                                        >Agama is required.</div>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Save Changes</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                </template>
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Edit Roles</a>
-                  </template>
-                  <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
-                        <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label">Roles</label>
-                                    <multiselect
-                                        v-model="role_data"
-                                        :options="roleData"
-                                        :multiple="true"
-                                        @remove="removeRole"
-                                    ></multiselect>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Save Changes</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-                            </div>
-                        </div>
-                        </form>
-                    </div>
-                </template>
-              </b-tab>
-            </b-tabs>
-          </div>
+        <div class="col-sm-12">
+            <div class="form-group col-sm-12">
+                <label for="nim">NIM</label>
+                <input 
+                style="background-color: #F0F4F6;"
+                :disabled="true"
+                v-model="dataEditDetail.nim"
+                id="nip" 
+                name="nip" 
+                type="number" 
+                class="form-control"/>
+            </div>
         </div>
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
+          <div class="tab-pane" id="metadata">
+              <div class="col-sm-12">
+                  <div class="form-group">
+                      <label class="control-label">Roles</label>
+                      <multiselect
+                          v-model="role_data"
+                          :options="roleData"
+                          :multiple="true"
+                          @remove="removeRole"
+                      ></multiselect>
+                  </div>
+              </div>
+              <div class="text-center mt-4">
+                  <button
+                  type="submit"
+                  class="btn btn-primary mr-2 waves-effect waves-light"
+                  >Save Changes</button>
+                  <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+              </div>
+          </div>
+        </form>
       </b-modal>
     </div>
   </div>

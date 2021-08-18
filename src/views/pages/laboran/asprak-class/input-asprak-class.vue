@@ -44,7 +44,6 @@ export default {
           semester: "",
           },
       submitted: false,
-      submitted_nim: false,
       inputError: null,
       tryingToInput: false,
       isInputError: false,
@@ -65,7 +64,7 @@ export default {
       genderData: ['male', 'female'],
       dosenData: [],
       courseData: [],
-      classCourseData: [],
+      kelasData: [],
       namaKelasData: [],
 
       //v-model dropdown value = array of objects
@@ -79,6 +78,12 @@ export default {
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
+    },
+    loadDosenData() {
+        return this.dosenData;
+    },
+    loadKelasData() {
+        return this.kelasData;
     },
     loadCourseData() {
         return this.courseData;
@@ -139,7 +144,6 @@ export default {
             if (result.value) {
                 this.clearForm();
                 this.submitted = false;
-                this.submitted_nim = false;
                 this.isInputCanceled = true;
                 Swal.fire("Canceled!", "The form has been left blank.", "success");
             }
@@ -161,20 +165,13 @@ export default {
         this.courseData = [];
         this.course_data = "";
         this.class_data = "";
-        this.submitted = false;
-        this.submitted_nim = false;
-        this.nimChanged();
-        this.isNimNotAvailable = true;
     },
 
-    getRequestParams(search, kelas) {
+    getRequestParams(search) {
       let params = {};
 
       if (search) {
         params["search"] = search;
-      }
-      if (kelas) {
-        params["kelas"] = kelas;
       }
 
       return params;
@@ -199,15 +196,14 @@ export default {
         )
     },
 
-    async getDataClassCourses(namaKelasData){
+    async getDataClassrooms(namaKelasData){
         const params = this.getRequestParams(
-                null,
                 namaKelasData.name
         );
-        return api.getAllClassCourses(params)
+        return api.getListClassrooms(params)
             .then(response => {
-                if (response.data.data){
-                    this.classCourseData = response.data.data;
+                if (response.data.classes){
+                    this.kelasData = response.data.classes;
                 }
             })
             .catch(error => {
@@ -220,11 +216,63 @@ export default {
             })
     },
 
-    async setDataClassroom(classCourseData, course_id){
-        let data = classCourseData.find(data => data.course.id === course_id);
-        this.dataStudent.academic_year = data.academic_year.name;
-        this.dataStudent.semester = data.academic_year.semester;
-        this.dataStudent.staff_code = data.staff.code;
+    async getDataCourses(kelasData){
+        return new Promise((resolve, reject) => {
+            kelasData.forEach((element, index, array) => {
+                const params = this.getRequestParams(
+                    element.course_id
+                );
+                api.getListCourses(params)
+                    .then(response => {
+                        if (response.data.courses){
+                            this.courseData = response.data.courses
+                        }
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            footer: error
+                        })
+                    })
+                if (index === array.length -1) resolve();
+            });
+        })
+        .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
+        });
+    },
+
+    async setDataClassroom(kelasData, course_id){
+        let data = kelasData.find(data => data.course_id === course_id);
+        this.dataStudent.academic_year = data.academic_year;
+        this.dataStudent.semester = data.semester;
+
+        const params = this.getRequestParams(
+                data.staff_id
+        );
+        return api.getListStaffs(params)
+            .then(response => {
+                if (response.data.staffs){
+                    let staffs = response.data.staffs;
+                    let staff = staffs.find(item => item.id === data.staff_id);
+                    this.dataStudent.staff_code = staff.code;
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            });
     },
 
     loadDataDropdown(){
@@ -236,10 +284,8 @@ export default {
 
         this.removeCourse();
         this.dataStudent.class_name = value.name;
-        await this.getDataClassCourses(value);
-        this.classCourseData.forEach((element, index, array) => {
-            this.courseData.push(element.course)
-        });
+        await this.getDataClassrooms(value);
+        await this.getDataCourses(this.kelasData);
 
         this.isKelasNotSelected = false;
         this.isFentchingData = false;
@@ -250,7 +296,7 @@ export default {
 
         this.dataStudent.course_name = value.name;
         this.dataStudent.course_code = value.code;
-        await this.setDataClassroom(this.classCourseData, value.id);
+        await this.setDataClassroom(this.kelasData, value.id);
 
         this.isFentchingData = false;
     },
@@ -273,9 +319,10 @@ export default {
     },
 
     checkNim(){
-        this.submitted_nim = true;
+        this.submitted = true;
         this.$v.dataStudent.nim.$touch();
         if (this.$v.dataStudent.nim.$invalid) {
+            this.submitted = false;
             return;
         }
         return api.showStudent(this.dataStudent.nim)
@@ -300,10 +347,10 @@ export default {
             });
     },
 
-    nimChanged(){
+    isNimChanged(){
         this.disabled_bg.backgroundColor = "#F0F4F6";
         this.isNimNotAvailable = true;
-        this.submitted_nim = false;
+        this.submitted = false;
         this.removeMahasiswa();
     },
 
@@ -374,19 +421,19 @@ export default {
                                             name="nim"
                                             type="number"
                                             class="form-control"
-                                            @input="nimChanged"
-                                            :class="{ 'is-invalid': submitted_nim && $v.dataStudent.nim.$error }"
+                                            @input="isNimChanged"
+                                            :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
                                         />
                                         <div
-                                        v-if="submitted_nim && !$v.dataStudent.nim.required"
+                                        v-if="submitted && !$v.dataStudent.nim.required"
                                         class="invalid-feedback"
                                         >NIM is required.</div>
                                     </div>
                                     <div class="col-sm-4">
                                         <b-button variant="success" @click="checkNim"
                                         :class="{ 
-                                            'is-invalid': submitted_nim && !isNimFound,
-                                            'is-valid': submitted_nim && isNimFound }">Check NIM</b-button>
+                                            'is-invalid': submitted && !isNimFound,
+                                            'is-valid': submitted && isNimFound }">Check NIM</b-button>
                                         <div
                                         v-if="!isNimFound"
                                         class="invalid-feedback"
@@ -422,17 +469,15 @@ export default {
                             </div>
                         </div>
 
-                        <div class="col-md-4" v-if="isNimNotAvailable">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label class="control-label">Jenis Kelamin</label>
-                                <input
-                                    v-model="dataStudent.gender"
-                                    :disabled="isNimNotAvailable"
-                                    type="text" 
-                                    class="form-control"
-                                    v-bind:style="disabled_bg"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
-                                >
+                            <label class="control-label">Jenis Kelamin</label>
+                            <multiselect
+                                v-model="dataStudent.gender"
+                                :disabled="isNimNotAvailable"
+                                :options="genderData"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
+                            ></multiselect>
                                 <div
                                 v-if="submitted && !$v.dataStudent.gender.required"
                                 class="invalid-feedback"
@@ -440,49 +485,15 @@ export default {
                             </div>
                         </div>
 
-                        <div class="col-md-4" v-if="isNimNotAvailable">
+                        <div class="col-md-4">
                             <div class="form-group">
-                                <label class="control-label">Agama</label>
-                                <input
-                                    v-model="dataStudent.religion"
-                                    :disabled="isNimNotAvailable"
-                                    type="text" 
-                                    class="form-control"
-                                    v-bind:style="disabled_bg"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
-                                >
-                                <div
-                                v-if="submitted && !$v.dataStudent.religion.required"
-                                class="invalid-feedback"
-                                >Agama is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4" v-if="!isNimNotAvailable">
-                            <div class="form-group">
-                                <label class="control-label">Jenis Kelamin</label>
-                                <multiselect
-                                    v-model="dataStudent.gender"
-                                    :disabled="isNimNotAvailable"
-                                    :options="genderData"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
-                                ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.gender.required"
-                                class="invalid-feedback"
-                                >Jenis Kelamin is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4" v-if="!isNimNotAvailable">
-                            <div class="form-group">
-                                <label class="control-label">Agama</label>
-                                <multiselect
-                                    v-model="dataStudent.religion"
-                                    :disabled="isNimNotAvailable"
-                                    :options="religionData"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
-                                ></multiselect>
+                            <label class="control-label">Agama</label>
+                            <multiselect
+                                v-model="dataStudent.religion"
+                                :disabled="isNimNotAvailable"
+                                :options="religionData"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
+                            ></multiselect>
                                 <div
                                 v-if="submitted && !$v.dataStudent.religion.required"
                                 class="invalid-feedback"
@@ -601,7 +612,7 @@ export default {
                                     :disabled="true"
                                     id="semester"
                                     name="semester"
-                                    type="text"
+                                    type="number"
                                     style="background-color: #F0F4F6;"
                                     class="form-control"
                                     :class="{ 'is-invalid': submitted && $v.dataStudent.semester.$error }"

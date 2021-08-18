@@ -74,7 +74,7 @@ service.interceptors.response.use(response => {
 
     Vue.notify({
         group: 'notify',
-        type: 'error',
+        icon: 'error',
         title: 'Error',
         text: String(errors),
     })
