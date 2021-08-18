@@ -17,14 +17,13 @@ export default {
   data() {
     return {
       //list class-course
-      isFentchingData: false,
+      isFetchingData: false,
       dataClassCourses: [],
       dataTable: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
-      filter: "",
       filter_search: "",
       filterOn: [],
       sortBy: "class.name",
@@ -38,7 +37,17 @@ export default {
         { key: "action", sortable: false }
       ],
 
-      namaKelasData: [],
+      class_name: "",
+      course_name: "",
+      academic_year_id: "",
+      course_data: "",
+      class_data: "",
+      dataDropdown:{
+          classes: [],
+          courses: [],
+          staffs: [],
+          academic_year: [],
+      },
     };
   },
   computed: {
@@ -55,9 +64,12 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     },
   },
-  mounted() {
+  mounted: async function() {
     // Set the initial number of items
-    this.fetchData();
+    this.loading();
+    await this.fetchData().then(result=>{
+        this.loading();
+    });
     this.loadDataDropdown();
   },
   methods: {
@@ -70,21 +82,31 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(kelas) {
+    getRequestParams(class_name, course_name, academic_year_id) {
       let params = {};
 
-      if (kelas) {
-        params["kelas"] = kelas;
+      if (class_name) {
+        params["class_name"] = class_name;
+      }
+
+      if (course_name) {
+        params["course_name"] = course_name;
+      }
+
+      if (academic_year_id) {
+        params["academic_year_id"] = academic_year_id;
       }
 
       return params;
     },
     fetchData(){
       this.loadDataDropdown();
-      this.isFentchingData = true;
+      this.isFetchingData = true;
 
       const params = this.getRequestParams(
-        this.filter,
+        this.class_name,
+        this.course_name,
+        this.academic_year_id,
       );
 
       return (
@@ -94,10 +116,10 @@ export default {
               this.totalRows = response.data.data.length;
               this.dataClassCourses = response.data.data;
             }
-            this.isFentchingData = false;
+            this.isFetchingData = false;
           })
           .catch(error => {
-            this.isFentchingData = false;
+            this.isFetchingData = false;
 
             Swal.fire({
                 icon: 'error',
@@ -109,26 +131,16 @@ export default {
       )
     },
 
-    setKelas(value) {
-      this.filter = value.name;
-      this.fetchData();
+    async loadDataDropdown(){
+        this.getDataDropdown();
     },
 
-    removeKelas() {
-      this.filter = "";
-      this.fetchData();
-    },
-
-    loadDataDropdown(){
-        this.getClassroomNames();
-    },
-
-    getClassroomNames(){
+    async getDataDropdown(){
         return (
-            api.getByNameClassrooms()
+            api.getClassCourseStaffYear()
             .then(response => {
-                if(response.data.classes){
-                    this.namaKelasData = response.data.classes;
+                if(response.data.data){
+                    this.setDataDropdown(response.data.data);
                 }
             })
             .catch(error => {
@@ -142,20 +154,68 @@ export default {
         )
     },
 
-    handlePageChange(value) {
-      this.currentPage = value;
-      this.fetchData();
+    setDataDropdown(data){
+        data.academic_year.forEach((element, index, array) => {
+            element.year = String(element.year) + " / " + String(element.semester)
+        });
+        this.dataDropdown = data;
     },
 
-    handlePageSizeChange(value) {
+    async selectKelas(value){
+        this.class_name = value.name;
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async removeKelas(){
+        this.class_name = "";
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async selectCourse(value){
+        this.course_name = value.name;
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async removeCourse(){
+        this.course_name = "";
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async handlePageChange(value) {
+      this.currentPage = value;
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
+    },
+
+    async handlePageSizeChange(value) {
       this.perPage = value;
       this.currentPage = 1;
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
-    refreshData(){
+    async refreshData(){
       this.filter = "";
-      this.fetchData();
+      this.loading();
+      await this.fetchData().then(result=>{
+          this.loading();
+      });
     },
 
     onClickDelete(data){
@@ -174,12 +234,15 @@ export default {
       });
     },
 
-    deleteClassCourse(id, class_name, course_name){
+    async deleteClassCourse(id, class_name, course_name){
       return (
         api.deleteClassCourse(id)
           .then(response => {
             Swal.fire("Deleted!", class_name + " | " + course_name + " has been deleted.", "success");
-            this.fetchData();
+            this.loading();
+            this.fetchData().then(result=>{
+                this.loading();
+            });
           })
           .catch(error => {
             Swal.fire({
@@ -191,12 +254,30 @@ export default {
           })
       )
     },
+
+    loading() {
+      if(this.isLoading){
+        this.isLoading = false;
+      } else{
+        this.isLoading = true;
+      }
+
+      var x = document.getElementById("loading");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    },
   }
 };
 </script>
 
 <template>
   <div>
+    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
         <label class="d-inline-flex align-items-center">
@@ -208,12 +289,25 @@ export default {
           <div class="form-group">
             <multiselect
                 placeholder="Kelas"
-                v-model="filter"
-                :options="namaKelasData"
+                v-model="class_data"
+                :options="dataDropdown.classes"
                 label="name"
                 track-by="name"
-                @select="setKelas"
+                @select="selectKelas"
                 @remove="removeKelas"
+            ></multiselect>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-3">
+          <div class="form-group">
+            <multiselect
+                placeholder="Mata Kuliah"
+                v-model="course_data"
+                :options="dataDropdown.courses"
+                label="name"
+                track-by="name"
+                @select="selectCourse"
+                @remove="removeCourse"
             ></multiselect>
           </div>
         </div>
@@ -256,7 +350,7 @@ export default {
         :fields="fields"
         responsive="sm"
         :per-page="perPage"
-        :busy.sync="isFentchingData"
+        :busy.sync="isFetchingData"
         :current-page="currentPage"
         :sort-by="sortBy"
         :sort-desc="sortDesc"

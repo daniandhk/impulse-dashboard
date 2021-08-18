@@ -1,3 +1,5 @@
+import store from '@/store'
+
 export default [
     //laboran
     {
@@ -5,6 +7,15 @@ export default [
         name: 'laboran-studentclass',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/student-class/index')
     },
@@ -13,6 +24,15 @@ export default [
         name: 'laboran-student',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/student/index')
     },
@@ -21,6 +41,15 @@ export default [
         name: 'laboran-staff',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/staff/index')
     },
@@ -29,6 +58,15 @@ export default [
         name: 'laboran-course',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/course/index')
     },
@@ -37,6 +75,15 @@ export default [
         name: 'laboran-classroom',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/classroom/index')
     },
@@ -45,6 +92,15 @@ export default [
         name: 'laboran-room',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/room/index')
     },
@@ -53,6 +109,15 @@ export default [
         name: 'laboran-classcourse',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/class-course/index')
     },
@@ -61,6 +126,15 @@ export default [
         name: 'laboran-asprakclass',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/laboran/asprak-class/index')
     },

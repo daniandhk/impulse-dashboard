@@ -1,6 +1,7 @@
 export default [
     {
         path :'*',
+        name: 'error-404',
         component: () => import('../../views/pages/utility/error-404')
     },
     {

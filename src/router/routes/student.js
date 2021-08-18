@@ -1,3 +1,5 @@
+import store from '@/store'
+
 export default [
     //path praktikan
     {
@@ -5,6 +7,15 @@ export default [
         name: 'praktikan-jadwal',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/jadwal')
     },
@@ -13,6 +24,15 @@ export default [
         name: 'praktikan-matakuliah',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/matakuliah')
     },
@@ -21,6 +41,15 @@ export default [
         name: 'praktikan-nilai',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/nilai')
     },
@@ -29,6 +58,15 @@ export default [
         name: 'praktikan-praktikum',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/praktikum')
     },
@@ -37,6 +75,15 @@ export default [
         name: 'praktikan-jurnal',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/jurnal')
     },
@@ -45,6 +92,15 @@ export default [
         name: 'praktikan-tes_awal',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/tes_awal')
     },
@@ -53,6 +109,15 @@ export default [
         name: 'praktikan-tes_akhir',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/tes_akhir')
     },
@@ -61,6 +126,15 @@ export default [
         name: 'praktikan-pengaturan',
         meta: {
             authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
         },
         component: () => import('../../views/pages/student/pengaturan')
     },

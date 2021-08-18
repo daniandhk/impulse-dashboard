@@ -37,7 +37,7 @@ export default {
       isInputError: false,
       inputSuccess: false,
       isInputCanceled: false,
-      isFentchingData: false,
+      isFetchingData: false,
 
       //dropdown list data
       religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],

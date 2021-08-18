@@ -49,7 +49,7 @@ export default {
       isInputError: false,
       inputSuccess: false,
       isInputCanceled: false,
-      isFentchingData: false,
+      isFetchingData: false,
       isKelasNotSelected: true,
 
       //mahasiswa
@@ -280,7 +280,7 @@ export default {
     },
 
     async setKelas(value){
-        this.isFentchingData = true;
+        this.isFetchingData = true;
 
         this.removeCourse();
         this.dataStudent.class_name = value.name;
@@ -288,17 +288,17 @@ export default {
         await this.getDataCourses(this.kelasData);
 
         this.isKelasNotSelected = false;
-        this.isFentchingData = false;
+        this.isFetchingData = false;
     },
 
     async setCourse(value){
-        this.isFentchingData = true;
+        this.isFetchingData = true;
 
         this.dataStudent.course_name = value.name;
         this.dataStudent.course_code = value.code;
         await this.setDataClassroom(this.kelasData, value.id);
 
-        this.isFentchingData = false;
+        this.isFetchingData = false;
     },
 
     removeKelas(){

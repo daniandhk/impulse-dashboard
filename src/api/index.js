@@ -4,6 +4,9 @@ import httpAxios from '@/httpAxios.js';
 //laboran
 export * from "./laboran.js";
 
+//aslab
+export * from "./aslab.js";
+
 //auth
 export function login(data){
     return httpAxios({
