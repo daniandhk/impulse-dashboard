@@ -23,12 +23,23 @@ export const asprakItems = [
     },
     {
         id: 5,
-        label: 'menuitems.asprak.list.absensi-asprak',
+        label: 'menuitems.asprak.list.berita-acara',
         icon: 'ri-account-circle-line',
-        link: 'asprak-absensi-asprak'
+        subItems: [
+            {
+                id: 6,
+                label: 'menuitems.asprak.list.cetak-berita-acara',
+                link: 'asprak-cetak-berita-acara'
+            },
+            {
+                id: 7,
+                label: 'menuitems.asprak.list.berita-acara',
+                link: 'asprak-berita-acara'
+            }
+        ]
     },
     {
-        id: 6,
+        id: 8,
         label: 'menuitems.asprak.list.lihat-feedback',
         icon: 'ri-chat-1-line',
         link: 'asprak-lihat-feedback'

@@ -58,7 +58,7 @@ export default [
 
     {
         path: '/absen/absensi-asprak',
-        name: 'asprak-absensi-asprak',
+        name: 'asprak-berita-acara',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -72,6 +72,24 @@ export default [
             },
         },
         component: () => import('../../views/pages/asprak/absen/absensi-asprak')
+    },
+
+    {
+        path: '/absen/cetak-berita-acara',
+        name: 'asprak-cetak-berita-acara',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/absen/cetak-berita-acara')
     },
 
     {

@@ -2,6 +2,7 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
+import DatePicker from "vue2-datepicker";
 
 import { tableData } from "./data-absen";
 /**
@@ -9,14 +10,14 @@ import { tableData } from "./data-absen";
  */
 export default {
   page: {
-    title: "Berita Acara Praktikum",
+    title: "Cetak Berita Acara Praktikum",
     meta: [{ name: "description", content: appConfig.description }]
   },
-  components: { Layout, PageHeader },
+  components: { Layout, PageHeader, DatePicker },
   data() {
     return {
       tableData: tableData,
-      title: "Berita Acara Praktikum",
+      title: "Cetak Berita Acara Praktikum",
       items: [
         {
           text: "Absensi",
@@ -27,6 +28,12 @@ export default {
           active: true
         }
       ],
+      defaultdate: "",
+      autoClose: "",
+      daterange: "",
+      demoMonth: "",
+      demoYear: "",
+      time: null,
       status: "not_accepted",
       checkCustom: "not_accepted",
       checked: true,
@@ -42,11 +49,9 @@ export default {
         { key: "Mata_Kuliah", sortable: true },
         { key: "Kelas", sortable: true },
         { key: "Modul", sortable: true },
-        { key: "Tanggal_Absen", sortable: true },
         { key: "Dosen", sortable: true },
         { key: "Waktu", sortable: true },
         { key: "Tipe_Praktikum", sortable: true },
-        { key: "Status_Submit", sortable: true },
         { key: "Action", sortable: true },
       ]
     };
@@ -87,7 +92,7 @@ export default {
               <div class="col-12">
                 <form class="form-horizontal" role="form">
                   <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Kelas</label>
+                    <label class="col-md-2 col-form-label">Tahun Akademis Dan Semester</label>
                     <div class="col-md-10">
                       <select class="form-control">
                         <option>Select</option>
@@ -98,18 +103,21 @@ export default {
                   </div>
                 </form>
                 <form class="form-horizontal" role="form">
-                  <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Status Submit</label>
-                    <div class="col-md-10">
-                      <select class="form-control">
-                        <option>Select</option>
-                        <option>Large select</option>
-                        <option>Small select</option>
-                      </select>
+                    <div class="form-group row">
+                        <label class="col-md-2 col-form-label">Tanggal Praktikum</label>
+                        <div class="col-md-10">
+                            <date-picker v-model="defaultdate" :first-day-of-week="1" lang="en" confirm></date-picker>
+                        </div>
                     </div>
-                  </div>
                 </form>
-                
+                <div class="text-center">
+                            <b-button type="submit" variant="success"><router-link
+                                                to=""
+                                                class="font-weight-medium"
+                                                style="color: white;"
+                                            >Tampilkan</router-link>
+                            </b-button>
+                </div>
               </div>
             </div>
             <!-- end row -->
@@ -169,7 +177,7 @@ export default {
                                     to="/absen/berita-acara"
                                     class="font-weight-medium"
                                     style="color: white;"
-                                  >Absen</router-link>
+                                  >Cetak</router-link>
                   </b-button>
               </template></b-table>
             </div>

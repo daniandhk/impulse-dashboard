@@ -121,15 +121,15 @@ export default {
                             <div>
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox" value id="defaultCheck1" />
-                                    <label class="form-check-label" for="defaultCheck1">Asprak 1</label>
+                                    <label class="form-check-label" for="defaultCheck1">Dani Andhika Permana</label>
                                 </div>
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox"/>
-                                    <label class="form-check-label" for="defaultCheck1">Asprak 2</label>
+                                    <label class="form-check-label" for="defaultCheck1">Muhammad Figo Akbar</label>
                                 </div>
                                 <div class="form-check mb-3">
                                     <input class="form-check-input" type="checkbox"/>
-                                    <label class="form-check-label" for="defaultCheck1">Asprak 3</label>
+                                    <label class="form-check-label" for="defaultCheck1">Edgar Vigo</label>
                                 </div>
                             </div>
                         </b-form-group>
