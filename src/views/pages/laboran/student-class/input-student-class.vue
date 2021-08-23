@@ -42,6 +42,7 @@ export default {
           staff_code: "", 
           academic_year: "", 
           semester: "",
+          academic_year_id: "",
           },
       submitted: false,
       submitted_nim: false,
@@ -52,6 +53,7 @@ export default {
       isInputCanceled: false,
       isFetchingData: false,
       isKelasNotSelected: true,
+      isCourseNotSelected: true,
 
       //mahasiswa
       isNimNotAvailable: true,
@@ -63,14 +65,20 @@ export default {
       //dropdown list data
       religionData: ['islam', 'protestan', 'katolik', 'buddha', 'hindu', 'khonghucu', 'kristen'],
       genderData: ['male', 'female'],
-      dosenData: [],
       courseData: [],
-      classCourseData: [],
+      academicYearData: [],
+      classCourseData: "",
       namaKelasData: [],
 
       //v-model dropdown value = array of objects
       course_data: "",
       class_data: "",
+      academic_year_data: "",
+
+      dataInput: {
+          student_id: "",
+          class_course_id: "",
+      },
     };
   },
   mounted() {
@@ -82,6 +90,9 @@ export default {
     },
     loadCourseData() {
         return this.courseData;
+    },
+    loadAcademicYearData() {
+        return this.academicYearData;
     }
   },
   methods: {
@@ -157,6 +168,7 @@ export default {
         this.dataStudent.staff_code = "";
         this.dataStudent.academic_year = "";
         this.dataStudent.semester = "";
+        this.dataStudent.academic_year_id = "";
 
         this.courseData = [];
         this.course_data = "";
@@ -167,14 +179,19 @@ export default {
         this.isNimNotAvailable = true;
     },
 
-    getRequestParams(search, kelas) {
+    getRequestParams(class_name, course_name, academic_year_id) {
       let params = {};
 
-      if (search) {
-        params["search"] = search;
+      if (class_name) {
+        params["class_name"] = class_name;
       }
-      if (kelas) {
-        params["kelas"] = kelas;
+
+      if (course_name) {
+        params["course_name"] = course_name;
+      }
+
+      if (academic_year_id) {
+        params["academic_year_id"] = academic_year_id;
       }
 
       return params;
@@ -199,15 +216,20 @@ export default {
         )
     },
 
-    async getDataClassCourses(namaKelasData){
+    async getDataCourses(){
         const params = this.getRequestParams(
+                this.dataStudent.class_name,
                 null,
-                namaKelasData.name
+                null,
         );
         return api.getAllClassCourses(params)
             .then(response => {
                 if (response.data.data){
-                    this.classCourseData = response.data.data;
+                    this.courseData = response.data.data;
+                    this.courseData.forEach(function (element) {
+                        element.name = element.course.name;
+                        element.code = element.course.code;
+                    });
                 }
             })
             .catch(error => {
@@ -220,11 +242,51 @@ export default {
             })
     },
 
-    async setDataClassroom(classCourseData, course_id){
-        let data = classCourseData.find(data => data.course.id === course_id);
-        this.dataStudent.academic_year = data.academic_year.name;
-        this.dataStudent.semester = data.academic_year.semester;
-        this.dataStudent.staff_code = data.staff.code;
+    async getDataAcademicYear(){
+        const params = this.getRequestParams(
+                this.dataStudent.class_name,
+                this.dataStudent.course_name,
+                null,
+        );
+        return api.getAllClassCourses(params)
+            .then(response => {
+                if (response.data.data){
+                    this.academicYearData = response.data.data;
+                    this.academicYearData.forEach(function (element) {
+                        element.name = String(element.academic_year.name) + " (" + String(element.academic_year.semester) + ")";
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            })
+    },
+
+    async getDataClassCourse(){
+        const params = this.getRequestParams(
+                this.dataStudent.class_name,
+                this.dataStudent.course_name,
+                this.dataStudent.academic_year_id,
+        );
+        return api.getAllClassCourses(params)
+            .then(response => {
+                if (response.data.data){
+                    this.classCourseData = response.data.data[0];
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            })
     },
 
     loadDataDropdown(){
@@ -236,10 +298,7 @@ export default {
 
         this.removeCourse();
         this.dataStudent.class_name = value.name;
-        await this.getDataClassCourses(value);
-        this.classCourseData.forEach((element, index, array) => {
-            this.courseData.push(element.course)
-        });
+        await this.getDataCourses();
 
         this.isKelasNotSelected = false;
         this.isFetchingData = false;
@@ -248,28 +307,60 @@ export default {
     async setCourse(value){
         this.isFetchingData = true;
 
-        this.dataStudent.course_name = value.name;
-        this.dataStudent.course_code = value.code;
-        await this.setDataClassroom(this.classCourseData, value.id);
+        this.removeAcademicYear();
+        this.dataStudent.course_name = value.course.name;
+        this.dataStudent.course_code = value.course.code;
+        this.dataStudent.academic_year_id = value.course.id;
+        await this.getDataAcademicYear();
+
+        this.isCourseNotSelected = false;
+        this.isFetchingData = false;
+    },
+
+    async setAcademicYear(value){
+        this.isFetchingData = true;
+
+        this.dataStudent.academic_year = value.academic_year.name;
+        this.dataStudent.semester = value.academic_year.semester;
+        this.dataStudent.staff_code = value.staff.code;
+        await this.getDataClassCourse();
+
+        this.dataInput.class_course_id = this.classCourseData.id;
 
         this.isFetchingData = false;
     },
 
     removeKelas(){
+        this.courseData = [];
+
         this.isKelasNotSelected = true;
+
         this.class_data = "";
         this.dataStudent.class_name = "";
-        this.courseData = [];
         this.removeCourse();
     },
 
     removeCourse(){
+        this.academicYearData = [];
+
+        this.isCourseNotSelected = true;
+
         this.course_data = "";
         this.dataStudent.course_name = "";
         this.dataStudent.course_code = "";
+        this.dataStudent.academic_year_id = "";
+        this.removeAcademicYear();
+    },
+
+    removeAcademicYear(){
+        this.classCourseData = "";
+
+        this.academic_year_data = "";
         this.dataStudent.academic_year = "";
         this.dataStudent.semester = "";
         this.dataStudent.staff_code = "";
+        
+        this.dataInput.class_course_id = "";
     },
 
     checkNim(){
@@ -308,15 +399,19 @@ export default {
     },
 
     setMahasiswa(data){
-        this.dataStudent.name = data.name
-        this.dataStudent.gender = data.gender
-        this.dataStudent.religion = data.religion
+        this.dataStudent.name = data.name;
+        this.dataStudent.gender = data.gender;
+        this.dataStudent.religion = data.religion;
+
+        this.dataInput.student_id = data.id;
     },
 
     removeMahasiswa(){
         this.dataStudent.name = "";
         this.dataStudent.gender = "";
         this.dataStudent.religion = "";
+
+        this.dataInput.student_id = "";
     }
   }
 };
@@ -390,7 +485,7 @@ export default {
                                         <div
                                         v-if="!isNimFound"
                                         class="invalid-feedback"
-                                        >NIM is not available, please input Name, Gender, and Religion.</div>
+                                        >NIM is not available,<br>please input Name, Gender, and Religion.</div>
                                         <div
                                         v-if="isNimFound"
                                         class="valid-feedback"
@@ -411,7 +506,7 @@ export default {
                                 name="nama" 
                                 type="text" 
                                 class="form-control"
-                                :disabled="isNimNotAvailable"
+                                disabled="true"
                                 v-bind:style="disabled_bg"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }" />
 
@@ -533,17 +628,17 @@ export default {
 
                         <div class="col-sm-4">
                             <div class="form-group">
-                                <label for="course_code">Kode Mata Kuliah</label>
-                                <input
-                                    v-model="dataStudent.course_code"
-                                    :disabled="true"
-                                    id="course_code"
-                                    name="course_code"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.course_code.$error }"
-                                />
+                            <label class="control-label">Kode Mata Kuliah</label>
+                            <multiselect
+                                v-model="course_data"
+                                :options="loadCourseData"
+                                :disabled="isKelasNotSelected"
+                                label="code"
+                                track-by="code"
+                                @select="setCourse"
+                                @remove="removeCourse"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.course_code.$error }" 
+                            ></multiselect>
                                 <div
                                 v-if="submitted && !$v.dataStudent.course_code.required"
                                 class="invalid-feedback"
@@ -553,6 +648,26 @@ export default {
                     </div>
 
                     <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                            <label class="control-label">Tahun Akademik (Semester)</label>
+                            <multiselect
+                                v-model="academic_year_data"
+                                :options="loadAcademicYearData"
+                                :disabled="isCourseNotSelected"
+                                label="name"
+                                track-by="name"
+                                @select="setAcademicYear"
+                                @remove="removeAcademicYear"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.academic_year.$error }" 
+                            ></multiselect>
+                                <div
+                                v-if="submitted && !$v.dataStudent.academic_year.required"
+                                class="invalid-feedback"
+                                >Tahun Akademik (Semester) is required.</div>
+                            </div>
+                        </div>
+
                         <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="staff_code">Kode Dosen Mata Kuliah</label>
@@ -570,46 +685,6 @@ export default {
                                 v-if="submitted && !$v.dataStudent.staff_code.required"
                                 class="invalid-feedback"
                                 >Kode Dosen Mata Kuliah is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="academic_year">Tahun Akademik</label>
-                                <input
-                                    v-model="dataStudent.academic_year"
-                                    :disabled="true"
-                                    id="academic_year"
-                                    name="academic_year"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.academic_year.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.academic_year.required"
-                                class="invalid-feedback"
-                                >Tahun Akademik is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="semester">Semester</label>
-                                <input
-                                    v-model="dataStudent.semester"
-                                    :disabled="true"
-                                    id="semester"
-                                    name="semester"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.semester.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.semester.required"
-                                class="invalid-feedback"
-                                >Semester is required.</div>
                             </div>
                         </div>
                     </div>
