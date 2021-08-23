@@ -65,6 +65,8 @@ export default {
       sortDesc: false,
       fields: [
         { key: "title", sortable: true, label: "Name" },
+        { key: "class_course.class.name", sortable: true, label: "Kelas" },
+        { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai" },
         { key: "end", sortable: true, label: "Jam Terakhir" },
@@ -93,6 +95,15 @@ export default {
         },
         class_course: {
           id: "",
+          class: {
+            name: "",
+          },
+          course: {
+            name: "",
+          },
+          staff: {
+            name: "",
+          },
         },
         module: {
           index: "",
