@@ -3,8 +3,8 @@ import store from '@/store'
 export default [
     //path praktikan
     {
-        path: '/praktikan/jadwal',
-        name: 'praktikan-jadwal',
+        path: '/praktikan/schedule/calendar',
+        name: 'praktikan-schedule',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -17,7 +17,7 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/student/jadwal')
+        component: () => import('../../views/pages/student/schedule/schedule-calendar')
     },
     {
         path: '/praktikan/matakuliah',
