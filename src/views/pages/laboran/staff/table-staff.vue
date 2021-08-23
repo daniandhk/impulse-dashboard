@@ -3,13 +3,14 @@ import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
+import Multiselect from "vue-multiselect";
 
 /**
  * Orders Component
  */
 export default {
   components: {
-
+    Multiselect,
   },
   validations: {
     dataEdit: {
@@ -49,6 +50,20 @@ export default {
           name: "",
           },
       submitted: false,
+
+      //edit role
+      roleData: ['laboran', 'dosen'],
+      role_data: [],
+      dataEditRole: {
+          no_induk: "",
+          student: 0,
+          asprak: 0,
+          aslab: 0,
+          staff: 0,
+          laboran: 0,
+          dosen: 0,
+      },
+      main_role: "staff",
     };
   },
   computed: {
@@ -233,6 +248,12 @@ export default {
       this.dataEdit.nip = data.item.nip;
       this.dataEdit.code = data.item.code;
       this.dataEdit.name = data.item.name;
+
+      //edit role
+      this.dataEditRole.no_induk = data.item.nip;
+      this.getRoles(this.dataEditRole.no_induk);
+      this.setRoles(this.role_data, this.dataEditRole);
+
       this.$bvModal.show('modal-edit');
     },
 
@@ -267,6 +288,84 @@ export default {
             })
         )
       }
+    },
+
+    getRoles(no_induk){
+        return (
+          api.getRoles(no_induk)
+            .then(response => {
+              if(response.data.data){
+                  this.role_data = response.data.data.roles
+              }
+            })
+            .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+            })
+        )
+    },
+
+    setRoles(role_data, dataEditRole){
+        if (role_data.includes("staff") == false){
+            role_data.push("staff");
+        }
+        role_data.forEach((element, index, array) => {
+            if (element == "student") {
+                dataEditRole.student = 1
+            }
+            if (element == "asprak") {
+                dataEditRole.asprak = 1
+            }
+            if (element == "aslab") {
+                dataEditRole.aslab = 1
+            }
+            if (element == "staff") {
+                dataEditRole.staff = 1
+            }
+            if (element == "laboran") {
+                dataEditRole.laboran = 1
+            }
+            if (element == "dosen") {
+                dataEditRole.dosen = 1
+            }
+        });
+    },
+
+    editRole(){
+        this.setRoles(this.role_data, this.dataEditRole);
+        return (
+          api.setRoles(this.dataEditRole)
+            .then(response => {
+              this.submitted = false;
+              this.hideModal();
+              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
+              this.loading();
+              this.fetchData().then(result=>{
+                  this.loading();
+              });
+            })
+            .catch(error => {
+              this.submitted = false;
+              this.hideModal();
+              
+              Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+              })
+            })
+        )
+    },
+
+    removeRole(value){
+        if (value == "staff") {
+            this.role_data.push("staff");
+        }
     },
 
     hideModal(){
@@ -388,70 +487,116 @@ export default {
         hide-footer 
         title-class="font-18"
       >
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStaff">
-          <div class="tab-pane" id="metadata">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nip">NIP</label>
-                    <input 
-                    style="background-color: #F0F4F6;"
-                    :disabled="true"
-                    v-model="dataEdit.nip"
-                    id="nip" 
-                    name="nip" 
-                    type="number" 
-                    class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }" />
+        <div class="card">
+          <div class="card-body pt-0">
+            <b-tabs nav-class="nav-tabs-custom">
+              <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Edit Data</a>
+                </template>
+                <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStaff">
+                          <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="nip">NIP</label>
+                                    <input 
+                                    style="background-color: #F0F4F6;"
+                                    :disabled="true"
+                                    v-model="dataEdit.nip"
+                                    id="nip" 
+                                    name="nip" 
+                                    type="text" 
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }" />
 
-                    <div
-                    v-if="submitted && !$v.dataEdit.nip.required"
-                    class="invalid-feedback"
-                    >NIP is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nama">Nama Dosen</label>
-                    <input 
-                    v-model="dataEdit.name"
-                    id="nama" 
-                    name="nama" 
-                    type="text" 
-                    class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
+                                    <div
+                                    v-if="submitted && !$v.dataEdit.nip.required"
+                                    class="invalid-feedback"
+                                    >NIP is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="nama">Nama Dosen</label>
+                                    <input 
+                                    v-model="dataEdit.name"
+                                    id="nama" 
+                                    name="nama" 
+                                    type="text" 
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
 
-                    <div
-                    v-if="submitted && !$v.dataEdit.name.required"
-                    class="invalid-feedback"
-                    >Nama Dosen is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="code">Kode Dosen</label>
-                    <input
-                        v-model="dataEdit.code"
-                        id="code"
-                        name="code"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
-                    />
-                    <div
-                    v-if="submitted && !$v.dataEdit.code.required"
-                    class="invalid-feedback"
-                    >Kode Mata Kuliah is required.</div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <button
-                type="submit"
-                class="btn btn-primary mr-2 waves-effect waves-light"
-                >Save Changes</button>
-                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-            </div>
+                                    <div
+                                    v-if="submitted && !$v.dataEdit.name.required"
+                                    class="invalid-feedback"
+                                    >Nama Dosen is required.</div>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="code">Kode Dosen</label>
+                                    <input
+                                        v-model="dataEdit.code"
+                                        id="code"
+                                        name="code"
+                                        type="text"
+                                        class="form-control"
+                                        :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
+                                    />
+                                    <div
+                                    v-if="submitted && !$v.dataEdit.code.required"
+                                    class="invalid-feedback"
+                                    >Kode Mata Kuliah is required.</div>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                          </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Edit Roles</a>
+                  </template>
+                  <template>
+                    <div class='mt-4'>
+                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
+                        <div class="tab-pane" id="metadata">
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class="control-label">Roles</label>
+                                    <multiselect
+                                        v-model="role_data"
+                                        :options="roleData"
+                                        :multiple="true"
+                                        @remove="removeRole"
+                                    ></multiselect>
+                                </div>
+                            </div>
+                            <div class="text-center mt-4">
+                                <button
+                                type="submit"
+                                class="btn btn-primary mr-2 waves-effect waves-light"
+                                >Save Changes</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                            </div>
+                        </div>
+                        </form>
+                    </div>
+                </template>
+              </b-tab>
+            </b-tabs>
           </div>
-        </form>
+        </div>
       </b-modal>
     </div>
   </div>
