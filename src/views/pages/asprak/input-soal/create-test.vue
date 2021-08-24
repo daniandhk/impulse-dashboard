@@ -2,50 +2,44 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import Multiselect from "vue-multiselect";
-import Vue from 'vue';
 import vue2Dropzone from "vue2-dropzone";
-import appConfig from "@/app.config";
+import Vue from 'vue';
 
+import * as api from '@/api';
+import Swal from "sweetalert2";
+import moment from 'moment';
+
+import { required } from "vuelidate/lib/validators";
+import { notificationMethods } from "@/state/helpers";
+
+/**
+ * Advanced-form component
+ */
 export default {
   components: {
     Layout,
-    PageHeader,
     Multiselect,
+    PageHeader,
     vueDropzone: vue2Dropzone
   },
-  data() {
-    return {
-        title: "Create Test",
-        meta: [{ name: "description", content: appConfig.description }],
-        items: [
-            {
-            text: "Input Soal"
+    dropzoneOptions: {
+    url: "https://httpbin.org/post",
+    thumbnailWidth: 150,
+    maxFilesize: 0.5,
+    headers: { "My-Awesome-Header": "header value" }
+    },
 
-            },
-            {
-            text: "Create Test",
-            active: true
-            }
-        ],
-        dropzoneOptions: {
-        url: "https://httpbin.org/post",
-        thumbnailWidth: 150,
-        maxFilesize: 0.5,
-        headers: { "My-Awesome-Header": "header value" }
-        },
-        
-        selected_test: "",
-        test_types: ["Pretest", "Jurnal", "Posttest"],
-        isPretestSelected: false,
-        isJurnalSelected: false,
-        isPosttestSelected: false,
+    selected_test: "",
+    test_types: ["Pretest", "Jurnal", "Posttest"],
+    isPretestSelected: false,
+    isJurnalSelected: false,
+    isPosttestSelected: false,
 
-        selected_soal: "",
-        soal_types: ["Mutiple Choice", "Essay"],
-        isMutiplechoiceSelected: false,
-        isEssaySelected: false,
-
-        dataTest: {
+    selected_soal: "",
+    soal_types: ["Mutiple Choice", "Essay"],
+    isMutiplechoiceSelected: false,
+    isEssaySelected: false,
+    dataTest: {
             test: {
                 time_start: "",
                 time_end: "",
@@ -53,10 +47,145 @@ export default {
             question: []
         },
         questions: [],
+
+
+  validations: {
+    schedule_data:{
+      date: { required },
+      title: { required },
+      room: {
+        id: { required },
+      },
+    },
+    time_start: { required },
+    time_end: { required },
+  },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  mounted: async function() {
+    this.loading();
+    await this.loadData().then(result=>{
+      this.loading();
+    });
+  },
+  watch: {
+    $route: async function() {
+      await this.loadData().then(result=>{
+        this.loading();
+      });
+    }
+  },
+  data() {
+    return {
+      title: "Edit Schedule",
+      items: [
+        {
+          text: "Asisten Lab",
+          href: "/"
+        },
+        {
+          text: "Schedule",
+          href: "/aslab/schedule"
+        },
+        {
+          text: "Edit",
+          active: true,
+        }
+      ],
+      schedule_data: {
+        id: "",
+        title: "",
+        start: "",
+        end: "",
+        room: {
+          name: "",
+        },
+        class_course: {
+          id: "",
+        },
+        module: {
+          index: "",
+        },
+        academic_year: {
+          year: "",
+          semester: "",
+        },
+        date: ""
+      },
+      class_course_data: {
+        class: {
+          name: "",
+        },
+        course: {
+          name: "",
+        },
+        academic_year: {
+          name: "",
+        }
+      },
+
+      dataRooms: [],
+      time_date: "",
+      time_start: "",
+      time_end: "",
+      dataModules: [],
+
+      isLoading: false,
+
+      dataEdit:{
+        time_start: null,
+        time_end: null,
+        name: "",
+        room_id: "",
+        class_course_id: "",
+        academic_year_id: "",
+        module_id: "",
+        date: null,
+      },
+      submitted: false,
+      tryingToInput: false,
+      isInputError: false,
+      inputSuccess: false,
+      isInputCanceled: false,
+      inputError: null,
+
+    dropzoneOptions: {
+    url: "https://httpbin.org/post",
+    thumbnailWidth: 150,
+    maxFilesize: 0.5,
+    headers: { "My-Awesome-Header": "header value" }
+    },
+
+    selected_test: "",
+    test_types: ["Pretest", "Jurnal", "Posttest"],
+    isPretestSelected: false,
+    isJurnalSelected: false,
+    isPosttestSelected: false,
+
+    selected_soal: "",
+    soal_types: ["Mutiple Choice", "Essay"],
+    isMutiplechoiceSelected: false,
+    isEssaySelected: false,
+    dataTest: {
+            test: {
+                time_start: "",
+                time_end: "",
+            },
+            question: []
+        },
+        questions: [],
+        
+
     };
   },
+  
   methods: {
-        selectType(value){
+    ...notificationMethods,
+
+    selectType(value){
             if (value == "Pretest") {
                 this.isPretestSelected = true;
                 this.isJurnalSelected = false;
@@ -161,17 +290,278 @@ export default {
             else {
                 return "( harap centang jawaban yang benar )"
             }
-        }
-      
-  }
+        },
+
+    async loadData(){
+      this.setId(this.$route.params.id);
+      await this.fetchData();
+    },
+
+    setId(id){
+      this.schedule_data.id = id;
+    },
+
+    async fetchData(){
+      return (
+        api.showSchedule(this.schedule_data.id)
+          .then(response => {
+            this.isIdValid(response.data.data);
+            if(response.data.data){
+              this.schedule_data = response.data.data;
+              this.getClassCourse(this.schedule_data.class_course.id);
+              this.getListSchedules(this.schedule_data.class_course.id);
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+      );
+    },
+
+    isIdValid(data){
+      if(data){
+        return true;
+      }
+      else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'This ID is invalid!',
+            footer: 'You will be redirected to Schedule Menu',
+            timer: 4000
+        })
+        this.$router.replace({
+          name: 'aslab-schedule'
+        });
+      }
+    },
+
+    async getClassCourse(id){
+      return (
+        api.showClassCourse(id)
+          .then(response => {
+            if(response.data.data){
+              this.class_course_data = response.data.data;
+              this.class_course_data.academic_year.name = String(this.class_course_data.academic_year.name) + " / " + String(this.class_course_data.academic_year.semester);
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+      );
+    },
+
+    getListSchedules(class_course_id){
+      return (
+        api.showSchedules(class_course_id)
+          .then(response => {
+            if(response.data.data){
+              this.generateModule(response.data.data.length);
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+      );
+    },
+
+    generateModule(sum){
+      this.dataModules = Array.from({length: sum}, (_, i) => i + 1)
+    },
+
+    getRequestParams(module) {
+      let params = {};
+
+      if (module) {
+        params["module"] = module;
+      }
+
+      return params;
+    },
+
+    selectModule(value){
+      this.loading();
+      const params = this.getRequestParams(
+        value,
+      );
+      const class_course_id = this.class_course_data.id;
+      this.schedule_data.title = "";
+      this.time_start = null;
+      this.time_end = null;
+      this.time_date = null;
+
+      api.showSchedules(class_course_id, params)
+          .then(response => {
+            if(response.data.data){
+              let schedule_id = response.data.data.id;
+              this.$router.push({
+                  name: 'aslab-schedule-input', 
+                  params: { id: schedule_id }
+              });
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+    },
+
+
+    cancelSubmit(){
+      Swal.fire({
+          title: "Are you sure?",
+          text: "the form that you have filled in will be reset!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#34c38f",
+          cancelButtonColor: "#f46a6a",
+          confirmButtonText: "Yes, cancel it!"
+      }).then(result => {
+          if (result.value) {
+              this.loading();
+              this.submitted = false;
+              this.isInputCanceled = true;
+              this.loadData().then(result=>{
+                this.loading();
+              });
+              Swal.fire("Canceled!", "The form has been reset.", "success");
+          }
+      });
+    },
+
+    
+
+    // selectJenisTest(value){
+    //   if(value=="pretest"){
+    //     let id = this.schedule_data.module.pretest_id
+    //     api.getTest(id).then(response.data.data)
+    //     this.test_data = response.data.data
+    //   }
+    // },
+
+    // checkTestData(){
+    //   if(this.test_data != null){
+    //     this.isEdit =  true;
+    //     if(this.test_data.test.type == 'multiple_coise')
+    //     this.type_data = 
+    //     this.dataTest.question = this.test_data.question
+    //   } else{
+    //     this.isEdit = false;
+    //   }
+    // },
+
+    // submitSoal(){
+    //   if(this.isEdit = true){
+    //     //manggil api edit test
+    //   }
+    //   else{
+    //     //manggil api create test, edit schedule: ganti module.
+    //   }
+    // },
+
+    loading() {
+      if(this.isLoading){
+        this.isLoading = false;
+      } else{
+        this.isLoading = true;
+      }
+
+      var x = document.getElementById("loading");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    },
+
+  },
 };
+
 </script>
 
 <template>
-    <Layout>
-        <PageHeader :title="title" :items="items" />
-        <div>
-            <form>
+  <Layout>
+    <PageHeader :title="title" :items="items" />
+    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+              <div class="col-sm-4">
+                  <div class="form-group">
+                      <label>Kelas</label>
+                      <input
+                          v-model="class_course_data.class.name"
+                          type="text"
+                          class="form-control"
+                          disabled="true"
+                          style="background-color: #F0F4F6;"
+                      />
+                  </div>
+              </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                      <label>Mata Kuliah</label>
+                      <input
+                          v-model="class_course_data.course.name"
+                          type="text"
+                          class="form-control"
+                          disabled="true"
+                          style="background-color: #F0F4F6;"
+                      />
+                  </div>
+              </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                      <label>Tahun / Semester</label>
+                      <input
+                          v-model="class_course_data.academic_year.name"
+                          type="text"
+                          class="form-control"
+                          disabled="true"
+                          style="background-color: #F0F4F6;"
+                      />
+                  </div>
+              </div>
+          </div>
+
+          <div class="form-group text-center">
+              <label>Module</label>
+              <multiselect 
+                class="text-center"
+                v-model="schedule_data.module.index" 
+                :options="dataModules"
+                @select="selectModule"
+                :allow-empty="false"
+                :disabled="isLoading"
+              ></multiselect>
+          </div>
+        </div>
+      </div>
+      <form>
                 <div class="card">
                     <div class="card-body">
                         <div class="col-sm-12">
@@ -389,6 +779,6 @@ export default {
                         </div>
                     </div>
             </form>
-        </div>
-    </Layout>
+    </div>
+  </Layout>
 </template>
