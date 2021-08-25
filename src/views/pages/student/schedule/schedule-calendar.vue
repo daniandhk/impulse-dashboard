@@ -31,10 +31,6 @@ export default {
         },
         {
           text: "Schedule",
-          href: ""
-        },
-        {
-          text: "Calendar",
           active: true,
         }
       ],
@@ -253,9 +249,9 @@ await this.loadDataDropdown();
       this.currentEvents = events;
     },
 
-    editModal(){
+    detailModal(){
       this.$router.push({
-          name: 'aslab-schedule-input', 
+          name: 'praktikan-schedule-detail', 
           params: { id: this.schedule_data.id }
       });
     },
@@ -411,17 +407,6 @@ function sleep(ms) {
       title-class="font-18"
     >
       <div class="tab-pane col-sm-12 col-md-12" id="metadata">
-        <div>
-            <div class="form-group">
-                <label>Title</label>
-                <input
-                    v-model="schedule_data.title"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
         <div class="row">
           <div class="col-sm-9">
               <div class="form-group">
@@ -519,9 +504,9 @@ function sleep(ms) {
         <div class="text-right mt-4">
             <button
             type="button"
-            @click="editModal"
-            class="btn btn-info mr-2 waves-effect waves-light"
-            >Edit</button>
+            @click="detailModal"
+            class="btn btn-success mr-2 waves-effect waves-light"
+            >Mulai Praktikum</button>
             <button type="button" @click="closeModal" class="btn btn-light waves-effect">Close</button>
         </div>
       </div>
