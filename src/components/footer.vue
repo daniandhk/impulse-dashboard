@@ -13,6 +13,7 @@
               About Impulse
             </a> -->
             <router-link
+                            to="/about-us"
                             class="font-weight-medium"
                             href="/about-us"
                             style="color: #74788d;"
