@@ -246,7 +246,7 @@ export default {
             timer: 4000
         })
         this.$router.replace({
-          name: 'aslab-schedule'
+          name: 'praktikan-schedule-calendar'
         });
       }
     },
@@ -462,7 +462,15 @@ export default {
           if(this.pretest_data.auth){
             if(this.dataInput.auth_pretest == this.pretest_data.auth){
               this.isAuthPretestWrong = false;
-              //go to soal
+              this.$router.push({
+                  name: 'praktikan-schedule-test', 
+                  params: { 
+                    id: this.pretest_data.test.id, 
+                    schedule_test_id: this.pretest_data.id, 
+                    type: "pretest",
+                    auth: this.dataInput.auth_pretest,
+                  }
+              });
             }
             else{
               this.isAuthPretestWrong = true;
@@ -483,7 +491,15 @@ export default {
           if(this.journal_data.auth){
             if(this.dataInput.auth_journal == this.journal_data.auth){
               this.isAuthJournalWrong = false;
-              //go to soal
+              this.$router.push({
+                  name: 'praktikan-schedule-test', 
+                  params: { 
+                    id: this.journal_data.test.id, 
+                    schedule_test_id: this.journal_data.id, 
+                    type: "journal",
+                    auth: this.dataInput.auth_pretest,
+                  }
+              });
             }
             else{
               this.isAuthJournalWrong = true;
@@ -504,7 +520,15 @@ export default {
           if(this.posttest_data.auth){
             if(this.dataInput.auth_posttest == this.posttest_data.auth){
               this.isAuthPosttestWrong = false;
-              //go to soal
+              this.$router.push({
+                  name: 'praktikan-schedule-test', 
+                  params: { 
+                    id: this.posttest_data.test.id, 
+                    schedule_test_id: this.posttest_data.id, 
+                    type: "posttest",
+                    auth: this.dataInput.auth_pretest,
+                  }
+              });
             }
             else{
               this.isAuthPosttestWrong = true;
