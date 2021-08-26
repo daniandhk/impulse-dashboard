@@ -313,7 +313,14 @@ export default {
         </div>
       </div>
     </div>
-    <div class="row mt-2">
+    <hr style="margin-left: -28px; 
+                margin-right: -28px; 
+                height: 2px; 
+                background-color: #eee; 
+                border: 0 none; 
+                color: #eee;"
+    >
+    <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
         <div id="tickets-table_length" class="dataTables_length">
           <label class="d-inline-flex align-items-center">

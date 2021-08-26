@@ -65,6 +65,8 @@ export default {
       sortDesc: false,
       fields: [
         { key: "title", sortable: true, label: "Name" },
+        { key: "class_course.class.name", sortable: true, label: "Kelas" },
+        { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai" },
         { key: "end", sortable: true, label: "Jam Terakhir" },
@@ -93,6 +95,15 @@ export default {
         },
         class_course: {
           id: "",
+          class: {
+            name: "",
+          },
+          course: {
+            name: "",
+          },
+          staff: {
+            name: "",
+          },
         },
         module: {
           index: "",
@@ -374,7 +385,13 @@ export default {
                 </div>
             </div>
             </div>
-            <hr>
+            <hr style="margin-left: -28px; 
+                        margin-right: -28px; 
+                        height: 2px; 
+                        background-color: #eee; 
+                        border: 0 none; 
+                        color: #eee;"
+            >
             <div class="row mt-4">
             <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">

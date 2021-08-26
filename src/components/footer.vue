@@ -13,9 +13,9 @@
               About Impulse
             </a> -->
             <router-link
-                            to="about-us"
+                            to="/about-us"
                             class="font-weight-medium"
-                            href="javascript:void(0);"
+                            href="/about-us"
                             style="color: #74788d;"
                           >About Impulse</router-link>
           </div>

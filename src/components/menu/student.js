@@ -23,7 +23,7 @@ export const praktikanItems = [
             {
                 id: 5,
                 label: 'menuitems.praktikan.list.kalender',
-                link: 'praktikan-jadwal'
+                link: 'praktikan-schedule-calendar'
             },
             {
                 id: 6,
