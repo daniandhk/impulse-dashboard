@@ -9,4 +9,9 @@ export default [
         name: 'about-us',
         component: () => import('../../views/pages/utility/about-us')
     },
+    {
+        path :'/temp/create-test',
+        name: 'create-test',
+        component: () => import('../../views/pages/temp/create-test')
+    },
 ]
