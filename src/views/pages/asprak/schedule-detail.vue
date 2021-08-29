@@ -429,7 +429,7 @@ export default {
     updateSchedule(){
       this.submitted = true;
       this.$v.schedule_data.$touch();
-      if (this.$v.$invalid) {
+      if (this.$v.schedule_data.$invalid) {
         return;
       } else {
         this.tryingToInput = true;
@@ -714,7 +714,7 @@ export default {
       this.dataTest.module_id = this.schedule_data.module.id;
       this.submitted_test = true;
       this.$v.dataTest.$touch();
-      if (this.$v.$invalid) {
+      if (this.$v.dataTest.$invalid) {
         return;
       } else {
         this.tryingToInputTest = true;
