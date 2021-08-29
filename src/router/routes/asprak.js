@@ -3,6 +3,42 @@ import store from '@/store'
 export default [
     //path asprak
     {
+        path: '/asprak/schedule',
+        name: 'asprak-schedule',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/schedule')
+    },
+
+    {
+        path: '/asprak/schedule/detail/:id',
+        name: 'asprak-schedule-detail',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/schedule-detail')
+    },
+
+    {
         path: '/asprak/input-soal',
         name: 'asprak-input-soal',
         meta: {

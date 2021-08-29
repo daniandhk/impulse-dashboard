@@ -18,7 +18,7 @@ export const asprakItems = [
     {
         id: 4,
         label: 'menuitems.asprak.list.input-soal',
-        link: 'asprak-input-soal',
+        link: 'asprak-schedule',
         icon: 'ri-profile-line'
     },
     {
