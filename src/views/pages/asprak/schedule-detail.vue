@@ -1,0 +1,1319 @@
+<script>
+import DatePicker from "vue2-datepicker";
+import Layout from "../../layouts/main";
+import PageHeader from "@/components/page-header";
+import Multiselect from "vue-multiselect";
+import vue2Dropzone from "vue2-dropzone";
+
+import * as api from '@/api';
+import Swal from "sweetalert2";
+import moment from 'moment';
+import Vue from 'vue';
+import store from '@/store';
+
+import { required } from "vuelidate/lib/validators";
+import { notificationMethods } from "@/state/helpers";
+
+/**
+ * Advanced-form component
+ */
+export default {
+  components: {
+    DatePicker,
+    Layout,
+    Multiselect,
+    PageHeader,
+    vueDropzone: vue2Dropzone,
+  },
+  validations: {
+    schedule_data:{
+      date: { required },
+      title: { required },
+      room: {
+        id: { required },
+      },
+      time_start: { required },
+      time_end: { required },
+    },
+
+    dataTest: {
+        type: { required },
+        test_type: { required },
+        module_id: { required },
+        questions: {
+          $each: {
+              text: { required },
+          }
+        }
+    },
+  },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  mounted: async function() {
+    this.loading();
+    await this.loadData().then(result=>{
+      this.loading();
+    });
+  },
+  watch: {
+    $route: async function() {
+      await this.loadData().then(result=>{
+        this.loading();
+      });
+    }
+  },
+  data() {
+    return {
+      title: "Detail Schedule",
+      items: [
+        {
+          text: "Asisten Praktikum",
+          href: "/"
+        },
+        {
+          text: "Schedule",
+          href: "/asprak/schedule"
+        },
+        {
+          text: "Detail",
+          active: true,
+        }
+      ],
+      schedule_data: {
+        id: "",
+        title: "",
+        start: "",
+        end: "",
+        room: {
+          name: "",
+        },
+        class_course: {
+          id: "",
+        },
+        module: {
+          index: "",
+        },
+        academic_year: {
+          year: "",
+          semester: "",
+        },
+        date: "",
+        time_start: "",
+        time_end: "",
+      },
+      class_course_data: {
+        class: {
+          name: "",
+        },
+        course: {
+          name: "",
+        },
+        academic_year: {
+          name: "",
+        }
+      },
+
+      dataRooms: [],
+      time_date: "",
+      dataModules: [],
+
+      isLoading: false,
+
+      dataEdit:{
+        time_start: null,
+        time_end: null,
+        name: "",
+        room_id: "",
+        class_course_id: "",
+        academic_year_id: "",
+        module_id: "",
+        date: null,
+      },
+      submitted: false,
+      tryingToInput: false,
+      isInputError: false,
+      inputSuccess: false,
+      isInputCanceled: false,
+      inputError: null,
+
+      //input test
+      test_id: "",
+      tests: ["Pretest", "Journal", "Posttest"],
+      selected_test: "",
+
+      types: ["Multiple Choice", "Essay", "Upload File"],
+      selected_type: "",
+
+      dataTest: {
+          type: "",
+          test_type: "",
+          module_id: "",
+          questions: []
+      },
+
+      isLoadedData: false,
+      isUnsavedData: false,
+
+      submitted_test: false,
+      tryingToInputTest: false,
+      isInputTestError: false,
+      inputTestSuccess: false,
+      isInputTestCanceled: false,
+
+      //upload file
+      dropzoneOptions: {
+        url: process.env.VUE_APP_BACKEND_URL + "/staff/import",
+        thumbnailWidth: 150,
+        maxFilesize: 5,
+        
+        headers:{"Authorization":'Bearer ' + store.getters.getLoggedUser.token},
+        acceptedFiles: "text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        maxFiles: 1,
+        init: function() {
+          this.on('addedfile', function(file) {
+            if (this.files.length > 1) {
+              this.removeFile(this.files[0]);
+            }
+          });
+          this.on('error', function(file, response){
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed to upload your file!',
+                text: 'Cek kembali kesesuaian file dengan deskripsi.',
+                footer: response
+            })
+          });
+          this.on('success', function(file, response){
+            Swal.fire({
+                icon: 'success',
+                title: 'Uploaded!',
+                text: 'Your file has been uploaded.',
+                footer: response
+            })
+          })
+        }
+      }
+
+    };
+  },
+  methods: {
+    ...notificationMethods,
+
+    async loadData(){
+      this.setId(this.$route.params.id);
+      await this.fetchData();
+      await this.loadDropdown();
+      await this.setDate();
+    },
+
+    setId(id){
+      this.schedule_data.id = id;
+    },
+
+    async fetchData(){
+      return (
+        api.showSchedule(this.schedule_data.id)
+          .then(response => {
+            this.isIdValid(response.data.data);
+            if(response.data.data){
+              this.schedule_data = response.data.data;
+              this.getClassCourse(this.schedule_data.class_course.id);
+              this.getListSchedules(this.schedule_data.class_course.id);
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+      );
+    },
+
+    isIdValid(data){
+      if(data){
+        return true;
+      }
+      else{
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'This ID is invalid!',
+            footer: 'You will be redirected to Schedule Menu',
+            timer: 4000
+        })
+        this.$router.replace({
+          name: 'asprak-schedule'
+        });
+      }
+    },
+
+    async getClassCourse(id){
+      return (
+        api.showClassCourse(id)
+          .then(response => {
+            if(response.data.data){
+              this.class_course_data = response.data.data;
+              this.class_course_data.academic_year.name = String(this.class_course_data.academic_year.name) + " / " + String(this.class_course_data.academic_year.semester);
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+      );
+    },
+
+    getListSchedules(class_course_id){
+      return (
+        api.showSchedules(class_course_id)
+          .then(response => {
+            if(response.data.data){
+              this.generateModule(response.data.data.length);
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+      );
+    },
+
+    generateModule(sum){
+      this.dataModules = Array.from({length: sum}, (_, i) => i + 1)
+    },
+
+    getRequestParams(module) {
+      let params = {};
+
+      if (module) {
+        params["module"] = module;
+      }
+
+      return params;
+    },
+
+    selectModule(value){
+      this.loading();
+      const params = this.getRequestParams(
+        value,
+      );
+      const class_course_id = this.class_course_data.id;
+      this.schedule_data.title = "";
+      this.schedule_data.time_start = null;
+      this.schedule_data.time_end = null;
+      this.time_date = null;
+
+      //emptying input test
+      this.submitted_test = false;
+      this.selected_test = "";
+      this.selected_type = "",
+      this.dataTest = {
+          type: "",
+          test_type: "",
+          module_id: "",
+          questions: []
+      };
+      this.inputTestSuccess = false;
+      this.isUnsavedData = false;
+      this.isLoadedData = false;
+
+      api.showSchedules(class_course_id, params)
+          .then(response => {
+            if(response.data.data){
+              let schedule_id = response.data.data.id;
+              this.$router.push({
+                  name: 'asprak-schedule-detail', 
+                  params: { id: schedule_id }
+              });
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Something went wrong!',
+                  footer: error
+              })
+          })
+    },
+
+    async setDate(){
+      this.time_date = this.schedule_data.date;
+      if(this.schedule_data.start){
+        this.schedule_data.time_start = moment(String(this.schedule_data.start)).format('HH:mm:ss');
+      }
+      if(this.schedule_data.end){
+        this.schedule_data.time_end = moment(String(this.schedule_data.end)).format('HH:mm:ss');
+      }
+    },
+
+    notAfterTimeEnd(date) {
+      if(this.schedule_data.time_end){
+        let hours = this.schedule_data.time_end.split(':')[0];
+        let minutes = this.schedule_data.time_end.split(':')[1];
+        let seconds = this.schedule_data.time_end.split(':')[2];
+        
+        return date > new Date(new Date().setHours(hours, minutes, seconds, 0));
+      }
+    },
+
+    notBeforeTimeStart(date) {
+      if(this.schedule_data.time_start){
+        let hours = this.schedule_data.time_start.split(':')[0];
+        let minutes = this.schedule_data.time_start.split(':')[1];
+        let seconds = this.schedule_data.time_start.split(':')[2];
+        
+        return date < new Date(new Date().setHours(hours, minutes, seconds, 0));
+      }
+    },
+
+    async loadDropdown(){
+      await this.getRoomsData();
+    },
+
+    async getRoomsData(){
+      return (
+        api.getAllRooms()
+          .then(response => {
+            if (response.data.rooms){
+              this.dataRooms = response.data.rooms;
+            }
+          })
+          .catch(error => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
+          })
+      );
+    },
+
+    cancelSubmit(){
+      Swal.fire({
+          title: "Are you sure?",
+          text: "the form that you have filled in will be reset!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#34c38f",
+          cancelButtonColor: "#f46a6a",
+          confirmButtonText: "Yes, cancel it!"
+      }).then(result => {
+          if (result.value) {
+              this.loading();
+              this.submitted = false;
+              this.isInputCanceled = true;
+              this.loadData().then(result=>{
+                this.loading();
+              });
+              Swal.fire("Canceled!", "The form has been reset.", "success");
+          }
+      });
+    },
+
+    updateSchedule(){
+      this.submitted = true;
+      this.$v.schedule_data.$touch();
+      if (this.$v.schedule_data.$invalid) {
+        return;
+      } else {
+        this.tryingToInput = true;
+
+        let combined_start = this.time_date + " " + this.schedule_data.time_start;
+        let time_start = moment(String(combined_start)).format('YYYY-MM-DD HH:mm:ss');
+        this.dataEdit.time_start = time_start;
+
+        let combined_end = this.time_date + " " + this.schedule_data.time_end;
+        let time_end = moment(String(combined_end)).format('YYYY-MM-DD HH:mm:ss')
+        this.dataEdit.time_end = time_end;
+
+        let schedule_id = this.schedule_data.id;
+        this.dataEdit.date = moment(String(this.time_date)).format('YYYY-MM-DD');
+        this.dataEdit.name = this.schedule_data.title;
+        this.dataEdit.room_id = this.schedule_data.room.id;
+        this.dataEdit.class_course_id = this.schedule_data.class_course.id;
+        this.dataEdit.academic_year_id = this.schedule_data.academic_year.id;
+        this.dataEdit.module_id = this.schedule_data.module.id;
+
+        this.editSchedule(schedule_id, this.dataEdit);
+      }
+    },
+
+    editSchedule(id, data){
+      return (
+        api.editSchedule(id, data)
+          .then(response => {
+            this.loading();
+            this.tryingToInput = false;
+            this.isInputError = false;
+            this.inputSuccess = true;
+            this.submitted = false;
+            Swal.fire("Edited!", data.name + " has been edited.", "success");
+            this.loadData().then(result=>{
+              this.loading();
+            });
+          })
+          .catch(error => {
+            this.submitted = false;
+            this.tryingToInput = false;
+            this.isInputError = true;
+            this.inputError = error;
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                footer: error
+            })
+          })
+      );
+    },
+
+    //input test
+    async selectTest(value){
+      //emptying data
+      this.selected_type = "";
+      this.isUnsavedData = false;
+      this.inputTestSuccess = false;
+      this.isLoadedData = false;
+      
+      //load data
+      if(value == "Journal"){
+        this.selected_type = "Upload File";
+        this.test_id = this.schedule_data.module.journal_id;
+        this.dataTest.test_type = "journal";
+      }
+      else if(value == "Pretest"){
+        this.test_id = this.schedule_data.module.pretest_id;
+        this.dataTest.test_type = "pretest";
+      }
+      else if(value == "Posttest"){
+        this.test_id = this.schedule_data.module.posttest_id;
+        this.dataTest.test_type = "posttest";
+      }
+      if(this.test_id){
+        await this.showTest(this.test_id);
+      }
+      else{
+        this.dataTest.type = "";
+        this.dataTest.questions = [];
+      }
+    },
+
+    removeTest(){
+      this.isUnsavedData = false;
+      this.inputTestSuccess = false;
+      this.isLoadedData = false;
+
+      this.test_id = "";
+      this.dataTest.test_type = "";
+    },
+
+    selectType(value){
+      this.isUnsavedData = true;
+      this.inputTestSuccess = false;
+      this.isLoadedData = false;
+
+      if(value == "Essay"){
+        this.dataTest.type = "essay"
+      }
+      else if(value == "Multiple Choice"){
+        this.dataTest.type = "multiple_choice"
+      }
+      else if(value == "Upload File"){
+        this.dataTest.type = "file"
+      }
+    },
+
+    removeType(){
+      this.isUnsavedData = false;
+      this.inputTestSuccess = false;
+      this.isLoadedData = false;
+
+      this.dataTest.type = "";
+    },
+    async showTest(test_id){
+        return (
+            api.showTest(test_id)
+            .then(response => {
+                if(response.data.data){
+                  let data = response.data.data
+                  this.dataTest.type = data.test.type;
+                  this.dataTest.questions = [];
+
+                  if(data.test.type == "multiple_choice"){
+                    this.selected_type = "Multiple Choice"
+                  }
+                  else if(data.test.type == "essay"){
+                    this.selected_type = "Essay"
+                  }
+                  else if(data.test.type == "file"){
+                    this.selected_type = "Upload File"
+                  }
+
+                  data.question.forEach((element, index, array) => {
+                      let question = {
+                        text: element.question,
+                        answer: element.answers[0].answer,
+                        options: [],
+                      }
+                      element.answers.forEach((element_answer, index_answer, array_answer) => {
+                        let option = {
+                          text: element_answer.answer,
+                          is_answer: element_answer.is_answer,
+                        }
+                        question.options.push(option);
+                      });
+                        
+                      this.dataTest.questions.push(question);
+                  });
+
+                  this.isLoadedData = true;
+                  this.inputTestSuccess = false;
+                  this.isUnsavedData = false;
+                }
+            })
+            .catch(error => {
+                console.log(error)
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            })
+        );
+    },
+
+    addQuestion: function (questions) {
+        this.inputedData();
+        let data = {
+              text: "",
+              answer: "",
+              options: [
+                {
+                  text: "",
+                  is_answer: false,
+                },
+                {
+                  text: "",
+                  is_answer: false,
+                },
+              ],
+            }
+        
+        questions.push(data)
+    },
+    removeQuestion: function (questions, index) {
+        this.inputedData();
+
+        Vue.delete(questions, index);
+    },
+
+    addAnswer: function (question) {
+        this.inputedData();
+
+        let data = {
+            text: "",
+            is_answer: false,
+        }
+        question.options.push(data)
+    },
+    removeAnswer: function (question, index) {
+        this.inputedData();
+        
+        Vue.delete(question.options, index);
+    },
+    correctAnswers(question) {
+        let data = [];
+        question.options.forEach((element, index, array) => {
+            if (element.is_answer){
+                data.push(String.fromCharCode(index+1 + 64))
+            }
+        });
+        return data;
+    },
+    printCorrectAnswers(question) {
+        if (this.correctAnswers(question).length){
+            return this.correctAnswers(question).toString().replace("[", "").replace("]", "");
+        }
+        else {
+            return "( harap centang jawaban yang benar )"
+        }
+    },
+
+    inputedData(){
+      this.isUnsavedData = true;
+      this.inputTestSuccess = false;
+      this.isLoadedData = false;
+    },
+
+    inputTest(){
+      return (
+          api.inputTest(this.dataTest)
+            .then(response => {
+                this.tryingToInputTest = false;
+                this.isInputTestError = false;
+                this.inputTestSuccess = true;
+                this.isUnsavedData = false;
+                this.isLoadedData = false;
+            
+                if (this.inputTestSuccess) {
+                    this.submitted_test = false;
+                    Swal.fire("Submitted!", "The form submitted successfully.", "success");
+                }
+            })
+            .catch(error => {
+                //pop up
+                this.submitted_test = false;
+                this.tryingToInputTest = false;
+                this.isInputTestError = true;
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            })
+      );
+    },
+
+    deleteTest(test_id){
+      return (
+        api.deleteTest(test_id)
+          .then(response => {
+            //
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Something went wrong!',
+              footer: error
+            })
+          })
+      )
+    },
+
+    submitTest(){
+      this.dataTest.module_id = this.schedule_data.module.id;
+      this.submitted_test = true;
+      this.$v.dataTest.$touch();
+      if (this.$v.dataTest.$invalid) {
+        return;
+      } else {
+        this.tryingToInputTest = true;
+        Swal.fire({
+            title: "Yakin data akan di submit?",
+            text: "Jawaban yang kosong akan tetap ter-submit!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#34c38f",
+            cancelButtonColor: "#f46a6a",
+            confirmButtonText: "Yes, submit it!"
+        }).then(result => {
+            if (result.value) {
+                this.loading();
+                this.inputTest();
+                this.loadData().then(result=>{
+                  this.loading();
+                });
+            }
+        });
+      }
+    },
+
+    cancelSubmitTest(){
+      Swal.fire({
+          title: "Are you sure?",
+          text: "the form that you have filled in will be reset!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#34c38f",
+          cancelButtonColor: "#f46a6a",
+          confirmButtonText: "Yes, cancel it!"
+      }).then(result => {
+          if (result.value) {
+              this.loading();
+              this.submitted_test = false;
+              this.isInputTestCanceled = true;
+
+              //emptying input test
+              this.selected_test = "";
+              this.selected_type = "",
+              this.dataTest = {
+                  type: "",
+                  test_type: "",
+                  module_id: "",
+                  questions: []
+              };
+              this.inputTestSuccess = false;
+              this.isUnsavedData = false;
+              this.isLoadedData = false;
+
+              this.loading();
+              Swal.fire("Canceled!", "The form has been reset.", "success");
+          }
+      });
+    },
+
+    loading() {
+      if(this.isLoading){
+        this.isLoading = false;
+      } else{
+        this.isLoading = true;
+      }
+
+      var x = document.getElementById("loading");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    },
+
+  },
+};
+
+</script>
+
+<template>
+  <Layout>
+    <PageHeader :title="title" :items="items" />
+    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+              <div class="col-sm-4">
+                  <div class="form-group">
+                      <label>Kelas</label>
+                      <input
+                          v-model="class_course_data.class.name"
+                          type="text"
+                          class="form-control"
+                          disabled="true"
+                          style="background-color: #F0F4F6;"
+                      />
+                  </div>
+              </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                      <label>Mata Kuliah</label>
+                      <input
+                          v-model="class_course_data.course.name"
+                          type="text"
+                          class="form-control"
+                          disabled="true"
+                          style="background-color: #F0F4F6;"
+                      />
+                  </div>
+              </div>
+
+              <div class="col-sm-4">
+                  <div class="form-group">
+                      <label>Tahun / Semester</label>
+                      <input
+                          v-model="class_course_data.academic_year.name"
+                          type="text"
+                          class="form-control"
+                          disabled="true"
+                          style="background-color: #F0F4F6;"
+                      />
+                  </div>
+              </div>
+          </div>
+
+          <div class="form-group text-center">
+              <label>Module</label>
+              <multiselect 
+                class="text-center"
+                v-model="schedule_data.module.index" 
+                :options="dataModules"
+                @select="selectModule"
+                :allow-empty="false"
+                :disabled="isLoading"
+              ></multiselect>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body pt-0">
+          <b-tabs nav-class="nav-tabs-custom">
+            <b-tab title-link-class="p-3">
+              <template v-slot:title>
+                <a class="font-weight-bold active">Edit Schedule</a>
+              </template>
+              <template>
+                <form class="form-horizontal mt-4" @submit.prevent="updateSchedule">
+                  <div>
+                      <b-alert
+                      v-model="inputSuccess"
+                      class="mt-3"
+                      variant="success"
+                      dismissible
+                      >Data updated successfully!</b-alert>
+
+                      <b-alert
+                      v-model="isInputError"
+                      class="mt-3"
+                      variant="danger"
+                      dismissible
+                      >{{inputError}}</b-alert>
+
+                      <b-alert
+                      v-model="isInputCanceled"
+                      class="mt-3"
+                      variant="success"
+                      dismissible
+                      >Canceled!</b-alert>
+
+                      <b-alert
+                      variant="danger"
+                      class="mt-3"
+                      v-if="notification.message"
+                      show
+                      dismissible
+                      >{{notification.message}}</b-alert>
+                  </div>
+
+                  <div class="form-group mb-3">
+                      <label>Name</label>
+                      <input 
+                        v-model="schedule_data.title"
+                        type="text"
+                        class="form-control"
+                        :disabled="isLoading"
+                        :class="{ 'is-invalid': submitted && $v.schedule_data.title.$error }"
+                      >
+                      <div
+                      v-if="submitted && !$v.schedule_data.title.required"
+                      class="invalid-feedback"
+                      >Name is required.</div>
+                  </div>
+                  
+                  <div class="form-group mb-3">
+                      <label>Ruangan</label>
+                      <multiselect 
+                        v-model="schedule_data.room" 
+                        :options="dataRooms"
+                        label="name"
+                        track-by="name"
+                        :allow-empty="false"
+                        :disabled="isLoading"
+                        :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
+                      ></multiselect>
+                      <div
+                      v-if="submitted && !$v.schedule_data.room.id.required"
+                      class="invalid-feedback"
+                      >Ruangan is required.</div>
+                  </div>
+                  
+                  <div class="form-group mb-3">
+                      <label>Tanggal</label>
+                      <br />
+                      <date-picker
+                        v-model="time_date" 
+                        :first-day-of-week="1" 
+                        lang="en"
+                        :clearable=false
+                        value-type="format"
+                        :disabled="isLoading"
+                        :class="{ 'is-invalid': submitted && $v.schedule_data.date.$error }"
+                      ></date-picker>
+                      <div
+                      v-if="submitted && !$v.schedule_data.date.required"
+                      class="invalid-feedback"
+                      >Tanggal is required.</div>
+                  </div>
+
+                  <div class="form-group mb-3">
+                      <label>Jam Mulai</label>
+                      <br />
+                      <date-picker
+                        v-model="schedule_data.time_start"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading"
+                        :disabled-time="notAfterTimeEnd"
+                        :class="{ 'is-invalid': submitted && $v.schedule_data.time_start.$error }"
+                      ></date-picker>
+                      <div
+                      v-if="submitted && !$v.schedule_data.time_start.required"
+                      class="invalid-feedback"
+                      >Jam Mulai is required.</div>
+                  </div>
+                  
+                  <div class="form-group mb-3">
+                      <label>Jam Terakhir</label>
+                      <br />
+                      <date-picker
+                        v-model="schedule_data.time_end"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading"
+                        :disabled-time="notBeforeTimeStart"
+                        :class="{ 'is-invalid': submitted && $v.schedule_data.time_end.$error }"
+                      ></date-picker>
+                      <div
+                      v-if="submitted && !$v.schedule_data.time_end.required"
+                      class="invalid-feedback"
+                      >Jam Terakhir is required.</div>
+                  </div>
+
+                  <div class="text-center mt-4">
+                      <button
+                      type="submit"
+                      class="btn btn-primary mr-2 waves-effect waves-light"
+                      >Save Changes</button>
+                      <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Cancel</button>
+                  </div>
+                </form>
+              </template>
+            </b-tab>
+            <b-tab title-link-class="p-3">
+                <template v-slot:title>
+                    <a class="font-weight-bold active">Input Test</a>
+                </template>
+                <template>
+                    <div class="form-horizontal mt-4">
+                      <div>
+                        <div class="row">
+                          <div class="form-group text-center col-sm-6">
+                              <label>Test</label>
+                              <multiselect 
+                                class="text-center"
+                                v-model="selected_test" 
+                                :options="tests"
+                                @select="selectTest"
+                                @remove="removeTest"
+                                :disabled="isLoading"
+                                :class="{ 'is-invalid': submitted_test && $v.dataTest.test_type.$error,}"
+                              ></multiselect>
+                              <div
+                                v-if="submitted_test && !$v.dataTest.test_type.required"
+                                class="invalid-feedback text-center mt-2"
+                                >Test is required.</div>
+                          </div>
+                          <div class="form-group text-center col-sm-6">
+                              <label>Type</label>
+                              <multiselect 
+                                class="text-center"
+                                v-model="selected_type" 
+                                :options="types"
+                                @select="selectType"
+                                @remove="removeType"
+                                :disabled="isLoading"
+                                :class="{ 'is-invalid': submitted_test && $v.dataTest.type.$error,}"
+                              ></multiselect>
+                              <div
+                                v-if="submitted_test && !$v.dataTest.type.required"
+                                class="invalid-feedback text-center mt-2"
+                                >Type is required.</div>
+                          </div>
+                        </div>
+                        <div>
+                            <b-alert
+                            v-model="inputTestSuccess"
+                            class="mt-3"
+                            variant="success"
+                            dismissible
+                            >Data updated successfully!</b-alert>
+
+                            <b-alert
+                            v-model="isInputTestError"
+                            class="mt-3"
+                            variant="danger"
+                            dismissible
+                            >{{inputError}}</b-alert>
+
+                            <b-alert
+                            v-model="isInputTestCanceled"
+                            class="mt-3"
+                            variant="success"
+                            dismissible
+                            >Canceled!</b-alert>
+
+                            <b-alert
+                            variant="danger"
+                            class="mt-3"
+                            v-if="notification.message"
+                            show
+                            dismissible
+                            >{{notification.message}}</b-alert>
+
+                            <b-alert
+                            v-model="isUnsavedData"
+                            class="mt-3"
+                            variant="danger"
+                            dismissible
+                            >Unsaved data!</b-alert>
+
+                            <b-alert
+                            v-model="isLoadedData"
+                            class="mt-3"
+                            variant="warning"
+                            dismissible
+                            >Data is loaded!</b-alert>
+                        </div>
+                        <div class="text-center" :class="{ 'is-invalid': submitted_test && $v.dataTest.module_id.$error,}">
+                            <button
+                              type="button"
+                              class="btn btn-primary mr-2 waves-effect waves-light"
+                              @click="submitTest"
+                            >Save Changes</button>
+                            <button 
+                              type="button" 
+                              @click="cancelSubmitTest" 
+                              class="btn btn-light waves-effect"
+                            >Cancel</button>
+                        </div>
+                        <div
+                          v-if="submitted_test && !$v.dataTest.module_id.required"
+                          class="invalid-feedback text-center mt-2"
+                          >Module ID is required.</div>
+
+                        <hr style="margin-left: -20px; 
+                                    margin-right: -20px; 
+                                    height: 2px; 
+                                    background-color: #eee; 
+                                    border: 0 none; 
+                                    color: #eee;"
+                        >
+                        <div v-if="selected_type == 'Multiple Choice'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
+                            <div class="col-sm-12" v-for="(question, index) in dataTest.questions" :key="index" :set="v = $v.dataTest.questions.$each[index]">
+                                <div class="row">
+                                    <div class="text-center col-sm-1">
+                                        <b-button 
+                                        class="m-1"
+                                        style="min-width: 75px;" 
+                                        variant="outline-secondary"
+                                        >{{index+1}}
+                                        </b-button>
+                                        <b-button 
+                                        class="m-1" 
+                                        size="sm" 
+                                        style="min-width: 75px;" 
+                                        variant="danger"
+                                        v-on:click="removeQuestion(dataTest.questions, index)"
+                                        >remove
+                                        </b-button>
+                                    </div>
+                                    <div class="card col-sm-11 mt-1">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label for="text">Pertanyaan</label>
+                                                    <div class="form-group">
+                                                        <textarea
+                                                        rows=2 
+                                                        v-model="question.text"
+                                                        type="text" 
+                                                        class="form-control"
+                                                        placeholder="Masukkan pertanyaan disini"
+                                                        @input="inputedData"
+                                                        :class="{ 'is-invalid': submitted_test && v.text.$error }"
+                                                        />
+                                                        <div
+                                                          v-if="submitted_test && !v.text.$error.required"
+                                                          class="invalid-feedback"
+                                                          >Pertanyaan is required.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label for="text">Jawaban Benar: {{printCorrectAnswers(question)}}</label>
+                                                    <hr class="m-4">
+                                                </div>
+                                                <div class="col col-sm-12">
+                                                    <div class="row">
+                                                        <label class="col-9">Pilihan</label>
+                                                        <label class="col-3 text-right">Jawaban</label>
+                                                    </div>
+                                                    <div v-for="(answer, idx) in question.options" :key="idx">
+                                                        <div class="row mb-2">
+                                                            <div class="col-sm-1 col-md-2 col-lg-1 text-center">
+                                                                <b-button 
+                                                                size="sm" 
+                                                                class="mt-1 mr-1" 
+                                                                style="min-width: 75px;" 
+                                                                variant="light"
+                                                                >{{String.fromCharCode(idx+1 + 64)}}
+                                                                </b-button>
+                                                                <b-button
+                                                                v-if="idx != 0 && idx != 1"
+                                                                size="sm" 
+                                                                class="mt-1 mr-1" 
+                                                                style="min-width: 75px;" 
+                                                                variant="danger"
+                                                                v-on:click="removeAnswer(question, idx)"
+                                                                >remove
+                                                                </b-button>
+                                                            </div>
+                                                            <div class="col-sm-10 col-md-9 col-lg-10 mt-1">
+                                                                <div class="form-group">
+                                                                    <textarea
+                                                                    rows=2 
+                                                                    v-model="answer.text"
+                                                                    type="text" 
+                                                                    class="form-control"
+                                                                    placeholder="Masukkan jawaban disini"
+                                                                    @input="inputedData"
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-1 col-md-1 col-lg-1 mt-1 text-right">
+                                                                <input class="form-check-input" type="checkbox" v-model="answer.is_answer"/>
+                                                                <label for="checkbox" style="min-width: 35px;">{{answer.is_answer}}</label>
+                                                            </div>
+                                                        </div>
+                                                        <hr>
+                                                    </div>
+                                                    <div class="text-left">
+                                                        <b-button v-on:click="addAnswer(question)" size=sm variant="secondary">Tambah Pilihan</b-button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <b-button v-on:click="addQuestion(dataTest.questions)" variant="secondary">Tambah Soal</b-button>
+                            </div>
+                        </div>
+                        <div v-if="selected_type == 'Essay'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
+                            <div class="col-sm-12" v-for="(question, index) in dataTest.questions" :key="index" :set="v = $v.dataTest.questions.$each[index]">
+                                <div class="row">
+                                    <div class="text-center col-sm-1">
+                                        <b-button 
+                                        class="m-1"
+                                        style="min-width: 75px;" 
+                                        variant="outline-secondary"
+                                        >{{index+1}}
+                                        </b-button>
+                                        <b-button 
+                                        class="m-1" 
+                                        size="sm" 
+                                        style="min-width: 75px;" 
+                                        variant="danger"
+                                        v-on:click="removeQuestion(dataTest.questions, index)"
+                                        >remove
+                                        </b-button>
+                                    </div>
+                                    <div class="card col-sm-11 mt-1">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <label for="text">Pertanyaan</label>
+                                                    <div class="form-group">
+                                                        <textarea
+                                                        rows=2 
+                                                        v-model="question.text"
+                                                        type="text" 
+                                                        class="form-control"
+                                                        placeholder="Masukkan pertanyaan disini"
+                                                        @input="inputedData"
+                                                        :class="{ 'is-invalid': submitted_test && v.text.$error }"
+                                                        />
+                                                        <div
+                                                          v-if="submitted_test && !v.text.$error.required"
+                                                          class="invalid-feedback"
+                                                          >Pertanyaan is required.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <hr class="m-4">
+                                                </div>
+                                                <div class="col-12">
+                                                    <label>Jawaban Benar</label>
+                                                    <div class="form-group">
+                                                        <textarea
+                                                        rows=4 
+                                                        v-model="question.answer"
+                                                        type="text" 
+                                                        class="form-control"
+                                                        placeholder="Masukkan jawaban disini"
+                                                        @input="inputedData"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center">
+                                <b-button v-on:click="addQuestion(dataTest.questions)" variant="secondary">Tambah Soal</b-button>
+                            </div>
+                        </div>
+                        <div v-if="selected_type == 'Upload File'" class="pt-4 pr-3 pb-4">
+                          <div class="row">
+                              <div class="text-center form-group col-12">
+                                <label>!!!! Dummy Upload Excel Staff Data !!!!</label>
+                              </div>
+                              <div class="col-sm-12 col-md-12">
+                                  <!-- <div title="Import Excel"> -->
+                                  <div>
+                                      <div class="tab-pane" id="metadata">
+                                          <p style="color: red; font-size: 12px; margin: 0 !important;">IMPORTANT – PLEASE READ CAREFULLY</p>
+                                          <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel:</p>
+                                          <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                                              - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
+                                              - Pastikan hanya ada <b>satu sheet</b>,<br>
+                                              - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
+                                          </p>
+                                          <img src="@/assets/images/staff-excel-example.png" style="box-sizing: border-box; 
+                                                                                                                  width: 25%; 
+                                                                                                                  margin: auto;"/>
+                                          <div class="mb-4 mt-2">
+                                              <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                                                  Contoh file Excel: <a href="/files/staffdummy.xlsx" download>staffdummy.xlsx</a><br>
+                                              </p>
+                                          </div>
+                                          <!-- file upload -->
+                                          <vue-dropzone
+                                              id="dropzone"
+                                              ref="myVueDropzone"
+                                              :use-custom-slot="true"
+                                              :options="dropzoneOptions"
+                                          >
+                                              <div class="dropzone-custom-content">
+                                              <i class="display-4 text-muted bx bxs-cloud-upload"></i>
+                                              <h4>Drop a file here or click to upload.</h4>
+                                              </div>
+                                          </vue-dropzone>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </template>
+            </b-tab>
+          </b-tabs>
+        </div>
+      </div>
+    </div>
+  </Layout>
+</template>

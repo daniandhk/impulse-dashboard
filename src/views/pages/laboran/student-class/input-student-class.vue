@@ -310,7 +310,7 @@ export default {
         this.removeAcademicYear();
         this.dataStudent.course_name = value.course.name;
         this.dataStudent.course_code = value.course.code;
-        this.dataStudent.academic_year_id = value.course.id;
+        
         await this.getDataAcademicYear();
 
         this.isCourseNotSelected = false;
@@ -320,6 +320,7 @@ export default {
     async setAcademicYear(value){
         this.isFetchingData = true;
 
+        this.dataStudent.academic_year_id = value.academic_year.id;
         this.dataStudent.academic_year = value.academic_year.name;
         this.dataStudent.semester = value.academic_year.semester;
         this.dataStudent.staff_code = value.staff.code;
