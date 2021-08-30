@@ -1245,7 +1245,7 @@ export default {
                                                     <hr class="m-4">
                                                 </div>
                                                 <div class="col-12">
-                                                    <label>Jawaban</label>
+                                                    <label>Jawaban Benar</label>
                                                     <div class="form-group">
                                                         <textarea
                                                         rows=4 
