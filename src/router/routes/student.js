@@ -20,6 +20,23 @@ export default [
         component: () => import('../../views/pages/student/schedule/schedule-calendar')
     },
     {
+        path: '/praktikan/schedule/list',
+        name: 'praktikan-schedule-list',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/student/schedule/schedule-list')
+    },
+    {
         path: '/praktikan/schedule/detail/:id',
         name: 'praktikan-schedule-detail',
         meta: {
