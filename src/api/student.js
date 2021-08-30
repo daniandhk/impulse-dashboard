@@ -35,3 +35,7 @@ export function getEssayAnswer(test_id, user_id) {
 export function getMultipleChoiceAnswer(test_id, user_id) {
     return httpAxios.get(`/answer/getMultipleChoiceAnswer/${test_id}/${user_id}`);
 }
+
+export function getStudentCourses(id) {
+    return httpAxios.get(`/schedule/getstudentcourse/${id}`);
+}

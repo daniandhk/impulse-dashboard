@@ -28,7 +28,7 @@ export const praktikanItems = [
             {
                 id: 6,
                 label: 'menuitems.praktikan.list.matakuliah',
-                link: 'praktikan-matakuliah'
+                link: 'praktikan-schedule-list'
             }
         ]
     },
