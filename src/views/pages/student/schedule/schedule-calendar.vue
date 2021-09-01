@@ -20,13 +20,16 @@ import Multiselect from "vue-multiselect";
  * Calendar component
  */
 export default {
-  components: { FullCalendar, Layout, PageHeader, Multiselect, },
+  page: {
+    title: "Calendar",
+  },
+  components: { FullCalendar, Layout, PageHeader, },
   data() {
     return {
       title: "Calendar",
       items: [
         {
-          text: "Student",
+          text: "Dashboard",
           href: "/"
         },
         {
@@ -83,9 +86,9 @@ export default {
 
       calendarOptions: {
         headerToolbar: {
-          left: "prev,next today",
+          left: "prev,next",
           center: "title",
-          right: "dayGridMonth,timeGridWeek,timeGridDay,listWeek",
+          right: "today",
         },
         plugins: [
           dayGridPlugin,
@@ -352,41 +355,6 @@ function sleep(ms) {
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <div class="row">
-              <div class="col-sm-12 col-md-12">
-                <label class="d-inline-flex align-items-center">
-                  Filter:
-                </label>
-              </div>
-              <div class="row col-sm-12 col-md-12">
-                <div class="col-sm-12 col-md-3">
-                  <div class="form-group">
-                    <multiselect
-                        placeholder="Kelas"
-                        v-model="class_data"
-                        :options="dataDropdown.classes"
-                        label="name"
-                        track-by="name"
-                        @select="selectKelas"
-                        @remove="removeKelas"
-                    ></multiselect>
-                  </div>
-                </div>
-                <div class="col-sm-12 col-md-3">
-                  <div class="form-group">
-                    <multiselect
-                        placeholder="Mata Kuliah"
-                        v-model="course_data"
-                        :options="dataDropdown.courses"
-                        label="name"
-                        track-by="name"
-                        @select="selectCourse"
-                        @remove="removeCourse"
-                    ></multiselect>
-                  </div>
-                </div>
-              </div>
-            </div>
             <div class="app-calendar mt-4">
               <FullCalendar
                 ref="fullCalendar"
@@ -445,7 +413,7 @@ function sleep(ms) {
           </div>
           <div class="col-sm-3">
               <div class="form-group">
-                  <label>Module</label>
+                  <label>Modul</label>
                   <input
                       v-model="schedule_data.module.index"
                       type="text"
@@ -507,7 +475,7 @@ function sleep(ms) {
             @click="detailModal"
             class="btn btn-success mr-2 waves-effect waves-light"
             >Mulai Praktikum</button>
-            <button type="button" @click="closeModal" class="btn btn-light waves-effect">Close</button>
+            <button type="button" @click="closeModal" class="btn btn-light waves-effect">Batalkan</button>
         </div>
       </div>
     </b-modal>

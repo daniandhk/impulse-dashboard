@@ -170,45 +170,7 @@ export default {
             </div>
           </div>
           <simplebar style="max-height: 230px;">
-            <a href class="text-reset notification-item">
-              <div class="media">
-                <div class="avatar-xs mr-3">
-                  <span class="avatar-title bg-primary rounded-circle font-size-16">
-                    <i class="ri-shopping-cart-line"></i>
-                  </span>
-                </div>
-                <div class="media-body">
-                  <h6 class="mt-0 mb-1">{{ $t('navbar.dropdown.notification.order.title')}}</h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">{{ $t('navbar.dropdown.notification.order.text')}}</p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      {{ $t('navbar.dropdown.notification.order.time')}}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href class="text-reset notification-item">
-              <div class="media">
-                <img
-                  src="@/assets/images/users/avatar-3.jpg"
-                  class="mr-3 rounded-circle avatar-xs"
-                  alt="user-pic"
-                />
-                <div class="media-body">
-                  <h6 class="mt-0 mb-1">{{ $t('navbar.dropdown.notification.james.title')}}</h6>
-                  <div class="font-size-12 text-muted">
-                    <p class="mb-1">{{ $t('navbar.dropdown.notification.james.text')}}</p>
-                    <p class="mb-0">
-                      <i class="mdi mdi-clock-outline"></i>
-                      {{ $t('navbar.dropdown.notification.james.time')}}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            <a href class="text-reset notification-item">
+            <!-- <a href class="text-reset notification-item">
               <div class="media">
                 <div class="avatar-xs mr-3">
                   <span class="avatar-title bg-success rounded-circle font-size-16">
@@ -245,7 +207,7 @@ export default {
                   </div>
                 </div>
               </div>
-            </a>
+            </a> -->
           </simplebar>
           <div class="p-2 border-top">
             <a

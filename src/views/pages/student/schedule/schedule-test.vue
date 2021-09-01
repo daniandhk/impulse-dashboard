@@ -37,7 +37,7 @@ export default {
             title: "Test",
             items: [
                 {
-                    text: "Student",
+                    text: "Dashboard",
                     href: "/"
                 },
                 {

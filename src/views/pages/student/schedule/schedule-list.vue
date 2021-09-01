@@ -11,7 +11,7 @@ import store from '@/store';
  */
 export default {
   page: {
-    title: "Jadwal Mata Kuliah",
+    title: "List course",
     meta: [{ name: "description" }],
   },
   components: {
@@ -26,7 +26,7 @@ export default {
       title: "List Course",
       items: [
         {
-          text: "Student",
+          text: "Dashboard",
           href: "/"
         },
         {
@@ -53,7 +53,7 @@ export default {
         { key: "end", sortable: true, label: "Terakhir" },
         { key: "title", label: "Name" },
         { key: "class_course.course.code", label: "Kode Mata Kuliah" },
-        { key: "module.index",  label: "Module" },
+        { key: "module.index",  label: "Modul" },
         { key: "room.name", label: "Ruangan" },
       ],
 
@@ -183,9 +183,10 @@ export default {
           <div class="card-body pt-0">
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3" v-for="(course, index) in dataClassCourses" :key="index">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">{{course.course_name}}</a>
+                <template v-slot:title> 
+                  <a class="font-weight-bold active ml-sm-5 mr-lg-5" >{{course.course_name}}</a>
                 </template>
+                <div class="row"></div>
                 <div class="row mt-4">
                     <div class="col-sm-3">
                         <div class="form-group">
