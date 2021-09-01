@@ -65,6 +65,15 @@ const baseRoutes = [
         },
         component: () => import('../../views/pages/auth/profile')
     },
+
+    {
+        path: '/pengaturan',
+        name: 'settings',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../../views/pages/auth/change-password')
+    },
     {
         path: '/',
         name: 'home',
