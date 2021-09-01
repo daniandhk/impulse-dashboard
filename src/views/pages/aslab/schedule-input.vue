@@ -247,7 +247,7 @@ export default {
       api.showSchedules(class_course_id, params)
           .then(response => {
             if(response.data.data){
-              let schedule_id = response.data.data.id;
+              let schedule_id = response.data.data[0].id;
               this.$router.push({
                   name: 'aslab-schedule-input', 
                   params: { id: schedule_id }
