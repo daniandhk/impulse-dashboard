@@ -4,6 +4,7 @@ import PageHeader from "@/components/page-header";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
+import store from '@/store';
 
 import { notificationMethods } from "@/state/helpers";
 import Multiselect from "vue-multiselect";
@@ -43,7 +44,7 @@ export default {
       title: "Schedule",
       items: [
         {
-          text: "Asisten Lab",
+          text: "Asisten Praktikum",
           href: "/"
         },
         {
@@ -51,6 +52,8 @@ export default {
           active: true,
         },
       ],
+
+      asprak_id: store.getters.getLoggedUser.id,
 
       //list class-course
       isFetchingData: false,
@@ -61,7 +64,7 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter_search: "",
       filterOn: [],
-      sortBy: "title",
+      sortBy: "class_course.class.name",
       sortDesc: false,
       fields: [
         { key: "title", sortable: true, label: "Name" },
@@ -136,7 +139,7 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(class_name, course_name, academic_year_id) {
+    getRequestParams(class_name, course_name, academic_year_id, asprak_id) {
       let params = {};
 
       if (class_name) {
@@ -151,6 +154,10 @@ export default {
         params["academic_year_id"] = academic_year_id;
       }
 
+      if (asprak_id) {
+        params["asprak_id"] = asprak_id;
+      }
+
       return params;
     },
     async fetchData(){
@@ -161,6 +168,7 @@ export default {
         this.class_name,
         this.course_name,
         this.academic_year_id,
+        this.asprak_id,
       );
 
       return (
@@ -317,7 +325,7 @@ export default {
 
     editModal(){
       this.$router.push({
-          name: 'aslab-schedule-input', 
+          name: 'asprak-schedule-detail', 
           params: { id: this.schedule_data.id }
       });
     },
@@ -444,7 +452,7 @@ export default {
                     @click=onClickEdit(data)
                     class="mr-3 text-primary"
                     v-b-tooltip.hover
-                    title="Edit"
+                    title="Detail"
                 >
                     <i class="mdi mdi-pencil font-size-18"></i>
                 </a>
@@ -587,7 +595,7 @@ export default {
             type="button"
             @click="editModal"
             class="btn btn-info mr-2 waves-effect waves-light"
-            >Edit</button>
+            >Detail</button>
             <button type="button" @click="closeModal" class="btn btn-light waves-effect">Close</button>
         </div>
       </div>

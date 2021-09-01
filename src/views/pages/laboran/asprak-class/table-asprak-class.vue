@@ -3,14 +3,14 @@ import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
-import Multiselect from "vue-multiselect";
+// import Multiselect from "vue-multiselect";
 
 /**
  * Orders Component
  */
 export default {
   components: {
-    Multiselect,
+    // Multiselect,
   },
   validations: {
     dataEdit: {
@@ -37,60 +37,31 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter: "",
       filterOn: [],
-      sortBy: "nim",
+      sortBy: "student.nim",
       sortDesc: false,
       fields: [
-        { key: "nim", sortable: true, label: "NIM" },
-        { key: "name", sortable: true, label: "Name" },
-        { key: "class_name", sortable: true, label: "Kelas MK" },
-        { key: "course_code", sortable: true, label: "Kode MK" },
-        { key: "course_name", sortable: true, label: "Nama MK" },
-        { key: "staff_code", sortable: true, label: "Kode Dosen" },
-        { key: "semester", sortable: true, label: "Semester" },
-        { key: "academic_year", sortable: true, label: "Tahun Akademik" },
+        { key: "student.nim", sortable: false, label: "NIM" },
+        { key: "student.name", sortable: false, label: "Name" },
+        { key: "class_course.classes.name", sortable: false, label: "Kelas MK" },
+        { key: "class_course.courses.code", sortable: false, label: "Kode MK" },
+        { key: "class_course.courses.name", sortable: false, label: "Nama MK" },
+        { key: "class_course.staffs.code", sortable: false, label: "Kode Dosen" },
+        { key: "class_course.academic_years.semester", sortable: false, label: "Semester" },
+        { key: "class_course.academic_years.year", sortable: false, label: "Tahun Akademik" },
         { key: "action", sortable: false }
       ],
 
-      courseData: [],
-      kelasData: [],
-      namaKelasData: [],
-      isKelasNotSelected: true,
-
-      //v-model dropdown value = array of objects
+      class_name: "",
+      course_name: "",
+      academic_year_id: "",
       course_data: "",
       class_data: "",
-
-      filter_course: "",
-      filter_class: "",
-
-      //edit data
-      dataEdit: { 
-          student_id: "",
-          class_id: "",
-          },
-      dataEditDetail: { 
-          nim: "",
-          class_name: "",
-          course_name: "",
-          },
-      submitted: false,
-      isKelasEditNotSelected: true,
-      course_dataEdit: "",
-      class_dataEdit: "",
-
-      //edit role
-      roleData: ['asprak', 'aslab'],
-      role_data: [],
-      dataEditRole: {
-          no_induk: "",
-          student: 0,
-          asprak: 0,
-          aslab: 0,
-          staff: 0,
-          laboran: 0,
-          dosen: 0,
+      dataDropdown:{
+          classes: [],
+          courses: [],
+          staffs: [],
+          academic_year: [],
       },
-      main_role: "student",
     };
   },
   computed: {
@@ -132,17 +103,17 @@ export default {
     getRequestParams(search, kelas, course, page, pageSize, orderBy, sortDesc) {
       let params = {};
 
-      if (search) {
-        params["search"] = search;
-      }
+      // if (search) {
+      //   params["search"] = search;
+      // }
 
-      if (kelas) {
-        params["kelas"] = kelas;
-      }
+      // if (kelas) {
+      //   params["kelas"] = kelas;
+      // }
 
-      if (course) {
-        params["course"] = course;
-      }
+      // if (course) {
+      //   params["course"] = course;
+      // }
 
       if (page) {
         params["page"] = page;
@@ -152,15 +123,15 @@ export default {
         params["per_page"] = pageSize;
       }
 
-      if (orderBy) {
-        params["orderBy"] = orderBy;
-      }
+      // if (orderBy) {
+      //   params["orderBy"] = orderBy;
+      // }
 
-      if (sortDesc) {
-        params["sortedBy"] = "DESC";
-      } else {
-        params["sortedBy"] = "ASC";
-      }
+      // if (sortDesc) {
+      //   params["sortedBy"] = "DESC";
+      // } else {
+      //   params["sortedBy"] = "ASC";
+      // }
 
       return params;
     },
@@ -168,20 +139,17 @@ export default {
       this.loadDataDropdown();
       this.isFetchingData = true;
 
-      let class_name = (this.class_data) ? this.class_data.name : "";
-      let course_name = (this.course_data) ? this.course_data.name : "";
-
       const params = this.getRequestParams(
         this.filter,
-        class_name,
-        course_name,
+        this.class_name,
+        this.course_name,
         this.currentPage,
         this.perPage,
         this.sortBy,
         this.sortDesc
       );
       return (
-        api.getAllStudentClasses(params)
+        api.getAllAsprakClasses(params)
           .then(response => {
             this.isFetchingData = false;
 
@@ -190,6 +158,7 @@ export default {
           })
           .catch(error => {
             this.isFetchingData = false;
+            
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
@@ -217,32 +186,32 @@ export default {
       });
     },
 
-    async handleSortingChange(value){
-      if(value.sortBy !== this.sortBy) {
-        this.sortDesc = false
-      } 
-      else {
-        if(this.sortDesc) {
-          this.sortDesc = false
-        } 
-        else {
-          this.sortDesc = true
-        }
-      }
-      this.sortBy = value.sortBy;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
-    },
+    // async handleSortingChange(value){
+    //   if(value.sortBy !== this.sortBy) {
+    //     this.sortDesc = false
+    //   } 
+    //   else {
+    //     if(this.sortDesc) {
+    //       this.sortDesc = false
+    //     } 
+    //     else {
+    //       this.sortDesc = true
+    //     }
+    //   }
+    //   this.sortBy = value.sortBy;
+    //   this.loading();
+    //   await this.fetchData().then(result=>{
+    //       this.loading();
+    //   });
+    // },
 
-    async handleSearch(value){
-      this.filter = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
-    },
+    // async handleSearch(value){
+    //   this.filter = value;
+    //   this.loading();
+    //   await this.fetchData().then(result=>{
+    //       this.loading();
+    //   });
+    // },
 
     async refreshData(){
       this.loading();
@@ -254,7 +223,7 @@ export default {
     onClickDelete(data){
       Swal.fire({
           title: "Are you sure?",
-          text: data.item.nim + " will be deleted!",
+          text: data.item.student.nim + " will be deleted!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
@@ -262,12 +231,12 @@ export default {
           confirmButtonText: "Yes, delete it!"
       }).then(result => {
           if (result.value) {
-              this.deleteStudent(data.item.student_id, data.item.nim);
+              this.deleteAsprakClass(data.item.student.id, data.item.student.nim);
           }
       });
     },
 
-    deleteStudent(id, nim){
+    deleteAsprakClass(id, nim){
       return (
         api.deleteStudentClass(id)
           .then(response => {
@@ -288,16 +257,16 @@ export default {
       )
     },
 
-    loadDataDropdown(){
-        this.getClassroomNames();
+    async loadDataDropdown(){
+        this.getDataDropdown();
     },
 
-    getClassroomNames(){
+    async getDataDropdown(){
         return (
-            api.getByNameClassrooms()
+            api.getClassCourseStaffYear()
             .then(response => {
-                if(response.data.classes){
-                    this.namaKelasData = response.data.classes;
+                if(response.data.data){
+                    this.setDataDropdown(response.data.data);
                 }
             })
             .catch(error => {
@@ -311,267 +280,43 @@ export default {
         )
     },
 
-    async getDataClassrooms(namaKelasData){
-        const params = this.getRequestParams(
-                namaKelasData.name
-        );
-        return api.getListClassrooms(params)
-            .then(response => {
-                if (response.data.classes){
-                    this.kelasData = response.data.classes;
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: error
-                })
-            })
-    },
-
-    async getDataCourses(kelasData){
-        return new Promise((resolve, reject) => {
-            kelasData.forEach((element, index, array) => {
-                const params = this.getRequestParams(
-                    element.course_id
-                );
-                this.getListCourses(params).then(()=>{
-                  if (index === array.length -1) resolve();
-                })
-            });
-        })
-        .catch(error => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-                footer: error
-            })
+    setDataDropdown(data){
+        data.academic_year.forEach((element, index, array) => {
+            element.year = String(element.year) + " / " + String(element.semester)
         });
+        this.dataDropdown = data;
     },
 
-    async getListCourses(params){
-      return (
-        api.getListCourses(params)
-                    .then(response => {
-                        if (response.data.courses){
-                            this.courseData = response.data.courses
-                        }
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
-                            footer: error
-                        })
-                    })
-      )
-    },
-
-    async setKelas(value){
-        this.class_data = value;
-        this.removeCourse();
-
-        await this.getDataClassrooms(value);
-        await this.getDataCourses(this.kelasData);
-
-        this.isKelasNotSelected = false;
-    },
-
-    async setCourse(value){
-        this.course_data = value;
+    async selectKelas(value){
+        this.class_name = value.name;
         this.loading();
         await this.fetchData().then(result=>{
             this.loading();
         });
     },
 
-    removeKelas(){
-        this.isKelasNotSelected = true;
-        this.class_data = "";
-        this.courseData = [];
-        this.removeCourse();
+    async removeKelas(){
+        this.class_name = "";
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
+    },
+
+    async selectCourse(value){
+        this.course_name = value.name;
+        this.loading();
+        await this.fetchData().then(result=>{
+            this.loading();
+        });
     },
 
     async removeCourse(){
-        this.course_data = "";
+        this.course_name = "";
         this.loading();
         await this.fetchData().then(result=>{
             this.loading();
         });
-    },
-
-    async onClickEdit(data){
-      //edit data
-      this.dataEdit.student_id = data.item.student_id;
-      this.dataEdit.class_id = data.item.class_id;
-      this.dataEditDetail.nim = data.item.nim;
-      await this.setKelasEdit(data.item);
-
-      //edit role
-      this.dataEditRole.no_induk = data.item.nim;
-      this.getRoles(this.dataEditRole.no_induk);
-      this.setRoles(this.role_data, this.dataEditRole);
-
-      this.$bvModal.show('modal-edit');
-    },
-
-    setStudentClass(){
-      this.submitted = true;
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
-      } 
-      else {
-        return (
-          api.setStudentClass(this.dataEdit)
-            .then(response => {
-              this.submitted = false;
-              this.hideModal();
-              Swal.fire("Edited!", this.dataEditDetail.nim + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
-            })
-            .catch(error => {
-              this.submitted = false;
-              this.hideModal();
-
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-                footer: error
-              })
-            })
-        )
-      }
-    },
-
-    async setKelasEdit(value){
-        this.dataEditDetail.class_name = value.name;
-        this.removeCourseEdit();
-
-        let data = {};
-        data['name'] = value.class_name;
-
-        await this.getDataClassrooms(data);
-        await this.getDataCourses(this.kelasData)
-          .then(() =>{
-              let kelas = {};
-              if (value.class_name){
-                kelas = this.kelasData.find(data => data.name === value.class_name);
-                let course = this.courseData.find(data => data.id === kelas.course_id);
-
-                this.setCourseEdit(course);
-              }
-              else {
-                kelas = this.kelasData.find(data => data.name === value.name);
-              }
-              this.class_dataEdit = kelas;
-              this.dataEdit.class_id = kelas.id;
-
-              this.isKelasEditNotSelected = false;
-          })
-    },
-
-    async setCourseEdit(value){
-        this.dataEditDetail.course_name = value.name;
-        let data = this.courseData.find(data => data.id === value.id);
-        this.course_dataEdit = data;
-    },
-
-    removeKelasEdit(){
-        this.isKelasEditNotSelected = true;
-        this.class_dataEdit = "";
-        this.courseData = [];
-        this.removeCourseEdit();
-    },
-
-    removeCourseEdit(){
-        this.course_dataEdit = "";
-    },
-
-    getRoles(no_induk){
-        return (
-          api.getRoles(no_induk)
-            .then(response => {
-              if(response.data.data){
-                  this.role_data = response.data.data.roles
-              }
-            })
-            .catch(error => {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Something went wrong!',
-                  footer: error
-              })
-            })
-        )
-    },
-
-    setRoles(role_data, dataEditRole){
-        if (role_data.includes("student") == false){
-            role_data.push("student");
-        }
-        role_data.forEach((element, index, array) => {
-            if (element == "student") {
-                dataEditRole.student = 1
-            }
-            if (element == "asprak") {
-                dataEditRole.asprak = 1
-            }
-            if (element == "aslab") {
-                dataEditRole.aslab = 1
-            }
-            if (element == "staff") {
-                dataEditRole.staff = 1
-            }
-            if (element == "laboran") {
-                dataEditRole.laboran = 1
-            }
-            if (element == "dosen") {
-                dataEditRole.dosen = 1
-            }
-        });
-    },
-
-    editRole(){
-        this.setRoles(this.role_data, this.dataEditRole);
-        return (
-          api.setRoles(this.dataEditRole)
-            .then(response => {
-              this.submitted = false;
-              this.hideModal();
-              Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
-            })
-            .catch(error => {
-              this.submitted = false;
-              this.hideModal();
-              
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-                footer: error
-              })
-            })
-        )
-    },
-
-    removeRole(value){
-        if (value == "student") {
-            this.role_data.push("student");
-        }
     },
 
     hideModal(){
@@ -601,7 +346,7 @@ export default {
     <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
       <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
     </div>
-    <div class="row mt-4">
+    <!-- <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
         <label class="d-inline-flex align-items-center">
           Filter:
@@ -613,10 +358,10 @@ export default {
             <multiselect
                 placeholder="Kelas"
                 v-model="class_data"
-                :options="namaKelasData"
+                :options="dataDropdown.classes"
                 label="name"
                 track-by="name"
-                @select="setKelas"
+                @select="selectKelas"
                 @remove="removeKelas"
             ></multiselect>
           </div>
@@ -626,18 +371,17 @@ export default {
             <multiselect
                 placeholder="Mata Kuliah"
                 v-model="course_data"
-                :options="loadCourseData"
-                :disabled="isKelasNotSelected"
+                :options="dataDropdown.courses"
                 label="name"
                 track-by="name"
-                @select="setCourse"
+                @select="selectCourse"
                 @remove="removeCourse"
             ></multiselect>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row mt-2">
+    </div> -->
+    <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
         <div id="tickets-table_length" class="dataTables_length">
           <label class="d-inline-flex align-items-center">
@@ -652,7 +396,7 @@ export default {
         </div>
       </div>
       <!-- Search -->
-      <div class="col-sm-12 col-md-6">
+      <!-- <div class="col-sm-12 col-md-6">
         <div id="tickets-table_filter" class="dataTables_filter text-md-right">
           <label class="d-inline-flex align-items-center">
             Search:
@@ -664,7 +408,7 @@ export default {
             ></b-form-input>
           </label>
         </div>
-      </div>
+      </div> -->
       <!-- End search -->
     </div>
     <div class="table-responsive">
@@ -685,15 +429,6 @@ export default {
         :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
-          <a
-            href="javascript:void(0);"
-            @click=onClickEdit(data)
-            class="mr-3 text-primary"
-            v-b-tooltip.hover
-            title="Edit"
-          >
-            <i class="mdi mdi-pencil font-size-18"></i>
-          </a>
           <a
             href="javascript:void(0);"
             @click=onClickDelete(data)
@@ -720,51 +455,6 @@ export default {
           </ul>
         </div>
       </div>
-    </div>
-    <div name="modalEdit">
-      <b-modal 
-        size="lg" 
-        id="modal-edit" 
-        title="Edit Student" 
-        hide-footer 
-        title-class="font-18"
-      >
-        <div class="col-sm-12">
-            <div class="form-group col-sm-12">
-                <label for="nim">NIM</label>
-                <input 
-                style="background-color: #F0F4F6;"
-                :disabled="true"
-                v-model="dataEditDetail.nim"
-                id="nip" 
-                name="nip" 
-                type="number" 
-                class="form-control"/>
-            </div>
-        </div>
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
-          <div class="tab-pane" id="metadata">
-              <div class="col-sm-12">
-                  <div class="form-group">
-                      <label class="control-label">Roles</label>
-                      <multiselect
-                          v-model="role_data"
-                          :options="roleData"
-                          :multiple="true"
-                          @remove="removeRole"
-                      ></multiselect>
-                  </div>
-              </div>
-              <div class="text-center mt-4">
-                  <button
-                  type="submit"
-                  class="btn btn-primary mr-2 waves-effect waves-light"
-                  >Save Changes</button>
-                  <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-              </div>
-          </div>
-        </form>
-      </b-modal>
     </div>
   </div>
 </template>

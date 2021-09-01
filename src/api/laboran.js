@@ -204,3 +204,26 @@ export function setRoles(data){
         data: data
     })
 }
+
+//asprak class
+export function inputAsprakClass(data){
+    return httpAxios({
+        url: '/classcourse/asprak',
+        method: 'POST',
+        data: data
+    })
+}
+export function getAllAsprakClasses(params) {
+    if (params){
+        return httpAxios.get('/classcourse/asprak', { params })
+    }
+    else{
+        return httpAxios.get('/classcourse/asprak')
+    }
+}
+export function deleteAsprakClass(id) {
+    return httpAxios.delete(`/classcourse/asprak/${id}`);
+}
+export function showAsprakClass(id) {
+    return httpAxios.get(`/classcourse/asprak/${id}`);
+}

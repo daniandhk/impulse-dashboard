@@ -7,6 +7,12 @@ export * from "./laboran.js";
 //aslab
 export * from "./aslab.js";
 
+//student
+export * from "./student.js";
+
+//asprak
+export * from "./asprak.js";
+
 //auth
 export function login(data){
     return httpAxios({

@@ -74,17 +74,18 @@
         "input-jurnal": "Input Jurnal",
         "input-tesakhir": "Input Tes Akhir",
         "lihat-feedback": "Lihat Feedback",
-        "berita-acara": "Berita Acara Praktikum",
-        "cetak-berita-acara": "Cetak Berita Acara Praktikum"
+        "absensi-asprak": "Absensi Asprak",
+        "start-practicum": "Start Practicum",
+        "schedule": "Schedule"
       }
     },
     "praktikan": {
       "text": "Praktikan",
       "list": {
-        "jadwal": "Jadwal",
-        "nilai": "Nilai",
-        "kalender": "1. Kalender",
-        "matakuliah":"2. Mata Kuliah",
+        "jadwal": "Schedule",
+        "nilai": "Score",
+        "kalender": "Calendar",
+        "matakuliah":"List Course",
         "praktikum":"Praktikum",
         "pengaturan":"Pengaturan",
         "jurnal":"1. Jurnal",
