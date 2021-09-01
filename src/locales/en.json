@@ -7,16 +7,6 @@
       "notification": {
         "text": "Notifications",
         "subtext": "View All",
-        "order": {
-          "title": "Your order is placed",
-          "text": "If several languages coalesce the grammar",
-          "time": "3 min ago"
-        },
-        "james": {
-          "title": "James Lemire",
-          "text": "It will seem like simplified English.",
-          "time": "1 hours ago"
-        },
         "item": {
           "title": "Your item is shipped",
           "text": "If several languages coalesce the grammar",

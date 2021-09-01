@@ -8,7 +8,7 @@ import appConfig from "@/app.config";
  */
 export default {
   page: {
-    title: "Images",
+    title: "Profile",
     meta: [{ name: "description", content: appConfig.description }]
   },
   components: { Layout, PageHeader },
@@ -17,11 +17,11 @@ export default {
       title: "Profile",
       items: [
         {
-          text: "UI Elements",
+          text: "Dashboard",
           href: "/"
         },
         {
-          text: "Images",
+          text: "Profile",
           active: true
         }
       ]
@@ -39,7 +39,7 @@ export default {
           <div class="card-body">
             <h4 class="card-title">Foto Profil</h4>
             <div class>
-              <img src="@/assets/images/small/img-2.jpg" class="img-fluid" alt="Responsive image" />
+              <img src="@/assets/images/small/default_profile.jpg" class="img-fluid" alt="Responsive image" />
             </div>
           </div>
         </div>
