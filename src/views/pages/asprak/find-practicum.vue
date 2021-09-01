@@ -5,7 +5,7 @@ import Multiselect from "vue-multiselect";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
-import moment from 'moment';
+import store from '@/store';
 
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
@@ -67,6 +67,8 @@ export default {
         }
       ],
 
+      asprak_id: store.getters.getLoggedUser.id,
+
       submitted: false,
       isFetchingData: false,
       isKelasNotSelected: true,
@@ -89,7 +91,7 @@ export default {
   methods: {
     ...notificationMethods,
 
-    getRequestParams(class_name, course_name, academic_year_id) {
+    getRequestParams(class_name, course_name, academic_year_id, asprak_id) {
       let params = {};
 
       if (class_name) {
@@ -102,6 +104,10 @@ export default {
 
       if (academic_year_id) {
         params["academic_year_id"] = academic_year_id;
+      }
+
+      if (asprak_id) {
+        params["asprak_id"] = asprak_id;
       }
 
       return params;
@@ -131,6 +137,7 @@ export default {
                 this.class_name,
                 null,
                 null,
+                this.asprak_id,
         );
         return api.getAllClassCourses(params)
             .then(response => {
@@ -157,6 +164,7 @@ export default {
                 this.class_name,
                 this.course_name,
                 null,
+                this.asprak_id,
         );
         return api.getAllClassCourses(params)
             .then(response => {
@@ -182,6 +190,7 @@ export default {
                 this.class_name,
                 this.course_name,
                 this.academic_year_id,
+                this.asprak_id,
         );
         return api.getAllSchedules(params)
             .then(response => {

@@ -4,6 +4,7 @@ import PageHeader from "@/components/page-header";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
+import store from '@/store';
 
 import { notificationMethods } from "@/state/helpers";
 import Multiselect from "vue-multiselect";
@@ -51,6 +52,8 @@ export default {
           active: true,
         },
       ],
+
+      asprak_id: store.getters.getLoggedUser.id,
 
       //list class-course
       isFetchingData: false,
@@ -136,7 +139,7 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(class_name, course_name, academic_year_id) {
+    getRequestParams(class_name, course_name, academic_year_id, asprak_id) {
       let params = {};
 
       if (class_name) {
@@ -151,6 +154,10 @@ export default {
         params["academic_year_id"] = academic_year_id;
       }
 
+      if (asprak_id) {
+        params["asprak_id"] = asprak_id;
+      }
+
       return params;
     },
     async fetchData(){
@@ -161,6 +168,7 @@ export default {
         this.class_name,
         this.course_name,
         this.academic_year_id,
+        this.asprak_id,
       );
 
       return (
