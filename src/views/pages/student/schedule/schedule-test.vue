@@ -77,8 +77,9 @@ export default {
                 question_id: "",
                 answer_id: "",
                 answer: "",
-            }
-            //
+            },
+            isMCAnswersAvailable: false,
+            isEssayAnswersAvailable: false,
         }
     },
     methods: {
@@ -161,6 +162,9 @@ export default {
         },
 
         setInputData(){
+            this.isMCAnswersAvailable = false;
+            this.isEssayAnswersAvailable = false;
+
             this.dataInput.test_id = this.test_data.test.id;
             this.test_data.question.forEach((element, index, array) => {
                 let data = {};
@@ -228,11 +232,10 @@ export default {
                 return (
                     api.getEssayAnswer(this.test_data.test.id, this.user_id)
                     .then(response => {
-                        console.log(response)
                         if(response.data.data){
-                            console.log(response.data.data)
                             if(response.data.data.answer){
-                                console.log(response.data.data.answer)
+                                this.isEssayAnswersAvailable = true;
+
                                 let answers = response.data.data.answer;
                                 answers.forEach((element, index, array) => {
                                     this.dataInput.answers[index].answers = element.answers;
@@ -256,6 +259,8 @@ export default {
                     .then(response => {
                         if(response.data.data){
                             if(response.data.data.answer){
+                                this.isMCAnswersAvailable = true;
+
                                 let answers = response.data.data.answer;
                                 answers.forEach((element, index, array) => {
                                     this.dataInput.answers[index].answer_id = element.answer.id;
@@ -313,44 +318,54 @@ export default {
 
         submitAnswers(){
             if(this.isEssay){
-                return (
-                    api.storeEssay(this.dataInput)
-                    .then(response => {
-                        Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
-                        this.$router.push({
-                            name: 'praktikan-schedule-detail', 
-                            params: { id: this.schedule_test_data.schedule.id }
-                        });
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
-                            footer: error
+                if(this.isEssayAnswersAvailable){
+                    //api update
+                }
+                else{
+                    return (
+                        api.storeEssay(this.dataInput)
+                        .then(response => {
+                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                            this.$router.push({
+                                name: 'praktikan-schedule-detail', 
+                                params: { id: this.schedule_test_data.schedule.id }
+                            });
                         })
-                    })
-                );
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                                footer: error
+                            })
+                        })
+                    );
+                }
             }
             else if(this.isMultipleChoice){
-                return (
-                    api.storeMultipleChoice(this.dataInput)
-                    .then(response => {
-                        Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
-                        this.$router.push({
-                            name: 'praktikan-schedule-detail', 
-                            params: { id: this.schedule_test_data.schedule.id }
-                        });
-                    })
-                    .catch(error => {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: 'Something went wrong!',
-                            footer: error
+                if(this.isMCAnswersAvailable){
+                    //api update
+                }
+                else{
+                    return (
+                        api.storeMultipleChoice(this.dataInput)
+                        .then(response => {
+                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                            this.$router.push({
+                                name: 'praktikan-schedule-detail', 
+                                params: { id: this.schedule_test_data.schedule.id }
+                            });
                         })
-                    })
-                );
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                                footer: error
+                            })
+                        })
+                    );
+                }
             }
         },
 
