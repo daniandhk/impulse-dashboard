@@ -15,8 +15,6 @@ export default {
   validations: {
     dataClassroom: {
       name: { required },
-      academic_year: { required },
-      semester: { required },
     },
   },
   data() {
@@ -25,8 +23,6 @@ export default {
       title: "Classroom Data",
       dataClassroom: { 
           name: "",
-          academic_year: "",
-          semester: "",
           },
       submitted: false,
       inputError: null,
@@ -107,8 +103,6 @@ export default {
 
     clearForm(){
         this.dataClassroom.name = "";
-        this.dataClassroom.academic_year = "";
-        this.dataClassroom.semester = "";
     },
   }
 };
@@ -156,6 +150,9 @@ export default {
 
                     <div class="row">
                         <div class="col-sm-4">
+                        </div>
+
+                        <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="nama">Nama Kelas</label>
                                 <input
@@ -176,40 +173,6 @@ export default {
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="semester">Semester</label>
-                                <input 
-                                v-model="dataClassroom.semester"
-                                id="semester" 
-                                name="semester" 
-                                type="number"
-                                min="0"
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.dataClassroom.semester.$error }" />
-
-                                <div
-                                v-if="submitted && !$v.dataClassroom.semester.required"
-                                class="invalid-feedback"
-                                >Semester is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="academic_year">Tahun Akademik</label>
-                                <input
-                                    v-model="dataClassroom.academic_year"
-                                    id="academic_year"
-                                    name="academic_year"
-                                    type="text"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataClassroom.academic_year.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataClassroom.academic_year.required"
-                                class="invalid-feedback"
-                                >Tahun Akademik is required.</div>
-                            </div>
                         </div>
                     </div>
 

@@ -14,8 +14,6 @@ export default {
   validations: {
     dataEdit: {
       name: { required },
-      academic_year: { required },
-      semester: { required },
     },
   },
   created() {
@@ -36,8 +34,6 @@ export default {
       sortDesc: false,
       fields: [
         { key: "name", sortable: true, label: "Nama Kelas" },
-        { key: "semester", sortable: true, label: "Semester" },
-        { key: "academic_year", sortable: true, label: "Tahun Akademik" },
         { key: "action", sortable: false }
       ],
 
@@ -45,8 +41,6 @@ export default {
       idDataEdit: "",
       dataEdit: { 
           name: "",
-          academic_year: "", 
-          semester: "",
           },
       submitted: false,
     };
@@ -231,8 +225,6 @@ export default {
     onClickEdit(data){
       this.idDataEdit = data.item.id;
       this.dataEdit.name = data.item.name;
-      this.dataEdit.academic_year = data.item.academic_year;
-      this.dataEdit.semester = data.item.semester;
 
       this.$bvModal.show('modal-edit');
     },
@@ -408,41 +400,6 @@ export default {
                     v-if="submitted && !$v.dataEdit.name.required"
                     class="invalid-feedback"
                     >Nama Kelas is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="semester">Semester</label>
-                    <input 
-                    v-model="dataEdit.semester"
-                    id="semester" 
-                    name="semester" 
-                    type="number"
-                    min="0"
-                    class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.semester.$error }" />
-
-                    <div
-                    v-if="submitted && !$v.dataEdit.semester.required"
-                    class="invalid-feedback"
-                    >Semester is required.</div>
-                </div>
-            </div>
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="academic_year">Tahun Akademik</label>
-                    <input
-                        v-model="dataEdit.academic_year"
-                        id="academic_year"
-                        name="academic_year"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.academic_year.$error }"
-                    />
-                    <div
-                    v-if="submitted && !$v.dataEdit.academic_year.required"
-                    class="invalid-feedback"
-                    >Tahun Akademik is required.</div>
                 </div>
             </div>
             <div class="text-center mt-4">
