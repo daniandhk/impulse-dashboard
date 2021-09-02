@@ -4,6 +4,9 @@
 - set your .env settings
 - yarn serve
 
+# Commit Summary to master: 
+vYY.MM.DD.XX [XX = date's version start from 00]
+
 # TO DO
 ## catatan minor tasks yang belum
 - tampilan dashboard.
@@ -17,6 +20,3 @@
 - right-sidebar.vue         (ada scss nya)
 - register.vue
 - forgot-password.vue
-
-# Commit Summary to master: 
-# vYY.MM.DD.XX [XX = date's version start from 00]
