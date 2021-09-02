@@ -68,5 +68,10 @@ export const laboranItems = [
         icon: 'ri-home-6-line',
         link: 'laboran-room'
     },
-    
+    {
+        id: 13,
+        label: 'menuitems.laboran.list.academic-year',
+        icon: 'ri-home-6-line',
+        link: 'laboran-academicyear'
+    },
 ]
