@@ -227,3 +227,25 @@ export function deleteAsprakClass(id) {
 export function showAsprakClass(id) {
     return httpAxios.get(`/classcourse/asprak/${id}`);
 }
+
+//academic year
+export function getAllAcademicYears() {
+    return httpAxios.get('/academicYear')
+}
+export function deleteAcademicYear(id) {
+    return httpAxios.delete(`/academicYear/${id}`);
+}
+export function inputAcademicYear(data){
+    return httpAxios({
+        url: '/academicYear',
+        method: 'POST',
+        data: data
+    })
+}
+export function editAcademicYear(id, data){
+    return httpAxios({
+        url: `/academicYear/${id}`,
+        method: 'PUT',
+        data: data
+    })
+}

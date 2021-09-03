@@ -280,25 +280,6 @@ export default {
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                            <label class="control-label">Kode Mata Kuliah</label>
-                            <multiselect
-                                v-model="dataDetail.course_data"
-                                :options="dataDropdown.courses"
-                                label="code"
-                                track-by="code"
-                                @select="selectCourse"
-                                @remove="removeCourse"
-                                :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataInput.course_id.required"
-                                class="invalid-feedback"
-                                >Mata Kuliah is required.</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
                             <label class="control-label">Nama Mata Kuliah</label>
                             <multiselect
                                 v-model="dataDetail.course_data"
@@ -315,17 +296,36 @@ export default {
                                 >Mata Kuliah is required.</div>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                            <label class="control-label">Kode Mata Kuliah</label>
+                            <multiselect
+                                v-model="dataDetail.course_data"
+                                :options="dataDropdown.courses"
+                                label="code"
+                                track-by="code"
+                                @select="selectCourse"
+                                @remove="removeCourse"
+                                :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }" 
+                            ></multiselect>
+                                <div
+                                v-if="submitted && !$v.dataInput.course_id.required"
+                                class="invalid-feedback"
+                                >Mata Kuliah is required.</div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
-                            <label class="control-label">Kode Dosen</label>
+                            <label class="control-label">Nama Dosen</label>
                             <multiselect
                                 v-model="dataDetail.staff_data"
                                 :options="dataDropdown.staffs"
-                                label="code"
-                                track-by="code"
+                                label="name"
+                                track-by="name"
                                 @select="selectStaff"
                                 @remove="removeStaff"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }" 
@@ -339,12 +339,12 @@ export default {
 
                         <div class="col-md-6">
                             <div class="form-group">
-                            <label class="control-label">Nama Dosen</label>
+                            <label class="control-label">Kode Dosen</label>
                             <multiselect
                                 v-model="dataDetail.staff_data"
                                 :options="dataDropdown.staffs"
-                                label="name"
-                                track-by="name"
+                                label="code"
+                                track-by="code"
                                 @select="selectStaff"
                                 @remove="removeStaff"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }" 

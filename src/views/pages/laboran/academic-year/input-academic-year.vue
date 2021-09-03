@@ -4,25 +4,28 @@ import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
+import Multiselect from "vue-multiselect";
 
 /**
  * Orders Component
  */
 export default {
   components: {
-    //
+      Multiselect,
   },
   validations: {
-    dataClassroom: {
-      name: { required },
+    dataAcademicYear: {
+      year: { required },
+      semester: { required },
     },
   },
   data() {
     return {
-      //input course
-      title: "Classroom Data",
-      dataClassroom: { 
-          name: "",
+      //input academic-year
+      title: "Academic Year Data",
+      dataAcademicYear: { 
+          year: "", 
+          semester: "",
           },
       submitted: false,
       inputError: null,
@@ -30,20 +33,18 @@ export default {
       isInputError: false,
       inputSuccess: false,
       isInputCanceled: false,
+      dataSemester: ["odd","even"],
     };
-  },
-  mounted() {
-      //
   },
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
-    },
+    }
   },
   methods: {
     ...notificationMethods,
     
-    inputClassroom() {
+    inputAcademicYear() {
         this.submitted = true;
         this.$v.$touch();
         if (this.$v.$invalid) {
@@ -52,7 +53,7 @@ export default {
           this.tryingToInput = true;
           this.inputError = null;
           return (
-              api.inputClassroom(this.dataClassroom)
+              api.inputAcademicYear(this.dataAcademicYear)
                 .then(response => {
                     this.tryingToInput = false;
                     this.isInputError = false;
@@ -102,7 +103,8 @@ export default {
     },
 
     clearForm(){
-        this.dataClassroom.name = "";
+        this.dataAcademicYear.year = "";
+        this.dataAcademicYear.semester = "";
     },
   }
 };
@@ -110,11 +112,11 @@ export default {
 
 <template>
     <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputClassroom">
-            <!-- <div title="Course Data"> -->
+        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputAcademicYear">
+            <!-- <div title="Room Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Classroom</h4>
+                    <h4 class="card-title">Add Room</h4>
                     <p class="card-title-desc">Fill all information below</p>
                     
                     <div>
@@ -149,30 +151,37 @@ export default {
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-4">
-                        </div>
-
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
-                                <label for="nama">Nama Kelas</label>
-                                <input
-                                    v-model="dataClassroom.name"
-                                    v-mask="'AA-##-##'"
-                                    id="nama"
-                                    name="nama"
-                                    type="text"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataClassroom.name.$error }"
-                                />
-                                <span class="text-muted">e.g IF-42-03</span>
+                                <label for="year">Tahun Akademik</label>
+                                <input 
+                                v-model="dataAcademicYear.year"
+                                id="year" 
+                                name="year" 
+                                type="number" 
+                                class="form-control"
+                                :class="{ 'is-invalid': submitted && $v.dataAcademicYear.year.$error }" />
+
                                 <div
-                                v-if="submitted && !$v.dataClassroom.name.required"
+                                v-if="submitted && !$v.dataAcademicYear.year.required"
                                 class="invalid-feedback"
-                                >Nama Kelas is required.</div>
+                                >Tahun Akademik is required.</div>
                             </div>
                         </div>
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="semester">Semester</label>
+                                <multiselect
+                                    v-model="dataAcademicYear.semester"
+                                    :options="dataSemester"
+                                    :class="{ 'is-invalid': submitted && $v.dataAcademicYear.semester.$error }" 
+                                ></multiselect>
+                                <div
+                                v-if="submitted && !$v.dataAcademicYear.semester.required"
+                                class="invalid-feedback"
+                                >Semester is required.</div>
+                            </div>
                         </div>
                     </div>
 

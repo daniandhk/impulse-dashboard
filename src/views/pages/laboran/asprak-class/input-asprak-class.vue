@@ -23,6 +23,7 @@ export default {
       course_code: { required },
       course_name: { required },
       staff_code: { required },
+      staff_name: { required },
       academic_year: { required },
       semester: { required },
     },
@@ -40,6 +41,7 @@ export default {
           course_code: "", 
           course_name: "", 
           staff_code: "", 
+          staff_name: "", 
           academic_year: "", 
           semester: "",
           academic_year_id: "",
@@ -162,6 +164,7 @@ export default {
         this.dataStudent.course_code = "";
         this.dataStudent.course_name = "";
         this.dataStudent.staff_code = "";
+        this.dataStudent.staff_name = "";
         this.dataStudent.academic_year = "";
         this.dataStudent.semester = "";
         this.dataStudent.academic_year_id = "";
@@ -316,6 +319,7 @@ export default {
         this.dataStudent.academic_year = value.academic_year.name;
         this.dataStudent.semester = value.academic_year.semester;
         this.dataStudent.staff_code = value.staff.code;
+        this.dataStudent.staff_name = value.staff.name;
         await this.getDataClassCourse().then(response=>{
             console.log(this.classCourseData)
             this.dataInput.class_course_id = this.classCourseData.id;
@@ -353,6 +357,7 @@ export default {
         this.dataStudent.academic_year = "";
         this.dataStudent.semester = "";
         this.dataStudent.staff_code = "";
+        this.dataStudent.staff_name = "";
         
         this.dataInput.class_course_id = "";
     },
@@ -638,6 +643,26 @@ export default {
                                 v-if="submitted && !$v.dataStudent.academic_year.required"
                                 class="invalid-feedback"
                                 >Tahun Akademik (Semester) is required.</div>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="staff_name">Nama Dosen Mata Kuliah</label>
+                                <input
+                                    v-model="dataStudent.staff_name"
+                                    :disabled="true"
+                                    id="staff_name"
+                                    name="staff_name"
+                                    type="text"
+                                    style="background-color: #F0F4F6;"
+                                    class="form-control"
+                                    :class="{ 'is-invalid': submitted && $v.dataStudent.staff_name.$error }"
+                                />
+                                <div
+                                v-if="submitted && !$v.dataStudent.staff_name.required"
+                                class="invalid-feedback"
+                                >Nama Dosen Mata Kuliah is required.</div>
                             </div>
                         </div>
 
