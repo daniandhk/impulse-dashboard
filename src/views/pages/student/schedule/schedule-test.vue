@@ -239,6 +239,7 @@ export default {
                                 let answers = response.data.data.answer;
                                 answers.forEach((element, index, array) => {
                                     this.dataInput.answers[index].answers = element.answers;
+                                    this.dataInput.answers[index].id = element.id;
                                 });
                             }
                         }
@@ -264,6 +265,7 @@ export default {
                                 let answers = response.data.data.answer;
                                 answers.forEach((element, index, array) => {
                                     this.dataInput.answers[index].answer_id = element.answer.id;
+                                    this.dataInput.answers[index].id = element.id;
                                 });
                             }
                         }
@@ -319,7 +321,24 @@ export default {
         submitAnswers(){
             if(this.isEssay){
                 if(this.isEssayAnswersAvailable){
-                    //api update
+                    return (
+                        api.updateEssay(this.dataInput)
+                        .then(response => {
+                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                            this.$router.push({
+                                name: 'praktikan-schedule-detail', 
+                                params: { id: this.schedule_test_data.schedule.id }
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                                footer: error
+                            })
+                        })
+                    );
                 }
                 else{
                     return (
@@ -344,7 +363,24 @@ export default {
             }
             else if(this.isMultipleChoice){
                 if(this.isMCAnswersAvailable){
-                    //api update
+                    return (
+                        api.updateMultipleChoice(this.dataInput)
+                        .then(response => {
+                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                            this.$router.push({
+                                name: 'praktikan-schedule-detail', 
+                                params: { id: this.schedule_test_data.schedule.id }
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Something went wrong!',
+                                footer: error
+                            })
+                        })
+                    );
                 }
                 else{
                     return (

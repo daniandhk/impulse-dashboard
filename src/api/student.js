@@ -39,3 +39,19 @@ export function getMultipleChoiceAnswer(test_id, user_id) {
 export function getStudentCourses(id) {
     return httpAxios.get(`/schedule/getstudentcourse/${id}`);
 }
+
+export function updateEssay(data) {
+    return httpAxios({
+        url: '/answer/updateEssayAnswer',
+        method: 'PUT',
+        data: data
+    })
+}
+
+export function updateMultipleChoice(data) {
+    return httpAxios({
+        url: '/answer/updateMultipleChoiceAnswer',
+        method: 'PUT',
+        data: data
+    })
+}
