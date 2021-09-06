@@ -37,7 +37,7 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter: "",
       filterOn: [],
-      sortBy: "student.nim",
+      sortBy: "class_course.classes.name",
       sortDesc: false,
       fields: [
         { key: "student.nim", sortable: false, label: "NIM" },

@@ -138,4 +138,21 @@ export default [
         },
         component: () => import('../../views/pages/laboran/asprak-class/index')
     },
+    {
+        path: '/laboran/academic-year',
+        name: 'laboran-academicyear',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/laboran/academic-year/index')
+    },
 ]

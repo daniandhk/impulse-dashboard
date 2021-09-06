@@ -9,11 +9,14 @@ import { required } from "vuelidate/lib/validators";
  */
 export default {
   components: {
-    //
+
   },
   validations: {
     dataEdit: {
+      desc: { required },
       name: { required },
+      msteam_link: { required },
+      msteam_code: { required },
     },
   },
   created() {
@@ -21,28 +24,22 @@ export default {
   },
   data() {
     return {
-      //list classroom
+      //list academic year
       isFetchingData: false,
-      dataClassrooms: [],
+      dataAcademicYears: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
       filter: "",
       filterOn: [],
-      sortBy: "name",
+      sortBy: "year",
       sortDesc: false,
       fields: [
-        { key: "name", sortable: true, label: "Nama Kelas" },
+        { key: "year", sortable: true, label: "Tahun Akademik" },
+        { key: "semester", sortable: true, label: "Semester" },
         { key: "action", sortable: false }
       ],
-
-      //modal edit
-      idDataEdit: "",
-      dataEdit: { 
-          name: "",
-          },
-      submitted: false,
     };
   },
   computed: {
@@ -53,7 +50,7 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataClassrooms;
+      return this.dataAcademicYears;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -76,50 +73,20 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(search, page, pageSize, orderBy, sortDesc) {
-      let params = {};
-
-      if (search) {
-        params["search"] = search;
-      }
-
-      if (page) {
-        params["page"] = page;
-      }
-
-      if (pageSize) {
-        params["per_page"] = pageSize;
-      }
-
-      if (orderBy) {
-        params["orderBy"] = orderBy;
-      }
-
-      if (sortDesc) {
-        params["sortedBy"] = "DESC";
-      } else {
-        params["sortedBy"] = "ASC";
-      }
-
-      return params;
-    },
     fetchData(){
       this.isFetchingData = true;
 
-      const params = this.getRequestParams(
-        this.filter,
-        this.currentPage,
-        this.perPage,
-        this.sortBy,
-        this.sortDesc
-      );
       return (
-        api.getAllClassrooms(params)
+        api.getAllAcademicYears()
           .then(response => {
+            if (response.data.academic_years){
+              this.totalRows = response.data.academic_years.length;
+              this.dataAcademicYears = response.data.academic_years;
+              this.dataAcademicYears.forEach((element, index, array) => {
+                  element.name = String(element.year) + " (" + String(element.semester) + ")"
+              });
+            }
             this.isFetchingData = false;
-
-            this.totalRows = response.data.meta.pagination.total;
-            this.dataClassrooms = response.data.data;
           })
           .catch(error => {
             this.isFetchingData = false;
@@ -151,33 +118,6 @@ export default {
       });
     },
 
-    async handleSortingChange(value){
-      if(value.sortBy !== this.sortBy) {
-        this.sortDesc = false
-      } 
-      else {
-        if(this.sortDesc) {
-          this.sortDesc = false
-        } 
-        else {
-          this.sortDesc = true
-        }
-      }
-      this.sortBy = value.sortBy;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
-    },
-
-    async handleSearch(value){
-      this.filter = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
-    },
-
     async refreshData(){
       this.loading();
       await this.fetchData().then(result=>{
@@ -196,14 +136,14 @@ export default {
           confirmButtonText: "Yes, delete it!"
       }).then(result => {
           if (result.value) {
-              this.deleteClassroom(data.item.id, data.item.name);
+              this.deleteAcademicYear(data.item.id, data.item.name);
           }
       });
     },
 
-    deleteClassroom(id, name){
+    deleteAcademicYear(id, name){
       return (
-        api.deleteClassroom(id)
+        api.deleteAcademicYear(id)
           .then(response => {
             Swal.fire("Deleted!", name + " has been deleted.", "success");
             this.loading();
@@ -220,46 +160,6 @@ export default {
             })
           })
       )
-    },
-
-    onClickEdit(data){
-      this.idDataEdit = data.item.id;
-      this.dataEdit.name = data.item.name;
-
-      this.$bvModal.show('modal-edit');
-    },
-
-    editClassroom(){
-      this.submitted = true;
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
-      } 
-      else {
-        return (
-          api.editClassroom(this.idDataEdit, this.dataEdit)
-            .then(response => {
-              this.submitted = false;
-              this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.name + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
-            })
-            .catch(error => {
-              this.submitted = false;
-              this.hideModal();
-              
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Something went wrong!',
-                footer: error
-              })
-            })
-        )
-      }
     },
 
     hideModal(){
@@ -310,7 +210,6 @@ export default {
             Search:
             <b-form-input
               v-model="filter"
-              @input="handleSearch"
               type="search"
               class="form-control form-control-sm ml-2"
             ></b-form-input>
@@ -326,26 +225,17 @@ export default {
         :items="datas"
         :fields="fields"
         responsive="sm"
-        :per-page="0"
+        :per-page="perPage"
         :busy.sync="isFetchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
+        :filter="filter"
         :filter-included-fields="filterOn"
         @filtered="onFiltered"
         :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
-          <a
-            href="javascript:void(0);"
-            @click=onClickEdit(data)
-            class="mr-3 text-primary"
-            v-b-tooltip.hover
-            title="Edit"
-          >
-            <i class="mdi mdi-pencil font-size-18"></i>
-          </a>
           <a
             href="javascript:void(0);"
             @click=onClickDelete(data)
@@ -372,46 +262,6 @@ export default {
           </ul>
         </div>
       </div>
-    </div>
-    <div name="modalEdit">
-      <b-modal 
-        size="lg" 
-        id="modal-edit" 
-        title="Edit Classroom" 
-        hide-footer 
-        title-class="font-18"
-      >
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editClassroom">
-          <div class="tab-pane" id="metadata">
-            <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="name">Nama Kelas</label>
-                    <input
-                        v-model="dataEdit.name"
-                        v-mask="'AA-##-##'"
-                        id="name"
-                        name="name"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }"
-                    />
-                    <span class="text-muted">e.g IF-42-03</span>
-                    <div
-                    v-if="submitted && !$v.dataEdit.name.required"
-                    class="invalid-feedback"
-                    >Nama Kelas is required.</div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <button
-                type="submit"
-                class="btn btn-primary mr-2 waves-effect waves-light"
-                >Save Changes</button>
-                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
-            </div>
-          </div>
-        </form>
-      </b-modal>
     </div>
   </div>
 </template>

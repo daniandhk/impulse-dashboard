@@ -710,7 +710,7 @@ export default {
       )
     },
 
-    submitTest(){
+    async submitTest(){
       this.dataTest.module_id = this.schedule_data.module.id;
       this.submitted_test = true;
       this.$v.dataTest.$touch();
@@ -729,6 +729,9 @@ export default {
         }).then(result => {
             if (result.value) {
                 this.loading();
+                if(this.test_id){
+                  this.deleteTest(this.test_id);
+                }
                 this.inputTest();
                 this.loadData().then(result=>{
                   this.loading();

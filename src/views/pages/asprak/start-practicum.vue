@@ -228,41 +228,47 @@ export default {
                       this.isPretestNull = false;
                       this.pretest_data = response.data.data[0];
                       this.setDateTest(this.pretest_data);
+                      this.setStatusTest('pretest', this.pretest_data);
                       this.pretest_data.schedule_id = this.schedule_data.id;
                       this.pretest_data.test_id = this.schedule_data.module.pretest_id;
-                      this.setStatusTest('pretest', this.pretest_data);
                   }
                   else if(type == 'journal'){
                       this.isJournalNew = false;
                       this.isJournalNull = false;
                       this.journal_data = response.data.data[0];
                       this.setDateTest(this.journal_data);
+                      this.setStatusTest('journal', this.journal_data);
                       this.journal_data.schedule_id = this.schedule_data.id;
                       this.journal_data.test_id = this.schedule_data.module.journal_id;
-                      this.setStatusTest('journal', this.journal_data);
                   }
                   else if(type == 'posttest'){
                       this.isPosttestNew = false;
                       this.isPosttestNull = false;
                       this.posttest_data = response.data.data[0];
                       this.setDateTest(this.posttest_data);
+                      this.setStatusTest('posttest', this.posttest_data);
                       this.posttest_data.schedule_id = this.schedule_data.id;
                       this.posttest_data.test_id = this.schedule_data.module.posttest_id;
-                      this.setStatusTest('posttest', this.posttest_data);
                   }
               }
               else{
                   if(type == 'pretest'){
                       this.isPretestNew = true;
                       this.isPretestNull = false;
+                      this.pretest_data.schedule_id = this.schedule_data.id;
+                      this.pretest_data.test_id = this.schedule_data.module.pretest_id;
                   }
                   else if(type == 'journal'){
                       this.isJournalNew = true;
                       this.isJournalNull = false;
+                      this.journal_data.schedule_id = this.schedule_data.id;
+                      this.journal_data.test_id = this.schedule_data.module.journal_id;
                   }
                   else if(type == 'posttest'){
                       this.isPosttestNew = true;
                       this.isPosttestNull = false;
+                      this.posttest_data.schedule_id = this.schedule_data.id;
+                      this.posttest_data.test_id = this.schedule_data.module.posttest_id;
                   }
               }
           })
