@@ -222,7 +222,6 @@ export default {
                 .then(response => {
                     this.isIdValid(response.data.data);
                     if(response.data.data){
-                        console.log(response.data.data)
                         this.schedule_test_data = response.data.data;
                         this.items[2].href = "/praktikan/schedule/detail/" + this.schedule_test_data.schedule.id;
                     }
@@ -282,12 +281,6 @@ export default {
                                     });
                                 });
                             }
-                            else{
-                                this.dataInput.questions.forEach((element, index, array) => {
-                                    element.answers = [];
-                                    element.answers.push('');
-                                });
-                            }
                         }
                     })
                     .catch(error => {
@@ -319,7 +312,6 @@ export default {
         },
 
         onClickSubmit(){
-            console.log(this.dataInput)
             Swal.fire({
                 title: "Yakin akan menyelesaikan test?",
                 text: "Jawaban yang kosong akan tetap ter-submit!",
@@ -336,6 +328,12 @@ export default {
         },
 
         submitAnswers(){
+            this.dataInput.questions.forEach((element, index, array) => {
+                if(!element.answers.length){
+                    element.answers = [];
+                    element.answers.push('');
+                }
+            });
             if(this.isEssay){
                 if(this.isEssayAnswersAvailable){
                     return (
@@ -495,6 +493,7 @@ export default {
                                                 type="text" 
                                                 class="form-control"
                                                 placeholder="Masukkan jawaban disini"
+                                                :disabled="isEssayAnswersAvailable"
                                             />
                                         </div>
                                     </div>
@@ -505,6 +504,7 @@ export default {
                                                 type="checkbox" 
                                                 v-model="dataInput.questions[index].answers"
                                                 :value="answer.id"
+                                                :disabled="isMCAnswersAvailable"
                                             />{{answer.answer}}
                                         </div>
                                     </div>
@@ -514,8 +514,15 @@ export default {
                     </div>
                 </div>
             </div>
-            <div class="text-center m-4">
-                <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
+            <div v-if="!isEssayAnswersAvailable && !isMCAnswersAvailable">
+                <div class="text-center m-4">
+                    <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
+                </div>
+            </div>
+            <div v-if="isEssayAnswersAvailable || isMCAnswersAvailable">
+                <div class="text-center m-4">
+                    <b-button variant="secondary" :disabled="true" style="min-width: 250px;">Anda telah menyelesaikan tes ini!</b-button>
+                </div>
             </div>
         </div>
         <div v-if="isFile">
