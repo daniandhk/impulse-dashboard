@@ -43,6 +43,7 @@ export default {
         questions: {
           $each: {
               text: { required },
+              weight: { required },
           }
         }
     },
@@ -94,6 +95,7 @@ export default {
           id: "",
         },
         module: {
+          id: "",
           index: "",
         },
         academic_year: {
@@ -165,12 +167,12 @@ export default {
 
       //upload file
       dropzoneOptions: {
-        url: process.env.VUE_APP_BACKEND_URL + "/staff/import",
+        url: process.env.VUE_APP_BACKEND_URL + "/schedule/create-test",
         thumbnailWidth: 150,
-        maxFilesize: 5,
+        maxFilesize: 50,
         
         headers:{"Authorization":'Bearer ' + store.getters.getLoggedUser.token},
-        acceptedFiles: "text/csv,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        acceptedFiles: ".pdf,.doc,.docx,.rar,.zip,application/pdf,application/rar,application/zip",
         maxFiles: 1,
         init: function() {
           this.on('addedfile', function(file) {
@@ -179,21 +181,14 @@ export default {
             }
           });
           this.on('error', function(file, response){
+            console.log(response)
             Swal.fire({
                 icon: 'error',
                 title: 'Failed to upload your file!',
-                text: 'Cek kembali kesesuaian file dengan deskripsi.',
+                text: 'Cek kembali kesesuaian deskripsi.',
                 footer: response
             })
           });
-          this.on('success', function(file, response){
-            Swal.fire({
-                icon: 'success',
-                title: 'Uploaded!',
-                text: 'Your file has been uploaded.',
-                footer: response
-            })
-          })
         }
       }
 
@@ -511,6 +506,7 @@ export default {
       else{
         this.dataTest.type = "";
         this.dataTest.questions = [];
+        this.addQuestion(this.dataTest.questions);
       }
     },
 
@@ -536,6 +532,9 @@ export default {
       }
       else if(value == "Upload File"){
         this.dataTest.type = "file"
+        if(!this.dataTest.questions.length){
+          this.addQuestion(this.dataTest.questions)
+        }
       }
     },
 
@@ -568,7 +567,8 @@ export default {
                   data.question.forEach((element, index, array) => {
                       let question = {
                         text: element.question,
-                        answer: element.answers[0].answer,
+                        weight: Number(element.weight),
+                        answer: (element.answers.length) ? element.answers[0].answer : "",
                         options: [],
                       }
                       element.answers.forEach((element_answer, index_answer, array_answer) => {
@@ -603,6 +603,7 @@ export default {
         this.inputedData();
         let data = {
               text: "",
+              weight: 0,
               answer: "",
               options: [
                 {
@@ -652,7 +653,7 @@ export default {
             return this.correctAnswers(question).toString().replace("[", "").replace("]", "");
         }
         else {
-            return "( harap centang jawaban yang benar )"
+            return "[ CENTANG JAWABAN YANG BENAR ]"
         }
     },
 
@@ -729,9 +730,6 @@ export default {
         }).then(result => {
             if (result.value) {
                 this.loading();
-                if(this.test_id){
-                  this.deleteTest(this.test_id);
-                }
                 this.inputTest();
                 this.loadData().then(result=>{
                   this.loading();
@@ -773,6 +771,64 @@ export default {
               Swal.fire("Canceled!", "The form has been reset.", "success");
           }
       });
+    },
+
+    sendingEvent (file, xhr, formData) {
+      let questions = [];
+      if(this.dataTest.questions[0].weight != "" && this.dataTest.questions[0].answer != ""){
+        const data = {
+                text: this.dataTest.questions[0].text,
+                weight: this.dataTest.questions[0].weight,
+                answer: this.dataTest.questions[0].answer,
+        }
+        questions = [data];
+      }
+      
+      formData.append('module_id', this.schedule_data.module.id);
+      formData.append('type', 'file');
+      formData.append('test_type', 'journal');
+      formData.append('questions', questions);
+      formData.append('weight', this.dataTest.questions[0].weight);
+      formData.append('answer', this.dataTest.questions[0].answer);
+    },
+
+    successEvent (file, response) {
+      this.loading();
+      Swal.fire({
+          icon: 'success',
+          title: 'Uploaded!',
+          text: 'Your file has been uploaded.',
+          footer: response
+      })
+      this.loadData().then(result=>{
+        this.selectTest("Journal").then(rslt=>{
+          this.inputTestSuccess = true;
+          this.isUnsavedData = false;
+          this.isLoadedData = false;
+        });
+        this.loading();
+      });
+    },
+
+    onClickDownload(){
+        return (
+            api.downloadJournal(this.schedule_data.module.id, this.test_id)
+            .then(response => {
+                let blob = new Blob([response.data])
+                let link = document.createElement('a')
+                link.href = window.URL.createObjectURL(blob)
+                link.download = this.dataTest.questions[0].text
+                link.click()
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: error
+                })
+            })
+        );
     },
 
     loading() {
@@ -898,90 +954,94 @@ export default {
                       >{{notification.message}}</b-alert>
                   </div>
 
-                  <div class="form-group mb-3">
-                      <label>Name</label>
-                      <input 
-                        v-model="schedule_data.title"
-                        type="text"
-                        class="form-control"
-                        :disabled="isLoading"
-                        :class="{ 'is-invalid': submitted && $v.schedule_data.title.$error }"
-                      >
-                      <div
-                      v-if="submitted && !$v.schedule_data.title.required"
-                      class="invalid-feedback"
-                      >Name is required.</div>
-                  </div>
-                  
-                  <div class="form-group mb-3">
-                      <label>Ruangan</label>
-                      <multiselect 
-                        v-model="schedule_data.room" 
-                        :options="dataRooms"
-                        label="name"
-                        track-by="name"
-                        :allow-empty="false"
-                        :disabled="isLoading"
-                        :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
-                      ></multiselect>
-                      <div
-                      v-if="submitted && !$v.schedule_data.room.id.required"
-                      class="invalid-feedback"
-                      >Ruangan is required.</div>
-                  </div>
-                  
-                  <div class="form-group mb-3">
-                      <label>Tanggal</label>
-                      <br />
-                      <date-picker
-                        v-model="time_date" 
-                        :first-day-of-week="1" 
-                        lang="en"
-                        :clearable=false
-                        value-type="format"
-                        :disabled="isLoading"
-                        :class="{ 'is-invalid': submitted && $v.schedule_data.date.$error }"
-                      ></date-picker>
-                      <div
-                      v-if="submitted && !$v.schedule_data.date.required"
-                      class="invalid-feedback"
-                      >Tanggal is required.</div>
+                  <div class="row mb-2 mt-2">
+                    <div class="form-group col-sm-6">
+                        <label>Name for Calendar</label>
+                        <input 
+                          v-model="schedule_data.title"
+                          type="text"
+                          class="form-control"
+                          :disabled="isLoading"
+                          :class="{ 'is-invalid': submitted && $v.schedule_data.title.$error }"
+                        >
+                        <div
+                        v-if="submitted && !$v.schedule_data.title.required"
+                        class="invalid-feedback"
+                        >Name is required.</div>
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                        <label>Ruangan</label>
+                        <multiselect 
+                          v-model="schedule_data.room" 
+                          :options="dataRooms"
+                          label="name"
+                          track-by="name"
+                          :allow-empty="false"
+                          :disabled="isLoading"
+                          :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
+                        ></multiselect>
+                        <div
+                        v-if="submitted && !$v.schedule_data.room.id.required"
+                        class="invalid-feedback"
+                        >Ruangan is required.</div>
+                    </div>
                   </div>
 
-                  <div class="form-group mb-3">
-                      <label>Jam Mulai</label>
-                      <br />
-                      <date-picker
-                        v-model="schedule_data.time_start"
-                        value-type="format"
-                        type="time"
-                        placeholder="HH:mm:ss"
-                        :disabled="isLoading"
-                        :disabled-time="notAfterTimeEnd"
-                        :class="{ 'is-invalid': submitted && $v.schedule_data.time_start.$error }"
-                      ></date-picker>
-                      <div
-                      v-if="submitted && !$v.schedule_data.time_start.required"
-                      class="invalid-feedback"
-                      >Jam Mulai is required.</div>
-                  </div>
-                  
-                  <div class="form-group mb-3">
-                      <label>Jam Terakhir</label>
-                      <br />
-                      <date-picker
-                        v-model="schedule_data.time_end"
-                        value-type="format"
-                        type="time"
-                        placeholder="HH:mm:ss"
-                        :disabled="isLoading"
-                        :disabled-time="notBeforeTimeStart"
-                        :class="{ 'is-invalid': submitted && $v.schedule_data.time_end.$error }"
-                      ></date-picker>
-                      <div
-                      v-if="submitted && !$v.schedule_data.time_end.required"
-                      class="invalid-feedback"
-                      >Jam Terakhir is required.</div>
+                  <div class="row mb-2 mt-2">
+                    <div class="form-group col-sm-4">
+                        <label>Tanggal</label>
+                        <br />
+                        <date-picker
+                          v-model="time_date" 
+                          :first-day-of-week="1" 
+                          lang="en"
+                          :clearable=false
+                          value-type="format"
+                          :disabled="isLoading"
+                          :class="{ 'is-invalid': submitted && $v.schedule_data.date.$error }"
+                        ></date-picker>
+                        <div
+                        v-if="submitted && !$v.schedule_data.date.required"
+                        class="invalid-feedback"
+                        >Tanggal is required.</div>
+                    </div>
+
+                    <div class="form-group col-sm-4">
+                        <label>Jam Mulai</label>
+                        <br />
+                        <date-picker
+                          v-model="schedule_data.time_start"
+                          value-type="format"
+                          type="time"
+                          placeholder="HH:mm:ss"
+                          :disabled="isLoading"
+                          :disabled-time="notAfterTimeEnd"
+                          :class="{ 'is-invalid': submitted && $v.schedule_data.time_start.$error }"
+                        ></date-picker>
+                        <div
+                        v-if="submitted && !$v.schedule_data.time_start.required"
+                        class="invalid-feedback"
+                        >Jam Mulai is required.</div>
+                    </div>
+                    
+                    <div class="form-group col-sm-4">
+                        <label>Jam Terakhir</label>
+                        <br />
+                        <date-picker
+                          v-model="schedule_data.time_end"
+                          value-type="format"
+                          type="time"
+                          placeholder="HH:mm:ss"
+                          :disabled="isLoading"
+                          :disabled-time="notBeforeTimeStart"
+                          :class="{ 'is-invalid': submitted && $v.schedule_data.time_end.$error }"
+                        ></date-picker>
+                        <div
+                        v-if="submitted && !$v.schedule_data.time_end.required"
+                        class="invalid-feedback"
+                        >Jam Terakhir is required.</div>
+                    </div>
                   </div>
 
                   <div class="text-center mt-4">
@@ -1079,22 +1139,6 @@ export default {
                             dismissible
                             >Data is loaded!</b-alert>
                         </div>
-                        <div class="text-center" :class="{ 'is-invalid': submitted_test && $v.dataTest.module_id.$error,}">
-                            <button
-                              type="button"
-                              class="btn btn-primary mr-2 waves-effect waves-light"
-                              @click="submitTest"
-                            >Save Changes</button>
-                            <button 
-                              type="button" 
-                              @click="cancelSubmitTest" 
-                              class="btn btn-light waves-effect"
-                            >Cancel</button>
-                        </div>
-                        <div
-                          v-if="submitted_test && !$v.dataTest.module_id.required"
-                          class="invalid-feedback text-center mt-2"
-                          >Module ID is required.</div>
 
                         <hr style="margin-left: -20px; 
                                     margin-right: -20px; 
@@ -1126,16 +1170,31 @@ export default {
                                         <div class="card-body">
                                             <div class="row">
                                                 <div class="col-12">
+                                                    <label for="text">Bobot Nilai</label>
+                                                    <div class="form-group">
+                                                      <input 
+                                                        v-model="question.weight"
+                                                        type="number" 
+                                                        class="form-control col-2"
+                                                        @input="inputedData"
+                                                        :class="{ 'is-invalid': submitted_test && v.weight.$error }" />
+                                                      <div
+                                                        v-if="submitted_test && !v.weight.$error.required"
+                                                        class="invalid-feedback"
+                                                        >Bobot Nilai is required.</div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
                                                     <label for="text">Pertanyaan</label>
                                                     <div class="form-group">
                                                         <textarea
-                                                        rows=2 
-                                                        v-model="question.text"
-                                                        type="text" 
-                                                        class="form-control"
-                                                        placeholder="Masukkan pertanyaan disini"
-                                                        @input="inputedData"
-                                                        :class="{ 'is-invalid': submitted_test && v.text.$error }"
+                                                          rows=2 
+                                                          v-model="question.text"
+                                                          type="text" 
+                                                          class="form-control"
+                                                          placeholder="Masukkan pertanyaan disini"
+                                                          @input="inputedData"
+                                                          :class="{ 'is-invalid': submitted_test && v.text.$error }"
                                                         />
                                                         <div
                                                           v-if="submitted_test && !v.text.$error.required"
@@ -1192,7 +1251,9 @@ export default {
                                                         <hr>
                                                     </div>
                                                     <div class="text-left">
-                                                        <b-button v-on:click="addAnswer(question)" size=sm variant="secondary">Tambah Pilihan</b-button>
+                                                        <b-button size="sm" v-on:click="addAnswer(question)" variant="outline-secondary">
+                                                          <b-icon icon="plus-circle-fill"></b-icon> tambah jawaban
+                                                        </b-button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -1201,7 +1262,10 @@ export default {
                                 </div>
                             </div>
                             <div class="text-center">
-                                <b-button v-on:click="addQuestion(dataTest.questions)" variant="secondary">Tambah Soal</b-button>
+                                <b-button v-on:click="addQuestion(dataTest.questions)" variant="secondary">
+                                  <b-icon icon="plus-square-fill"></b-icon>
+                                  tambah pertanyaan
+                                </b-button>
                             </div>
                         </div>
                         <div v-if="selected_type == 'Essay'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
@@ -1226,6 +1290,21 @@ export default {
                                     <div class="card col-sm-11 mt-1">
                                         <div class="card-body">
                                             <div class="row">
+                                                <div class="col-12">
+                                                    <label for="text">Bobot Nilai</label>
+                                                    <div class="form-group">
+                                                      <input 
+                                                        v-model="question.weight"
+                                                        type="number" 
+                                                        class="form-control col-2"
+                                                        @input="inputedData"
+                                                        :class="{ 'is-invalid': submitted_test && v.weight.$error }" />
+                                                      <div
+                                                        v-if="submitted_test && !v.weight.$error.required"
+                                                        class="invalid-feedback"
+                                                        >Bobot Nilai is required.</div>
+                                                    </div>
+                                                </div>
                                                 <div class="col-12">
                                                     <label for="text">Pertanyaan</label>
                                                     <div class="form-group">
@@ -1266,39 +1345,89 @@ export default {
                                 </div>
                             </div>
                             <div class="text-center">
-                                <b-button v-on:click="addQuestion(dataTest.questions)" variant="secondary">Tambah Soal</b-button>
+                                <b-button v-on:click="addQuestion(dataTest.questions)" variant="secondary">
+                                  <b-icon icon="plus-square-fill"></b-icon>
+                                  tambah pertanyaan
+                                </b-button>
                             </div>
                         </div>
-                        <div v-if="selected_type == 'Upload File'" class="pt-4 pr-3 pb-4">
+                        <div v-if="selected_type == 'Upload File'" class="pr-3 pb-4 pt-2">
                           <div class="row">
-                              <div class="text-center form-group col-12">
-                                <label>!!!! Dummy Upload Excel Staff Data !!!!</label>
-                              </div>
                               <div class="col-sm-12 col-md-12">
                                   <!-- <div title="Import Excel"> -->
                                   <div>
-                                      <div class="tab-pane" id="metadata">
+                                      <div class="tab-pane pb-2 pt-2" id="metadata">
                                           <p style="color: red; font-size: 12px; margin: 0 !important;">IMPORTANT – PLEASE READ CAREFULLY</p>
-                                          <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel:</p>
+                                          <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload soal Jurnal:</p>
                                           <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                                              - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
-                                              - Pastikan hanya ada <b>satu sheet</b>,<br>
-                                              - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
+                                              - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
+                                              - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
+                                              - File Soal yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
+                                              - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error.
+                                              <!-- - Pastikan hanya ada <b>satu sheet</b>,<br>
+                                              - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br> -->
                                           </p>
-                                          <img src="@/assets/images/staff-excel-example.png" style="box-sizing: border-box; 
+                                          <!-- <img src="@/assets/images/staff-excel-example.png" style="box-sizing: border-box; 
                                                                                                                   width: 25%; 
-                                                                                                                  margin: auto;"/>
-                                          <div class="mb-4 mt-2">
-                                              <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                                                  Contoh file Excel: <a href="/files/staffdummy.xlsx" download>staffdummy.xlsx</a><br>
-                                              </p>
+                                                                                                                  margin: auto;"/> -->
+                                      </div>
+                                      <hr style="margin-left: -20px; 
+                                                  margin-right: -38px; 
+                                                  height: 2px; 
+                                                  background-color: #eee; 
+                                                  border: 0 none; 
+                                                  color: #eee;
+                                                  padding: 0!important;"
+                                      >
+                                      <div>
+                                        <div class="mb-2 mt-4">
+                                              <div class="row">
+                                                <div class="col-4">
+                                                    <label for="text">Bobot Nilai</label>
+                                                    <div class="form-group">
+                                                      <input 
+                                                        v-model="dataTest.questions[0].weight"
+                                                        type="number" 
+                                                        class="form-control"
+                                                        @input="inputedData"/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-4">
+                                                    <label for="text">URL Upload Jawaban</label>
+                                                    <div class="form-group">
+                                                        <input
+                                                        v-model="dataTest.questions[0].answer"
+                                                        type="text" 
+                                                        class="form-control"
+                                                        placeholder="https://drive.google.com/drive/folders/xxx"
+                                                        @input="inputedData"
+                                                        />
+                                                    </div>
+                                                </div>
+                                                <div class="col-4" v-if="dataTest.questions[0].text">
+                                                    <label>File Journal</label>
+                                                    <div class="form-group">
+                                                      <input 
+                                                        v-model="dataTest.questions[0].text"
+                                                        type="text" 
+                                                        class="form-control"
+                                                        disabled="true"/>
+                                                    </div>
+                                                    <div class="form-group">
+                                                      <b-button variant="primary" @click="onClickDownload">Download</b-button>
+                                                    </div>
+                                                </div>
+                                            </div>
                                           </div>
                                           <!-- file upload -->
+                                          <label for="text">Upload File Soal Jurnal</label>
                                           <vue-dropzone
                                               id="dropzone"
                                               ref="myVueDropzone"
                                               :use-custom-slot="true"
                                               :options="dropzoneOptions"
+                                              v-on:vdropzone-sending="sendingEvent"
+                                              v-on:vdropzone-success="successEvent"
                                           >
                                               <div class="dropzone-custom-content">
                                               <i class="display-4 text-muted bx bxs-cloud-upload"></i>
@@ -1310,6 +1439,30 @@ export default {
                               </div>
                           </div>
                         </div>
+
+                        <hr style="margin-left: -20px; 
+                                    margin-right: -20px; 
+                                    height: 2px; 
+                                    background-color: #eee; 
+                                    border: 0 none; 
+                                    color: #eee;"
+                        >
+                        <div v-if="dataTest.type == 'multiple_choice' || dataTest.type == 'essay'" class="text-center" :class="{ 'is-invalid': submitted_test && $v.dataTest.module_id.$error,}">
+                            <button
+                              type="button"
+                              class="btn btn-primary mr-2 waves-effect waves-light"
+                              @click="submitTest"
+                            >Save Changes</button>
+                            <button 
+                              type="button" 
+                              @click="cancelSubmitTest" 
+                              class="btn btn-light waves-effect"
+                            >Cancel</button>
+                        </div>
+                        <div
+                          v-if="submitted_test && !$v.dataTest.module_id.required"
+                          class="invalid-feedback text-center mt-2"
+                          >Module ID is required.</div>
                       </div>
                     </div>
                 </template>

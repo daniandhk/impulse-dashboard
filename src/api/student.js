@@ -29,11 +29,11 @@ export function storeMultipleChoice(data) {
 }
 
 export function getEssayAnswer(test_id, user_id) {
-    return httpAxios.get(`/answer/getEssayAnswer/${test_id}/${user_id}`);
+    return httpAxios.get(`/answer/essayAnswer/${user_id}/${test_id}`);
 }
 
 export function getMultipleChoiceAnswer(test_id, user_id) {
-    return httpAxios.get(`/answer/getMultipleChoiceAnswer/${test_id}/${user_id}`);
+    return httpAxios.get(`/answer/multipleChoiceAnswer/${user_id}/${test_id}`);
 }
 
 export function getStudentCourses(id) {
@@ -53,5 +53,13 @@ export function updateMultipleChoice(data) {
         url: '/answer/updateMultipleChoiceAnswer',
         method: 'PUT',
         data: data
+    })
+}
+
+export function downloadJournal(module_id, journal_id) {
+    return httpAxios({
+        url: `/module/journal/${module_id}/${journal_id}`,
+        method: 'POST',
+        responseType: 'blob',
     })
 }

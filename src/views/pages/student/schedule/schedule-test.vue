@@ -68,10 +68,12 @@ export default {
 
             isEssay: false,
             isMultipleChoice: false,
+            isFile: false,
 
             dataInput: {
-                test_id: "",
+                schedule_test_id: "",
                 answers: [],
+                questions: [],
             },
             answer: {
                 question_id: "",
@@ -98,7 +100,7 @@ export default {
         setId(){
             this.schedule_test_data.id = this.$route.params.schedule_test_id;
             this.test_data.test.id = this.$route.params.id;
-            this.user_id = store.getters.getLoggedUser.user_id;
+            this.user_id = store.getters.getLoggedUser.id;
         },
 
         setType(){
@@ -154,10 +156,17 @@ export default {
             if(this.test_data.test.type == 'essay'){
                 this.isEssay = true;
                 this.isMultipleChoice = false;
+                this.isFile = false;
             }
             if(this.test_data.test.type == 'multiple_choice'){
                 this.isEssay = false;
                 this.isMultipleChoice = true;
+                this.isFile = false;
+            }
+            if(this.test_data.test.type == 'file'){
+                this.isEssay = false;
+                this.isMultipleChoice = false;
+                this.isFile = true;
             }
         },
 
@@ -165,7 +174,7 @@ export default {
             this.isMCAnswersAvailable = false;
             this.isEssayAnswersAvailable = false;
 
-            this.dataInput.test_id = this.test_data.test.id;
+            this.dataInput.schedule_test_id = this.schedule_test_data.id;
             this.test_data.question.forEach((element, index, array) => {
                 let data = {};
                 if(this.test_data.test.type == 'essay'){
@@ -173,14 +182,15 @@ export default {
                         question_id: element.id,
                         answers: "",
                     }
+                    this.dataInput.answers.push(data);
                 }
                 if(this.test_data.test.type == 'multiple_choice'){
                     data = {
-                        question_id: element.id,
-                        answer_id: "",
+                        id: element.id,
+                        answers: [],
                     }
+                    this.dataInput.questions.push(data);
                 }
-                this.dataInput.answers.push(data);
             });
 
             this.getAnswers();
@@ -212,8 +222,9 @@ export default {
                 .then(response => {
                     this.isIdValid(response.data.data);
                     if(response.data.data){
-                    this.schedule_test_data = response.data.data;
-                    this.items[2].href = "/praktikan/schedule/detail/" + this.schedule_test_data.schedule.id;
+                        console.log(response.data.data)
+                        this.schedule_test_data = response.data.data;
+                        this.items[2].href = "/praktikan/schedule/detail/" + this.schedule_test_data.schedule.id;
                     }
                 })
                 .catch(error => {
@@ -259,13 +270,22 @@ export default {
                     api.getMultipleChoiceAnswer(this.test_data.test.id, this.user_id)
                     .then(response => {
                         if(response.data.data){
-                            if(response.data.data.answer){
+                            if(response.data.data.student_answer){
                                 this.isMCAnswersAvailable = true;
 
-                                let answers = response.data.data.answer;
-                                answers.forEach((element, index, array) => {
-                                    this.dataInput.answers[index].answer_id = element.answer.id;
-                                    this.dataInput.answers[index].id = element.id;
+                                let answers = response.data.data.student_answer;
+                                this.dataInput.questions.forEach((element, index, array) => {
+                                    answers.forEach((element_answer, index_answer, array_answer) => {
+                                        if(element_answer.question.id == element.id){
+                                            element.answers.push(element_answer.answer.id);
+                                        }
+                                    });
+                                });
+                            }
+                            else{
+                                this.dataInput.questions.forEach((element, index, array) => {
+                                    element.answers = [];
+                                    element.answers.push('');
                                 });
                             }
                         }
@@ -298,11 +318,8 @@ export default {
             }
         },
 
-        setAnswer(answer, index){
-            this.dataInput.answers[index].answer_id = answer.id;
-        },
-
         onClickSubmit(){
+            console.log(this.dataInput)
             Swal.fire({
                 title: "Yakin akan menyelesaikan test?",
                 text: "Jawaban yang kosong akan tetap ter-submit!",
@@ -405,6 +422,27 @@ export default {
             }
         },
 
+        onClickDownload(){
+            return (
+                api.downloadJournal(this.schedule_test_data.schedule.module_id, this.schedule_test_data.test.id)
+                .then(response => {
+                    let blob = new Blob([response.data])
+                    let link = document.createElement('a')
+                    link.href = window.URL.createObjectURL(blob)
+                    link.download = this.test_data.question[0].question
+                    link.click()
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                        footer: error
+                    })
+                })
+            );
+        },
+
         loading() {
             if(this.isLoading){
                 this.isLoading = false;
@@ -429,7 +467,7 @@ export default {
         <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
             <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
         </div>
-        <div>
+        <div v-if="isEssay || isMultipleChoice">
             <div v-for="(question, index) in test_data.question" :key="index">
                 <div class="row">
                     <div class="text-center col-sm-1">
@@ -464,10 +502,9 @@ export default {
                                         <div class="mt-2 ml-1 form-check" v-for="(answer, idx) in question.answers" :key="idx">
                                             <input 
                                                 class="form-check-input" 
-                                                type="radio" 
-                                                v-model="dataInput.answers[index].answer_id"
+                                                type="checkbox" 
+                                                v-model="dataInput.questions[index].answers"
                                                 :value="answer.id"
-                                                @click="setAnswer(answer, index)"
                                             />{{answer.answer}}
                                         </div>
                                     </div>
@@ -479,6 +516,39 @@ export default {
             </div>
             <div class="text-center m-4">
                 <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
+            </div>
+        </div>
+        <div v-if="isFile">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center">
+                        <label>Download File Journal</label>
+                    </div>
+                    <div class="text-center">
+                        <b-button variant="primary" @click="onClickDownload" style="min-width: 350px;">Download</b-button>
+                    </div>
+                    <!-- <div class="text-center mt-2">
+                        <p>{{test_data.question[0].question}}</p>
+                    </div> -->
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center">
+                        <label>URL Upload Jawaban Journal</label>
+                    </div>
+                    <div class="text-center">
+                        <div class="form-group">
+                            <input
+                                v-model="test_data.question[0].answers[0].answer"
+                                disabled="true"
+                                type="text" 
+                                class="form-control text-center"
+                                placeholder="https://drive.google.com/drive/folders/xxx"
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </Layout>
