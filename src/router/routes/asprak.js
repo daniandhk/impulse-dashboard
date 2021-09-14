@@ -75,6 +75,61 @@ export default [
     },
 
     {
+        path: '/asprak/bap',
+        name: 'asprak-bap',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/bap/list-bap')
+    },
+
+    {
+        path: '/asprak/bap/:id',
+        name: 'asprak-bap-input',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/bap/input-bap')
+    },
+
+    {
+        path: '/asprak/bap/:id/detail',
+        name: 'asprak-bap-detail',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/bap/detail-bap')
+    },
+
+    //
+    {
         path: '/asprak/input-soal',
         name: 'asprak-input-soal',
         meta: {

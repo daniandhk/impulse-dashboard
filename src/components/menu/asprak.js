@@ -31,7 +31,7 @@ export const asprakItems = [
         id: 6,
         label: 'menuitems.asprak.list.absensi-asprak',
         icon: 'ri-account-circle-line',
-        link: 'asprak-absensi-asprak'
+        link: 'asprak-bap'
     },
     {
         id: 7,
