@@ -63,3 +63,7 @@ export function downloadJournal(module_id, journal_id) {
         responseType: 'blob',
     })
 }
+
+export function getStudentCourseScore(student_id) {
+    return httpAxios.get(`/grade/all/${student_id}`);
+}
