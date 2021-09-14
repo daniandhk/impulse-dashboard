@@ -30,15 +30,7 @@ export default {
   data() {
     return {
       title: "Ganti Password",
-      items: [
-        {
-          text: "Laboran"
-        },
-        {
-          text: "Student Data",
-          active: true
-        }
-      ],
+
       dataEdit: { 
         old_password: "",
         new_password: "",
@@ -103,7 +95,7 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader :title="title" />
     <div class="row">
       <div class="col-12">
         <div class="card">
@@ -112,8 +104,8 @@ export default {
               <div class="col-12">
                 <form class="form-horizontal" @submit.prevent="editPassword">
                           <div class="form-group auth-form-group-custom mb-4">
-                            <i class="ri-user-3-line auti-custom-input-icon"></i>
-                            <label for="username">Password Lama</label>
+                            <i class="ri-lock-2-line auti-custom-input-icon"></i>
+                            <label for="old_password">Password Lama</label>
                             <input
                               type="password"
                               v-model="dataEdit.old_passsword"
@@ -131,13 +123,13 @@ export default {
 
                           <div class="form-group auth-form-group-custom mb-4">
                             <i class="ri-lock-2-line auti-custom-input-icon"></i>
-                            <label for="userpassword">Password Baru</label>
+                            <label for="new_password">Password Baru</label>
                             <input
                               v-model="dataEdit.new_password"
                               type="password"
                               class="form-control"
                          
-                              placeholder="Enter new password"
+                              placeholder="Password Baru"
                               :class="{ 'is-invalid': submitted && $v.dataEdit.new_password.$error }"
                             />
                             <div
@@ -148,19 +140,19 @@ export default {
 
                           <div class="form-group auth-form-group-custom mb-4">
                             <i class="ri-lock-2-line auti-custom-input-icon"></i>
-                            <label for="userpassword">Konfirmasi Password Baru</label>
+                            <label for="new_password_confirmation">Konfirmasi Password Baru</label>
                             <input
                               v-model="dataEdit.new_password_confirmation"
                               type="password"
                               class="form-control"
                           
-                              placeholder="password confirmation"
+                              placeholder="Konfirmasi Password Baru"
                               :class="{ 'is-invalid': submitted && $v.dataEdit.new_password_confirmation.$error }"
                             />
                             <div
                               v-if="submitted && !$v.dataEdit.new_password_confirmation.required"
                               class="invalid-feedback"
-                            >Confrimation password is required.</div>
+                            >Confirmation password is required.</div>
                           </div>
 
                           <div class="mt-4 text-center">

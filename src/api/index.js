@@ -41,7 +41,7 @@ export function register(data){
 export function editPassword(id, data){
     return httpAxios({
         url: `/me/update-password/${id}`,
-        method: 'POST',
+        method: 'PUT',
         data: data
     })
 }
