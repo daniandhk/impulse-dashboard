@@ -42,7 +42,7 @@
       "text": "Laboran",
       "main-data": "Main Data",
       "combined-data": "Combined Data",
-      "temp": "Temp",
+      "absensi-data": "BAP Data",
       "list": {
         "student": "Student Data",
         "studentclass": "Student Class",
@@ -52,7 +52,8 @@
         "classroom": "Classroom Data",
         "room": "Room Data",
         "class-course": "Course Class",
-        "academic-year": "Academic Year Data"
+        "academic-year": "Academic Year Data",
+        "bap": "Berita Acara Praktikum"
       }
     },
     "staff": {
@@ -62,7 +63,8 @@
       "text": "Asisten Lab",
       "list":{
         "jadwal": "Schedule",
-        "kalender": "Calendar"
+        "kalender": "Calendar",
+        "bap": "Berita Acara Praktikum"
       }
     },
     "asprak": {

@@ -27,4 +27,10 @@ export const aslabItems = [
         icon: 'ri-calendar-todo-fill',
         link: 'aslab-schedule-calendar'
     },
+    {
+        id: 6,
+        label: 'menuitems.aslab.list.bap',
+        icon: 'ri-account-circle-line',
+        link: 'aslab-bap'
+    },
 ]

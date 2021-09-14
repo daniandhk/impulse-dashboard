@@ -74,4 +74,15 @@ export const laboranItems = [
         icon: 'ri-home-6-line',
         link: 'laboran-academicyear'
     },
+    {
+        id: 14,
+        label: "menuitems.laboran.absensi-data",
+        isTitle: true
+    },
+    {
+        id: 15,
+        label: 'menuitems.laboran.list.bap',
+        icon: 'ri-account-circle-line',
+        link: 'laboran-bap'
+    },
 ]
