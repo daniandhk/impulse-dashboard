@@ -9542,7 +9542,7 @@ vuedraggable@^2.24.3:
 
 vuelidate@^0.7.6:
   version "0.7.6"
-  resolved "https://registry.npmjs.org/vuelidate/-/vuelidate-0.7.6.tgz"
+  resolved "https://registry.yarnpkg.com/vuelidate/-/vuelidate-0.7.6.tgz#84100c13b943470660d0416642845cd2a1edf4b2"
   integrity sha512-suzIuet1jGcyZ4oUSW8J27R2tNrJ9cIfklAh63EbAkFjE380iv97BAiIeolRYoB9bF9usBXCu4BxftWN1Dkn3g==
 
 vuex@^3.5.1:

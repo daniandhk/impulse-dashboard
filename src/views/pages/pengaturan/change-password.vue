@@ -1,5 +1,5 @@
 <script>
-import Vue from "vue";
+import * as api from '@/api';
 import Swal from "sweetalert2";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
@@ -39,7 +39,7 @@ export default {
   },
   validations: {
     typeform: {
-      name: { required },
+      old_password: { required },
       new_password: { required, minLength: minLength(6) },
       new_password_confirmation: { required, sameAsPassword: sameAs("new_password") },
     }
@@ -54,7 +54,20 @@ export default {
         return;
       }
       else{
-        //
+        return (
+          api.changePassword(this.typeform)
+              .then(response => {
+                Swal.fire("Updated!", "You password has been updated.", "success");
+              })
+              .catch(error => {
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Check again you Old Password!',
+                      footer: error
+                  })
+              })
+          );
       }
     },
   }
@@ -80,7 +93,7 @@ export default {
                   class="form-control"
                   placeholder="Password"
                   name="old_password"
-                  :class="{ 'is-invalid': typesubmit && $v.typeform.name.$error }"
+                  :class="{ 'is-invalid': typesubmit && $v.typeform.old_password.$error }"
                 />
                 <div v-if="typesubmit && $v.typeform.old_password.$error" class="invalid-feedback">
                   <span v-if="!$v.typeform.old_password.required">This value is required.</span>
@@ -125,12 +138,10 @@ export default {
                   </div>
                 </div>
               </div>
-
-         
+              
               <div class="text-center form-group mb-0">
                 <div>
                 <button type="submit" class="btn btn-primary">Save Changes</button>
-      
                 </div>
               </div>
             </form>
