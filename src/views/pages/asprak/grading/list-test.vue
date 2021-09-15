@@ -468,7 +468,7 @@ export default {
             >
                 <template v-slot:cell(pretest)="data">
                     <b-button
-                        v-if="data.item.test_id.pretest_id"
+                        v-if="data.item.test_id.pretest_id && data.item.submitted.pretest"
                         type="submit" 
                         variant="success"
                         @click=onShowClick(data)
@@ -476,7 +476,7 @@ export default {
                         >Show
                     </b-button>
                     <b-button
-                        v-if="!data.item.test_id.pretest_id"
+                        v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
                         type="submit" 
                         variant="danger"
                         style="min-width: 75px;"
@@ -485,7 +485,7 @@ export default {
                 </template>
                 <template v-slot:cell(journal)="data">
                     <b-button
-                        v-if="data.item.test_id.journal_id"
+                        v-if="data.item.test_id.journal_id && data.item.submitted.journal"
                         type="submit" 
                         variant="success"
                         @click=onShowClick(data)
@@ -493,7 +493,7 @@ export default {
                         >Show
                     </b-button>
                     <b-button
-                        v-if="!data.item.test_id.journal_id"
+                        v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
                         type="submit" 
                         variant="danger"
                         style="min-width: 75px;"
@@ -502,7 +502,7 @@ export default {
                 </template>
                 <template v-slot:cell(posttest)="data">
                     <b-button
-                        v-if="data.item.test_id.posttest_id"
+                        v-if="data.item.test_id.posttest_id && data.item.submitted.posttest"
                         type="submit" 
                         variant="success"
                         @click=onShowClick(data)
@@ -510,7 +510,7 @@ export default {
                         >Show
                     </b-button>
                     <b-button
-                        v-if="!data.item.test_id.posttest_id"
+                        v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
                         type="submit" 
                         variant="danger"
                         style="min-width: 75px;"

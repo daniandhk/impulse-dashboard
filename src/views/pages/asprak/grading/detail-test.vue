@@ -225,6 +225,10 @@ export default {
                         text: 'Something went wrong!',
                         footer: error
                     })
+                    this.$router.replace({
+                        name: 'asprak-grading-list', 
+                        params: { id: this.schedule_id }
+                    });
                 })
             );
         },
@@ -333,28 +337,32 @@ export default {
         },
 
         cancelSubmit(){
-        Swal.fire({
-            title: "Are you sure?",
-            text: "the form that you have filled in will be reset!",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#34c38f",
-            cancelButtonColor: "#f46a6a",
-            confirmButtonText: "Yes, cancel it!"
-        }).then(result => {
-            if (result.value) {
-                this.loading();
-                this.submitted = false;
-                this.isInputCanceled = true;
+            this.$router.push({
+                name: 'asprak-grading-list', 
+                params: { id: this.schedule_id }
+            });
+            // Swal.fire({
+            //     title: "Are you sure?",
+            //     text: "the form that you have filled in will be reset!",
+            //     icon: "warning",
+            //     showCancelButton: true,
+            //     confirmButtonColor: "#34c38f",
+            //     cancelButtonColor: "#f46a6a",
+            //     confirmButtonText: "Yes, cancel it!"
+            // }).then(result => {
+            //     if (result.value) {
+            //         this.loading();
+            //         this.submitted = false;
+            //         this.isInputCanceled = true;
 
-                this.test_data.grade.forEach((element, index, array) => {
-                    element.grade = 0;
-                });
-                this.countGrade();
-                this.loading();
-                Swal.fire("Canceled!", "The form has been reset.", "success");
-            }
-        });
+            //         this.test_data.grade.forEach((element, index, array) => {
+            //             element.grade = 0;
+            //         });
+            //         this.countGrade();
+            //         this.loading();
+            //         Swal.fire("Canceled!", "The form has been reset.", "success");
+            //     }
+            // });
         },
 
         onClickDownload(){
@@ -515,7 +523,7 @@ export default {
             </div>
             <div class="text-center mb-4">
                 <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
-                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Cancel</button>
+                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Back</button>
             </div>
         </div>
         <div v-if="isFile">
@@ -593,7 +601,7 @@ export default {
             </div>
             <div class="text-center mb-4">
                 <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
-                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Cancel</button>
+                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Back</button>
             </div>
         </div>
     </Layout>

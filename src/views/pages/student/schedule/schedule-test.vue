@@ -82,6 +82,7 @@ export default {
             },
             isMCAnswersAvailable: false,
             isEssayAnswersAvailable: false,
+            isFileAnswersAvailable: false,
         }
     },
     methods: {
@@ -177,11 +178,12 @@ export default {
         setInputData(){
             this.isMCAnswersAvailable = false;
             this.isEssayAnswersAvailable = false;
+            this.isFileAnswersAvailable = false;
 
             this.dataInput.schedule_test_id = this.schedule_test_data.id;
             this.test_data.question.forEach((element, index, array) => {
                 let data = {};
-                if(this.test_data.test.type == 'essay'){
+                if(this.test_data.test.type == 'essay' || this.test_data.test.type == 'file'){
                     data = {
                         question_id: element.id,
                         answers: "",
@@ -242,13 +244,18 @@ export default {
         },
 
         async getAnswers(){
-            if(this.isEssay){
+            if(this.isEssay || this.isFile){
                 return (
                     api.getEssayAnswer(this.test_data.test.id, this.user_id)
                     .then(response => {
                         if(response.data.data){
                             if(response.data.data.student_answer){
-                                this.isEssayAnswersAvailable = true;
+                                if(this.isEssay){
+                                    this.isEssayAnswersAvailable = true;
+                                }
+                                if(this.isFile){
+                                    this.isFileAnswersAvailable = true;
+                                }
 
                                 let answers = response.data.data.student_answer;
                                 this.dataInput.answers.forEach((element, index, array) => {
@@ -319,14 +326,20 @@ export default {
         },
 
         onClickSubmit(){
+            let text = "Jawaban yang kosong akan tetap ter-submit!";
+            let confirm = "Yes, submit it!";
+            if(this.isFile){
+                text = "Pastikan jawaban diunggah ke URL yang telah disediakan!"
+                confirm = "Yes, end this test!"
+            }
             Swal.fire({
-                title: "Yakin akan menyelesaikan test?",
-                text: "Jawaban yang kosong akan tetap ter-submit!",
+                title: "Yakin akan menyelesaikan test ini?",
+                text: text,
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#34c38f",
                 cancelButtonColor: "#f46a6a",
-                confirmButtonText: "Yes, submit it!"
+                confirmButtonText: confirm,
             }).then(result => {
                 if (result.value) {
                     this.submitAnswers();
@@ -343,24 +356,24 @@ export default {
             });
             if(this.isEssay){
                 if(this.isEssayAnswersAvailable){
-                    return (
-                        api.updateEssay(this.dataInput)
-                        .then(response => {
-                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
-                            this.$router.push({
-                                name: 'praktikan-schedule-detail', 
-                                params: { id: this.schedule_test_data.schedule.id }
-                            });
-                        })
-                        .catch(error => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Something went wrong!',
-                                footer: error
-                            })
-                        })
-                    );
+                    // return (
+                    //     api.updateEssay(this.dataInput)
+                    //     .then(response => {
+                    //         Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                    //         this.$router.push({
+                    //             name: 'praktikan-schedule-detail', 
+                    //             params: { id: this.schedule_test_data.schedule.id }
+                    //         });
+                    //     })
+                    //     .catch(error => {
+                    //         Swal.fire({
+                    //             icon: 'error',
+                    //             title: 'Oops...',
+                    //             text: 'Something went wrong!',
+                    //             footer: error
+                    //         })
+                    //     })
+                    // );
                 }
                 else{
                     return (
@@ -385,24 +398,24 @@ export default {
             }
             else if(this.isMultipleChoice){
                 if(this.isMCAnswersAvailable){
-                    return (
-                        api.updateMultipleChoice(this.dataInput)
-                        .then(response => {
-                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
-                            this.$router.push({
-                                name: 'praktikan-schedule-detail', 
-                                params: { id: this.schedule_test_data.schedule.id }
-                            });
-                        })
-                        .catch(error => {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Oops...',
-                                text: 'Something went wrong!',
-                                footer: error
-                            })
-                        })
-                    );
+                    // return (
+                    //     api.updateMultipleChoice(this.dataInput)
+                    //     .then(response => {
+                    //         Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                    //         this.$router.push({
+                    //             name: 'praktikan-schedule-detail', 
+                    //             params: { id: this.schedule_test_data.schedule.id }
+                    //         });
+                    //     })
+                    //     .catch(error => {
+                    //         Swal.fire({
+                    //             icon: 'error',
+                    //             title: 'Oops...',
+                    //             text: 'Something went wrong!',
+                    //             footer: error
+                    //         })
+                    //     })
+                    // );
                 }
                 else{
                     return (
@@ -424,6 +437,29 @@ export default {
                         })
                     );
                 }
+            }
+            else if(this.isFile){
+                this.dataInput.answers.forEach((element, index, array) => {
+                    element.answers = "uploaded";
+                });
+                return (
+                    api.storeEssay(this.dataInput)
+                    .then(response => {
+                        Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                        this.$router.push({
+                            name: 'praktikan-schedule-detail', 
+                            params: { id: this.schedule_test_data.schedule.id }
+                        });
+                    })
+                    .catch(error => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: 'Something went wrong!',
+                            footer: error
+                        })
+                    })
+                );
             }
         },
 
@@ -560,6 +596,16 @@ export default {
                                 class="form-control text-center"
                                 placeholder="https://drive.google.com/drive/folders/xxx"
                             />
+                        </div>
+                    </div>
+                    <div v-if="!isFileAnswersAvailable">
+                        <div class="text-center m-4">
+                            <b-button variant="success" @click="onClickSubmit" style="min-width: 350px;">Konfirmasi Telah Upload</b-button>
+                        </div>
+                    </div>
+                    <div v-if="isFileAnswersAvailable">
+                        <div class="text-center m-4">
+                            <b-button variant="secondary" :disabled="true" style="min-width: 350px;">Upload Terkonfirmasi</b-button>
                         </div>
                     </div>
                 </div>
