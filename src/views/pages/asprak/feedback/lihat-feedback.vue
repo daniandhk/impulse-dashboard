@@ -3,27 +3,27 @@ import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
 
-import { tableData } from "./data-absen";
+import { tableData } from "./data-feedback";
 /**
  * Form-element component
  */
 export default {
   page: {
-    title: "Absensi",
+    title: "Lihat Feedback",
     meta: [{ name: "description", content: appConfig.description }]
   },
   components: { Layout, PageHeader },
   data() {
     return {
       tableData: tableData,
-      title: "Berita Acara Praktikum",
+      title: "Lihat Feedback",
       items: [
         {
-          text: "Absensi",
+          text: "Feedback",
           href: "/"
         },
         {
-          text: "Absensi Asprak",
+          text: "Lihat Feedback",
           active: true
         }
       ],
@@ -39,15 +39,8 @@ export default {
       sortBy: "age",
       sortDesc: false,
       fields: [
-        { key: "Mata_Kuliah", sortable: true },
-        { key: "Kelas", sortable: true },
         { key: "Modul", sortable: true },
-        { key: "Tanggal_Absen", sortable: true },
-        { key: "Dosen", sortable: true },
-        { key: "Waktu", sortable: true },
-        { key: "Tipe_Praktikum", sortable: true },
-        { key: "Status_Submit", sortable: true },
-        { key: "Action", sortable: true },
+        { key: "Feedback", sortable: true },
       ]
     };
   },
@@ -83,11 +76,12 @@ export default {
       <div class="col-12">
         <div class="card">
           <div class="card-body">
+            <h4 class="card-title">Modul Praktikum</h4>
             <div class="row">
               <div class="col-12">
                 <form class="form-horizontal" role="form">
                   <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Kelas</label>
+                    <label class="col-md-2 col-form-label">Modul</label>
                     <div class="col-md-10">
                       <select class="form-control">
                         <option>Select</option>
@@ -97,19 +91,6 @@ export default {
                     </div>
                   </div>
                 </form>
-                <form class="form-horizontal" role="form">
-                  <div class="form-group row">
-                    <label class="col-md-2 col-form-label">Status Submit</label>
-                    <div class="col-md-10">
-                      <select class="form-control">
-                        <option>Select</option>
-                        <option>Large select</option>
-                        <option>Small select</option>
-                      </select>
-                    </div>
-                  </div>
-                </form>
-                
               </div>
             </div>
             <!-- end row -->
@@ -125,6 +106,7 @@ export default {
       <div class="col-12">
         <div class="card">
           <div class="card-body">
+            <h4 class="card-title">Feedback</h4>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
@@ -163,15 +145,7 @@ export default {
                 :filter="filter"
                 :filter-included-fields="filterOn"
                 @filtered="onFiltered"
-              >
-              <template v-slot:cell(Action)>
-                <b-button type="submit" variant="success"><router-link
-                                    to="/absen/berita-acara"
-                                    class="font-weight-medium"
-                                    style="color: white;"
-                                  >Absen</router-link>
-                  </b-button>
-              </template></b-table>
+              ></b-table>
             </div>
             <div class="row">
               <div class="col">

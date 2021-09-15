@@ -447,15 +447,24 @@ export default {
                 :headVariant="'dark'"
             >
                 <template v-slot:cell(action)="data">
-                <a
-                    href="javascript:void(0);"
-                    @click=onClickEdit(data)
-                    class="mr-3 text-primary"
-                    v-b-tooltip.hover
-                    title="Detail"
-                >
-                    <i class="mdi mdi-pencil font-size-18"></i>
-                </a>
+                  <a
+                      href="javascript:void(0);"
+                      @click=onClickEdit(data)
+                      class="mr-3 text-primary"
+                      v-b-tooltip.hover
+                      title="Info"
+                  >
+                      <i class="mdi mdi-eye-outline font-size-18"></i>
+                  </a>
+                  <a
+                      href="javascript:void(0);"
+                      @click=editModal
+                      class="mr-3 text-primary"
+                      v-b-tooltip.hover
+                      title="Detail"
+                  >
+                      <i class="mdi mdi-pencil font-size-18"></i>
+                  </a>
                 </template>
             </b-table>
             </div>
@@ -480,7 +489,7 @@ export default {
     <b-modal
       size="lg"
       v-model="eventModal"
-      title="Detail Schedule"
+      title="Info Schedule"
       hide-footer 
       title-class="font-18"
     >
@@ -590,14 +599,14 @@ export default {
               </div>
           </div>
         </div>
-        <div class="text-right mt-4">
+        <!-- <div class="text-right mt-4">
             <button
             type="button"
             @click="editModal"
             class="btn btn-info mr-2 waves-effect waves-light"
             >Detail</button>
             <button type="button" @click="closeModal" class="btn btn-light waves-effect">Close</button>
-        </div>
+        </div> -->
       </div>
     </b-modal>
   </Layout>
