@@ -323,7 +323,8 @@ export default {
       this.eventModal = false;
     },
 
-    editModal(){
+    editModal(data){
+      this.schedule_data.id = data.item.id;
       this.$router.push({
           name: 'asprak-schedule-detail', 
           params: { id: this.schedule_data.id }
@@ -458,7 +459,7 @@ export default {
                   </a>
                   <a
                       href="javascript:void(0);"
-                      @click=editModal
+                      @click=editModal(data)
                       class="mr-3 text-primary"
                       v-b-tooltip.hover
                       title="Detail"
