@@ -71,6 +71,25 @@ export default [
         component: () => import('../../views/pages/student/schedule/schedule-test')
     },
     {
+        path: '/praktikan/score',
+        name: 'praktikan-score',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/student/score/score-list')
+    },
+
+
+    {
         path: '/praktikan/matakuliah',
         name: 'praktikan-matakuliah',
         meta: {
@@ -171,22 +190,5 @@ export default [
             },
         },
         component: () => import('../../views/pages/student/tes_akhir')
-    },
-    {
-        path: '/pengaturan',      
-        name: 'praktikan-pengaturan',
-        meta: {
-            authRequired: true,
-            beforeResolve(routeTo, routeFrom, next) {
-                let role = store.getters.getRoleUser
-                if(role && role == 'student'){
-                    next()
-                }
-                else{
-                    next({ name: 'error-404' })
-                }
-            },
-        },
-        component: () => import('../../views/pages/student/pengaturan')
     },
 ]

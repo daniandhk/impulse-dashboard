@@ -3,21 +3,6 @@
     "dropdown": {
       "roles": {
         "text": "Available Roles"
-      },
-      "notification": {
-        "text": "Notifications",
-        "subtext": "View All",
-        "item": {
-          "title": "Your item is shipped",
-          "text": "If several languages coalesce the grammar",
-          "time": "3 min ago"
-        },
-        "salena": {
-          "title": "Salena Layfield",
-          "text": "As a skeptical Cambridge friend of mine occidental.",
-          "time": "1 hours ago"
-        },
-        "button": "Load More.."
       }
     }
   },
@@ -32,7 +17,7 @@
       "text": "Laboran",
       "main-data": "Main Data",
       "combined-data": "Combined Data",
-      "temp": "Temp",
+      "absensi-data": "BAP Data",
       "list": {
         "student": "Student Data",
         "studentclass": "Student Class",
@@ -42,7 +27,8 @@
         "classroom": "Classroom Data",
         "room": "Room Data",
         "class-course": "Course Class",
-        "academic-year": "Academic Year Data"
+        "academic-year": "Academic Year Data",
+        "bap": "Berita Acara Praktikum"
       }
     },
     "staff": {
@@ -52,7 +38,8 @@
       "text": "Asisten Lab",
       "list":{
         "jadwal": "Schedule",
-        "kalender": "Calendar"
+        "kalender": "Calendar",
+        "bap": "Berita Acara Praktikum"
       }
     },
     "asprak": {
@@ -64,9 +51,10 @@
         "input-jurnal": "Input Jurnal",
         "input-tesakhir": "Input Tes Akhir",
         "lihat-feedback": "Lihat Feedback",
-        "absensi-asprak": "Absensi Asprak",
-        "start-practicum": "Start Practicum",
-        "schedule": "Schedule"
+        "absensi-asprak": "Berita Acara Praktikum",
+        "start-practicum": "Mulai Praktikum",
+        "schedule": "Schedule",
+        "grading": "Penilaian Tes"
       }
     },
     "praktikan": {

@@ -155,4 +155,40 @@ export default [
         },
         component: () => import('../../views/pages/laboran/academic-year/index')
     },
+
+    {
+        path: '/laboran/bap',
+        name: 'laboran-bap',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/laboran/bap/list-bap')
+    },
+
+    {
+        path: '/laboran/bap/:id/detail',
+        name: 'laboran-bap-detail',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/laboran/bap/detail-bap')
+    },
 ]

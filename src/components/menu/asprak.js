@@ -31,13 +31,13 @@ export const asprakItems = [
         id: 6,
         label: 'menuitems.asprak.list.absensi-asprak',
         icon: 'ri-account-circle-line',
-        link: 'asprak-absensi-asprak'
+        link: 'asprak-bap'
     },
     {
         id: 7,
-        label: 'menuitems.asprak.list.lihat-feedback',
+        label: 'menuitems.asprak.list.grading',
         icon: 'ri-chat-1-line',
-        link: 'asprak-lihat-feedback'
+        link: 'asprak-grading'
     },
     
 ]

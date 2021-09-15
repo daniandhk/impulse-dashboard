@@ -21,6 +21,7 @@
     "apexcharts": "^3.22.2",
     "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
+    "bootstrap-icons": "^1.5.0",
     "bootstrap-vue": "^2.19.0",
     "chart.js": "^2.9.4",
     "core-js": "^3.7.0",

@@ -11,7 +11,7 @@ import store from '@/store';
  */
 export default {
   page: {
-    title: "List course",
+    title: "Score",
     meta: [{ name: "description" }],
   },
   components: {
@@ -23,18 +23,14 @@ export default {
   },
   data() {
     return {
-      title: "List Course",
+      title: "Score",
       items: [
         {
-          text: "Dashboard",
+          text: "Student",
           href: "/"
         },
         {
-          text: "Schedule",
-          href: "/praktikan/schedule/calendar"
-        },
-        {
-          text: "List Course",
+          text: "Score",
           active: true,
         },
       ],
@@ -44,28 +40,25 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter: null,
       filterOn: [],
-      sortBy: "date",
+      sortBy: "index",
       sortDesc: false,
-      dataSchedules: [],
+      dataModules: [],
       fields: [
-        { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Mulai" },
-        { key: "end", sortable: true, label: "Terakhir" },
-        { key: "title", label: "Name" },
-        { key: "class_course.course.code", label: "Kode Mata Kuliah" },
-        { key: "module.index",  label: "Modul" },
-        { key: "room.name", label: "Ruangan" },
+        { key: "index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "pretest_grade", label: "Nilai Pretest", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "journal_grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "posttest_grade", label: "Nilai Posttest", thClass: 'text-center', tdClass: 'text-center', },
       ],
 
       student_id: store.getters.getLoggedUser.id,
 
       dataClassCourses: [],
       class_course_data: {
-          class_name: "",
-          course_code: "",
-          course_name: "",
-          staff_code: "",
-          staff_name: "",
+          course: "",
+          class: "",
+          staff: "",
+          year: "",
+          semester: "",
           academic_year: "",
       },
 
@@ -78,7 +71,7 @@ export default {
      * Total no. of records
      */
     rows() {
-      return this.dataSchedules.length;
+      return this.dataModules.length;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -86,7 +79,7 @@ export default {
   },
   mounted: async function() {
     // Set the initial number of items
-    this.totalRows = this.dataSchedules.length;
+    this.totalRows = this.dataModules.length;
     // Set the initial number of items
     await this.getStudentCourses();
     await this.refreshData(0);
@@ -104,10 +97,11 @@ export default {
     
     async getStudentCourses(){
         return (
-            api.getStudentCourses(this.student_id)
+            api.getStudentCourseScore(this.student_id)
             .then(response => {
+                console.log(response.data.data.result)
                 if(response.data.data){
-                    this.dataClassCourses = response.data.data;
+                    this.dataClassCourses = response.data.data.result;
                 }
             })
             .catch(error => {
@@ -121,23 +115,9 @@ export default {
         );
     },
 
-    async getSchedules(class_course_id){
-        return (
-            api.showSchedules(class_course_id)
-            .then(response => {
-                if(response.data.data){
-                    this.dataSchedules = response.data.data;
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: error
-                })
-            })
-        );
+    async getModules(index){
+        this.dataModules = this.dataClassCourses[index].modules;
+        return true;
     },
 
     async refreshData(index){
@@ -145,8 +125,8 @@ export default {
         if(this.dataClassCourses.length){
             this.loading();
             this.class_course_data = this.dataClassCourses[index];
-            let class_course_id = this.class_course_data.class_course_id;
-            await this.getSchedules(class_course_id).then(response =>{
+            this.class_course_data.academic_year = this.class_course_data.year + " / " + this.class_course_data.semester
+            await this.getModules(index).then(response =>{
                 this.loading();
             })
         }
@@ -183,16 +163,15 @@ export default {
           <div class="card-body pt-0">
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3" v-for="(course, index) in dataClassCourses" :key="index">
-                <template v-slot:title> 
-                  <a class="font-weight-bold active ml-sm-5 mr-lg-5" >{{course.course_name}}</a>
+                <template v-slot:title>
+                  <a class="font-weight-bold active">{{course.course}}</a>
                 </template>
-                <div class="row"></div>
                 <div class="row mt-4">
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label>Kelas</label>
                             <input
-                                v-model="class_course_data.class_name"
+                                v-model="class_course_data.class"
                                 type="text"
                                 class="form-control"
                                 disabled="true"
@@ -205,7 +184,7 @@ export default {
                         <div class="form-group">
                             <label>Mata Kuliah</label>
                             <input
-                                v-model="class_course_data.course_name"
+                                v-model="class_course_data.course"
                                 type="text"
                                 class="form-control"
                                 disabled="true"
@@ -218,7 +197,7 @@ export default {
                         <div class="form-group">
                             <label>Kode Dosen</label>
                             <input
-                                v-model="class_course_data.staff_code"
+                                v-model="class_course_data.staff"
                                 type="text"
                                 class="form-control"
                                 disabled="true"
@@ -240,7 +219,14 @@ export default {
                         </div>
                     </div>
                 </div>
-                <!-- <div class="row mt-4">
+                <hr style="margin-right: -20px!important; 
+                            margin-left: -20px!important; 
+                            height: 2px; 
+                            background-color: #eee; 
+                            border: 0 none; 
+                            color: #eee;"
+                >
+                <div class="row mt-4">
                   <div class="col-sm-12 col-md-6">
                     <div id="tickets-table_length" class="dataTables_length">
                       <label class="d-inline-flex align-items-center">
@@ -249,7 +235,7 @@ export default {
                       </label>
                     </div>
                   </div>
-                  Search 
+                  <!-- Search  -->
                   <div class="col-sm-12 col-md-6">
                     <div id="tickets-table_filter" class="dataTables_filter text-md-right">
                       <label class="d-inline-flex align-items-center">
@@ -262,12 +248,12 @@ export default {
                       </label>
                     </div>
                   </div>
-                  End search
-                </div> -->
+                  <!-- End search -->
+                </div>
                 <div class="table-responsive mt-2">
                   <b-table
                     class="table-centered"
-                    :items="dataSchedules"
+                    :items="dataModules"
                     :fields="fields"
                     responsive="sm"
                     :per-page="perPage"

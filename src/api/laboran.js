@@ -249,3 +249,21 @@ export function editAcademicYear(id, data){
         data: data
     })
 }
+
+//bap
+export function getListBap(params) {
+    return httpAxios.get('/laboran/bap/show', { params })
+}
+export function showBap(schedule_id) {
+    return httpAxios.get(`/laboran/bap/show/${schedule_id}`);
+}
+export function infoBap(schedule_id) {
+    return httpAxios.get(`/laboran/bap/${schedule_id}`);
+}
+export function inputBap(schedule_id, data){
+    return httpAxios({
+        url: `/laboran/bap/${schedule_id}`,
+        method: 'POST',
+        data: data
+    })
+}

@@ -166,8 +166,21 @@ await this.loadDataDropdown();
             if(response.data.data){
               this.dataSchedules = response.data.data;
               this.dataSchedules.forEach(function (element) {
-                element.className = 'bg-success text-white';
+                let now = moment().format('YYYY-MM-DD HH:mm:ss');
+
+                if(element.start && element.end){
+                  if(now >= element.start  && now <= element.end){
+                    element.className = 'bg-success text-white';
+                  }
+                  else{
+                    element.className = 'bg-dark text-white';
+                  }
+                }
+                else{
+                  element.className = 'bg-dark text-white';
+                }
               });
+              //get schedule test, get is_active, set warna
             }
           })
           .catch(error => {

@@ -36,7 +36,7 @@ export const praktikanItems = [
         id: 7,
         label: 'menuitems.praktikan.list.nilai',
         icon: 'ri-bar-chart-grouped-fill',
-        link: 'praktikan-nilai'
+        link: 'praktikan-score'
     },
     // {
     //     id: 8,

@@ -231,14 +231,14 @@ export default {
           confirmButtonText: "Yes, delete it!"
       }).then(result => {
           if (result.value) {
-              this.deleteAsprakClass(data.item.student.id, data.item.student.nim);
+              this.deleteAsprakClass(data.item.id, data.item.student.nim);
           }
       });
     },
 
     deleteAsprakClass(id, nim){
       return (
-        api.deleteStudentClass(id)
+        api.deleteAsprakClass(id)
           .then(response => {
             Swal.fire("Deleted!", nim + " has been deleted.", "success");
             this.loading();

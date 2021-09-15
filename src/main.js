@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
-import BootstrapVue from 'bootstrap-vue'
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import VueApexCharts from 'vue-apexcharts'
 import Vuelidate from 'vuelidate'
 import VueSweetalert2 from 'vue-sweetalert2'
@@ -19,6 +19,7 @@ Vue.config.productionTip = false
 Vue.prototype.$backendUrl = process.env.VUE_APP_BACKEND_URL
 Vue.use(VueYoutube)
 Vue.use(BootstrapVue)
+Vue.use(BootstrapVueIcons)
 Vue.use(vco)
 Vue.use(Vuelidate)
 Vue.use(VueSweetalert2);
