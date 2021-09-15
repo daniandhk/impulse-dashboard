@@ -14,9 +14,11 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Practicum Details",
+  },
   components: {
     Layout,
-    Multiselect,
     PageHeader
   },
   validations: {
@@ -46,10 +48,10 @@ export default {
   },
   data() {
     return {
-      title: "Detail Schedule",
+      title: "Practicum Details",
       items: [
         {
-          text: "Student",
+          text: "Dashboard",
           href: "/"
         },
         {
@@ -57,7 +59,7 @@ export default {
           href: "/praktikan/schedule/calendar"
         },
         {
-          text: "Detail",
+          text: "Practicum Details",
           active: true,
         }
       ],
@@ -612,15 +614,13 @@ export default {
           </div>
 
           <div class="form-group text-center">
-              <label>Module</label>
-              <multiselect 
-                class="text-center"
-                v-model="schedule_data.module.index" 
-                :options="dataModules"
-                @select="selectModule"
-                :allow-empty="false"
-                :disabled="isLoading"
-              ></multiselect>
+              <label>Modul</label>
+              <input
+                      v-model="schedule_data.module.index"
+                      type="text"
+                      class="form-control text-center bg-#00000 "
+                      disabled="true"
+                  />
           </div>
         </div>
       </div>
@@ -881,7 +881,7 @@ export default {
                         <div>
                             <h5 class="text-left font-size-15 text-uppercase">Tes Akhir</h5>
                             <p class="text-left mb-0">
-                              Merupakan tahapan akhir dalam praktikum.
+                              Merupakan tahapan terakhir dalam praktikum.
                             </p>
                             <hr style="margin-left: -28px; 
                                         margin-right: -28px; 
