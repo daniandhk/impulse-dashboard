@@ -27,3 +27,19 @@ export function editScheduleTest(id, data){
         data: data
     })
 }
+
+export function getScheduleGrades(schedule_id) {
+    return httpAxios.get(`/grade/schedule/${schedule_id}`);
+}
+
+export function getSpecificTest(student_id, test_id) {
+    return httpAxios.get(`/grade/test/${student_id}/${test_id}`);
+}
+
+export function updateGrade(student_id, data){
+    return httpAxios({
+        url: `/grade/student/${student_id}`,
+        method: 'PUT',
+        data: data
+    })
+}

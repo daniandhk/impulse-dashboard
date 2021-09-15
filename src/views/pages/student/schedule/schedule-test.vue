@@ -116,6 +116,10 @@ export default {
                 this.title = "Tes Akhir";
                 this.items[3].text = "Tes Akhir";
             }
+            else{
+                this.title = "Tes";
+                this.items[3].text = "Tes";
+            }
         },
 
         checkAuth(){
@@ -243,13 +247,16 @@ export default {
                     api.getEssayAnswer(this.test_data.test.id, this.user_id)
                     .then(response => {
                         if(response.data.data){
-                            if(response.data.data.answer){
+                            if(response.data.data.student_answer){
                                 this.isEssayAnswersAvailable = true;
 
-                                let answers = response.data.data.answer;
-                                answers.forEach((element, index, array) => {
-                                    this.dataInput.answers[index].answers = element.answers;
-                                    this.dataInput.answers[index].id = element.id;
+                                let answers = response.data.data.student_answer;
+                                this.dataInput.answers.forEach((element, index, array) => {
+                                    answers.forEach((element_answer, index_answer, array_answer) => {
+                                        if(element_answer.question.id == element.question_id){
+                                            element.answers = element_answer.answer;
+                                        }
+                                    });
                                 });
                             }
                         }
@@ -529,7 +536,7 @@ export default {
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <label>Download File Journal</label>
+                        <label>File Journal</label>
                     </div>
                     <div class="text-center">
                         <b-button variant="primary" @click="onClickDownload" style="min-width: 350px;">Download</b-button>

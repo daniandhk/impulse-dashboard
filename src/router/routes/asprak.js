@@ -128,6 +128,60 @@ export default [
         component: () => import('../../views/pages/asprak/bap/detail-bap')
     },
 
+    {
+        path: '/asprak/grading',
+        name: 'asprak-grading',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/grading/find-schedule')
+    },
+
+    {
+        path: '/asprak/grading/:id',
+        name: 'asprak-grading-list',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/grading/list-test')
+    },
+
+    {
+        path: '/asprak/grading/:id/:student_id/:type/:test_id',
+        name: 'asprak-grading-detail',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'asprak'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/asprak/grading/detail-test')
+    },
+
     //
     {
         path: '/asprak/input-soal',

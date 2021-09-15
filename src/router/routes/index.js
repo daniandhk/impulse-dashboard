@@ -73,6 +73,14 @@ const baseRoutes = [
         },
         component: () => import('../../views/pages/dashboard/index')
     },
+    {
+        path: '/settings/change-password',      
+        name: 'settings',
+        meta: {
+            authRequired: true,
+        },
+        component: () => import('../../views/pages/pengaturan/change-password')
+    },
 ]
 
 const routes = baseRoutes.concat(laboranRoutes, studentRoutes, aslabRoutes, asprakRoutes, etcRoutes);

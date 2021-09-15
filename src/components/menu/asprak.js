@@ -35,9 +35,9 @@ export const asprakItems = [
     },
     {
         id: 7,
-        label: 'menuitems.asprak.list.lihat-feedback',
+        label: 'menuitems.asprak.list.grading',
         icon: 'ri-chat-1-line',
-        link: 'asprak-lihat-feedback'
+        link: 'asprak-grading'
     },
     
 ]
