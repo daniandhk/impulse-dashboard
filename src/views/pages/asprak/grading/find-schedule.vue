@@ -51,7 +51,7 @@ export default {
   },
   data() {
     return {
-      title: "Find Schedule",
+      title: "Find List Test",
       items: [
         {
           text: "Asisten Praktikum",
