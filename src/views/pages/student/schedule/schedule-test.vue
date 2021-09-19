@@ -518,7 +518,7 @@ export default {
                     <div class="text-center col-sm-1">
                         <b-button 
                         class="m-1"
-                        style="width: 75%; text-align: center; vertical-align: middle;" 
+                        style="width: 85%; text-align: center; vertical-align: middle;" 
                         variant="outline-secondary"
                         >{{index+1}}
                         </b-button>

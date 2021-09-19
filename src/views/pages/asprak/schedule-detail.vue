@@ -1170,14 +1170,14 @@ export default {
                                     <div class="text-center col-sm-1">
                                         <b-button 
                                         class="m-1"
-                                        style="min-width: 75px;" 
+                                        style="width: 85%; text-align: center; vertical-align: middle;" 
                                         variant="outline-secondary"
                                         >{{index+1}}
                                         </b-button>
                                         <b-button 
                                         class="m-1" 
                                         size="sm" 
-                                        style="min-width: 75px;" 
+                                        style="width: 85%; text-align: center; vertical-align: middle;" 
                                         variant="danger"
                                         v-on:click="removeQuestion(dataTest.questions, index)"
                                         >remove
@@ -1234,7 +1234,7 @@ export default {
                                                                 <b-button 
                                                                 size="sm" 
                                                                 class="mt-1 mr-1" 
-                                                                style="min-width: 75px;" 
+                                                                style="width: 85%; text-align: center; vertical-align: middle;"
                                                                 variant="light"
                                                                 >{{String.fromCharCode(idx+1 + 64)}}
                                                                 </b-button>
@@ -1242,7 +1242,7 @@ export default {
                                                                 v-if="idx != 0 && idx != 1"
                                                                 size="sm" 
                                                                 class="mt-1 mr-1" 
-                                                                style="min-width: 75px;" 
+                                                                style="width: 85%; text-align: center; vertical-align: middle;" 
                                                                 variant="danger"
                                                                 v-on:click="removeAnswer(question, idx)"
                                                                 >remove
@@ -1291,14 +1291,14 @@ export default {
                                     <div class="text-center col-sm-1">
                                         <b-button 
                                         class="m-1"
-                                        style="min-width: 75px;" 
+                                        style="width: 85%; text-align: center; vertical-align: middle;" 
                                         variant="outline-secondary"
                                         >{{index+1}}
                                         </b-button>
                                         <b-button 
                                         class="m-1" 
                                         size="sm" 
-                                        style="min-width: 75px;" 
+                                        style="width: 85%; text-align: center; vertical-align: middle;" 
                                         variant="danger"
                                         v-on:click="removeQuestion(dataTest.questions, index)"
                                         >remove
@@ -1379,8 +1379,10 @@ export default {
                                           <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                                               - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
                                               - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
-                                              - File Soal yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
-                                              - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error.
+                                              - <b>File Soal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
+                                              - Batas ukuran <b>File Soal</b> adalah <b>5 MB</b>,<br>
+                                              - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>
+                                              - Unggah file kembali untuk memperbarui <b>File Soal</b>, <b>Bobot Nilai</b>, dan <b>URL Upload Jawaban</b>.
                                               <!-- - Pastikan hanya ada <b>satu sheet</b>,<br>
                                               - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br> -->
                                           </p>
@@ -1405,6 +1407,7 @@ export default {
                                                       <input 
                                                         v-model="dataTest.questions[0].weight"
                                                         type="number" 
+                                                        :min='0'
                                                         class="form-control"
                                                         @input="inputedData"/>
                                                     </div>
