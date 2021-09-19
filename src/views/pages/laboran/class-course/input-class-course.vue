@@ -248,6 +248,7 @@ export default {
                                 track-by="name"
                                 @select="selectKelas"
                                 @remove="removeKelas"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.class_id.$error }" 
                             ></multiselect>
                                 <div
@@ -267,6 +268,7 @@ export default {
                                 track-by="year"
                                 @select="selectYear"
                                 @remove="removeYear"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.academic_year_id.$error }" 
                             ></multiselect>
                                 <div
@@ -288,6 +290,7 @@ export default {
                                 track-by="name"
                                 @select="selectCourse"
                                 @remove="removeCourse"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }" 
                             ></multiselect>
                                 <div
@@ -307,6 +310,7 @@ export default {
                                 track-by="code"
                                 @select="selectCourse"
                                 @remove="removeCourse"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }" 
                             ></multiselect>
                                 <div
@@ -328,6 +332,7 @@ export default {
                                 track-by="name"
                                 @select="selectStaff"
                                 @remove="removeStaff"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }" 
                             ></multiselect>
                                 <div
@@ -347,6 +352,7 @@ export default {
                                 track-by="code"
                                 @select="selectStaff"
                                 @remove="removeStaff"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }" 
                             ></multiselect>
                                 <div

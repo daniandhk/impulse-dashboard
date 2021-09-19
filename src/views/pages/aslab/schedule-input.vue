@@ -475,6 +475,7 @@ export default {
                 @select="selectModule"
                 :allow-empty="false"
                 :disabled="isLoading"
+                :show-labels="false"
               ></multiselect>
           </div>
         </div>
@@ -538,6 +539,7 @@ export default {
                   track-by="name"
                   :allow-empty="false"
                   :disabled="isLoading"
+                  :show-labels="false"
                   :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
                 ></multiselect>
                 <div

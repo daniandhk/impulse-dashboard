@@ -483,6 +483,7 @@ export default {
                         <multiselect
                             v-model="dataInput.jenis"
                             :options="dataJenis"
+                            :show-labels="false"
                             :class="{ 'is-invalid': submitted && $v.dataInput.jenis.$error }" 
                         ></multiselect>
                         <div

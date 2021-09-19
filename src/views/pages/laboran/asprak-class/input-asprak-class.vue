@@ -575,6 +575,7 @@ export default {
                                 track-by="name"
                                 @select="setKelas"
                                 @remove="removeKelas"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.class_name.$error }" 
                             ></multiselect>
                                 <div
@@ -595,6 +596,7 @@ export default {
                                 track-by="name"
                                 @select="setCourse"
                                 @remove="removeCourse"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.course_name.$error }" 
                             ></multiselect>
                                 <div
@@ -615,6 +617,7 @@ export default {
                                 track-by="code"
                                 @select="setCourse"
                                 @remove="removeCourse"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.course_code.$error }" 
                             ></multiselect>
                                 <div
@@ -637,6 +640,7 @@ export default {
                                 track-by="name"
                                 @select="setAcademicYear"
                                 @remove="removeAcademicYear"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.academic_year.$error }" 
                             ></multiselect>
                                 <div

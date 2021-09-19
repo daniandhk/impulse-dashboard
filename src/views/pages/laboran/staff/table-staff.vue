@@ -579,6 +579,7 @@ export default {
                                         :options="roleData"
                                         :multiple="true"
                                         @remove="removeRole"
+                                        :show-labels="false"
                                     ></multiselect>
                                 </div>
                             </div>

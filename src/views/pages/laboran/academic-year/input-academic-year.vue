@@ -175,6 +175,7 @@ export default {
                                 <multiselect
                                     v-model="dataAcademicYear.semester"
                                     :options="dataSemester"
+                                    :show-labels="false"
                                     :class="{ 'is-invalid': submitted && $v.dataAcademicYear.semester.$error }" 
                                 ></multiselect>
                                 <div

@@ -294,6 +294,7 @@ export default {
                         track-by="name"
                         @select="selectKelas"
                         @remove="removeKelas"
+                        :show-labels="false"
                     ></multiselect>
                 </div>
                 </div>
@@ -307,6 +308,7 @@ export default {
                         track-by="name"
                         @select="selectCourse"
                         @remove="removeCourse"
+                        :show-labels="false"
                     ></multiselect>
                 </div>
                 </div>

@@ -134,6 +134,7 @@ export default {
                                     :options="test_types"
                                     @select="selectType"
                                     @remove="removeType"
+                                    :show-labels="false"
                                 ></multiselect>
                             </div>
                         </div>
