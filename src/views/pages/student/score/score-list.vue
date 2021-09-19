@@ -11,7 +11,7 @@ import store from '@/store';
  */
 export default {
   page: {
-    title: "Score",
+    title: "Nilai",
     meta: [{ name: "description" }],
   },
   components: {
@@ -23,14 +23,14 @@ export default {
   },
   data() {
     return {
-      title: "Score",
+      title: "Nilai",
       items: [
         {
-          text: "Student",
+          text: "Praktikan",
           href: "/"
         },
         {
-          text: "Score",
+          text: "Nilai",
           active: true,
         },
       ],
@@ -80,6 +80,7 @@ export default {
   mounted: async function() {
     // Set the initial number of items
     this.totalRows = this.dataModules.length;
+    this.perPage = this.dataModules.length;
     // Set the initial number of items
     await this.getStudentCourses();
     await this.refreshData(0);
@@ -219,14 +220,7 @@ export default {
                         </div>
                     </div>
                 </div>
-                <hr style="margin-right: -20px!important; 
-                            margin-left: -20px!important; 
-                            height: 2px; 
-                            background-color: #eee; 
-                            border: 0 none; 
-                            color: #eee;"
-                >
-                <div class="row mt-4">
+                <!-- <div class="row mt-4">
                   <div class="col-sm-12 col-md-6">
                     <div id="tickets-table_length" class="dataTables_length">
                       <label class="d-inline-flex align-items-center">
@@ -235,7 +229,7 @@ export default {
                       </label>
                     </div>
                   </div>
-                  <!-- Search  -->
+                  Search 
                   <div class="col-sm-12 col-md-6">
                     <div id="tickets-table_filter" class="dataTables_filter text-md-right">
                       <label class="d-inline-flex align-items-center">
@@ -248,8 +242,8 @@ export default {
                       </label>
                     </div>
                   </div>
-                  <!-- End search -->
-                </div>
+                  End search
+                </div> -->
                 <div class="table-responsive mt-2">
                   <b-table
                     class="table-centered"
@@ -267,16 +261,16 @@ export default {
                   >
                   </b-table>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col">
                     <div class="dataTables_paginate paging_simple_numbers float-right">
                       <ul class="pagination pagination-rounded mb-0">
-                        <!-- pagination -->
+                        pagination
                         <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
                       </ul>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </b-tab>
             </b-tabs>
           </div>
@@ -284,15 +278,6 @@ export default {
       </div>
     </div>
     <div class="row" v-if="!dataClassCourses.length">
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="card-body mt-2 mb-2">
-              <div class="text-center">
-                  <label>Data is empty!</label>
-              </div>
-          </div>
-        </div>
-      </div>
     </div>
   </Layout>
 </template>
