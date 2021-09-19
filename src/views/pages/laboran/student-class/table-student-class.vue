@@ -611,7 +611,7 @@ export default {
         :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
-          <a
+          <!-- <a
             href="javascript:void(0);"
             @click=onClickEdit(data)
             class="mr-3 text-primary"
@@ -619,7 +619,7 @@ export default {
             title="Edit"
           >
             <i class="mdi mdi-pencil font-size-18"></i>
-          </a>
+          </a> -->
           <a
             href="javascript:void(0);"
             @click=onClickDelete(data)
