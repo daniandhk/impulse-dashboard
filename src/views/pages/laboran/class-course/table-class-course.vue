@@ -49,6 +49,8 @@ export default {
           staffs: [],
           academic_year: [],
       },
+
+      isCourseSelected: false,
     };
   },
   computed: {

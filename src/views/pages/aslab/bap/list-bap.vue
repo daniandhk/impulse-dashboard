@@ -75,6 +75,8 @@ export default {
         { key: "action", sortable: false }
       ],
 
+      isCourseSelected: false,
+
       class_name: "",
       course_name: "",
       academic_year_id: "",
@@ -378,6 +380,13 @@ export default {
                         @click=onClickEdit(data)
                         style="min-width: 75px;" 
                         >Show
+                    </b-button>
+                    <b-button
+                        v-if="!data.item.is_present"
+                        type="submit" 
+                        variant="danger"
+                        style="min-width: 75px;"
+                        >-
                     </b-button>
                 </template>
             </b-table>

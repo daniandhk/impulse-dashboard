@@ -8,15 +8,32 @@ import VueMask from 'v-mask'
 import * as VueGoogleMaps from 'vue2-google-maps'
 import VueYoutube from 'vue-youtube'
 import vco from "v-click-outside"
-import Notification from 'vue-notification';
+import Notification from 'vue-notification'
 import router from './router'
 import i18n from './i18n'
 import store from './store'
+import VueHtmlToPaper from 'vue-html-to-paper'
 
 import "@/assets/scss/app.scss"
 
+const options = {
+  name: '_blank',
+  specs: [
+    'fullscreen=yes',
+    'titlebar=yes',
+    'scrollbars=yes'
+  ],
+  styles: [
+    'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css',
+    'https://unpkg.com/kidlat-css/css/kidlat.css'
+  ],
+  timeout: 1000,
+  autoClose: true,
+}
+
 Vue.config.productionTip = false
 Vue.prototype.$backendUrl = process.env.VUE_APP_BACKEND_URL
+Vue.use(VueHtmlToPaper, options)
 Vue.use(VueYoutube)
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)

@@ -147,6 +147,8 @@ export default {
         { key: "action", sortable: false, label: "Hadir", thClass: 'text-center', tdClass: 'text-center', }
       ],
 
+      max: 255,
+
     };
   },
   methods: {
@@ -260,8 +262,6 @@ export default {
       } else {
         this.tryingToInput = true;
 
-        console.log(this.dataInput)
-
         Swal.fire({
             title: "Yakin BAP akan di submit?",
             text: "BAP yang ter-submit tidak dapat diubah!",
@@ -287,7 +287,10 @@ export default {
             this.inputSuccess = true;
             this.submitted = false;
             Swal.fire("Submitted!", "BAP has been submitted.", "success");
-            //go to detail
+            this.$router.replace({
+                name: 'asprak-bap-detail', 
+                params: { id: this.schedule_id }
+            });
           })
           .catch(error => {
             console.log(error)
@@ -497,12 +500,18 @@ export default {
                         label-cols-lg="2"
                         label="Materi Praktikum"
                     >
-                        <input
-                            v-model="dataInput.materi"
-                            type="text"
-                            class="form-control"
-                            :class="{ 'is-invalid': submitted && $v.dataInput.materi.$error }"
-                        />
+                        <div class="input-group">
+                          <input
+                              v-model="dataInput.materi"
+                              type="text"
+                              class="form-control"
+                              :maxlength="max"
+                              :class="{ 'is-invalid': submitted && $v.dataInput.materi.$error }"
+                          />
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">{{max - dataInput.materi.length}}</span>
+                          </div>
+                        </div>
                         <div
                         v-if="submitted && !$v.dataInput.materi.required"
                         class="invalid-feedback"
@@ -514,12 +523,18 @@ export default {
                         label-cols-lg="2"
                         label="Evaluasi Praktikum"
                     >
-                        <input
-                            v-model="dataInput.evaluasi"
-                            type="text"
-                            class="form-control"
-                            :class="{ 'is-invalid': submitted && $v.dataInput.evaluasi.$error }"
-                        />
+                        <div class="input-group">
+                          <input
+                              v-model="dataInput.evaluasi"
+                              type="text"
+                              class="form-control"
+                              :maxlength="max"
+                              :class="{ 'is-invalid': submitted && $v.dataInput.evaluasi.$error }"
+                          />
+                          <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">{{max - dataInput.evaluasi.length}}</span>
+                          </div>
+                        </div>
                         <div
                         v-if="submitted && !$v.dataInput.evaluasi.required"
                         class="invalid-feedback"

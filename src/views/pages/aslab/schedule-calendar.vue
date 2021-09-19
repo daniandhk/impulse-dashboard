@@ -83,6 +83,8 @@ export default {
           academic_year: [],
       },
 
+      isCourseSelected: false,
+
       calendarOptions: {
         headerToolbar: {
           left: "prev,next today",

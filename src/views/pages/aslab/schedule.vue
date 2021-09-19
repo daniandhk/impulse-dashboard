@@ -126,6 +126,8 @@ export default {
         }
       },
       eventModal: false,
+
+      isCourseSelected: false,
     };
   },
   methods: {

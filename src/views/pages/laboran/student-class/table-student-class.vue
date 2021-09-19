@@ -92,6 +92,8 @@ export default {
           dosen: 0,
       },
       main_role: "student",
+
+      isCourseSelected: false,
     };
   },
   computed: {
