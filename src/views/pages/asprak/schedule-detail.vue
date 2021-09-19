@@ -27,14 +27,15 @@ export default {
   },
   validations: {
     schedule_data:{
-      date: { required },
       title: { required },
       room: {
         id: { required },
       },
-      time_start: { required },
-      time_end: { required },
     },
+
+    time_start: { required },
+    time_end: { required },
+    time_date: { required },
 
     dataTest: {
         type: { required },
@@ -120,6 +121,8 @@ export default {
 
       dataRooms: [],
       time_date: "",
+      time_start: "",
+      time_end: "",
       dataModules: [],
 
       isLoading: false,
@@ -308,8 +311,8 @@ export default {
       );
       const class_course_id = this.class_course_data.id;
       this.schedule_data.title = "";
-      this.schedule_data.time_start = null;
-      this.schedule_data.time_end = null;
+      this.time_start = null;
+      this.time_end = null;
       this.time_date = null;
 
       //emptying input test
@@ -349,28 +352,28 @@ export default {
     async setDate(){
       this.time_date = this.schedule_data.date;
       if(this.schedule_data.start){
-        this.schedule_data.time_start = moment(String(this.schedule_data.start)).format('HH:mm:ss');
+        this.time_start = moment(String(this.schedule_data.start)).format('HH:mm:ss');
       }
       if(this.schedule_data.end){
-        this.schedule_data.time_end = moment(String(this.schedule_data.end)).format('HH:mm:ss');
+        this.time_end = moment(String(this.schedule_data.end)).format('HH:mm:ss');
       }
     },
 
     notAfterTimeEnd(date) {
-      if(this.schedule_data.time_end){
-        let hours = this.schedule_data.time_end.split(':')[0];
-        let minutes = this.schedule_data.time_end.split(':')[1];
-        let seconds = this.schedule_data.time_end.split(':')[2];
+      if(this.time_end){
+        let hours = this.time_end.split(':')[0];
+        let minutes = this.time_end.split(':')[1];
+        let seconds = this.time_end.split(':')[2];
         
         return date > new Date(new Date().setHours(hours, minutes, seconds, 0));
       }
     },
 
     notBeforeTimeStart(date) {
-      if(this.schedule_data.time_start){
-        let hours = this.schedule_data.time_start.split(':')[0];
-        let minutes = this.schedule_data.time_start.split(':')[1];
-        let seconds = this.schedule_data.time_start.split(':')[2];
+      if(this.time_start){
+        let hours = this.time_start.split(':')[0];
+        let minutes = this.time_start.split(':')[1];
+        let seconds = this.time_start.split(':')[2];
         
         return date < new Date(new Date().setHours(hours, minutes, seconds, 0));
       }
@@ -423,30 +426,40 @@ export default {
 
     updateSchedule(){
       this.submitted = true;
-      this.$v.schedule_data.$touch();
-      if (this.$v.schedule_data.$invalid) {
+
+      this.$v.time_date.$touch();
+      if (this.$v.time_date.$invalid) {
         return;
-      } else {
-        this.tryingToInput = true;
-
-        let combined_start = this.time_date + " " + this.schedule_data.time_start;
-        let time_start = moment(String(combined_start)).format('YYYY-MM-DD HH:mm:ss');
-        this.dataEdit.time_start = time_start;
-
-        let combined_end = this.time_date + " " + this.schedule_data.time_end;
-        let time_end = moment(String(combined_end)).format('YYYY-MM-DD HH:mm:ss')
-        this.dataEdit.time_end = time_end;
-
-        let schedule_id = this.schedule_data.id;
-        this.dataEdit.date = moment(String(this.time_date)).format('YYYY-MM-DD');
-        this.dataEdit.name = this.schedule_data.title;
-        this.dataEdit.room_id = this.schedule_data.room.id;
-        this.dataEdit.class_course_id = this.schedule_data.class_course.id;
-        this.dataEdit.academic_year_id = this.schedule_data.academic_year.id;
-        this.dataEdit.module_id = this.schedule_data.module.id;
-
-        this.editSchedule(schedule_id, this.dataEdit);
       }
+
+      this.$v.time_start.$touch();
+      if (this.$v.time_start.$invalid) {
+        return;
+      }
+
+      this.$v.time_end.$touch();
+      if (this.$v.time_end.$invalid) {
+        return;
+      }
+      this.tryingToInput = true;
+
+      let combined_start = this.time_date + " " + this.time_start;
+      let time_start = moment(String(combined_start)).format('YYYY-MM-DD HH:mm:ss');
+      this.dataEdit.time_start = time_start;
+
+      let combined_end = this.time_date + " " + this.time_end;
+      let time_end = moment(String(combined_end)).format('YYYY-MM-DD HH:mm:ss')
+      this.dataEdit.time_end = time_end;
+
+      let schedule_id = this.schedule_data.id;
+      this.dataEdit.date = moment(String(this.time_date)).format('YYYY-MM-DD');
+      this.dataEdit.name = this.schedule_data.title;
+      this.dataEdit.room_id = this.schedule_data.room.id;
+      this.dataEdit.class_course_id = this.schedule_data.class_course.id;
+      this.dataEdit.academic_year_id = this.schedule_data.academic_year.id;
+      this.dataEdit.module_id = this.schedule_data.module.id;
+
+      this.editSchedule(schedule_id, this.dataEdit);
     },
 
     editSchedule(id, data){
@@ -910,6 +923,7 @@ export default {
                 @select="selectModule"
                 :allow-empty="false"
                 :disabled="isLoading"
+                :show-labels="false"
               ></multiselect>
           </div>
         </div>
@@ -979,6 +993,7 @@ export default {
                           track-by="name"
                           :allow-empty="false"
                           :disabled="isLoading"
+                          :show-labels="false"
                           :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
                         ></multiselect>
                         <div
@@ -999,10 +1014,10 @@ export default {
                           :clearable=false
                           value-type="format"
                           :disabled="isLoading"
-                          :class="{ 'is-invalid': submitted && $v.schedule_data.date.$error }"
+                          :class="{ 'is-invalid': submitted && $v.time_date.$error }"
                         ></date-picker>
                         <div
-                        v-if="submitted && !$v.schedule_data.date.required"
+                        v-if="submitted && !$v.time_date.required"
                         class="invalid-feedback"
                         >Tanggal is required.</div>
                     </div>
@@ -1011,16 +1026,16 @@ export default {
                         <label>Jam Mulai</label>
                         <br />
                         <date-picker
-                          v-model="schedule_data.time_start"
+                          v-model="time_start"
                           value-type="format"
                           type="time"
                           placeholder="HH:mm:ss"
                           :disabled="isLoading"
                           :disabled-time="notAfterTimeEnd"
-                          :class="{ 'is-invalid': submitted && $v.schedule_data.time_start.$error }"
+                          :class="{ 'is-invalid': submitted && $v.time_start.$error }"
                         ></date-picker>
                         <div
-                        v-if="submitted && !$v.schedule_data.time_start.required"
+                        v-if="submitted && !$v.time_start.required"
                         class="invalid-feedback"
                         >Jam Mulai is required.</div>
                     </div>
@@ -1029,16 +1044,16 @@ export default {
                         <label>Jam Terakhir</label>
                         <br />
                         <date-picker
-                          v-model="schedule_data.time_end"
+                          v-model="time_end"
                           value-type="format"
                           type="time"
                           placeholder="HH:mm:ss"
                           :disabled="isLoading"
                           :disabled-time="notBeforeTimeStart"
-                          :class="{ 'is-invalid': submitted && $v.schedule_data.time_end.$error }"
+                          :class="{ 'is-invalid': submitted && $v.time_end.$error }"
                         ></date-picker>
                         <div
-                        v-if="submitted && !$v.schedule_data.time_end.required"
+                        v-if="submitted && !$v.time_end.required"
                         class="invalid-feedback"
                         >Jam Terakhir is required.</div>
                     </div>
@@ -1071,6 +1086,7 @@ export default {
                                 @select="selectTest"
                                 @remove="removeTest"
                                 :disabled="isLoading"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted_test && $v.dataTest.test_type.$error,}"
                               ></multiselect>
                               <div
@@ -1087,6 +1103,7 @@ export default {
                                 @select="selectType"
                                 @remove="removeType"
                                 :disabled="isLoading"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted_test && $v.dataTest.type.$error,}"
                               ></multiselect>
                               <div
