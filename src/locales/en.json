@@ -37,8 +37,9 @@
     "aslab": {
       "text": "Asisten Lab",
       "list":{
-        "jadwal": "Schedule",
-        "kalender": "Calendar",
+        "jadwal": "Jadwal",
+        "kalender": "Kalender",
+        "list": "List Jadwal",
         "bap": "Berita Acara Praktikum"
       }
     },

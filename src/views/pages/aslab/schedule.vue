@@ -13,6 +13,10 @@ import moment from 'moment';
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Jadwal",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     PageHeader,
@@ -40,14 +44,14 @@ export default {
   },
   data() {
     return {
-      title: "Schedule",
+      title: "Jadwal",
       items: [
         {
           text: "Asisten Lab",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           active: true,
         },
       ],
@@ -64,7 +68,7 @@ export default {
       sortBy: "title",
       sortDesc: false,
       fields: [
-        { key: "title", sortable: true, label: "Name" },
+        { key: "title", sortable: true, label: "Nama Kalender" },
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },

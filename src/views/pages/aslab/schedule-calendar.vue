@@ -19,21 +19,25 @@ import Multiselect from "vue-multiselect";
  * Calendar component
  */
 export default {
+  page: {
+    title: "Kalender",
+    meta: [{ name: "description" }],
+  },
   components: { FullCalendar, Layout, PageHeader, Multiselect, },
   data() {
     return {
-      title: "Calendar",
+      title: "Kalender",
       items: [
         {
           text: "Asisten Lab",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           href: "/aslab/schedule"
         },
         {
-          text: "Calendar",
+          text: "Kalender",
           active: true,
         }
       ],
@@ -431,7 +435,7 @@ function sleep(ms) {
     <b-modal
       size="lg"
       v-model="eventModal"
-      title="Detail Schedule"
+      title="Detail Jadwal"
       hide-footer 
       title-class="font-18"
     >
