@@ -10,6 +10,10 @@ import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
 
 export default {
+    page: {
+        title: "Penilain",
+        meta: [{ name: "description" }],
+    },
     components: {
         Layout,
         PageHeader
@@ -50,11 +54,11 @@ export default {
                     href: "/"
                 },
                 {
-                    text: "Grading",
+                    text: "Penilaian",
                     href: "/asprak/grading/"
                 },
                 {
-                    text: "List",
+                    text: "List Test",
                     href: "/asprak/grading/"
                 },
                 {

@@ -64,10 +64,10 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter_search: "",
       filterOn: [],
-      sortBy: "class_course.class.name",
+      sortBy: "title",
       sortDesc: false,
       fields: [
-        { key: "title", sortable: true, label: "Name" },
+        { key: "title", sortable: true, label: "Nama Kalender" },
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
@@ -374,7 +374,7 @@ export default {
                         variant="success"
                         @click=onClickEdit(data)
                         style="min-width: 75px;" 
-                        >Absen
+                        >Input
                     </b-button>
                     <b-button
                         v-if="data.item.is_present" 

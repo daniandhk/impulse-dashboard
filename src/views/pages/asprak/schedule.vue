@@ -14,6 +14,10 @@ import moment from 'moment';
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Jadwal",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     PageHeader,
@@ -41,14 +45,14 @@ export default {
   },
   data() {
     return {
-      title: "Schedule",
+      title: "Jadwal",
       items: [
         {
           text: "Asisten Praktikum",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           active: true,
         },
       ],
@@ -64,10 +68,10 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter_search: "",
       filterOn: [],
-      sortBy: "class_course.class.name",
+      sortBy: "title",
       sortDesc: false,
       fields: [
-        { key: "title", sortable: true, label: "Name" },
+        { key: "title", sortable: true, label: "Nama Kalender" },
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
@@ -473,7 +477,7 @@ export default {
                       @click=onClickEdit(data)
                       class="mr-3 text-primary"
                       v-b-tooltip.hover
-                      title="Info"
+                      title="Detail"
                   >
                       <i class="mdi mdi-eye-outline font-size-18"></i>
                   </a>
@@ -482,7 +486,7 @@ export default {
                       @click=editModal(data)
                       class="mr-3 text-primary"
                       v-b-tooltip.hover
-                      title="Detail"
+                      title="Edit"
                   >
                       <i class="mdi mdi-pencil font-size-18"></i>
                   </a>
@@ -510,7 +514,7 @@ export default {
     <b-modal
       size="lg"
       v-model="eventModal"
-      title="Info Schedule"
+      title="Detail Schedule"
       hide-footer 
       title-class="font-18"
     >

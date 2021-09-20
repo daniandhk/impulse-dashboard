@@ -14,6 +14,10 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Penilaian",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     Multiselect,
@@ -51,14 +55,14 @@ export default {
   },
   data() {
     return {
-      title: "Find List Test",
+      title: "Cari Modul",
       items: [
         {
           text: "Asisten Praktikum",
           href: "/"
         },
         {
-          text: "Grading",
+          text: "Penilaian",
           active: true,
         }
       ],

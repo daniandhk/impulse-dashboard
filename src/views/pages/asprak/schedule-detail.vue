@@ -18,6 +18,10 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Edit Jadwal",
+    meta: [{ name: "description" }],
+  },
   components: {
     DatePicker,
     Layout,
@@ -69,18 +73,18 @@ export default {
   },
   data() {
     return {
-      title: "Detail Schedule",
+      title: "Edit Jadwal",
       items: [
         {
           text: "Asisten Praktikum",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           href: "/asprak/schedule"
         },
         {
-          text: "Detail",
+          text: "Edit",
           active: true,
         }
       ],
@@ -970,7 +974,7 @@ export default {
 
                   <div class="row mb-2 mt-2">
                     <div class="form-group col-sm-6">
-                        <label>Name for Calendar</label>
+                        <label>Nama untuk Kalender</label>
                         <input 
                           v-model="schedule_data.title"
                           type="text"
