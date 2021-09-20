@@ -6,6 +6,9 @@ import TableAsprak from "./table-asprak-class";
 import InputAsprak from "./input-asprak-class";
 
 export default {
+  page: {
+    title: "Kelas Asisten Praktikum",
+  },
   components: {
     Layout,
     PageHeader,
@@ -17,13 +20,13 @@ export default {
   },
   data() {
     return {
-      title: "Asprak Class Data",
+      title: "Kelas Asisten Praktikum",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Asprak Class Data",
+          text: "Kelas Asisten Praktikum",
           active: true
         }
       ],
@@ -55,13 +58,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Classes</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableAsprak ref='TableAsprak'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Class</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputAsprak/>
               </b-tab>

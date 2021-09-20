@@ -12,6 +12,9 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Detail BAP",
+  },
   components: {
     Layout,
     PageHeader,

@@ -6,6 +6,9 @@ import TableRoom from "./table-room";
 import InputRoom from "./input-room";
 
 export default {
+  page: {
+    title: "Data Ruangan",
+  },
   components: {
     Layout,
     PageHeader,
@@ -17,13 +20,13 @@ export default {
   },
   data() {
     return {
-      title: "Room Data",
+      title: "Data Ruangan",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Room Data",
+          text: "Data Ruangan",
           active: true
         }
       ],
@@ -55,13 +58,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Rooms</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableRoom ref='TableRoom'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Room</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputRoom/>
               </b-tab>

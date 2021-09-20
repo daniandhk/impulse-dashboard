@@ -6,6 +6,9 @@ import TableClassCourse from "./table-class-course";
 import InputClassCourse from "./input-class-course";
 
 export default {
+  page: {
+    title: "Kelas Mata Kuliah",
+  },
   components: {
     Layout,
     PageHeader,
@@ -17,13 +20,13 @@ export default {
   },
   data() {
     return {
-      title: "Course Class Data",
+      title: "Kelas Mata Kuliah",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Course Class Data",
+          text: "Kelas Mata Kuliah",
           active: true
         }
       ],
@@ -55,13 +58,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Course Classes</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableClassCourse ref='TableClassCourse'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Course Class</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputClassCourse/>
               </b-tab>

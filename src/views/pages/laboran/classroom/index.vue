@@ -6,6 +6,9 @@ import TableClassroom from "./table-classroom";
 import InputClassroom from "./input-classroom";
 
 export default {
+  page: {
+    title: "Data Kelas",
+  },
   components: {
     Layout,
     PageHeader,
@@ -17,13 +20,13 @@ export default {
   },
   data() {
     return {
-      title: "Classroom Data",
+      title: "Data Kelas",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Classroom Data",
+          text: "Data Kelas",
           active: true
         }
       ],
@@ -55,13 +58,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Classrooms</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableClassroom ref='TableClassroom'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Classroom</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputClassroom/>
               </b-tab>

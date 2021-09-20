@@ -6,6 +6,9 @@ import TableStudent from "./table-student";
 import InputStudent from "./input-student";
 
 export default {
+  page: {
+    title: "Data Praktikan",
+  },
   components: {
     Layout,
     PageHeader,
@@ -17,13 +20,13 @@ export default {
   },
   data() {
     return {
-      title: "Student Data",
+      title: "Data Praktikan",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Student Data",
+          text: "Data Praktikan",
           active: true
         }
       ],
@@ -55,13 +58,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Students</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableStudent ref='TableStudent'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Student</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputStudent/>
               </b-tab>

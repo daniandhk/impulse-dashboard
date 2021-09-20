@@ -7,6 +7,9 @@ import InputStaff from "./input-staff";
 import ImportStaff from "./import-staff";
 
 export default {
+  page: {
+    title: "Data Staff",
+  },
   components: {
     Layout,
     PageHeader,
@@ -19,13 +22,13 @@ export default {
   },
   data() {
     return {
-      title: "Staff Data",
+      title: "Data Staff",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Staff Data",
+          text: "Data Staff",
           active: true
         }
       ],
@@ -57,13 +60,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Staffs</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableStaff ref='TableStaff'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Staff</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputStaff/>
               </b-tab>

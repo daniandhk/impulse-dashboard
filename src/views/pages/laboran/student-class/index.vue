@@ -7,6 +7,9 @@ import InputStudent from "./input-student-class";
 import ImportStudent from "./import-student-class";
 
 export default {
+  page: {
+    title: "Kelas Praktikan",
+  },
   components: {
     Layout,
     PageHeader,
@@ -57,13 +60,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Classes</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableStudent ref='TableStudent'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Class</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputStudent/>
               </b-tab>

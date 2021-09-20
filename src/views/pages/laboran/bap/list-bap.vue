@@ -14,6 +14,9 @@ import moment from 'moment';
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "List BAP",
+  },
   components: {
     Layout,
     PageHeader,
