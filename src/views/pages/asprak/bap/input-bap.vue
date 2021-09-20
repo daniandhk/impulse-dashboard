@@ -14,6 +14,10 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+      title: "Input BAP",
+      meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     PageHeader,
