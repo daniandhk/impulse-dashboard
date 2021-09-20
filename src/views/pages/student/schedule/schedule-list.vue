@@ -50,7 +50,7 @@ export default {
       fields: [
         { key: "module.index", sortable: true, label: "Modul" },
         { key: "class_course.course.code", label: "Kode Mata Kuliah" },
-        { key: "title", label: "Name" },
+        { key: "title", label: "Nama Kalender" },
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Mulai" },
         { key: "end", sortable: true, label: "Terakhir" },

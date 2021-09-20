@@ -61,10 +61,10 @@
     "praktikan": {
       "text": "Praktikan",
       "list": {
-        "jadwal": "Schedule",
-        "nilai": "Score",
-        "kalender": "Calendar",
-        "matakuliah":"List Course",
+        "jadwal": "Jadwal",
+        "nilai": "Nilai",
+        "kalender": "Kalender",
+        "matakuliah":"List Mata Kuliah",
         "praktikum":"Praktikum",
         "pengaturan":"Pengaturan",
         "jurnal":"1. Jurnal",
