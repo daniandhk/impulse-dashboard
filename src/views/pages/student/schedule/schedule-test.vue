@@ -10,6 +10,10 @@ import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
 
 export default {
+    page: {
+        title: "Test",
+        meta: [{ name: "description" }],
+    },
     components: {
         Layout,
         PageHeader
@@ -37,15 +41,15 @@ export default {
             title: "Test",
             items: [
                 {
-                    text: "Dashboard",
+                    text: "Praktikan",
                     href: "/"
                 },
                 {
-                    text: "Schedule",
+                    text: "Jadwal",
                     href: "/praktikan/schedule/calendar"
                 },
                 {
-                    text: "Detail",
+                    text: "Praktikum",
                     href: "/praktikan/schedule/calendar"
                 },
                 {
@@ -514,7 +518,7 @@ export default {
                     <div class="text-center col-sm-1">
                         <b-button 
                         class="m-1"
-                        style="min-width: 75px;" 
+                        style="width: 85%; text-align: center; vertical-align: middle;" 
                         variant="outline-secondary"
                         >{{index+1}}
                         </b-button>

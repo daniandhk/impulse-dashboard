@@ -10,6 +10,10 @@ import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
 
 export default {
+    page: {
+        title: "Penilain",
+        meta: [{ name: "description" }],
+    },
     components: {
         Layout,
         PageHeader
@@ -50,11 +54,11 @@ export default {
                     href: "/"
                 },
                 {
-                    text: "Grading",
+                    text: "Penilaian",
                     href: "/asprak/grading/"
                 },
                 {
-                    text: "List",
+                    text: "List Test",
                     href: "/asprak/grading/"
                 },
                 {
@@ -116,6 +120,8 @@ export default {
             isInputTestError: false,
             inputTestSuccess: false,
             isInputTestCanceled: false,
+
+            isGradeInvalid: false,
         }
     },
     methods: {
@@ -287,25 +293,27 @@ export default {
             if (this.$v.test_data.$invalid) {
                 return;
             } 
-            else {
-                this.tryingToInputTest = true;
-                Swal.fire({
-                    title: "Yakin akan menyelesaikan test?",
-                    text: "Jawaban yang kosong akan tetap ter-submit!",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonColor: "#34c38f",
-                    cancelButtonColor: "#f46a6a",
-                    confirmButtonText: "Yes, submit it!"
-                }).then(result => {
-                    if (result.value) {
-                        this.loading();
-                        this.submitAnswers().then(result=>{
-                            this.loading();
-                        });
-                    }
-                });
+            this.countGrade();
+            if(this.isGradeInvalid){
+                return;
             }
+            this.tryingToInputTest = true;
+            Swal.fire({
+                title: "Yakin akan menyelesaikan test?",
+                text: "Jawaban yang kosong akan tetap ter-submit!",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#34c38f",
+                cancelButtonColor: "#f46a6a",
+                confirmButtonText: "Yes, submit it!"
+            }).then(result => {
+                if (result.value) {
+                    this.loading();
+                    this.submitAnswers().then(result=>{
+                        this.loading();
+                    });
+                }
+            });
         },
 
         async submitAnswers(){
@@ -394,7 +402,14 @@ export default {
                 count_max = parseInt(count_max) + parseInt(this.test_data.test.questions[index].weight);
             });
 
-            this.total_grade = (String(+count_grade) + " / " + String(+count_max))
+            this.total_grade = (String(+count_grade) + " / " + String(+count_max));
+
+            if(count_grade > count_max){
+                this.isGradeInvalid = true;
+            }
+            else{
+                this.isGradeInvalid = false;
+            }
         },
 
         loading() {
@@ -427,7 +442,7 @@ export default {
                     <div class="text-center col-sm-1">
                         <b-button 
                         class="m-1"
-                        style="min-width: 75px;" 
+                        style="width: 85%; text-align: center; vertical-align: middle;"
                         variant="outline-secondary"
                         >{{index+1}}
                         </b-button>
@@ -484,7 +499,7 @@ export default {
                                             style="border: 0; max-width:80px!important;"
                                         />
                                         <input
-                                            style="max-width:60px!important; text-align:center;"
+                                            style="max-width:80px!important; text-align:center;"
                                             v-model="test_data.grade[index].grade"
                                             type="number"
                                             :max='question.weight'
@@ -501,7 +516,7 @@ export default {
                                             style="border: 0; max-width:30px!important; text-align:center;"
                                         />
                                         <input
-                                            style="max-width:60px!important; text-align:center;"
+                                            style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
                                             v-model="question.weight"
                                             type="text"
                                             class="form-control"
@@ -521,10 +536,15 @@ export default {
             <div class="text-center mt-4">
                 <label>Total Nilai: {{total_grade}}</label>
             </div>
-            <div class="text-center mb-4">
+            <div class="text-center mb-2" :class="{'is-invalid': isGradeInvalid}">
                 <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
                 <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Back</button>
             </div>
+            <div
+                v-if="isGradeInvalid"
+                class="text-center invalid-feedback mb-4"
+                style="margin:0!important"
+            >Nilai melebihi batas Bobot Nilai!</div>
         </div>
         <div v-if="isFile">
             <div class="card">
@@ -570,7 +590,7 @@ export default {
                                 style="border: 0; max-width:80px!important;"
                             />
                             <input
-                                style="max-width:60px!important; text-align:center;"
+                                style="max-width:80px!important; text-align:center;"
                                 v-model="test_data.grade[0].grade"
                                 type="number"
                                 :max='test_data.test.questions[0].weight'
@@ -586,7 +606,7 @@ export default {
                                 style="border: 0; max-width:30px!important; text-align:center;"
                             />
                             <input
-                                style="max-width:60px!important; text-align:center;"
+                                style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
                                 v-model="test_data.test.questions[0].weight"
                                 type="text"
                                 class="form-control"
@@ -599,10 +619,15 @@ export default {
             <div class="text-center mt-4">
                 <label>Total Nilai: {{total_grade}}</label>
             </div>
-            <div class="text-center mb-4">
+            <div class="text-center mb-2" :class="{'is-invalid': isGradeInvalid}">
                 <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
                 <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Back</button>
             </div>
+            <div
+                v-if="isGradeInvalid"
+                class="text-center invalid-feedback mb-4"
+                style="margin:0!important"
+            >Nilai melebihi batas Bobot Nilai!</div>
         </div>
     </Layout>
 </template>

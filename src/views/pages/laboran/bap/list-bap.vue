@@ -14,6 +14,9 @@ import moment from 'moment';
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "List BAP",
+  },
   components: {
     Layout,
     PageHeader,
@@ -86,6 +89,8 @@ export default {
           staffs: [],
           academic_year: [],
       },
+
+      isCourseSelected: false,
     };
   },
   methods: {
@@ -192,6 +197,8 @@ export default {
     },
 
     async selectCourse(value){
+        this.isCourseSelected = true;
+        this.course_code = value.code;
         this.course_name = value.name;
         this.loading();
         await this.fetchData().then(result=>{
@@ -200,6 +207,8 @@ export default {
     },
 
     async removeCourse(){
+        this.isCourseSelected = false;
+        this.course_code = "";
         this.course_name = "";
         this.loading();
         await this.fetchData().then(result=>{
@@ -281,10 +290,11 @@ export default {
                         track-by="name"
                         @select="selectKelas"
                         @remove="removeKelas"
+                        :show-labels="false"
                     ></multiselect>
                 </div>
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-4">
                 <div class="form-group">
                     <multiselect
                         placeholder="Mata Kuliah"
@@ -294,8 +304,21 @@ export default {
                         track-by="name"
                         @select="selectCourse"
                         @remove="removeCourse"
+                        :show-labels="false"
                     ></multiselect>
                 </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                  <div class="form-group">
+                    <input
+                        v-if="isCourseSelected"
+                        v-model="course_code"
+                        :disabled="true"
+                        class="form-control text-center"
+                        type="text"
+                        style="background-color: #F0F4F6;"
+                    >
+                  </div>
                 </div>
             </div>
             </div>
@@ -360,6 +383,13 @@ export default {
                         @click=onClickEdit(data)
                         style="min-width: 75px;" 
                         >Show
+                    </b-button>
+                    <b-button
+                        v-if="!data.item.is_present"
+                        type="submit" 
+                        variant="danger"
+                        style="min-width: 75px;"
+                        >-
                     </b-button>
                 </template>
             </b-table>

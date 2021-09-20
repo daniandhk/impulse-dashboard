@@ -116,7 +116,7 @@ export default {
             <!-- <div title="Room Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Room</h4>
+                    <h4 class="card-title">Add Academic Year</h4>
                     <p class="card-title-desc">Fill all information below</p>
                     
                     <div>
@@ -175,6 +175,7 @@ export default {
                                 <multiselect
                                     v-model="dataAcademicYear.semester"
                                     :options="dataSemester"
+                                    :show-labels="false"
                                     :class="{ 'is-invalid': submitted && $v.dataAcademicYear.semester.$error }" 
                                 ></multiselect>
                                 <div

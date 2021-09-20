@@ -165,10 +165,10 @@ export default {
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
           </template>
           <!-- item-->
-          <!-- <a class="dropdown-item" href="/profile">
+          <a class="dropdown-item">
             <i class="ri-user-line align-middle mr-1"></i>
-            Profile
-          </a> -->
+            {{user.username}}
+          </a>
           <a class="dropdown-item d-block" href="/settings/change-password">
             <i class="ri-settings-2-line align-middle mr-1"></i>
             Settings

@@ -13,6 +13,10 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "List Test",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     Multiselect,
@@ -51,11 +55,11 @@ export default {
           href: "/"
         },
         {
-          text: "Grading",
+          text: "Penilaian",
           href: "/asprak/grading/"
         },
         {
-          text: "List",
+          text: "List Test",
           active: true,
         }
       ],
@@ -115,7 +119,7 @@ export default {
       sortDesc: false,
       fields: [
         { key: "nim", sortable: true, label: "NIM" },
-        { key: "name", sortable: true, label: "Name" },
+        { key: "name", sortable: true, label: "Nama" },
         { key: "grade.pretest", sortable: true, label: "Nilai Pretest", thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.journal", sortable: true, label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.posttest", sortable: true, label: "Nilai Posttest", thClass: 'text-center', tdClass: 'text-center', },
@@ -414,6 +418,7 @@ export default {
                 @select="selectModule"
                 :allow-empty="false"
                 :disabled="isLoading"
+                :show-labels="false"
               ></multiselect>
           </div>
         </div>

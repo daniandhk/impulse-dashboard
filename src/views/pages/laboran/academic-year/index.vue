@@ -6,6 +6,9 @@ import TableRoom from "./table-academic-year";
 import InputRoom from "./input-academic-year";
 
 export default {
+  page: {
+    title: "Data Tahun Akademik",
+  },
   components: {
     Layout,
     PageHeader,
@@ -17,13 +20,13 @@ export default {
   },
   data() {
     return {
-      title: "Academic Year Data",
+      title: "Data Tahun Akademik",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Academic Year Data",
+          text: "Data Tahun Akademik",
           active: true
         }
       ],
@@ -55,13 +58,13 @@ export default {
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">All Academic Years</a>
+                  <a class="font-weight-bold active">Data</a>
                 </template>
                 <TableRoom ref='TableRoom'/>
               </b-tab>
               <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                      <a class="font-weight-bold active">Input Academic Year</a>
+                      <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputRoom/>
               </b-tab>

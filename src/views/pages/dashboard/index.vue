@@ -13,6 +13,10 @@ import AsprakDashboard from "./dashboard-asprak";
 import store from '@/store';
 
 export default {
+  page: {
+    title: "Dashboard",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     PageHeader,

@@ -41,6 +41,7 @@ export default {
       course_name: "",
       academic_year_id: "",
       course_data: "",
+      course_code: "",
       class_data: "",
       dataDropdown:{
           classes: [],
@@ -48,6 +49,8 @@ export default {
           staffs: [],
           academic_year: [],
       },
+
+      isCourseSelected: false,
     };
   },
   computed: {
@@ -178,6 +181,8 @@ export default {
     },
 
     async selectCourse(value){
+        this.isCourseSelected = true;
+        this.course_code = value.code;
         this.course_name = value.name;
         this.loading();
         await this.fetchData().then(result=>{
@@ -186,6 +191,8 @@ export default {
     },
 
     async removeCourse(){
+        this.isCourseSelected = false;
+        this.course_code = "";
         this.course_name = "";
         this.loading();
         await this.fetchData().then(result=>{
@@ -295,10 +302,11 @@ export default {
                 track-by="name"
                 @select="selectKelas"
                 @remove="removeKelas"
+                :show-labels="false"
             ></multiselect>
           </div>
         </div>
-        <div class="col-sm-12 col-md-3">
+        <div class="col-sm-12 col-md-4">
           <div class="form-group">
             <multiselect
                 placeholder="Mata Kuliah"
@@ -308,7 +316,20 @@ export default {
                 track-by="name"
                 @select="selectCourse"
                 @remove="removeCourse"
+                :show-labels="false"
             ></multiselect>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-2">
+          <div class="form-group">
+            <input
+                v-if="isCourseSelected"
+                v-model="course_code"
+                :disabled="true"
+                class="form-control text-center"
+                type="text"
+                style="background-color: #F0F4F6;"
+            >
           </div>
         </div>
       </div>

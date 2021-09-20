@@ -363,10 +363,11 @@ export default {
                 track-by="name"
                 @select="selectKelas"
                 @remove="removeKelas"
+                :show-labels="false"
             ></multiselect>
           </div>
         </div>
-        <div class="col-sm-12 col-md-3">
+        <div class="col-sm-12 col-md-4">
           <div class="form-group">
             <multiselect
                 placeholder="Mata Kuliah"
@@ -376,6 +377,7 @@ export default {
                 track-by="name"
                 @select="selectCourse"
                 @remove="removeCourse"
+                :show-labels="false"
             ></multiselect>
           </div>
         </div>

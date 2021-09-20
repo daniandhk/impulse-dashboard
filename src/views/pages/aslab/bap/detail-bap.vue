@@ -12,6 +12,10 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Detail BAP",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     PageHeader,
@@ -141,6 +145,12 @@ export default {
             this.isIdValid(response.data);
             if(response.data){
               this.bap_data = response.data;
+              if(!this.bap_data.asprak_presence){
+                  this.bap_data.asprak_presence = [];
+              }
+              if(!this.bap_data.student_presence){
+                  this.bap_data.student_presence = [];
+              }
             }
           })
           .catch(error => {
@@ -165,7 +175,7 @@ export default {
                     timer: 4000
                 })
                 this.$router.replace({
-                    name: 'aslab-bap'
+                    name: 'laboran-bap'
                 });
             }
             else{
@@ -181,7 +191,7 @@ export default {
                 timer: 4000
             })
             this.$router.replace({
-                name: 'aslab-bap'
+                name: 'laboran-bap'
             });
         }
     },
@@ -196,6 +206,10 @@ export default {
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.student_totalRows = filteredItems.length;
       this.student_currentPage = 1;
+    },
+
+    async print () {
+      await this.$htmlToPaper('print_page');
     },
 
     loading() {
@@ -225,245 +239,238 @@ export default {
       <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
     </div>
     <div>
-        <div class="card">
-            <div class="card-body">
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Kelas"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.class_course.classes.name" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+        <div id="print_page">
+            <div class="card">
+                <div class="card-body">
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Kelas"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.schedule.class_course.classes.name"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Mata Kuliah"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.class_course.courses.name" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Mata Kuliah"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.schedule.class_course.courses.name"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Dosen"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.class_course.staffs.name" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Dosen"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.schedule.class_course.staffs.name"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Modul"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.module.index" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Modul"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="String(bap_data.schedule.module.index)"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Tanggal"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.date" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Tanggal"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.schedule.date"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Jam Mulai"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.time_start" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Jam Mulai"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.schedule.time_start"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Jam Terakhir"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.time_end" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Jam Terakhir"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.schedule.time_end"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Ruangan"
-                >
-                    <b-form-input 
-                        for="text" 
-                        v-model="bap_data.schedule.room.name" 
-                        :disabled="true" 
-                        style="border: none;"
-                    ></b-form-input>
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Ruangan"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.schedule.room.name"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Jenis Interaksi"
-                >
-                    <input
-                        v-model="bap_data.bap[0].jenis"
-                        type="text"
-                        class="form-control"
-                        :disabled="true"
-                    />
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Jenis Interaksi"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.bap[0].jenis"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Materi Praktikum"
-                >
-                    <input
-                        v-model="bap_data.bap[0].materi"
-                        type="text"
-                        class="form-control"
-                        :disabled="true"
-                    />
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Materi Praktikum"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.bap[0].materi"
+                        >
+                        </b-form-group>
+                    </b-form-group>
 
-                <b-form-group
-                    label-cols-sm="2"
-                    label-cols-lg="2"
-                    label="Evaluasi Praktikum"
-                >
-                    <input
-                        v-model="bap_data.bap[0].evaluasi"
-                        type="text"
-                        class="form-control"
-                        :disabled="true"
-                    />
-                </b-form-group>
+                    <b-form-group
+                        label-cols-sm="2"
+                        label-cols-lg="2"
+                        label="Evaluasi Praktikum"
+                    >
+                        <b-form-group
+                            label-cols-sm="12"
+                            label-cols-lg="12"
+                            :label="bap_data.bap[0].evaluasi"
+                        >
+                        </b-form-group>
+                    </b-form-group>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 d-inline-flex align-items-center">
+                            <h4 class="card-title">Kehadiran Asisten Praktikum</h4>
+                        </div>
+                        <!-- Search -->
+                        <div class="col-sm-12 col-md-6">
+                            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+                            <label class="d-inline-flex align-items-center">
+                                Search:
+                                <b-form-input
+                                v-model="asprak_filter"
+                                type="search"
+                                class="form-control form-control-sm ml-2"
+                                ></b-form-input>
+                            </label>
+                            </div>
+                        </div>
+                        <!-- End search -->
+                    </div>
+                    <div class="table-responsive">
+                    <b-table
+                        ref="table"
+                        class="table-centered"
+                        :items="bap_data.asprak_presence"
+                        :fields="asprak_fields"
+                        responsive="sm"
+                        :per-page="asprak_perPage"
+                        :current-page="asprak_currentPage"
+                        :sort-by="asprak_sortBy"
+                        :sort-desc="asprak_sortDesc"
+                        :filter="asprak_filter"
+                        :filter-included-fields="asprak_filterOn"
+                        @filtered="asprak_onFiltered"
+                    >
+                    </b-table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6 d-inline-flex align-items-center">
+                            <h4 class="card-title">Kehadiran Praktikan</h4>
+                        </div>
+                        <!-- Search -->
+                        <div class="col-sm-12 col-md-6">
+                            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+                            <label class="d-inline-flex align-items-center">
+                                Search:
+                                <b-form-input
+                                v-model="student_filter"
+                                type="search"
+                                class="form-control form-control-sm ml-2"
+                                ></b-form-input>
+                            </label>
+                            </div>
+                        </div>
+                        <!-- End search -->
+                    </div>
+                    <div class="table-responsive">
+                    <b-table
+                        ref="table"
+                        class="table-centered"
+                        :items="bap_data.student_presence"
+                        :fields="student_fields"
+                        responsive="sm"
+                        :per-page="student_perPage"
+                        :current-page="student_currentPage"
+                        :sort-by="student_sortBy"
+                        :sort-desc="student_sortDesc"
+                        :filter="student_filter"
+                        :filter-included-fields="student_filterOn"
+                        @filtered="student_onFiltered"
+                    >
+                    </b-table>
+                    </div>
+                </div>
             </div>
         </div>
-
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Kehadiran Asisten Praktikum</h4>
-                <hr style="margin-left: -28px; 
-                            margin-right: -28px; 
-                            height: 2px; 
-                            background-color: #eee; 
-                            border: 0 none; 
-                            color: #eee;"
-                >
-                <div class="row mt-4">
-                    <!-- Search -->
-                    <div class="col-sm-12 col-md-12">
-                        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                        <label class="d-inline-flex align-items-center">
-                            Search:
-                            <b-form-input
-                            v-model="asprak_filter"
-                            type="search"
-                            class="form-control form-control-sm ml-2"
-                            ></b-form-input>
-                        </label>
-                        </div>
-                    </div>
-                    <!-- End search -->
-                </div>
-                <div class="table-responsive">
-                <b-table
-                    ref="table"
-                    class="table-centered"
-                    :items="bap_data.asprak_presence"
-                    :fields="asprak_fields"
-                    responsive="sm"
-                    :per-page="asprak_perPage"
-                    :current-page="asprak_currentPage"
-                    :sort-by="asprak_sortBy"
-                    :sort-desc="asprak_sortDesc"
-                    :filter="asprak_filter"
-                    :filter-included-fields="asprak_filterOn"
-                    @filtered="asprak_onFiltered"
-                    :headVariant="'dark'"
-                >
-                </b-table>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-body">
-                <h4 class="card-title">Kehadiran Praktikan</h4>
-                <hr style="margin-left: -28px; 
-                            margin-right: -28px; 
-                            height: 2px; 
-                            background-color: #eee; 
-                            border: 0 none; 
-                            color: #eee;"
-                >
-                <div class="row mt-4">
-                    <!-- Search -->
-                    <div class="col-sm-12 col-md-12">
-                        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                        <label class="d-inline-flex align-items-center">
-                            Search:
-                            <b-form-input
-                            v-model="student_filter"
-                            type="search"
-                            class="form-control form-control-sm ml-2"
-                            ></b-form-input>
-                        </label>
-                        </div>
-                    </div>
-                    <!-- End search -->
-                </div>
-                <div class="table-responsive">
-                <b-table
-                    ref="table"
-                    class="table-centered"
-                    :items="bap_data.student_presence"
-                    :fields="student_fields"
-                    responsive="sm"
-                    :per-page="student_perPage"
-                    :current-page="student_currentPage"
-                    :sort-by="student_sortBy"
-                    :sort-desc="student_sortDesc"
-                    :filter="student_filter"
-                    :filter-included-fields="student_filterOn"
-                    @filtered="student_onFiltered"
-                    :headVariant="'dark'"
-                >
-                </b-table>
-                </div>
-            </div>
+        <div class="text-center m-4">
+            <b-button variant="success" style="min-width: 350px;" @click="print">Print</b-button>
         </div>
     </div>
   </Layout>

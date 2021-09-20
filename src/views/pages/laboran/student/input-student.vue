@@ -208,6 +208,7 @@ export default {
                             <multiselect
                                 v-model="dataStudent.gender"
                                 :options="genderData"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" 
                             ></multiselect>
                                 <div
@@ -223,6 +224,7 @@ export default {
                             <multiselect
                                 v-model="dataStudent.religion"
                                 :options="religionData"
+                                :show-labels="false"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" 
                             ></multiselect>
                                 <div

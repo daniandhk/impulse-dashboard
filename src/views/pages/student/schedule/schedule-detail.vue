@@ -15,7 +15,7 @@ import { notificationMethods } from "@/state/helpers";
  */
 export default {
   page: {
-    title: "Practicum Details",
+    title: "Praktikum",
   },
   components: {
     Layout,
@@ -48,18 +48,18 @@ export default {
   },
   data() {
     return {
-      title: "Practicum Details",
+      title: "Praktikum",
       items: [
         {
-          text: "Dashboard",
+          text: "Praktikan",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           href: "/praktikan/schedule/calendar"
         },
         {
-          text: "Practicum Details",
+          text: "Praktikum",
           active: true,
         }
       ],
@@ -185,6 +185,8 @@ export default {
       isAuthPretestWrong: false,
       isAuthJournalWrong: false,
       isAuthPosttestWrong: false,
+
+      isJadwalShowed: false,
     };
   },
   methods: {
@@ -543,6 +545,10 @@ export default {
       }
     },
 
+    onClickJadwal(){
+      this.isJadwalShowed = !this.isJadwalShowed;
+    },
+
     loading() {
       if(this.isLoading){
         this.isLoading = false;
@@ -572,62 +578,64 @@ export default {
     <div>
       <div class="card">
         <div class="card-body">
-          <div class="row">
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Kelas</label>
-                      <input
-                          v-model="class_course_data.class.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Mata Kuliah</label>
-                      <input
-                          v-model="class_course_data.course.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Tahun / Semester</label>
-                      <input
-                          v-model="class_course_data.academic_year.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
+          <div class="text-center">
+            <h5 class="text-center font-size-15 text-uppercase">JADWAL</h5>
+            <a href="#" @click="onClickJadwal" class="font-weight-bold active" v-if="!isJadwalShowed">show</a>
+            <a href="#" @click="onClickJadwal" class="font-weight-bold active" v-if="isJadwalShowed">hide</a>
           </div>
+          <div v-if="isJadwalShowed">
+            <div class="row mt-4">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Kelas</label>
+                        <input
+                            v-model="class_course_data.class.name"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                        />
+                    </div>
+                </div>
 
-          <div class="form-group text-center">
-              <label>Modul</label>
-              <input
-                      v-model="schedule_data.module.index"
-                      type="text"
-                      class="form-control text-center bg-#00000 "
-                      disabled="true"
-                  />
-          </div>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="text-center font-size-15 text-uppercase">JADWAL</h5>
-          <div class="row mt-2">
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Mata Kuliah</label>
+                        <input
+                            v-model="class_course_data.course.name"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                        />
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Tahun / Semester</label>
+                        <input
+                            v-model="class_course_data.academic_year.name"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                        />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group text-center">
+                <label>Modul</label>
+                <input
+                        v-model="schedule_data.module.index"
+                        type="text"
+                        class="form-control text-center bg-#00000 "
+                        disabled="true"
+                    />
+            </div>
+
+            <div class="row">
               <div class="col-sm-4">
                   <div class="form-group">
                       <label>Tanggal</label>
@@ -666,6 +674,7 @@ export default {
                       />
                   </div>
               </div>
+            </div>
           </div>
         </div>
       </div>

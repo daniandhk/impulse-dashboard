@@ -14,6 +14,10 @@ import moment from 'moment';
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Jadwal",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     PageHeader,
@@ -41,14 +45,14 @@ export default {
   },
   data() {
     return {
-      title: "Schedule",
+      title: "Jadwal",
       items: [
         {
           text: "Asisten Praktikum",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           active: true,
         },
       ],
@@ -64,10 +68,10 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter_search: "",
       filterOn: [],
-      sortBy: "class_course.class.name",
+      sortBy: "title",
       sortDesc: false,
       fields: [
-        { key: "title", sortable: true, label: "Name" },
+        { key: "title", sortable: true, label: "Nama Kalender" },
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
@@ -129,6 +133,8 @@ export default {
         }
       },
       eventModal: false,
+
+      isCourseSelected: false,
     };
   },
   methods: {
@@ -240,6 +246,8 @@ export default {
     },
 
     async selectCourse(value){
+        this.isCourseSelected = true;
+        this.course_code = value.code;
         this.course_name = value.name;
         this.loading();
         await this.fetchData().then(result=>{
@@ -248,6 +256,8 @@ export default {
     },
 
     async removeCourse(){
+        this.isCourseSelected = false;
+        this.course_code = "";
         this.course_name = "";
         this.loading();
         await this.fetchData().then(result=>{
@@ -376,10 +386,11 @@ export default {
                         track-by="name"
                         @select="selectKelas"
                         @remove="removeKelas"
+                        :show-labels="false"
                     ></multiselect>
                 </div>
                 </div>
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-4">
                 <div class="form-group">
                     <multiselect
                         placeholder="Mata Kuliah"
@@ -389,8 +400,21 @@ export default {
                         track-by="name"
                         @select="selectCourse"
                         @remove="removeCourse"
+                        :show-labels="false"
                     ></multiselect>
                 </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
+                  <div class="form-group">
+                    <input
+                        v-if="isCourseSelected"
+                        v-model="course_code"
+                        :disabled="true"
+                        class="form-control text-center"
+                        type="text"
+                        style="background-color: #F0F4F6;"
+                    >
+                  </div>
                 </div>
             </div>
             </div>
@@ -453,7 +477,7 @@ export default {
                       @click=onClickEdit(data)
                       class="mr-3 text-primary"
                       v-b-tooltip.hover
-                      title="Info"
+                      title="Detail"
                   >
                       <i class="mdi mdi-eye-outline font-size-18"></i>
                   </a>
@@ -462,7 +486,7 @@ export default {
                       @click=editModal(data)
                       class="mr-3 text-primary"
                       v-b-tooltip.hover
-                      title="Detail"
+                      title="Edit"
                   >
                       <i class="mdi mdi-pencil font-size-18"></i>
                   </a>
@@ -490,7 +514,7 @@ export default {
     <b-modal
       size="lg"
       v-model="eventModal"
-      title="Info Schedule"
+      title="Detail Schedule"
       hide-footer 
       title-class="font-18"
     >

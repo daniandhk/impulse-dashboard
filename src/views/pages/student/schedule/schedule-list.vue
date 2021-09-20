@@ -11,7 +11,7 @@ import store from '@/store';
  */
 export default {
   page: {
-    title: "List course",
+    title: "List Course",
     meta: [{ name: "description" }],
   },
   components: {
@@ -26,15 +26,15 @@ export default {
       title: "List Course",
       items: [
         {
-          text: "Dashboard",
+          text: "Praktikan",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           href: "/praktikan/schedule/calendar"
         },
         {
-          text: "List Course",
+          text: "Mata Kuliah",
           active: true,
         },
       ],
@@ -44,16 +44,16 @@ export default {
       pageOptions: [10, 25, 50, 100],
       filter: null,
       filterOn: [],
-      sortBy: "date",
+      sortBy: "module.index",
       sortDesc: false,
       dataSchedules: [],
       fields: [
+        { key: "module.index", sortable: true, label: "Modul" },
+        { key: "class_course.course.code", label: "Kode Mata Kuliah" },
+        { key: "title", label: "Nama Kalender" },
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Mulai" },
         { key: "end", sortable: true, label: "Terakhir" },
-        { key: "title", label: "Name" },
-        { key: "class_course.course.code", label: "Kode Mata Kuliah" },
-        { key: "module.index",  label: "Modul" },
         { key: "room.name", label: "Ruangan" },
       ],
 
@@ -87,6 +87,7 @@ export default {
   mounted: async function() {
     // Set the initial number of items
     this.totalRows = this.dataSchedules.length;
+    this.perPage = this.dataSchedules.length;
     // Set the initial number of items
     await this.getStudentCourses();
     await this.refreshData(0);
@@ -281,16 +282,16 @@ export default {
                   >
                   </b-table>
                 </div>
-                <div class="row">
+                <!-- <div class="row">
                   <div class="col">
                     <div class="dataTables_paginate paging_simple_numbers float-right">
                       <ul class="pagination pagination-rounded mb-0">
-                        <!-- pagination -->
+                        pagination
                         <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
                       </ul>
                     </div>
                   </div>
-                </div>
+                </div> -->
               </b-tab>
             </b-tabs>
           </div>
@@ -298,15 +299,6 @@ export default {
       </div>
     </div>
     <div class="row" v-if="!dataClassCourses.length">
-      <div class="col-lg-12">
-        <div class="card">
-          <div class="card-body mt-2 mb-2">
-              <div class="text-center">
-                  <label>Data is empty!</label>
-              </div>
-          </div>
-        </div>
-      </div>
     </div>
   </Layout>
 </template>

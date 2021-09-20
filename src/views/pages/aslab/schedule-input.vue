@@ -15,6 +15,10 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Edit Jadwal",
+    meta: [{ name: "description" }],
+  },
   components: {
     DatePicker,
     Layout,
@@ -52,14 +56,14 @@ export default {
   },
   data() {
     return {
-      title: "Edit Schedule",
+      title: "Edit Jadwal",
       items: [
         {
           text: "Asisten Lab",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           href: "/aslab/schedule"
         },
         {
@@ -475,6 +479,7 @@ export default {
                 @select="selectModule"
                 :allow-empty="false"
                 :disabled="isLoading"
+                :show-labels="false"
               ></multiselect>
           </div>
         </div>
@@ -515,7 +520,7 @@ export default {
             </div>
 
             <div class="form-group mb-3">
-                <label>Name</label>
+                <label>Nama untuk Kalender</label>
                 <input 
                   v-model="schedule_data.title"
                   type="text"
@@ -538,6 +543,7 @@ export default {
                   track-by="name"
                   :allow-empty="false"
                   :disabled="isLoading"
+                  :show-labels="false"
                   :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
                 ></multiselect>
                 <div

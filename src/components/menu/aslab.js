@@ -18,17 +18,22 @@ export const aslabItems = [
     {
         id: 4,
         label: 'menuitems.aslab.list.jadwal',
-        icon: 'ri-todo-fill',
-        link: 'aslab-schedule'
-    },
-    {
-        id: 5,
-        label: 'menuitems.aslab.list.kalender',
         icon: 'ri-calendar-todo-fill',
-        link: 'aslab-schedule-calendar'
+        subItems: [
+            {
+                id: 5,
+                label: 'menuitems.aslab.list.kalender',
+                link: 'aslab-schedule-calendar'
+            },
+            {
+                id: 6,
+                label: 'menuitems.aslab.list.list',
+                link: 'aslab-schedule'
+            }
+        ]
     },
     {
-        id: 6,
+        id: 7,
         label: 'menuitems.aslab.list.bap',
         icon: 'ri-account-circle-line',
         link: 'aslab-bap'

@@ -21,19 +21,19 @@ import Multiselect from "vue-multiselect";
  */
 export default {
   page: {
-    title: "Calendar",
+    title: "Kalender",
   },
   components: { FullCalendar, Layout, PageHeader, },
   data() {
     return {
-      title: "Calendar",
+      title: "Kalender",
       items: [
         {
-          text: "Dashboard",
+          text: "Praktikan",
           href: "/"
         },
         {
-          text: "Schedule",
+          text: "Jadwal",
           active: true,
         }
       ],
@@ -113,6 +113,8 @@ export default {
       },
       currentEvents: [],
       eventModal: false,
+
+      isNow: false,
     };
   },
   computed: {
@@ -251,6 +253,17 @@ await this.loadDataDropdown();
         this.schedule_data.date = moment(String(info.event.startStr)).format('YYYY-MM-DD');
       }
 
+      let now = moment().format('YYYY-MM-DD HH:mm:ss');
+      if(this.schedule_data.start != "empty" && this.schedule_data.end != "empty"){
+        if(now >= this.schedule_data.start  && now <= this.schedule_data.end){
+          this.isNow = true;
+        }
+        else{
+          this.isNow = false;
+        }
+      }
+      //v-if="isNow" di div button
+
       this.eventModal = true;
     },
 
@@ -368,7 +381,7 @@ function sleep(ms) {
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <div class="app-calendar mt-4">
+            <div class="app-calendar">
               <FullCalendar
                 ref="fullCalendar"
                 :options="calendarOptions"

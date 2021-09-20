@@ -15,6 +15,10 @@ import { notificationMethods } from "@/state/helpers";
  * Advanced-form component
  */
 export default {
+  page: {
+    title: "Mulai Praktikum",
+    meta: [{ name: "description" }],
+  },
   components: {
     Layout,
     Multiselect,
@@ -67,18 +71,18 @@ export default {
   },
   data() {
     return {
-      title: "Detail Schedule",
+      title: "Mulai Praktikum",
       items: [
         {
           text: "Asisten Praktikum",
           href: "/"
         },
         {
-          text: "Schedule",
-          href: "/asprak/schedule/"
+          text: "Jadwal",
+          href: "/asprak/schedule/find"
         },
         {
-          text: "Detail",
+          text: "Mulai Praktikum",
           active: true,
         }
       ],
@@ -203,6 +207,18 @@ export default {
       isJournalStart: false,
       isPosttestStart: false,
 
+      isJadwalNull: false,
+
+      pretest_form: {
+        backgroundColor: "#F0F4F6",
+      },
+      journal_form: {
+        backgroundColor: "#F0F4F6",
+      },
+      posttest_form: {
+        backgroundColor: "#F0F4F6",
+      },
+
     };
   },
   methods: {
@@ -226,6 +242,7 @@ export default {
                   if(type == 'pretest'){
                       this.isPretestNew = false;
                       this.isPretestNull = false;
+                      this.isActive('pretest', true);
                       this.pretest_data = response.data.data[0];
                       this.setDateTest(this.pretest_data);
                       this.setStatusTest('pretest', this.pretest_data);
@@ -235,6 +252,7 @@ export default {
                   else if(type == 'journal'){
                       this.isJournalNew = false;
                       this.isJournalNull = false;
+                      this.isActive('journal', true);
                       this.journal_data = response.data.data[0];
                       this.setDateTest(this.journal_data);
                       this.setStatusTest('journal', this.journal_data);
@@ -244,6 +262,7 @@ export default {
                   else if(type == 'posttest'){
                       this.isPosttestNew = false;
                       this.isPosttestNull = false;
+                      this.isActive('posttest', true);
                       this.posttest_data = response.data.data[0];
                       this.setDateTest(this.posttest_data);
                       this.setStatusTest('posttest', this.posttest_data);
@@ -255,18 +274,21 @@ export default {
                   if(type == 'pretest'){
                       this.isPretestNew = true;
                       this.isPretestNull = false;
+                      this.isActive('pretest', true);
                       this.pretest_data.schedule_id = this.schedule_data.id;
                       this.pretest_data.test_id = this.schedule_data.module.pretest_id;
                   }
                   else if(type == 'journal'){
                       this.isJournalNew = true;
                       this.isJournalNull = false;
+                      this.isActive('journal', true);
                       this.journal_data.schedule_id = this.schedule_data.id;
                       this.journal_data.test_id = this.schedule_data.module.journal_id;
                   }
                   else if(type == 'posttest'){
                       this.isPosttestNew = true;
                       this.isPosttestNull = false;
+                      this.isActive('posttest', true);
                       this.posttest_data.schedule_id = this.schedule_data.id;
                       this.posttest_data.test_id = this.schedule_data.module.posttest_id;
                   }
@@ -284,12 +306,42 @@ export default {
       else{
         if(type == 'pretest'){
             this.isPretestNull = true;
+            this.isActive('pretest', false);
         }
         else if(type == 'journal'){
             this.isJournalNull = true;
+            this.isActive('journal', false);
         }
         else if(type == 'posttest'){
             this.isPosttestNull = true;
+            this.isActive('posttest', false);
+        }
+      }
+    },
+
+    isActive(type, status){
+      if(type == 'pretest'){
+        if(status){
+          this.pretest_form.backgroundColor = "";
+        }
+        else{
+          this.pretest_form.backgroundColor = "#F0F4F6";
+        }
+      }
+      else if(type == 'journal'){
+        if(status){
+          this.journal_form.backgroundColor = "";
+        }
+        else{
+          this.journal_form.backgroundColor = "#F0F4F6";
+        }
+      }
+      else if(type == 'posttest'){
+        if(status){
+          this.posttest_form.backgroundColor = "";
+        }
+        else{
+          this.posttest_form.backgroundColor = "#F0F4F6";
         }
       }
     },
@@ -340,6 +392,19 @@ export default {
               this.schedule_data = response.data.data;
               this.getClassCourse(this.schedule_data.class_course.id);
               this.getListSchedules(this.schedule_data.class_course.id);
+
+              if(this.schedule_data.date == null || this.schedule_data.start == null || this.schedule_data.end == null){
+                this.isJadwalNull = true;
+                this.isActive('pretest', false);
+                this.isActive('journal', false);
+                this.isActive('posttest', false);
+              }
+              else{
+                this.isJadwalNull = false;
+                this.isActive('pretest', true);
+                this.isActive('journal', true);
+                this.isActive('posttest', true);
+              }
             }
           })
           .catch(error => {
@@ -488,8 +553,13 @@ export default {
       this.isPosttestNew = false;
 
       this.isPretestNull = false;
+      this.isActive('pretest', true);
+
       this.isJournalNull = false;
+      this.isActive('journal', true);
+
       this.isPosttestNull = false;
+      this.isActive('posttest', true);
     },
 
     setDateTest(data){
@@ -827,6 +897,7 @@ export default {
                 @select="selectModule"
                 :allow-empty="false"
                 :disabled="isLoading"
+                :show-labels="false"
               ></multiselect>
           </div>
         </div>
@@ -874,6 +945,11 @@ export default {
                   </div>
               </div>
           </div>
+          <b-alert
+              v-model="isJadwalNull"
+              class="mt-3 text-center"
+              variant="danger"
+          >Harap input jadwal di Menu Jadwal!</b-alert>
         </div>
       </div>
       <div class="row">
@@ -914,7 +990,7 @@ export default {
                                     value-type="format"
                                     type="time"
                                     placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPretestNull"
+                                    :disabled="isLoading || isPretestNull || isJadwalNull"
                                     :class="{ 'is-invalid': submitted && $v.pretest_data.time_start.$error }"
                                 ></date-picker>
                                 <div
@@ -939,7 +1015,7 @@ export default {
                                     value-type="format"
                                     type="time"
                                     placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPretestNull"
+                                    :disabled="isLoading || isPretestNull || isJadwalNull"
                                     :class="{ 'is-invalid': submitted && $v.pretest_data.time_end.$error }"
                                 ></date-picker>
                                 <div
@@ -963,7 +1039,8 @@ export default {
                                     v-model="pretest_data.auth"
                                     type="text"
                                     class="form-control"
-                                    :disabled="isLoading || isPretestNull"
+                                    :disabled="isLoading || isPretestNull || isJadwalNull"
+                                    v-bind:style="pretest_form"
                                     :class="{ 'is-invalid': submitted && $v.pretest_data.auth.$error }"
                                 />
                                 <div
@@ -1039,7 +1116,7 @@ export default {
                                     value-type="format"
                                     type="time"
                                     placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isJournalNull"
+                                    :disabled="isLoading || isJournalNull || isJadwalNull"
                                     :class="{ 'is-invalid': submitted && $v.journal_data.time_start.$error }"
                                 ></date-picker>
                                 <div
@@ -1064,7 +1141,7 @@ export default {
                                     value-type="format"
                                     type="time"
                                     placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isJournalNull"
+                                    :disabled="isLoading || isJournalNull || isJadwalNull"
                                     :class="{ 'is-invalid': submitted && $v.journal_data.time_end.$error }"
                                 ></date-picker>
                                 <div
@@ -1088,7 +1165,8 @@ export default {
                                     v-model="journal_data.auth"
                                     type="text"
                                     class="form-control"
-                                    :disabled="isLoading || isJournalNull"
+                                    :disabled="isLoading || isJournalNull || isJadwalNull"
+                                    v-bind:style="journal_form"
                                     :class="{ 'is-invalid': submitted && $v.journal_data.auth.$error }"
                                 />
                                 <div
@@ -1164,7 +1242,7 @@ export default {
                                     value-type="format"
                                     type="time"
                                     placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPosttestNull"
+                                    :disabled="isLoading || isPosttestNull || isJadwalNull"
                                     :class="{ 'is-invalid': submitted && $v.posttest_data.time_start.$error }"
                                 ></date-picker>
                                 <div
@@ -1189,7 +1267,7 @@ export default {
                                     value-type="format"
                                     type="time"
                                     placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPosttestNull"
+                                    :disabled="isLoading || isPosttestNull || isJadwalNull"
                                     :class="{ 'is-invalid': submitted && $v.posttest_data.time_end.$error }"
                                 ></date-picker>
                                 <div
@@ -1213,7 +1291,8 @@ export default {
                                     v-model="posttest_data.auth"
                                     type="text"
                                     class="form-control"
-                                    :disabled="isLoading || isPosttestNull"
+                                    :disabled="isLoading || isPosttestNull || isJadwalNull"
+                                    v-bind:style="posttest_form"
                                     :class="{ 'is-invalid': submitted && $v.posttest_data.auth.$error }"
                                 />
                                 <div

@@ -15,19 +15,19 @@
     },
     "laboran": {
       "text": "Laboran",
-      "main-data": "Main Data",
-      "combined-data": "Combined Data",
-      "absensi-data": "BAP Data",
+      "main-data": "Data Utama",
+      "combined-data": "Data Kelas",
+      "absensi-data": "Data BAP",
       "list": {
-        "student": "Student Data",
-        "studentclass": "Student Class",
-        "asprakclass": "Asprak Class",
-        "staff": "Staff Data",
-        "course": "Course Data",
-        "classroom": "Classroom Data",
-        "room": "Room Data",
-        "class-course": "Course Class",
-        "academic-year": "Academic Year Data",
+        "student": "Data Praktikan",
+        "studentclass": "Kelas Praktikan",
+        "asprakclass": "Kelas Asisten Praktikum",
+        "staff": "Data Staff",
+        "course": "Data Mata Kuliah",
+        "classroom": "Data Kelas",
+        "room": "Data Ruangan",
+        "class-course": "Kelas Mata Kuliah",
+        "academic-year": "Data Tahun Akademik",
         "bap": "Berita Acara Praktikum"
       }
     },
@@ -37,8 +37,9 @@
     "aslab": {
       "text": "Asisten Lab",
       "list":{
-        "jadwal": "Schedule",
-        "kalender": "Calendar",
+        "jadwal": "Jadwal",
+        "kalender": "Kalender",
+        "list": "List Jadwal",
         "bap": "Berita Acara Praktikum"
       }
     },
@@ -53,17 +54,17 @@
         "lihat-feedback": "Lihat Feedback",
         "absensi-asprak": "Berita Acara Praktikum",
         "start-practicum": "Mulai Praktikum",
-        "schedule": "Schedule",
+        "schedule": "Jadwal",
         "grading": "Penilaian Tes"
       }
     },
     "praktikan": {
       "text": "Praktikan",
       "list": {
-        "jadwal": "Schedule",
-        "nilai": "Score",
-        "kalender": "Calendar",
-        "matakuliah":"List Course",
+        "jadwal": "Jadwal",
+        "nilai": "Nilai",
+        "kalender": "Kalender",
+        "matakuliah":"List Mata Kuliah",
         "praktikum":"Praktikum",
         "pengaturan":"Pengaturan",
         "jurnal":"1. Jurnal",
