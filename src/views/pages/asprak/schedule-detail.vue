@@ -513,6 +513,7 @@ export default {
       //load data
       if(value == "Journal"){
         this.selected_type = "Upload File";
+        this.dataTest.type = "file";
         this.test_id = this.schedule_data.module.journal_id;
         this.dataTest.test_type = "journal";
       }
@@ -1245,7 +1246,7 @@ export default {
                                                                 <b-button 
                                                                 size="sm" 
                                                                 class="mt-1 mr-1" 
-                                                                style="width: 85%; text-align: center; vertical-align: middle;"
+                                                                style="width: 100%; text-align: center; vertical-align: middle;"
                                                                 variant="light"
                                                                 >{{String.fromCharCode(idx+1 + 64)}}
                                                                 </b-button>
@@ -1253,7 +1254,7 @@ export default {
                                                                 v-if="idx != 0 && idx != 1"
                                                                 size="sm" 
                                                                 class="mt-1 mr-1" 
-                                                                style="width: 85%; text-align: center; vertical-align: middle;" 
+                                                                style="width: 100%; text-align: center; vertical-align: middle;" 
                                                                 variant="danger"
                                                                 v-on:click="removeAnswer(question, idx)"
                                                                 >remove
