@@ -32,9 +32,13 @@ export default {
 
                 <b-tab title-link-class="p-3">
                   <template v-slot:title>
-                    <a class="font-weight-bold active text-reset">Penanggung Jawab</a>
+                    <a class="font-weight-bold active text-reset">Konseptor</a>
                     </template>
-                    <p class="m-4">- Aulia Arif Wardana (KAUR LAB)</p>
+                    <p class="m-4">- Angelina Prima Kurniati, Ph.D.</p>
+                    <p class="m-4">- Febryanti Sthevanie, M.T.</p>
+                    <p class="m-4">- Sidik Prabowo, M.T.</p>
+                    <p class="m-4">- Aulia Arif Wardana, M.T.</p>
+                    <p class="m-4">- Siti Amatullah Karimah, M.T.</p>
                 </b-tab>
                 
                 <b-tab title-link-class="p-3">
@@ -50,12 +54,20 @@ export default {
                   <template v-slot:title>
                     <a class="font-weight-bold active text-reset">Programmer</a>
                   </template>
-                    <p class="m-4">- Dani Andhika Permana (Frontend) </p>
-                    <p class="m-4">- Edgar Vigo (Frontend) </p>
-                    <p class="m-4">- Muhammad Figo Akbar (Frontend) </p>
-                    <p class="m-4">- Fariz Muhammad Rizky (Backend) </p>
-                    <p class="m-4">- Indra Wahyudi (Backend) </p>
-                    <p class="m-4">- Muhammad Hafidh Raditya (Backend) </p>
+                    <div class="row">
+                      <div class="mr-2">
+                        <label class="m-4">Frontend</label>
+                        <p class="mr-4 ml-4 mb-4">- Dani Andhika Permana</p>
+                        <p class="m-4">- Edgar Vigo</p>
+                        <p class="mr-4 ml-4 mt-4">- Muhammad Figo Akbar</p>
+                      </div>
+                      <div class="ml-3">
+                        <label class="m-4">Backend</label>
+                        <p class="mr-4 ml-4 mb-4">- Fariz Muhammad Rizky</p>
+                        <p class="m-4">- Indra Wahyudi</p>
+                        <p class="m-4">- Muhammad Hafidh Raditya</p>
+                      </div>
+                    </div>
                 </b-tab>
                 
                 <b-tab title-link-class="p-3">
@@ -76,7 +88,7 @@ export default {
               </b-tabs> 
 
               <div class="text-center">
-                <h3 class="mt-5">IMPULSE dalam naungan</h3>
+                <h3 class="mt-5">IMPULSE berada dalam naungan</h3>
               </div>
 
               <div class="row row-no-gutters justify-content-center text-center p-4">
