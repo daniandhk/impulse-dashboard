@@ -468,6 +468,7 @@ export default {
         },
 
         onClickDownload(){
+            this.loading();
             return (
                 api.downloadJournal(this.schedule_test_data.schedule.module_id, this.schedule_test_data.test.id)
                 .then(response => {
@@ -476,6 +477,9 @@ export default {
                     link.href = window.URL.createObjectURL(blob)
                     link.download = this.test_data.question[0].question
                     link.click()
+                    
+                    this.loading();
+                    Swal.fire("Downloaded!", "The file has been downloaded.", "success");
                 })
                 .catch(error => {
                     Swal.fire({
