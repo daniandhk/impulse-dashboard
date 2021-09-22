@@ -190,9 +190,11 @@ function loading() {
                       </div>
 
                       <div class="mt-5 text-center">
-                        <p>
-                          © 2021 Informatics Lab.
-                        </p>
+                        <a href="/about-us" style="text-decoration: none; color: inherit;">
+                          <p>
+                            © 2021 Informatics Lab.
+                          </p>
+                        </a>
                       </div>
                     </div>
                   </div>
