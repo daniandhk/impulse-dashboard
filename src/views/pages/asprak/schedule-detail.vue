@@ -196,6 +196,13 @@ export default {
                 footer: response
             })
           });
+          this.on('success', function(file, response){
+            Swal.fire({
+                icon: 'success',
+                title: 'Uploaded!',
+                text: 'Your file has been uploaded.',
+            })
+          })
         }
       }
 

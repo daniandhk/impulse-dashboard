@@ -19,7 +19,7 @@
       "combined-data": "Data Kelas",
       "absensi-data": "Data BAP",
       "list": {
-        "student": "Data Praktikan",
+        "student": "Data Mahasiswa",
         "studentclass": "Kelas Praktikan",
         "asprakclass": "Kelas Asisten Praktikum",
         "staff": "Data Staff",
