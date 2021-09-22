@@ -42,7 +42,6 @@ export default {
                 icon: 'success',
                 title: 'Uploaded!',
                 text: 'Your file has been uploaded.',
-                footer: response
             })
           })
         }
