@@ -836,6 +836,7 @@ export default {
     },
 
     onClickDownload(){
+        this.loading();
         return (
             api.downloadJournal(this.schedule_data.module.id, this.test_id)
             .then(response => {
@@ -844,6 +845,9 @@ export default {
                 link.href = window.URL.createObjectURL(blob)
                 link.download = this.dataTest.questions[0].text
                 link.click()
+
+                this.loading();
+                Swal.fire("Downloaded!", "The file has been downloaded.", "success");
             })
             .catch(error => {
                 Swal.fire({
@@ -1392,7 +1396,7 @@ export default {
                                               - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
                                               - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
                                               - <b>File Soal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
-                                              - Batas ukuran <b>File Soal</b> adalah <b>5 MB</b>,<br>
+                                              - Batas ukuran <b>File Soal</b> adalah <b>2 MB</b>,<br>
                                               - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>
                                               - Unggah file kembali untuk memperbarui <b>File Soal</b>, <b>Bobot Nilai</b>, dan <b>URL Upload Jawaban</b>.
                                               <!-- - Pastikan hanya ada <b>satu sheet</b>,<br>

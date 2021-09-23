@@ -89,8 +89,11 @@ export default {
     this.totalRows = this.dataSchedules.length;
     this.perPage = this.dataSchedules.length;
     // Set the initial number of items
+    this.loading();
     await this.getStudentCourses();
-    await this.refreshData(0);
+    await this.refreshData(0).then(result=>{
+      this.loading();
+    });
   },
   methods: {
     ...notificationMethods,
