@@ -12,20 +12,20 @@ import { required, minLength, sameAs } from "vuelidate/lib/validators";
  */
 export default {
   page: {
-    title: "Settings",
+    title: "Pengaturan",
     meta: [{ name: "description", content: appConfig.description }]
   },
   components: { Layout, PageHeader },
   data() {
     return {
-      title: "Change Password",
+      title: "Ubah Password",
       items: [
         {
-          text: "Settings",
+          text: "Pengaturan",
           href: "/settings/change-password"
         },
         {
-          text: "Change Password",
+          text: "Ubah Password",
           active: true
         }
       ],

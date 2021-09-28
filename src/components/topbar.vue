@@ -171,7 +171,7 @@ export default {
           </a>
           <a class="dropdown-item d-block" href="/settings/change-password">
             <i class="ri-settings-2-line align-middle mr-1"></i>
-            Settings
+            Pengaturan
           </a>
           <div class="dropdown-divider"></div>
           <a class="dropdown-item text-danger" href="/logout">
