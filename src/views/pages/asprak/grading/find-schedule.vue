@@ -353,7 +353,7 @@ export default {
                             <div
                             v-if="submitted && !$v.class_data.required"
                             class="invalid-feedback"
-                            >Kelas Mata Kuliah is required.</div>
+                            >Kelas Mata Kuliah harus diisi!</div>
                         </div>
                     </div>
 
@@ -374,7 +374,7 @@ export default {
                             <div
                             v-if="submitted && !$v.course_data.required"
                             class="invalid-feedback"
-                            >Nama Mata Kuliah is required.</div>
+                            >Nama Mata Kuliah harus diisi!</div>
                         </div>
                     </div>
 
@@ -395,7 +395,7 @@ export default {
                             <div
                             v-if="submitted && !$v.course_data.required"
                             class="invalid-feedback"
-                            >Kode Mata Kuliah is required.</div>
+                            >Kode Mata Kuliah harus diisi!</div>
                         </div>
                     </div>
                 </div>
@@ -418,7 +418,7 @@ export default {
                             <div
                             v-if="submitted && !$v.academic_year_data.required"
                             class="invalid-feedback"
-                            >Tahun Akademik (Semester) is required.</div>
+                            >Tahun Akademik (Semester) harus diisi!</div>
                         </div>
                     </div>
 
@@ -438,7 +438,7 @@ export default {
                             <div
                             v-if="submitted && !$v.staff_name.required"
                             class="invalid-feedback"
-                            >Nama Dosen Mata Kuliah is required.</div>
+                            >Nama Dosen Mata Kuliah harus diisi!</div>
                         </div>
                     </div>
 
@@ -458,13 +458,13 @@ export default {
                             <div
                             v-if="submitted && !$v.staff_code.required"
                             class="invalid-feedback"
-                            >Kode Dosen Mata Kuliah is required.</div>
+                            >Kode Dosen Mata Kuliah harus diisi!</div>
                         </div>
                     </div>
                 </div>
 
                 <div class="form-group text-center">
-                    <label>Module</label>
+                    <label>Modul</label>
                     <multiselect 
                         class="text-center"
                         v-model="module_index" 
@@ -477,7 +477,7 @@ export default {
                     <div
                     v-if="submitted && !$v.module_index.required"
                     class="invalid-feedback"
-                    >Module is required.</div>
+                    >Modul harus diisi!</div>
                 </div>
 
                 <div class="text-center mt-4">

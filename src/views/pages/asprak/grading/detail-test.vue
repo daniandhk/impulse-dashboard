@@ -300,13 +300,13 @@ export default {
             }
             this.tryingToInputTest = true;
             Swal.fire({
-                title: "Yakin akan menyelesaikan test?",
-                text: "Jawaban yang kosong akan tetap ter-submit!",
+                title: "Yakin akan submit nilai?",
+                text: "Nilai dapat diubah kembali.",
                 icon: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#34c38f",
                 cancelButtonColor: "#f46a6a",
-                confirmButtonText: "Yes, submit it!"
+                confirmButtonText: "Ya, lanjut submit!"
             }).then(result => {
                 if (result.value) {
                     this.loading();
@@ -326,8 +326,22 @@ export default {
                     this.isInputError = false;
                     this.inputSuccess = true;
                     this.submitted = false;
-                    Swal.fire("Submitted!", "Grade has been submitted.", "success");
-                    //go to detail
+                    Swal.fire({
+                        title: "Berhasil Submit!",
+                        text: "Ingin keluar dari halaman ini?",
+                        icon: "success",
+                        showCancelButton: true,
+                        confirmButtonColor: "#34c38f",
+                        cancelButtonColor: "#f46a6a",
+                        confirmButtonText: "Ya, keluar!"
+                    }).then(result => {
+                        if (result.value) {
+                            this.$router.push({
+                                name: 'asprak-grading-list', 
+                                params: { id: this.schedule_id }
+                            });
+                        }
+                    });
                 })
                 .catch(error => {
                     console.log(error)
@@ -351,13 +365,13 @@ export default {
                 params: { id: this.schedule_id }
             });
             // Swal.fire({
-            //     title: "Are you sure?",
-            //     text: "the form that you have filled in will be reset!",
+            //     title: "Anda yakin?",
+            //     text: "Form yang telah terisi akan dikosongkan!",
             //     icon: "warning",
             //     showCancelButton: true,
             //     confirmButtonColor: "#34c38f",
             //     cancelButtonColor: "#f46a6a",
-            //     confirmButtonText: "Yes, cancel it!"
+            //     confirmButtonText: "Ya, batalkan!"
             // }).then(result => {
             //     if (result.value) {
             //         this.loading();
@@ -369,7 +383,7 @@ export default {
             //         });
             //         this.countGrade();
             //         this.loading();
-            //         Swal.fire("Canceled!", "The form has been reset.", "success");
+            //         Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
             //     }
             // });
         },
@@ -386,7 +400,7 @@ export default {
                     link.click()
                     
                     this.loading();
-                    Swal.fire("Downloaded!", "The file has been downloaded.", "success");
+                    Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
                 })
                 .catch(error => {
                     Swal.fire({
@@ -531,7 +545,7 @@ export default {
                                     <div
                                         v-if="submitted && !v.grade.$error.required"
                                         class="invalid-feedback"
-                                    >Nilai is required.</div>
+                                    >Nilai harus diisi!</div>
                                 </div>
                             </div>
                         </div>
@@ -543,7 +557,7 @@ export default {
             </div>
             <div class="text-center mb-2" :class="{'is-invalid': isGradeInvalid}">
                 <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
-                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Back</button>
+                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Kembali</button>
             </div>
             <div
                 v-if="isGradeInvalid"
@@ -626,7 +640,7 @@ export default {
             </div>
             <div class="text-center mb-2" :class="{'is-invalid': isGradeInvalid}">
                 <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
-                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Back</button>
+                <button type="button" @click="cancelSubmit" class="ml-2 btn btn-outline-dark waves-effect">Kembali</button>
             </div>
             <div
                 v-if="isGradeInvalid"

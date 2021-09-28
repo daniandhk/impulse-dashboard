@@ -100,7 +100,7 @@ export default {
                               :class="{ 'is-invalid': submitted && $v.email.$error }"
                             />
                             <div v-if="submitted && $v.email.$error" class="invalid-feedback">
-                              <span v-if="!$v.email.required">Email SSO is required.</span>
+                              <span v-if="!$v.email.required">Email SSO harus diisi!</span>
                               <span v-if="!$v.email.email">Please enter valid email.</span>
                             </div>
                           </div>

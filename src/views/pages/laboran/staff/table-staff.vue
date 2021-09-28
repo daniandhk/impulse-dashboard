@@ -208,7 +208,7 @@ export default {
 
     onClickDelete(data){
       Swal.fire({
-          title: "Are you sure?",
+          title: "Anda yakin?",
           text: data.item.nip + " will be deleted!",
           icon: "warning",
           showCancelButton: true,
@@ -514,7 +514,7 @@ export default {
                                     <div
                                     v-if="submitted && !$v.dataEdit.nip.required"
                                     class="invalid-feedback"
-                                    >NIP is required.</div>
+                                    >NIP harus diisi!</div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -531,7 +531,7 @@ export default {
                                     <div
                                     v-if="submitted && !$v.dataEdit.name.required"
                                     class="invalid-feedback"
-                                    >Nama Dosen is required.</div>
+                                    >Nama Dosen harus diisi!</div>
                                 </div>
                             </div>
                             <div class="col-sm-12">
@@ -548,15 +548,15 @@ export default {
                                     <div
                                     v-if="submitted && !$v.dataEdit.code.required"
                                     class="invalid-feedback"
-                                    >Kode Mata Kuliah is required.</div>
+                                    >Kode Mata Kuliah harus diisi!</div>
                                 </div>
                             </div>
                             <div class="text-center mt-4">
                                 <button
                                 type="submit"
                                 class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Save Changes</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                                >Simpan</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
                             </div>
                           </div>
                         </form>
@@ -587,8 +587,8 @@ export default {
                                 <button
                                 type="submit"
                                 class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Save Changes</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                                >Simpan</button>
+                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
                             </div>
                         </div>
                         </form>

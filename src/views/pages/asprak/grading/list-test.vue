@@ -410,7 +410,7 @@ export default {
           </div>
 
           <div class="form-group text-center">
-              <label>Module</label>
+              <label>Modul</label>
               <multiselect 
                 class="text-center"
                 v-model="schedule_data.module.index" 

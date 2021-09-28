@@ -573,8 +573,8 @@ export default {
 
     submitSchedule(type, status = null){
         this.submitted = true;
-        let message_header = "Submitted!";
-        let message_body = "The form submitted successfully.";
+        let message_header = "Berhasil submit!";
+        let message_body = "Form telah berhasil di submit.";
 
         if(type=='pretest'){
             if(this.isPretestNull == false){
@@ -889,7 +889,7 @@ export default {
           </div>
 
           <div class="form-group text-center">
-              <label>Module</label>
+              <label>Modul</label>
               <multiselect 
                 class="text-center"
                 v-model="schedule_data.module.index" 
@@ -973,7 +973,7 @@ export default {
                                 v-model="isPretestNull"
                                 class="mt-3"
                                 variant="danger"
-                            >Harap input soal di Menu Schedule!</b-alert>
+                            >Harap input soal di Menu Jadwal!</b-alert>
                             <div class="row text-left mt-4 mr-2">
                               <div class="col-sm-4">
                                 <input
@@ -996,7 +996,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.pretest_data.time_start.required"
                                 class="invalid-feedback"
-                                >Start Time is required.</div>
+                                >Start Time harus diisi!</div>
                               </div>
                             </div>
                             <div class="row text-left mt-2 mr-2">
@@ -1021,7 +1021,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.pretest_data.time_end.required"
                                 class="invalid-feedback"
-                                >End Time is required.</div>
+                                >End Time harus diisi!</div>
                               </div>
                             </div>
                             <div class="row text-left mt-2 mr-2">
@@ -1046,7 +1046,7 @@ export default {
                                 <div
                                   v-if="submitted && !$v.pretest_data.auth.required"
                                   class="invalid-feedback"
-                                  >Auth is required.</div>
+                                  >Auth harus diisi!</div>
                               </div>
                             </div>
                             <button 
@@ -1054,7 +1054,7 @@ export default {
                               @click="submitSchedule('pretest')" 
                               class="btn btn-primary mt-4 m-1" 
                               style="min-width: 150px;"
-                            >Save Changes
+                            >Simpan
                             </button>
                             <button 
                               type="button"
@@ -1099,7 +1099,7 @@ export default {
                                 v-model="isJournalNull"
                                 class="mt-3"
                                 variant="danger"
-                            >Harap input soal di Menu Schedule!</b-alert>
+                            >Harap input soal di Menu Jadwal!</b-alert>
                             <div class="row text-left mt-4 mr-2">
                               <div class="col-sm-4">
                                 <input
@@ -1122,7 +1122,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.journal_data.time_start.required"
                                 class="invalid-feedback"
-                                >Start Time is required.</div>
+                                >Start Time harus diisi!</div>
                               </div>
                             </div>
                             <div class="row text-left mt-2 mr-2">
@@ -1147,7 +1147,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.journal_data.time_end.required"
                                 class="invalid-feedback"
-                                >End Time is required.</div>
+                                >End Time harus diisi!</div>
                               </div>
                             </div>
                             <div class="row text-left mt-2 mr-2">
@@ -1172,7 +1172,7 @@ export default {
                                 <div
                                   v-if="submitted && !$v.journal_data.auth.required"
                                   class="invalid-feedback"
-                                  >Auth is required.</div>
+                                  >Auth harus diisi!</div>
                               </div>
                             </div>
                             <button 
@@ -1180,7 +1180,7 @@ export default {
                               @click="submitSchedule('journal')" 
                               class="btn btn-primary mt-4 m-1" 
                               style="min-width: 150px;"
-                            >Save Changes
+                            >Simpan
                             </button>
                             <button 
                               type="button"
@@ -1225,7 +1225,7 @@ export default {
                                 v-model="isPosttestNull"
                                 class="mt-3"
                                 variant="danger"
-                            >Harap input soal di Menu Schedule!</b-alert>
+                            >Harap input soal di Menu Jadwal!</b-alert>
                             <div class="row text-left mt-4 mr-2">
                               <div class="col-sm-4">
                                 <input
@@ -1248,7 +1248,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.posttest_data.time_start.required"
                                 class="invalid-feedback"
-                                >Start Time is required.</div>
+                                >Start Time harus diisi!</div>
                               </div>
                             </div>
                             <div class="row text-left mt-2 mr-2">
@@ -1273,7 +1273,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.posttest_data.time_end.required"
                                 class="invalid-feedback"
-                                >End Time is required.</div>
+                                >End Time harus diisi!</div>
                               </div>
                             </div>
                             <div class="row text-left mt-2 mr-2">
@@ -1298,7 +1298,7 @@ export default {
                                 <div
                                   v-if="submitted && !$v.posttest_data.auth.required"
                                   class="invalid-feedback"
-                                  >Auth is required.</div>
+                                  >Auth harus diisi!</div>
                               </div>
                             </div>
                             <button 
@@ -1306,7 +1306,7 @@ export default {
                               @click="submitSchedule('posttest')" 
                               class="btn btn-primary mt-4 m-1" 
                               style="min-width: 150px;"
-                            >Save Changes
+                            >Simpan
                             </button>
                             <button 
                               type="button"

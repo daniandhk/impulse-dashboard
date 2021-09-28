@@ -231,13 +231,13 @@ export default {
 
     cancelSubmit(){
       Swal.fire({
-          title: "Are you sure?",
-          text: "the form that you have filled in will be reset!",
+          title: "Anda yakin?",
+          text: "Form yang telah terisi akan dikosongkan!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, cancel it!"
+          confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
               this.loading();
@@ -253,7 +253,7 @@ export default {
               this.loadData().then(result=>{
                 this.loading();
               });
-              Swal.fire("Canceled!", "The form has been reset.", "success");
+              Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
     },
@@ -273,7 +273,7 @@ export default {
             showCancelButton: true,
             confirmButtonColor: "#34c38f",
             cancelButtonColor: "#f46a6a",
-            confirmButtonText: "Yes, submit it!"
+            confirmButtonText: "Ya, lanjut submit!"
         }).then(result => {
             if (result.value) {
                 this.inputBap(this.schedule_id, this.dataInput);
@@ -290,7 +290,7 @@ export default {
             this.isInputError = false;
             this.inputSuccess = true;
             this.submitted = false;
-            Swal.fire("Submitted!", "BAP has been submitted.", "success");
+            Swal.fire("Berhasil submit!", "BAP has been submitted.", "success");
             this.$router.replace({
                 name: 'asprak-bap-detail', 
                 params: { id: this.schedule_id }
@@ -496,7 +496,7 @@ export default {
                         <div
                         v-if="submitted && !$v.dataInput.jenis.required"
                         class="invalid-feedback"
-                        >Jenis Interaksi is required.</div>
+                        >Jenis Interaksi harus diisi!</div>
                     </b-form-group>
 
                     <b-form-group
@@ -519,7 +519,7 @@ export default {
                         <div
                         v-if="submitted && !$v.dataInput.materi.required"
                         class="invalid-feedback"
-                        >Materi Praktikum is required.</div>
+                        >Materi Praktikum harus diisi!</div>
                     </b-form-group>
 
                     <b-form-group
@@ -542,7 +542,7 @@ export default {
                         <div
                         v-if="submitted && !$v.dataInput.evaluasi.required"
                         class="invalid-feedback"
-                        >Evaluasi Praktikum is required.</div>
+                        >Evaluasi Praktikum harus diisi!</div>
                     </b-form-group>
                 </div>
             </div>
@@ -694,8 +694,8 @@ export default {
                     <button
                         type="submit"
                         class="btn btn-primary mr-2 waves-effect waves-light"
-                    >Save Changes</button>
-                    <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Cancel</button>
+                    >Simpan</button>
+                    <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
                 </div>
             </div>
         </form>

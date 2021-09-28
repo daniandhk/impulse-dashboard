@@ -141,7 +141,7 @@ export default {
                             <div
                               v-if="submitted && !$v.user.name.required"
                               class="invalid-feedback"
-                            > NIM/NIP is required.</div>
+                            > NIM/NIP harus diisi!</div>
                           </div>
 
                           <div class="form-group auth-form-group-custom mb-4">
@@ -156,7 +156,7 @@ export default {
                               :class="{ 'is-invalid': submitted && $v.user.email.$error }"
                             />
                             <div v-if="submitted && $v.user.email.$error" class="invalid-feedback">
-                              <span v-if="!$v.user.email.required">Email SSO is required.</span>
+                              <span v-if="!$v.user.email.required">Email SSO harus diisi!</span>
                               <span v-if="!$v.user.email.email">Please enter valid email.</span>
                             </div>
                           </div>
@@ -175,7 +175,7 @@ export default {
                             <div
                               v-if="submitted && !$v.user.password.required"
                               class="invalid-feedback"
-                            >Password is required.</div>
+                            >Password harus diisi!</div>
                           </div>
 
                           <div class="text-center">

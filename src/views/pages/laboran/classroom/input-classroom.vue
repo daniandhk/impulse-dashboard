@@ -61,7 +61,7 @@ export default {
                     if (this.inputSuccess) {
                         this.clearForm();
                         this.submitted = false;
-                        Swal.fire("Submitted!", "The form submitted successfully.", "success");
+                        Swal.fire("Berhasil submit!", "Form telah berhasil di submit.", "success");
                     }
                 })
                 .catch(error => {
@@ -84,19 +84,19 @@ export default {
 
     cancelSubmit(){
         Swal.fire({
-            title: "Are you sure?",
-            text: "the form that you have filled in will be deleted!",
+            title: "Anda yakin?",
+            text: "Form yang telah terisi akan dikosongkan!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#34c38f",
             cancelButtonColor: "#f46a6a",
-            confirmButtonText: "Yes, cancel it!"
+            confirmButtonText: "Ya, batalkan!"
         }).then(result => {
             if (result.value) {
                 this.clearForm();
                 this.submitted = false;
                 this.isInputCanceled = true;
-                Swal.fire("Canceled!", "The form has been left blank.", "success");
+                Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
             }
         });
     },
@@ -137,7 +137,7 @@ export default {
                         class="mt-3"
                         variant="success"
                         dismissible
-                        >Canceled!</b-alert>
+                        >Berhasil dibatalkan!</b-alert>
 
                         <b-alert
                         variant="danger"
@@ -168,7 +168,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataClassroom.name.required"
                                 class="invalid-feedback"
-                                >Nama Kelas is required.</div>
+                                >Nama Kelas harus diisi!</div>
                             </div>
                         </div>
 
@@ -180,8 +180,8 @@ export default {
                         <button
                         type="submit"
                         class="btn btn-primary mr-2 waves-effect waves-light"
-                        >Save Changes</button>
-                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Cancel</button>
+                        >Simpan</button>
+                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
                     </div>
                 </div>
             </div>

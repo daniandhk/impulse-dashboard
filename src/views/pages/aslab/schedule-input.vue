@@ -323,13 +323,13 @@ export default {
 
     cancelSubmit(){
       Swal.fire({
-          title: "Are you sure?",
-          text: "the form that you have filled in will be reset!",
+          title: "Anda yakin?",
+          text: "Form yang telah terisi akan dikosongkan!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, cancel it!"
+          confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
               this.loading();
@@ -338,7 +338,7 @@ export default {
               this.loadData().then(result=>{
                 this.loading();
               });
-              Swal.fire("Canceled!", "The form has been reset.", "success");
+              Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
     },
@@ -471,7 +471,7 @@ export default {
           </div>
 
           <div class="form-group text-center">
-              <label>Module</label>
+              <label>Modul</label>
               <multiselect 
                 class="text-center"
                 v-model="schedule_data.module.index" 
@@ -508,7 +508,7 @@ export default {
                 class="mt-3"
                 variant="success"
                 dismissible
-                >Canceled!</b-alert>
+                >Berhasil dibatalkan!</b-alert>
 
                 <b-alert
                 variant="danger"
@@ -531,7 +531,7 @@ export default {
                 <div
                 v-if="submitted && !$v.schedule_data.title.required"
                 class="invalid-feedback"
-                >Name is required.</div>
+                >Name harus diisi!</div>
             </div>
             
             <div class="form-group mb-3">
@@ -549,7 +549,7 @@ export default {
                 <div
                 v-if="submitted && !$v.schedule_data.room.id.required"
                 class="invalid-feedback"
-                >Ruangan is required.</div>
+                >Ruangan harus diisi!</div>
             </div>
             
             <div class="form-group mb-3">
@@ -567,7 +567,7 @@ export default {
                 <div
                 v-if="submitted && !$v.schedule_data.date.required"
                 class="invalid-feedback"
-                >Tanggal is required.</div>
+                >Tanggal harus diisi!</div>
             </div>
 
             <div class="form-group mb-3">
@@ -585,7 +585,7 @@ export default {
                 <div
                 v-if="submitted && !$v.time_start.required"
                 class="invalid-feedback"
-                >Jam Mulai is required.</div>
+                >Jam Mulai harus diisi!</div>
             </div>
             
             <div class="form-group mb-3">
@@ -603,15 +603,15 @@ export default {
                 <div
                 v-if="submitted && !$v.time_end.required"
                 class="invalid-feedback"
-                >Jam Terakhir is required.</div>
+                >Jam Terakhir harus diisi!</div>
             </div>
 
             <div class="text-center mt-4">
                 <button
                 type="submit"
                 class="btn btn-primary mr-2 waves-effect waves-light"
-                >Save Changes</button>
-                <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Cancel</button>
+                >Simpan</button>
+                <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
             </div>
           </div>
         </div>

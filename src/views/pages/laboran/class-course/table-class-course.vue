@@ -227,7 +227,7 @@ export default {
 
     onClickDelete(data){
       Swal.fire({
-          title: "Are you sure?",
+          title: "Anda yakin?",
           text: data.item.class.name + " | " + data.item.course.name + " will be deleted!",
           icon: "warning",
           showCancelButton: true,

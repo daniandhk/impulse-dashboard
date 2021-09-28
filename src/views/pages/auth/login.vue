@@ -117,8 +117,8 @@ function loading() {
                           </a>
                         </div>
 
-                        <h4 class="font-size-18 mt-4">Welcome Back !</h4>
-                        <p class="text-muted">Sign in to continue to Impulse.</p>
+                        <h4 class="font-size-18 mt-4">Selamat Datang !</h4>
+                        <p class="text-muted">Login untuk masuk ke Impulse.</p>
                       </div>
 
                       <div class="p-2 mt-5">
@@ -159,7 +159,7 @@ function loading() {
                             <div 
                             v-if="submitted && !$v.loginData.username.required" 
                             class="invalid-feedback">
-                              NIM/NIP is required.
+                              NIM/NIP harus diisi!
                             </div>
                           </div>
 
@@ -177,7 +177,7 @@ function loading() {
                             <div
                               v-if="submitted && !$v.loginData.password.required"
                               class="invalid-feedback"
-                            >Password is required.</div>
+                            >Password harus diisi!</div>
                           </div>
 
                           <div class="mt-4 text-center">

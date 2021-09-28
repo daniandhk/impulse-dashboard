@@ -130,8 +130,8 @@ export default {
             id: "",
             type: "",
         },
-        time_start: "not set yet",
-        time_end: "not set yet",
+        time_start: "-",
+        time_end: "-",
         is_active: false,
         auth: null
       },
@@ -145,8 +145,8 @@ export default {
             id: "",
             type: "",
         },
-        time_start: "not set yet",
-        time_end: "not set yet",
+        time_start: "-",
+        time_end: "-",
         is_active: false,
         auth: null
       },
@@ -160,8 +160,8 @@ export default {
             id: "",
             type: "",
         },
-        time_start: "not set yet",
-        time_end: "not set yet",
+        time_start: "-",
+        time_end: "-",
         is_active: false,
         auth: null
       },
@@ -343,20 +343,20 @@ export default {
       this.time_date = null;
 
       this.pretest_form.backgroundColor = "#F0F4F6";
-      this.pretest_data.time_start = "not set yet";
-      this.pretest_data.time_end = "not set yet";
+      this.pretest_data.time_start = "-";
+      this.pretest_data.time_end = "-";
       this.pretest_data.is_active = false;
       this.pretest_data.auth = null;
 
       this.journal_form.backgroundColor = "#F0F4F6";
-      this.journal_data.time_start = "not set yet";
-      this.journal_data.time_end = "not set yet";
+      this.journal_data.time_start = "-";
+      this.journal_data.time_end = "-";
       this.journal_data.is_active = false;
       this.journal_data.auth = null;
 
       this.posttest_form.backgroundColor = "#F0F4F6";
-      this.posttest_data.time_start = "not set yet";
-      this.posttest_data.time_end = "not set yet";
+      this.posttest_data.time_start = "-";
+      this.posttest_data.time_end = "-";
       this.posttest_data.is_active = false;
       this.posttest_data.auth = null;
     },
@@ -484,6 +484,13 @@ export default {
             this.isAuthPretestWrong = true;
           }
         }
+        else{
+          Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Tes Awal belum dimulai!'
+          })
+        }
       }
       else if(type == 'journal'){
         if(this.journal_data.is_active){
@@ -513,6 +520,13 @@ export default {
             this.isAuthJournalWrong = true;
           }
         }
+        else{
+          Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Jurnal belum dimulai!'
+          })
+        }
       }
       else if(type == 'posttest'){
         if(this.posttest_data.is_active){
@@ -541,6 +555,13 @@ export default {
           else{
             this.isAuthPosttestWrong = true;
           }
+        }
+        else{
+          Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Tes Akhir belum dimulai!'
+          })
         }
       }
     },
@@ -758,7 +779,7 @@ export default {
                                 <div
                                   v-if="submitted && !$v.dataInput.auth_pretest.required"
                                   class="invalid-feedback"
-                                  >Auth is required.</div>
+                                  >Auth harus diisi!</div>
                               </div>
                             </div>
                             <button 
@@ -773,7 +794,7 @@ export default {
                             <div
                               v-if="isAuthPretestWrong"
                               class="invalid-feedback"
-                            >Invalid Auth, please try again!</div>
+                            >Auth salah, harap coba kembali!</div>
                         </div>
                     </div>
                 </div>
@@ -860,7 +881,7 @@ export default {
                                 <div
                                   v-if="submitted && !$v.dataInput.auth_journal.required"
                                   class="invalid-feedback"
-                                  >Auth is required.</div>
+                                  >Auth harus diisi!</div>
                               </div>
                             </div>
                             <button 
@@ -875,7 +896,7 @@ export default {
                             <div
                               v-if="isAuthJournalWrong"
                               class="invalid-feedback"
-                            >Invalid Auth, please try again!</div>
+                            >Auth salah, harap coba kembali!</div>
                         </div>
                     </div>
                 </div>
@@ -962,7 +983,7 @@ export default {
                                 <div
                                   v-if="submitted && !$v.dataInput.auth_posttest.required"
                                   class="invalid-feedback"
-                                  >Auth is required.</div>
+                                  >Auth harus diisi!</div>
                               </div>
                             </div>
                             <button 
@@ -977,7 +998,7 @@ export default {
                             <div
                               v-if="isAuthPosttestWrong"
                               class="invalid-feedback"
-                            >Invalid Auth, please try again!</div>
+                            >Auth salah, harap coba kembali!</div>
                         </div>
                     </div>
                 </div>

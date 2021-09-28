@@ -396,7 +396,7 @@ function sleep(ms) {
     <b-modal
       size="lg"
       v-model="eventModal"
-      title="Detail Schedule"
+      title="Detail Jadwal"
       hide-footer 
       title-class="font-18"
     >
@@ -451,7 +451,7 @@ function sleep(ms) {
         </div>
         <div>
             <div class="form-group">
-                <label>Room</label>
+                <label>Ruangan</label>
                 <input
                     v-model="schedule_data.room.name"
                     type="text"
@@ -462,7 +462,7 @@ function sleep(ms) {
         </div>
         <div>
             <div class="form-group">
-                <label>Date</label>
+                <label>Tanggal</label>
                 <input
                     v-model="schedule_data.date"
                     type="text"
@@ -474,7 +474,7 @@ function sleep(ms) {
         <div class="row">
           <div class="col-sm-6">
               <div class="form-group">
-                  <label>Start</label>
+                  <label>Jam Mulai</label>
                   <input
                       v-model="schedule_data.start"
                       type="text"
@@ -485,7 +485,7 @@ function sleep(ms) {
           </div>
           <div class="col-sm-6">
               <div class="form-group">
-                  <label>End</label>
+                  <label>Jam Terakhir</label>
                   <input
                       v-model="schedule_data.end"
                       type="text"

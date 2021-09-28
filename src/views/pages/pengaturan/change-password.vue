@@ -96,7 +96,7 @@ export default {
                   :class="{ 'is-invalid': typesubmit && $v.typeform.old_password.$error }"
                 />
                 <div v-if="typesubmit && $v.typeform.old_password.$error" class="invalid-feedback">
-                  <span v-if="!$v.typeform.old_password.required">This value is required.</span>
+                  <span v-if="!$v.typeform.old_password.required">This value harus diisi!</span>
                 </div>
               </div>
 
@@ -112,7 +112,7 @@ export default {
                     placeholder="Password"
                   />
                   <div v-if="typesubmit && $v.typeform.new_password.$error" class="invalid-feedback">
-                    <span v-if="!$v.typeform.new_password.required">This value is required.</span>
+                    <span v-if="!$v.typeform.new_password.required">This value harus diisi!</span>
                     <span
                       v-if="!$v.typeform.new_password.minLength"
                     >Password must be at least 6 characters.</span>
@@ -131,7 +131,7 @@ export default {
                     v-if="typesubmit && $v.typeform.new_password_confirmation.$error"
                     class="invalid-feedback"
                   >
-                    <span v-if="!$v.typeform.new_password_confirmation.required">This value is required.</span>
+                    <span v-if="!$v.typeform.new_password_confirmation.required">This value harus diisi!</span>
                     <span
                       v-else-if="!$v.typeform.new_password_confirmation.sameAsPassword"
                     >This value should be the same.</span>
@@ -141,7 +141,7 @@ export default {
               
               <div class="text-center form-group mb-0">
                 <div>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
               </div>
             </form>

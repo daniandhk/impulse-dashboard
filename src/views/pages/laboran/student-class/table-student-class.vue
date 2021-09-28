@@ -254,7 +254,7 @@ export default {
 
     onClickDelete(data){
       Swal.fire({
-          title: "Are you sure?",
+          title: "Anda yakin?",
           text: data.item.nim + " will be deleted!",
           icon: "warning",
           showCancelButton: true,
@@ -686,8 +686,8 @@ export default {
                   <button
                   type="submit"
                   class="btn btn-primary mr-2 waves-effect waves-light"
-                  >Save Changes</button>
-                  <button type="button" @click="hideModal" class="btn btn-light waves-effect">Cancel</button>
+                  >Simpan</button>
+                  <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
               </div>
           </div>
         </form>

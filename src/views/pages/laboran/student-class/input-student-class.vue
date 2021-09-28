@@ -118,7 +118,7 @@ export default {
                     if (this.inputSuccess) {
                         this.clearForm();
                         this.submitted = false;
-                        Swal.fire("Submitted!", "The form submitted successfully.", "success");
+                        Swal.fire("Berhasil submit!", "Form telah berhasil di submit.", "success");
                     }
                 })
                 .catch(error => {
@@ -141,20 +141,20 @@ export default {
 
     cancelSubmit(){
         Swal.fire({
-            title: "Are you sure?",
-            text: "the form that you have filled in will be deleted!",
+            title: "Anda yakin?",
+            text: "Form yang telah terisi akan dikosongkan!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#34c38f",
             cancelButtonColor: "#f46a6a",
-            confirmButtonText: "Yes, cancel it!"
+            confirmButtonText: "Ya, batalkan!"
         }).then(result => {
             if (result.value) {
                 this.clearForm();
                 this.submitted = false;
                 this.submitted_nim = false;
                 this.isInputCanceled = true;
-                Swal.fire("Canceled!", "The form has been left blank.", "success");
+                Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
             }
         });
     },
@@ -452,7 +452,7 @@ export default {
                         class="mt-3"
                         variant="success"
                         dismissible
-                        >Canceled!</b-alert>
+                        >Berhasil dibatalkan!</b-alert>
 
                         <b-alert
                         variant="danger"
@@ -481,7 +481,7 @@ export default {
                                         <div
                                         v-if="submitted_nim && !$v.dataStudent.nim.required"
                                         class="invalid-feedback"
-                                        >NIM is required.</div>
+                                        >NIM harus diisi!</div>
                                     </div>
                                     <div class="col-sm-4">
                                         <b-button variant="success" @click="checkNim"
@@ -519,7 +519,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.name.required"
                                 class="invalid-feedback"
-                                >Nama Mahasiswa is required.</div>
+                                >Nama Mahasiswa harus diisi!</div>
                             </div>
                         </div>
 
@@ -537,7 +537,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.gender.required"
                                 class="invalid-feedback"
-                                >Jenis Kelamin is required.</div>
+                                >Jenis Kelamin harus diisi!</div>
                             </div>
                         </div>
 
@@ -555,7 +555,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.religion.required"
                                 class="invalid-feedback"
-                                >Agama is required.</div>
+                                >Agama harus diisi!</div>
                             </div>
                         </div>
 
@@ -572,7 +572,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.gender.required"
                                 class="invalid-feedback"
-                                >Jenis Kelamin is required.</div>
+                                >Jenis Kelamin harus diisi!</div>
                             </div>
                         </div>
 
@@ -589,7 +589,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.religion.required"
                                 class="invalid-feedback"
-                                >Agama is required.</div>
+                                >Agama harus diisi!</div>
                             </div>
                         </div>
                     </div>
@@ -611,7 +611,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.class_name.required"
                                 class="invalid-feedback"
-                                >Kelas Mata Kuliah is required.</div>
+                                >Kelas Mata Kuliah harus diisi!</div>
                             </div>
                         </div>
 
@@ -632,7 +632,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.course_name.required"
                                 class="invalid-feedback"
-                                >Nama Mata Kuliah is required.</div>
+                                >Nama Mata Kuliah harus diisi!</div>
                             </div>
                         </div>
 
@@ -653,7 +653,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.course_code.required"
                                 class="invalid-feedback"
-                                >Kode Mata Kuliah is required.</div>
+                                >Kode Mata Kuliah harus diisi!</div>
                             </div>
                         </div>
                     </div>
@@ -676,7 +676,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.academic_year.required"
                                 class="invalid-feedback"
-                                >Tahun Akademik (Semester) is required.</div>
+                                >Tahun Akademik (Semester) harus diisi!</div>
                             </div>
                         </div>
 
@@ -696,7 +696,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.staff_name.required"
                                 class="invalid-feedback"
-                                >Nama Dosen Mata Kuliah is required.</div>
+                                >Nama Dosen Mata Kuliah harus diisi!</div>
                             </div>
                         </div>
 
@@ -716,7 +716,7 @@ export default {
                                 <div
                                 v-if="submitted && !$v.dataStudent.staff_code.required"
                                 class="invalid-feedback"
-                                >Kode Dosen Mata Kuliah is required.</div>
+                                >Kode Dosen Mata Kuliah harus diisi!</div>
                             </div>
                         </div>
                     </div>
@@ -725,8 +725,8 @@ export default {
                         <button
                         type="submit"
                         class="btn btn-primary mr-2 waves-effect waves-light"
-                        >Save Changes</button>
-                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Cancel</button>
+                        >Simpan</button>
+                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
                     </div>
                 </div>
             </div>

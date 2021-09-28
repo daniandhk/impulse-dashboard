@@ -331,10 +331,10 @@ export default {
 
         onClickSubmit(){
             let text = "Jawaban yang kosong akan tetap ter-submit!";
-            let confirm = "Yes, submit it!";
+            let confirm = "Ya, lanjut submit!";
             if(this.isFile){
                 text = "Pastikan jawaban diunggah ke URL yang telah disediakan!"
-                confirm = "Yes, end this test!"
+                confirm = "Ya, akhiri tes sekarang!"
             }
             Swal.fire({
                 title: "Yakin akan menyelesaikan test ini?",
@@ -363,7 +363,7 @@ export default {
                     // return (
                     //     api.updateEssay(this.dataInput)
                     //     .then(response => {
-                    //         Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                    //         Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
                     //         this.$router.push({
                     //             name: 'praktikan-schedule-detail', 
                     //             params: { id: this.schedule_test_data.schedule.id }
@@ -383,7 +383,7 @@ export default {
                     return (
                         api.storeEssay(this.dataInput)
                         .then(response => {
-                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                            Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
                             this.$router.push({
                                 name: 'praktikan-schedule-detail', 
                                 params: { id: this.schedule_test_data.schedule.id }
@@ -405,7 +405,7 @@ export default {
                     // return (
                     //     api.updateMultipleChoice(this.dataInput)
                     //     .then(response => {
-                    //         Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                    //         Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
                     //         this.$router.push({
                     //             name: 'praktikan-schedule-detail', 
                     //             params: { id: this.schedule_test_data.schedule.id }
@@ -425,7 +425,7 @@ export default {
                     return (
                         api.storeMultipleChoice(this.dataInput)
                         .then(response => {
-                            Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                            Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
                             this.$router.push({
                                 name: 'praktikan-schedule-detail', 
                                 params: { id: this.schedule_test_data.schedule.id }
@@ -449,7 +449,7 @@ export default {
                 return (
                     api.storeEssay(this.dataInput)
                     .then(response => {
-                        Swal.fire("Submitted!", "Anda telah menyelesaikan test ini!", "success");
+                        Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
                         this.$router.push({
                             name: 'praktikan-schedule-detail', 
                             params: { id: this.schedule_test_data.schedule.id }
@@ -479,7 +479,7 @@ export default {
                     link.click()
                     
                     this.loading();
-                    Swal.fire("Downloaded!", "The file has been downloaded.", "success");
+                    Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
                 })
                 .catch(error => {
                     Swal.fire({
