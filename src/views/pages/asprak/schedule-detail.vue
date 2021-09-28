@@ -1281,7 +1281,7 @@ export default {
                                                         </div>
                                                         <hr>
                                                     </div>
-                                                    <div class="text-left">
+                                                    <div class="text-left" v-if="question.options.length < 10">
                                                         <b-button size="sm" v-on:click="addAnswer(question)" variant="outline-secondary">
                                                           <b-icon icon="plus-circle-fill"></b-icon> tambah jawaban
                                                         </b-button>
