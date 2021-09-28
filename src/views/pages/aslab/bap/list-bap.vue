@@ -69,7 +69,7 @@ export default {
       sortBy: "class_course.class.name",
       sortDesc: false,
       fields: [
-        { key: "title", sortable: true, label: "Name" },
+        { key: "title", sortable: true, label: "Nama" },
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },

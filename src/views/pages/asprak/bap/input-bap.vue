@@ -133,7 +133,7 @@ export default {
       asprak_sortDesc: false,
       asprak_fields: [
         { key: "nim", sortable: true, label: "NIM" },
-        { key: "name", sortable: true, label: "Name" },
+        { key: "name", sortable: true, label: "Nama" },
         { key: "action", sortable: false, label: "Hadir", thClass: 'text-center', tdClass: 'text-center', }
       ],
 
@@ -147,7 +147,7 @@ export default {
       student_sortDesc: false,
       student_fields: [
         { key: "nim", sortable: true, label: "NIM" },
-        { key: "name", sortable: true, label: "Name" },
+        { key: "name", sortable: true, label: "Nama" },
         { key: "action", sortable: false, label: "Hadir", thClass: 'text-center', tdClass: 'text-center', }
       ],
 

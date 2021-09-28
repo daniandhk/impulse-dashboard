@@ -41,7 +41,7 @@ export default {
       sortDesc: false,
       fields: [
         { key: "nim", sortable: true, label: "NIM" },
-        { key: "name", sortable: true, label: "Name" },
+        { key: "name", sortable: true, label: "Nama" },
         { key: "class_name", sortable: true, label: "Kelas MK" },
         { key: "course_code", sortable: true, label: "Kode MK" },
         { key: "course_name", sortable: true, label: "Nama MK" },
@@ -255,15 +255,15 @@ export default {
     onClickDelete(data){
       Swal.fire({
           title: "Anda yakin?",
-          text: data.item.nim + " will be deleted!",
+          text: data.item.nim + " akan dihapus!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, delete it!"
+          confirmButtonText: "Ya, hapus!"
       }).then(result => {
           if (result.value) {
-              this.deleteStudent(data.item.student_id, data.item.nim);
+              this.deleteStudent(data.item.students_class_course_id, data.item.nim);
           }
       });
     },
@@ -272,7 +272,7 @@ export default {
       return (
         api.deleteStudentClass(id)
           .then(response => {
-            Swal.fire("Deleted!", nim + " has been deleted.", "success");
+            Swal.fire("Berhasil dihapus!", nim + " telah terhapus.", "success");
             this.loading();
             this.fetchData().then(result=>{
                 this.loading();

@@ -32,16 +32,15 @@ export default {
           this.on('error', function(file, response){
             Swal.fire({
                 icon: 'error',
-                title: 'Failed to upload your file!',
+                title: 'Gagal mengunggah file!',
                 text: 'Cek kembali kesesuaian file dengan deskripsi.',
-                footer: response
             })
           });
           this.on('success', function(file, response){
             Swal.fire({
                 icon: 'success',
-                title: 'Uploaded!',
-                text: 'Your file has been uploaded.',
+                title: 'Berhasil diunggah!',
+                text: 'File telah terunggah.',
             })
           })
         }

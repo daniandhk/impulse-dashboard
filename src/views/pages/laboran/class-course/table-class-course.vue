@@ -228,12 +228,12 @@ export default {
     onClickDelete(data){
       Swal.fire({
           title: "Anda yakin?",
-          text: data.item.class.name + " | " + data.item.course.name + " will be deleted!",
+          text: data.item.class.name + " | " + data.item.course.name + " akan dihapus!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, delete it!"
+          confirmButtonText: "Ya, hapus!"
       }).then(result => {
           if (result.value) {
               this.deleteClassCourse(data.item.id, data.item.class.name, data.item.course.name);
@@ -245,7 +245,7 @@ export default {
       return (
         api.deleteClassCourse(id)
           .then(response => {
-            Swal.fire("Deleted!", class_name + " | " + course_name + " has been deleted.", "success");
+            Swal.fire("Berhasil dihapus!", class_name + " | " + course_name + " telah terhapus.", "success");
             this.loading();
             this.fetchData().then(result=>{
                 this.loading();

@@ -191,16 +191,15 @@ export default {
             console.log(response)
             Swal.fire({
                 icon: 'error',
-                title: 'Failed to upload your file!',
+                title: 'Gagal mengunggah file!',
                 text: 'Cek kembali kesesuaian deskripsi.',
-                footer: response
             })
           });
           this.on('success', function(file, response){
             Swal.fire({
                 icon: 'success',
-                title: 'Uploaded!',
-                text: 'Your file has been uploaded.',
+                title: 'Berhasil diunggah!',
+                text: 'File telah terunggah.',
             })
           })
         }
@@ -821,9 +820,8 @@ export default {
       this.loading();
       Swal.fire({
           icon: 'success',
-          title: 'Uploaded!',
-          text: 'Your file has been uploaded.',
-          footer: response
+          title: 'Berhasil diunggah!',
+          text: 'File telah terunggah.',
       })
       this.loadData().then(result=>{
         this.selectTest("Journal").then(rslt=>{

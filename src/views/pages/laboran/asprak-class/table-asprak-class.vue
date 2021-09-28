@@ -41,7 +41,7 @@ export default {
       sortDesc: false,
       fields: [
         { key: "student.nim", sortable: false, label: "NIM" },
-        { key: "student.name", sortable: false, label: "Name" },
+        { key: "student.name", sortable: false, label: "Nama" },
         { key: "class_course.classes.name", sortable: false, label: "Kelas MK" },
         { key: "class_course.courses.code", sortable: false, label: "Kode MK" },
         { key: "class_course.courses.name", sortable: false, label: "Nama MK" },
@@ -223,12 +223,12 @@ export default {
     onClickDelete(data){
       Swal.fire({
           title: "Anda yakin?",
-          text: data.item.student.nim + " will be deleted!",
+          text: data.item.student.nim + " akan dihapus!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, delete it!"
+          confirmButtonText: "Ya, hapus!"
       }).then(result => {
           if (result.value) {
               this.deleteAsprakClass(data.item.id, data.item.student.nim);
@@ -240,7 +240,7 @@ export default {
       return (
         api.deleteAsprakClass(id)
           .then(response => {
-            Swal.fire("Deleted!", nim + " has been deleted.", "success");
+            Swal.fire("Berhasil dihapus!", nim + " telah terhapus.", "success");
             this.loading();
             this.fetchData().then(result=>{
                 this.loading();

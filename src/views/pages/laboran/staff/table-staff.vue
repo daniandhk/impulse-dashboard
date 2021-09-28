@@ -37,7 +37,7 @@ export default {
       sortDesc: false,
       fields: [
         { key: "nip", sortable: true, label: "NIP" },
-        { key: "name", sortable: true, label: "Name" },
+        { key: "name", sortable: true, label: "Nama" },
         { key: "code", sortable: true, label: "Kode Dosen" },
         { key: "action", sortable: false }
       ],
@@ -209,12 +209,12 @@ export default {
     onClickDelete(data){
       Swal.fire({
           title: "Anda yakin?",
-          text: data.item.nip + " will be deleted!",
+          text: data.item.nip + " akan dihapus!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Yes, delete it!"
+          confirmButtonText: "Ya, hapus!"
       }).then(result => {
           if (result.value) {
               this.deleteStaff(data.item.id, data.item.nip);
@@ -226,7 +226,7 @@ export default {
       return (
         api.deleteStaff(id)
           .then(response => {
-            Swal.fire("Deleted!", nip + " has been deleted.", "success");
+            Swal.fire("Berhasil dihapus!", nip + " telah terhapus.", "success");
             this.loading();
             this.fetchData().then(result=>{
                 this.loading();
