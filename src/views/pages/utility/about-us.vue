@@ -22,7 +22,7 @@ export default {
               <div class="text-center mb-5 mt-5">
                 <h3>Tentang IMPULSE</h3>
                 <p class="mt-3"> Information systeM for PracticUm and Laboratory courSE (IMPULSE). <br> Merupakan website yang berfungsi untuk mengelola penjadwalan,
-                monitoring dan pelaksanaan praktikum, sesuai dengan dengan kebutuhan praktikan,
+                monitoring dan pelaksanaan praktikum, sesuai dengan kebutuhan praktikan,
                 asisten, laboran, Kaur. Lab dan pihak Fakultas Informatika, Telkom University.
                 Aplikasi ini diharapkan dapat mendukung pelaksanaan kegiatan operasional di
                 Laboratorium Informatika (IFLAB).</p>

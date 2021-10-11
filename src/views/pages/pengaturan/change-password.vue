@@ -96,13 +96,16 @@ export default {
                   :class="{ 'is-invalid': typesubmit && $v.typeform.old_password.$error }"
                 />
                 <div v-if="typesubmit && $v.typeform.old_password.$error" class="invalid-feedback">
-                  <span v-if="!$v.typeform.old_password.required">This value harus diisi!</span>
+                  <span v-if="!$v.typeform.old_password.required">Password Lama harus diisi!</span>
                 </div>
               </div>
 
               <div class="form-group">
                 <label>Masukkan Password Baru</label>
-                <div>
+                <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                    - Minimal terdiri dari 6 karakter.<br>
+                </p>
+                <div class="mt-4">
                   <input
                     v-model="typeform.new_password"
                     type="password"
@@ -112,7 +115,7 @@ export default {
                     placeholder="Password"
                   />
                   <div v-if="typesubmit && $v.typeform.new_password.$error" class="invalid-feedback">
-                    <span v-if="!$v.typeform.new_password.required">This value harus diisi!</span>
+                    <span v-if="!$v.typeform.new_password.required">Password Baru harus diisi!</span>
                     <span
                       v-if="!$v.typeform.new_password.minLength"
                     >Password must be at least 6 characters.</span>
@@ -131,10 +134,10 @@ export default {
                     v-if="typesubmit && $v.typeform.new_password_confirmation.$error"
                     class="invalid-feedback"
                   >
-                    <span v-if="!$v.typeform.new_password_confirmation.required">This value harus diisi!</span>
+                    <span v-if="!$v.typeform.new_password_confirmation.required">Password Baru harus diisi kembali!</span>
                     <span
                       v-else-if="!$v.typeform.new_password_confirmation.sameAsPassword"
-                    >This value should be the same.</span>
+                    >Masukkan kembali Password Baru dengan benar.</span>
                   </div>
                 </div>
               </div>

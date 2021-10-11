@@ -429,8 +429,8 @@ export default {
             <!-- <div title="Student Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Asprak Class</h4>
-                    <p class="card-title-desc">Fill all information below</p>
+                    <h4 class="card-title">Tambah Kelas Asisten Praktikum</h4>
+                    <p class="card-title-desc">Isi semua informasi dibawah ini</p>
                     
                     <div>
                         <b-alert
@@ -487,7 +487,7 @@ export default {
                                         <b-button variant="success" @click="checkNim"
                                         :class="{ 
                                             'is-invalid': submitted && !isNimAsprak,
-                                            'is-valid': submitted && isNimAsprak }">Check NIM</b-button>
+                                            'is-valid': submitted && isNimAsprak }">Cek NIM</b-button>
                                         <div
                                         v-if="!isNimAsprak"
                                         class="invalid-feedback"

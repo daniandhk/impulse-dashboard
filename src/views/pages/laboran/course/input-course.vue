@@ -114,8 +114,8 @@ export default {
             <!-- <div title="Course Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Course</h4>
-                    <p class="card-title-desc">Fill all information below</p>
+                    <h4 class="card-title">Tambah Mata Kuliah</h4>
+                    <p class="card-title-desc">Isi semua informasi dibawah ini</p>
                     
                     <div>
                         <b-alert

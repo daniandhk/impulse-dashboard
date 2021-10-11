@@ -31,7 +31,7 @@ export default {
   data() {
     return {
       //input student
-      title: "Student Class Data",
+      title: "Kelas Praktikan",
       dataStudent: { 
           name: "", 
           nim: "", 
@@ -429,8 +429,8 @@ export default {
             <!-- <div title="Student Data"> -->
             <div>
                 <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Add Student Class</h4>
-                    <p class="card-title-desc">Fill all information below</p>
+                    <h4 class="card-title">Tambah Kelas Praktikan</h4>
+                    <p class="card-title-desc">Isi semua informasi dibawah ini</p>
                     
                     <div>
                         <b-alert
@@ -487,7 +487,7 @@ export default {
                                         <b-button variant="success" @click="checkNim"
                                         :class="{ 
                                             'is-invalid': submitted_nim && !isNimFound,
-                                            'is-valid': submitted_nim && isNimFound }">Check NIM</b-button>
+                                            'is-valid': submitted_nim && isNimFound }">Cek NIM</b-button>
                                         <div
                                         v-if="!isNimFound"
                                         class="invalid-feedback"

@@ -22,13 +22,13 @@ export default {
   },
   data() {
     return {
-      title: "Student Class Data",
+      title: "Kelas Praktikan",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Student Class Data",
+          text: "Kelas Praktikan",
           active: true
         }
       ],
