@@ -159,7 +159,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -174,8 +174,8 @@ export default {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'This ID is invalid!',
-            footer: 'You will be redirected to Schedule Menu',
+            text: 'ID tidak valid!',
+            footer: 'Anda dialihkan ke Menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -197,7 +197,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -216,7 +216,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -262,7 +262,7 @@ export default {
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
-                  text: 'Something went wrong!',
+                  text: 'Terjadi kesalahan!',
                   footer: error
               })
           })
@@ -314,7 +314,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })
@@ -393,7 +393,7 @@ export default {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Something went wrong!',
+                text: 'Terjadi kesalahan!',
                 footer: error
             })
           })

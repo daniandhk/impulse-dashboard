@@ -136,7 +136,7 @@ export default {
             //         icon: 'error',
             //         title: 'Oops...',
             //         text: 'You need input Auth first!',
-            //         footer: 'You are redirected to Schedule Menu',
+            //         footer: 'Anda dialihkan ke Menu Jadwal',
             //     })
             //     this.$router.replace({
             //         name: 'praktikan-schedule-detail', 
@@ -151,8 +151,8 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'This test currently not actived!',
-                    footer: 'You are redirected to Schedule Menu',
+                    text: 'Tes saat ini belum dimulai!',
+                    footer: 'Anda dialihkan ke Menu Jadwal',
                 })
                 this.$router.replace({
                     name: 'praktikan-schedule-detail', 
@@ -219,7 +219,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: 'Terjadi kesalahan!',
                         footer: error
                     })
                 })
@@ -240,7 +240,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: 'Terjadi kesalahan!',
                         footer: error
                     })
                 })
@@ -276,7 +276,7 @@ export default {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Something went wrong!',
+                            text: 'Terjadi kesalahan!',
                             footer: error
                         })
                     })
@@ -305,7 +305,7 @@ export default {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Something went wrong!',
+                            text: 'Terjadi kesalahan!',
                             footer: error
                         })
                     })
@@ -321,8 +321,8 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'This ID is invalid!',
-                    footer: 'You will be redirected to Schedule Menu',
+                    text: 'ID tidak valid!',
+                    footer: 'Anda dialihkan ke Menu Jadwal',
                     timer: 4000
                 })
                 this.$router.back();
@@ -373,7 +373,7 @@ export default {
                     //         Swal.fire({
                     //             icon: 'error',
                     //             title: 'Oops...',
-                    //             text: 'Something went wrong!',
+                    //             text: 'Terjadi kesalahan!',
                     //             footer: error
                     //         })
                     //     })
@@ -393,7 +393,7 @@ export default {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Something went wrong!',
+                                text: 'Terjadi kesalahan!',
                                 footer: error
                             })
                         })
@@ -415,7 +415,7 @@ export default {
                     //         Swal.fire({
                     //             icon: 'error',
                     //             title: 'Oops...',
-                    //             text: 'Something went wrong!',
+                    //             text: 'Terjadi kesalahan!',
                     //             footer: error
                     //         })
                     //     })
@@ -435,7 +435,7 @@ export default {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Something went wrong!',
+                                text: 'Terjadi kesalahan!',
                                 footer: error
                             })
                         })
@@ -459,7 +459,7 @@ export default {
                         Swal.fire({
                             icon: 'error',
                             title: 'Oops...',
-                            text: 'Something went wrong!',
+                            text: 'Terjadi kesalahan!',
                             footer: error
                         })
                     })
@@ -485,7 +485,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: 'Terjadi kesalahan!',
                         footer: error
                     })
                 })

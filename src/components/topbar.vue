@@ -139,7 +139,7 @@ export default {
       </div>
 
       <div class="d-flex">
-        <div class="dropdown d-none d-lg-inline-block ml-1">
+        <!-- <div class="dropdown d-none d-lg-inline-block ml-1">
           <button
             type="button"
             class="btn header-item noti-icon waves-effect"
@@ -147,7 +147,7 @@ export default {
           >
             <i class="ri-fullscreen-line"></i>
           </button>
-        </div>
+        </div> -->
 
         <b-dropdown
           right

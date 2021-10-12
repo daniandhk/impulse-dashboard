@@ -93,7 +93,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Something went wrong!',
+                        text: 'Terjadi kesalahan!',
                         footer: error
                     })
                 })
@@ -148,7 +148,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Something went wrong!',
+                    text: 'Terjadi kesalahan!',
                     footer: error
                 })
             })
