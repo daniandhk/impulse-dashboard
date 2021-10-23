@@ -601,8 +601,8 @@ export default {
         <div class="card-body">
           <div class="text-center">
             <h5 class="text-center font-size-15 text-uppercase">JADWAL</h5>
-            <a href="#" @click="onClickJadwal" class="font-weight-bold active" v-if="!isJadwalShowed">show</a>
-            <a href="#" @click="onClickJadwal" class="font-weight-bold active" v-if="isJadwalShowed">hide</a>
+            <a href="javascript:void(0)" @click="onClickJadwal" class="font-weight-bold active" v-if="!isJadwalShowed">show</a>
+            <a href="javascript:void(0)" @click="onClickJadwal" class="font-weight-bold active" v-if="isJadwalShowed">hide</a>
           </div>
           <div v-if="isJadwalShowed">
             <div class="row mt-4">

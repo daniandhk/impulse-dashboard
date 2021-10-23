@@ -692,8 +692,8 @@ export default {
             <div class="form-group">
                 <div class="row" style="margin:0!important;">
                   <label class="mr-4">Ruangan</label>
-                  <a href="#" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
-                  <a href="#" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
+                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
+                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
                 </div>
                 <input
                     v-model="schedule_data.room.name"
