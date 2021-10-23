@@ -17,6 +17,8 @@ import { notificationMethods } from "@/state/helpers";
 /**
  * Advanced-form component
  */
+const greaterThanZero = (value) => value > 0
+
 export default {
   page: {
     title: "Edit Jadwal",
@@ -48,7 +50,7 @@ export default {
         questions: {
           $each: {
               text: { required },
-              weight: { required },
+              weight: { required, maxValue: greaterThanZero },
           }
         }
     },
@@ -1288,7 +1290,7 @@ export default {
                                                       <div
                                                         v-if="submitted_test && !v.weight.$error.required"
                                                         class="invalid-feedback"
-                                                        >Bobot Nilai harus diisi!</div>
+                                                        >Bobot Nilai harus diisi dan lebih dari nol!</div>
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
