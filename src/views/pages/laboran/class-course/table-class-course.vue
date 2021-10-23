@@ -34,7 +34,7 @@ export default {
         { key: "staff.name", sortable: true, label: "Nama Dosen" },
         { key: "academic_year.semester", sortable: true, label: "Semester" },
         { key: "academic_year.name", sortable: true, label: "Tahun Akademik" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",

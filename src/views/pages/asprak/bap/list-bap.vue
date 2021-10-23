@@ -78,7 +78,7 @@ export default {
         { key: "start", sortable: true, label: "Jam Mulai" },
         { key: "end", sortable: true, label: "Jam Terakhir" },
         { key: "class_course.staff.code", sortable: true, label: "Kode Dosen" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",

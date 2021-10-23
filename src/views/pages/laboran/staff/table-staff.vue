@@ -40,7 +40,7 @@ export default {
         { key: "name", sortable: true, label: "Nama" },
         { key: "code", sortable: true, label: "Kode Dosen" },
         { key: "action", sortable: false },
-        { key: "manage", sortable: false }
+        { key: "manage", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //modal edit
@@ -506,6 +506,7 @@ export default {
               <b-button
                   type="submit" 
                   variant="danger"
+                  size="sm"
                   @click=onClickReset(data)
                   style="min-width: 75px;" 
                   >Reset Password

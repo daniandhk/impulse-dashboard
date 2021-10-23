@@ -54,7 +54,7 @@ export default {
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Mulai" },
         { key: "end", sortable: true, label: "Terakhir" },
-        { key: "room", label: "Ruangan", sortable: false },
+        { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
       ],
 
       student_id: store.getters.getLoggedUser.id,
@@ -302,6 +302,7 @@ export default {
                           type="submit" 
                           variant="primary"
                           @click=onClickShow(data)
+                          size="sm"
                           style="min-width: 75px;" 
                           >{{data.item.room.name}}
                       </b-button>

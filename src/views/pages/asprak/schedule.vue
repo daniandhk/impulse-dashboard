@@ -77,8 +77,8 @@ export default {
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai" },
         { key: "end", sortable: true, label: "Jam Terakhir" },
-        { key: "room", sortable: false, label: "Ruangan" },
-        { key: "action", sortable: false }
+        { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "action", sortable: false, }
       ],
 
       class_name: "",
@@ -495,6 +495,7 @@ export default {
                       type="submit" 
                       variant="primary"
                       @click=onClickShow(data)
+                      size="sm"
                       style="min-width: 75px;" 
                       >{{data.item.room.name}}
                   </b-button>

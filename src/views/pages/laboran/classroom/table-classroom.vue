@@ -34,7 +34,7 @@ export default {
       sortDesc: false,
       fields: [
         { key: "name", sortable: true, label: "Nama Kelas" },
-        { key: "action", sortable: false }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //modal edit
