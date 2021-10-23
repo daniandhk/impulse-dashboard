@@ -30,6 +30,7 @@ export default {
       sortDesc: false,
       fields: [
         { key: "class.name", sortable: true, label: "Nama Kelas" },
+        { key: "course.code", sortable: true, label: "Kode MK" },
         { key: "course.name", sortable: true, label: "Nama MK" },
         { key: "staff.name", sortable: true, label: "Nama Dosen" },
         { key: "academic_year.semester", sortable: true, label: "Semester" },
