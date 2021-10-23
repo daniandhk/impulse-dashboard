@@ -232,6 +232,23 @@ export default {
       await this.getTestSchedule(this.schedule_data.id, this.schedule_data.module.pretest_id, 'pretest');
       await this.getTestSchedule(this.schedule_data.id, this.schedule_data.module.posttest_id, 'posttest');
       await this.getTestSchedule(this.schedule_data.id, this.schedule_data.module.journal_id, 'journal');
+
+      this.setSchedule();
+    },
+
+    setSchedule(){
+      if(this.schedule_data.date == null || this.schedule_data.start == null || this.schedule_data.end == null){
+        this.isJadwalNull = true;
+        this.isActive('pretest', false);
+        this.isActive('journal', false);
+        this.isActive('posttest', false);
+      }
+      else{
+        this.isJadwalNull = false;
+        this.isActive('pretest', true);
+        this.isActive('journal', true);
+        this.isActive('posttest', true);
+      }
     },
 
     async getTestSchedule(schedule_id, test_id, type){
@@ -392,19 +409,6 @@ export default {
               this.schedule_data = response.data.data;
               this.getClassCourse(this.schedule_data.class_course.id);
               this.getListSchedules(this.schedule_data.class_course.id);
-
-              if(this.schedule_data.date == null || this.schedule_data.start == null || this.schedule_data.end == null){
-                this.isJadwalNull = true;
-                this.isActive('pretest', false);
-                this.isActive('journal', false);
-                this.isActive('posttest', false);
-              }
-              else{
-                this.isJadwalNull = false;
-                this.isActive('pretest', true);
-                this.isActive('journal', true);
-                this.isActive('posttest', true);
-              }
             }
           })
           .catch(error => {
