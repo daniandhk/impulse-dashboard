@@ -16,7 +16,7 @@ export default {
       //dropzone
       seen: false,
       dropzoneOptions: {
-        url: process.env.VUE_APP_BACKEND_URL + "/staff/import",
+        url: process.env.VUE_APP_BACKEND_URL + "/laboran/asprak/import",
         thumbnailWidth: 150,
         maxFilesize: 5,
         
@@ -76,12 +76,12 @@ export default {
                         - Pastikan hanya ada <b>satu sheet</b>,<br>
                         - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
                     </p>
-                    <img src="@/assets/images/staff-excel-example.png" style="box-sizing: border-box; 
+                    <img class="mt-2 mb-2" src="@/assets/images/asprak-excel-example.png" style="box-sizing: border-box; 
                                                                                             width: 25%; 
                                                                                             margin: auto;"/>
-                    <div class="mb-4 mt-2">
+                    <div class="mb-4 mt-4">
                         <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                            Contoh file Excel: <a href="/files/staffdummy.xlsx" download>staffdummy.xlsx</a><br>
+                            Contoh file Excel: <a href="/files/asprakdummy.xlsx" download>asprakdummy.xlsx</a><br>
                         </p>
                     </div>
                     <!-- file upload -->

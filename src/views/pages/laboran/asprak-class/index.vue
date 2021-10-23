@@ -4,6 +4,7 @@ import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
 import TableAsprak from "./table-asprak-class";
 import InputAsprak from "./input-asprak-class";
+import ImportAsprak from "./import-asprak-class";
 
 export default {
   page: {
@@ -14,6 +15,7 @@ export default {
     PageHeader,
     TableAsprak,
     InputAsprak,
+    ImportAsprak,
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -67,6 +69,12 @@ export default {
                       <a class="font-weight-bold active">Input</a>
                   </template>
                   <InputAsprak/>
+              </b-tab>
+              <b-tab title-link-class="p-3">
+                  <template v-slot:title>
+                      <a class="font-weight-bold active">Import Excel</a>
+                  </template>
+                  <ImportAsprak/>
               </b-tab>
             </b-tabs>
           </div>

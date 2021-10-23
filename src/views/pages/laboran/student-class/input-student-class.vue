@@ -495,7 +495,7 @@ export default {
                                         <div
                                         v-if="isNimFound"
                                         class="valid-feedback"
-                                        >NIM is available.</div>
+                                        >NIM tersedia.</div>
                                     </div>
                                 </div>
                             </div>

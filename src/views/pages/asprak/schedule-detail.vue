@@ -1388,7 +1388,7 @@ export default {
                                   <!-- <div title="Import Excel"> -->
                                   <div>
                                       <div class="tab-pane pb-2 pt-2" id="metadata">
-                                          <p style="color: red; font-size: 12px; margin: 0 !important;">IMPORTANT – PLEASE READ CAREFULLY</p>
+                                          <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
                                           <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload soal Jurnal:</p>
                                           <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                                               - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>

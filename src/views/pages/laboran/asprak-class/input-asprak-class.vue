@@ -16,6 +16,7 @@ export default {
   validations: {
     dataStudent: {
       name: { required },
+      asprak_code: { required },
       nim: { required },
       gender: { required },
       religion: { required },
@@ -31,9 +32,10 @@ export default {
   data() {
     return {
       //input student
-      title: "Asprak Class Data",
+      title: "Kelas Asisten Praktikum",
       dataStudent: { 
           name: "", 
+          asprak_code: "",
           nim: "", 
           gender: "", 
           religion: "", 
@@ -76,6 +78,7 @@ export default {
 
       dataInput: {
           student_id: "",
+          asprak_code: "",
           class_course_id: "",
       },
     };
@@ -105,6 +108,7 @@ export default {
       } else {
           this.tryingToInput = true;
           this.inputError = null;
+          this.dataInput.asprak_code = this.dataStudent.asprak_code;
           return (
               api.inputAsprakClass(this.dataInput)
                 .then(response => {
@@ -157,6 +161,7 @@ export default {
 
     clearForm(){
         this.dataStudent.name = "";
+        this.dataStudent.asprak_code = "";
         this.dataStudent.nim = "";
         this.dataStudent.gender = "";
         this.dataStudent.religion = "";
@@ -431,8 +436,12 @@ export default {
                 <div class="tab-pane" id="metadata">
                     <h4 class="card-title">Tambah Kelas Asisten Praktikum</h4>
                     <p class="card-title-desc">Isi semua informasi dibawah ini</p>
+                    <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
+                    <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                        NIM sebagai Asprak dapat diatur di Menu Data Mahasiswa.
+                    </p>
                     
-                    <div>
+                    <div class="mt-4">
                         <b-alert
                         v-model="inputSuccess"
                         class="mt-3"
@@ -491,11 +500,11 @@ export default {
                                         <div
                                         v-if="!isNimAsprak"
                                         class="invalid-feedback"
-                                        >NIM is not available or not Asprak,<br>please try another NIM.</div>
+                                        >NIM tidak tersedia atau bukan Asprak,<br>silahkan coba NIM lain!</div>
                                         <div
                                         v-if="isNimAsprak"
                                         class="valid-feedback"
-                                        >NIM is available.</div>
+                                        >NIM tersedia.</div>
                                     </div>
                                 </div>
                             </div>
@@ -503,7 +512,7 @@ export default {
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <div class="form-group">
                                 <label for="nama">Nama Mahasiswa</label>
                                 <input 
@@ -523,7 +532,26 @@ export default {
                             </div>
                         </div>
 
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="nama">Kode Asprak</label>
+                                <input 
+                                v-model="dataStudent.asprak_code"
+                                id="code" 
+                                name="code" 
+                                type="text"
+                                maxlength="3"
+                                class="form-control"
+                                :class="{ 'is-invalid': submitted && $v.dataStudent.asprak_code.$error }" />
+
+                                <div
+                                v-if="submitted && !$v.dataStudent.asprak_code.required"
+                                class="invalid-feedback"
+                                >Kode Asprak harus diisi!</div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="nama">Jenis Kelamin</label>
                                 <input 
@@ -561,7 +589,7 @@ export default {
                                 class="invalid-feedback"
                                 >Agama harus diisi!</div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="row">

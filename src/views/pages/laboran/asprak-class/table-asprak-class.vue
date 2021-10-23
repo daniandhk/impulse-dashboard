@@ -40,6 +40,7 @@ export default {
       sortBy: "class_course.classes.name",
       sortDesc: false,
       fields: [
+        { key: "asprak_code", sortable: false, label: "Kode Asprak" },
         { key: "student.nim", sortable: false, label: "NIM" },
         { key: "student.name", sortable: false, label: "Nama" },
         { key: "class_course.classes.name", sortable: false, label: "Kelas MK" },
