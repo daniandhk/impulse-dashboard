@@ -27,14 +27,15 @@ export default {
   },
   validations: {
     schedule_data:{
-      date: { required },
       title: { required },
       room: {
         id: { required },
       },
     },
+
     time_start: { required },
     time_end: { required },
+    time_date: { required },
   },
   computed: {
     notification() {
@@ -127,6 +128,15 @@ export default {
       inputSuccess: false,
       isInputCanceled: false,
       inputError: null,
+
+      room: {
+        name: "",
+        desc: "",
+        msteam_link: "",
+        msteam_code: "",
+      },
+
+      isRuanganShowed: false,
 
     };
   },
@@ -300,6 +310,15 @@ export default {
 
     async loadDropdown(){
       await this.getRoomsData();
+
+      if(this.schedule_data.room.name){
+        this.setRoom(this.schedule_data.room.name);
+      }
+    },
+
+    setRoom(name){
+      let data_room = this.dataRooms.find(data => data.name === name);
+      this.selectRoom(data_room);
     },
 
     async getRoomsData(){
@@ -345,30 +364,45 @@ export default {
 
     updateSchedule(){
       this.submitted = true;
-      this.$v.$touch();
-      if (this.$v.$invalid) {
+
+      this.$v.time_date.$touch();
+      if (this.$v.time_date.$invalid) {
         return;
-      } else {
-        this.tryingToInput = true;
-
-        let combined_start = this.time_date + " " + this.time_start;
-        let time_start = moment(String(combined_start)).format('YYYY-MM-DD HH:mm:ss');
-        this.dataEdit.time_start = time_start;
-
-        let combined_end = this.time_date + " " + this.time_end;
-        let time_end = moment(String(combined_end)).format('YYYY-MM-DD HH:mm:ss')
-        this.dataEdit.time_end = time_end;
-
-        let schedule_id = this.schedule_data.id;
-        this.dataEdit.date = moment(String(this.time_date)).format('YYYY-MM-DD');
-        this.dataEdit.name = this.schedule_data.title;
-        this.dataEdit.room_id = this.schedule_data.room.id;
-        this.dataEdit.class_course_id = this.schedule_data.class_course.id;
-        this.dataEdit.academic_year_id = this.schedule_data.academic_year.id;
-        this.dataEdit.module_id = this.schedule_data.module.id;
-
-        this.editSchedule(schedule_id, this.dataEdit);
       }
+
+      this.$v.time_start.$touch();
+      if (this.$v.time_start.$invalid) {
+        return;
+      }
+
+      this.$v.time_end.$touch();
+      if (this.$v.time_end.$invalid) {
+        return;
+      }
+
+      this.$v.schedule_data.$touch();
+      if (this.$v.schedule_data.$invalid) {
+        return;
+      }
+      this.tryingToInput = true;
+
+      let combined_start = this.time_date + " " + this.time_start;
+      let time_start = moment(String(combined_start)).format('YYYY-MM-DD HH:mm:ss');
+      this.dataEdit.time_start = time_start;
+
+      let combined_end = this.time_date + " " + this.time_end;
+      let time_end = moment(String(combined_end)).format('YYYY-MM-DD HH:mm:ss')
+      this.dataEdit.time_end = time_end;
+
+      let schedule_id = this.schedule_data.id;
+      this.dataEdit.date = moment(String(this.time_date)).format('YYYY-MM-DD');
+      this.dataEdit.name = this.schedule_data.title;
+      this.dataEdit.room_id = this.schedule_data.room.id;
+      this.dataEdit.class_course_id = this.schedule_data.class_course.id;
+      this.dataEdit.academic_year_id = this.schedule_data.academic_year.id;
+      this.dataEdit.module_id = this.schedule_data.module.id;
+
+      this.editSchedule(schedule_id, this.dataEdit);
     },
 
     editSchedule(id, data){
@@ -398,6 +432,14 @@ export default {
             })
           })
       );
+    },
+
+    onClickRuangan(){
+      this.isRuanganShowed = !this.isRuanganShowed;
+    },
+
+    selectRoom(value){
+      this.room = value;
     },
 
     loading() {
@@ -519,91 +561,140 @@ export default {
                 >{{notification.message}}</b-alert>
             </div>
 
-            <div class="form-group mb-3">
-                <label>Nama untuk Kalender</label>
-                <input 
-                  v-model="schedule_data.title"
-                  type="text"
-                  class="form-control"
-                  :disabled="isLoading"
-                  :class="{ 'is-invalid': submitted && $v.schedule_data.title.$error }"
-                >
-                <div
-                v-if="submitted && !$v.schedule_data.title.required"
-                class="invalid-feedback"
-                >Name harus diisi!</div>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label>Ruangan</label>
-                <multiselect 
-                  v-model="schedule_data.room" 
-                  :options="dataRooms"
-                  label="name"
-                  track-by="name"
-                  :allow-empty="false"
-                  :disabled="isLoading"
-                  :show-labels="false"
-                  :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
-                ></multiselect>
-                <div
-                v-if="submitted && !$v.schedule_data.room.id.required"
-                class="invalid-feedback"
-                >Ruangan harus diisi!</div>
-            </div>
-            
-            <div class="form-group mb-3">
-                <label>Tanggal</label>
-                <br />
-                <date-picker
-                  v-model="time_date" 
-                  :first-day-of-week="1" 
-                  lang="en"
-                  :clearable=false
-                  value-type="format"
-                  :disabled="isLoading"
-                  :class="{ 'is-invalid': submitted && $v.schedule_data.date.$error }"
-                ></date-picker>
-                <div
-                v-if="submitted && !$v.schedule_data.date.required"
-                class="invalid-feedback"
-                >Tanggal harus diisi!</div>
+            <div class="row mb-2 mt-2">
+              <div class="form-group col-sm-12">
+                  <label>Nama untuk Kalender</label>
+                  <input 
+                    v-model="schedule_data.title"
+                    type="text"
+                    class="form-control"
+                    :disabled="isLoading"
+                    :class="{ 'is-invalid': submitted && $v.schedule_data.title.$error }"
+                  >
+                  <div
+                  v-if="submitted && !$v.schedule_data.title.required"
+                  class="invalid-feedback"
+                  >Name harus diisi!</div>
+              </div>
             </div>
 
-            <div class="form-group mb-3">
-                <label>Jam Mulai</label>
-                <br />
-                <date-picker
-                  v-model="time_start"
-                  value-type="format"
-                  type="time"
-                  placeholder="HH:mm:ss"
-                  :disabled="isLoading"
-                  :disabled-time="notAfterTimeEnd"
-                  :class="{ 'is-invalid': submitted && $v.time_start.$error }"
-                ></date-picker>
-                <div
-                v-if="submitted && !$v.time_start.required"
-                class="invalid-feedback"
-                >Jam Mulai harus diisi!</div>
+            <div class="row mb-2 mt-2">
+              <div class="form-group col-sm-4">
+                  <label>Tanggal</label>
+                  <br />
+                  <date-picker
+                    v-model="time_date" 
+                    :first-day-of-week="1" 
+                    lang="en"
+                    :clearable=false
+                    value-type="format"
+                    :disabled="isLoading"
+                    :class="{ 'is-invalid': submitted && $v.time_date.$error }"
+                  ></date-picker>
+                  <div
+                  v-if="submitted && !$v.time_date.required"
+                  class="invalid-feedback"
+                  >Tanggal harus diisi!</div>
+              </div>
+
+              <div class="form-group col-sm-4">
+                  <label>Jam Mulai</label>
+                  <br />
+                  <date-picker
+                    v-model="time_start"
+                    value-type="format"
+                    type="time"
+                    placeholder="HH:mm:ss"
+                    :disabled="isLoading"
+                    :disabled-time="notAfterTimeEnd"
+                    :class="{ 'is-invalid': submitted && $v.time_start.$error }"
+                  ></date-picker>
+                  <div
+                  v-if="submitted && !$v.time_start.required"
+                  class="invalid-feedback"
+                  >Jam Mulai harus diisi!</div>
+              </div>
+              
+              <div class="form-group col-sm-4">
+                  <label>Jam Terakhir</label>
+                  <br />
+                  <date-picker
+                    v-model="time_end"
+                    value-type="format"
+                    type="time"
+                    placeholder="HH:mm:ss"
+                    :disabled="isLoading"
+                    :disabled-time="notBeforeTimeStart"
+                    :class="{ 'is-invalid': submitted && $v.time_end.$error }"
+                  ></date-picker>
+                  <div
+                  v-if="submitted && !$v.time_end.required"
+                  class="invalid-feedback"
+                  >Jam Terakhir harus diisi!</div>
+              </div>
             </div>
-            
-            <div class="form-group mb-3">
-                <label>Jam Terakhir</label>
-                <br />
-                <date-picker
-                  v-model="time_end"
-                  value-type="format"
-                  type="time"
-                  placeholder="HH:mm:ss"
-                  :disabled="isLoading"
-                  :disabled-time="notBeforeTimeStart"
-                  :class="{ 'is-invalid': submitted && $v.time_end.$error }"
-                ></date-picker>
-                <div
-                v-if="submitted && !$v.time_end.required"
-                class="invalid-feedback"
-                >Jam Terakhir harus diisi!</div>
+
+            <div class="row mb-2 mt-2">
+              <div class="form-group col-sm-12">
+                  <div class="row" style="margin:0!important;">
+                    <label class="mr-4">Ruangan</label>
+                    <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
+                    <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
+                  </div>
+                  <multiselect 
+                    v-model="schedule_data.room" 
+                    :options="dataRooms"
+                    label="name"
+                    track-by="name"
+                    @select="selectRoom"
+                    :allow-empty="false"
+                    :disabled="isLoading"
+                    :show-labels="false"
+                    :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
+                  ></multiselect>
+                  <div
+                  v-if="submitted && !$v.schedule_data.room.id.required"
+                  class="invalid-feedback"
+                  >Ruangan harus diisi!</div>
+              </div>
+            </div>
+
+            <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+              <div class="form-group col-sm-12">
+                  <label>Deskripsi Ruangan</label>
+                  <textarea 
+                    v-model="room.desc"
+                    rows=2
+                    type="text"
+                    class="form-control"
+                    :disabled="true"
+                    style="background-color: #F0F4F6;"
+                  ></textarea>
+              </div>
+            </div>
+
+            <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+              <div class="form-group col-sm-6">
+                  <label>MS Teams Link</label>
+                  <input 
+                    v-model="room.msteam_link"
+                    type="text"
+                    class="form-control"
+                    :disabled="true"
+                    style="background-color: #F0F4F6;"
+                  >
+              </div>
+
+              <div class="form-group col-sm-6">
+                  <label>MS Teams Code</label>
+                  <input 
+                    v-model="room.msteam_code"
+                    type="text"
+                    class="form-control"
+                    :disabled="true"
+                    style="background-color: #F0F4F6;"
+                  >
+              </div>
             </div>
 
             <div class="text-center mt-4">

@@ -203,7 +203,16 @@ export default {
             })
           })
         }
-      }
+      },
+
+      room: {
+        name: "",
+        desc: "",
+        msteam_link: "",
+        msteam_code: "",
+      },
+
+      isRuanganShowed: false,
 
     };
   },
@@ -391,6 +400,15 @@ export default {
 
     async loadDropdown(){
       await this.getRoomsData();
+
+      if(this.schedule_data.room.name){
+        this.setRoom(this.schedule_data.room.name);
+      }
+    },
+
+    setRoom(name){
+      let data_room = this.dataRooms.find(data => data.name === name);
+      this.selectRoom(data_room);
     },
 
     async getRoomsData(){
@@ -449,6 +467,11 @@ export default {
 
       this.$v.time_end.$touch();
       if (this.$v.time_end.$invalid) {
+        return;
+      }
+
+      this.$v.schedule_data.$touch();
+      if (this.$v.schedule_data.$invalid) {
         return;
       }
       this.tryingToInput = true;
@@ -858,6 +881,14 @@ export default {
         );
     },
 
+    onClickRuangan(){
+      this.isRuanganShowed = !this.isRuanganShowed;
+    },
+
+    selectRoom(value){
+      this.room = value;
+    },
+
     loading() {
       if(this.isLoading){
         this.isLoading = false;
@@ -983,7 +1014,7 @@ export default {
                   </div>
 
                   <div class="row mb-2 mt-2">
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-sm-12">
                         <label>Nama untuk Kalender</label>
                         <input 
                           v-model="schedule_data.title"
@@ -996,24 +1027,6 @@ export default {
                         v-if="submitted && !$v.schedule_data.title.required"
                         class="invalid-feedback"
                         >Name harus diisi!</div>
-                    </div>
-                    
-                    <div class="form-group col-sm-6">
-                        <label>Ruangan</label>
-                        <multiselect 
-                          v-model="schedule_data.room" 
-                          :options="dataRooms"
-                          label="name"
-                          track-by="name"
-                          :allow-empty="false"
-                          :disabled="isLoading"
-                          :show-labels="false"
-                          :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
-                        ></multiselect>
-                        <div
-                        v-if="submitted && !$v.schedule_data.room.id.required"
-                        class="invalid-feedback"
-                        >Ruangan harus diisi!</div>
                     </div>
                   </div>
 
@@ -1070,6 +1083,69 @@ export default {
                         v-if="submitted && !$v.time_end.required"
                         class="invalid-feedback"
                         >Jam Terakhir harus diisi!</div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2 mt-2">
+                    <div class="form-group col-sm-12">
+                        <div class="row" style="margin:0!important;">
+                          <label class="mr-4">Ruangan</label>
+                          <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
+                          <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
+                        </div>
+                        <multiselect 
+                          v-model="schedule_data.room" 
+                          :options="dataRooms"
+                          label="name"
+                          track-by="name"
+                          @select="selectRoom"
+                          :allow-empty="false"
+                          :disabled="isLoading"
+                          :show-labels="false"
+                          :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
+                        ></multiselect>
+                        <div
+                        v-if="submitted && !$v.schedule_data.room.id.required"
+                        class="invalid-feedback"
+                        >Ruangan harus diisi!</div>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+                    <div class="form-group col-sm-12">
+                        <label>Deskripsi Ruangan</label>
+                        <textarea 
+                          v-model="room.desc"
+                          rows=2
+                          type="text"
+                          class="form-control"
+                          :disabled="true"
+                          style="background-color: #F0F4F6;"
+                        ></textarea>
+                    </div>
+                  </div>
+
+                  <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+                    <div class="form-group col-sm-6">
+                        <label>MS Teams Link</label>
+                        <input 
+                          v-model="room.msteam_link"
+                          type="text"
+                          class="form-control"
+                          :disabled="true"
+                          style="background-color: #F0F4F6;"
+                        >
+                    </div>
+
+                    <div class="form-group col-sm-6">
+                        <label>MS Teams Code</label>
+                        <input 
+                          v-model="room.msteam_code"
+                          type="text"
+                          class="form-control"
+                          :disabled="true"
+                          style="background-color: #F0F4F6;"
+                        >
                     </div>
                   </div>
 

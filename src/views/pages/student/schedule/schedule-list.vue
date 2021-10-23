@@ -54,7 +54,7 @@ export default {
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Mulai" },
         { key: "end", sortable: true, label: "Terakhir" },
-        { key: "room.name", label: "Ruangan" },
+        { key: "room", label: "Ruangan", sortable: false },
       ],
 
       student_id: store.getters.getLoggedUser.id,
@@ -71,6 +71,15 @@ export default {
 
       isFetchingData: false,
       isLoading: false,
+
+      room: {
+        name: "",
+        desc: "",
+        msteam_link: "",
+        msteam_code: "",
+      },
+      eventModal: false,
+
     };
   },
   computed: {
@@ -155,6 +164,11 @@ export default {
             })
         }
         this.isFetchingData = false;
+    },
+
+    onClickShow(data) {
+      this.room = data.item.room;
+      this.eventModal = true;
     },
 
     loading() {
@@ -283,6 +297,15 @@ export default {
                     @filtered="onFiltered"
                     :busy.sync="isFetchingData"
                   >
+                    <template v-slot:cell(room)="data">
+                      <b-button
+                          type="submit" 
+                          variant="primary"
+                          @click=onClickShow(data)
+                          style="min-width: 75px;" 
+                          >{{data.item.room.name}}
+                      </b-button>
+                    </template>
                   </b-table>
                 </div>
                 <!-- <div class="row">
@@ -303,5 +326,61 @@ export default {
     </div>
     <div class="row" v-if="!dataClassCourses.length">
     </div>
+
+    <b-modal
+      size="lg"
+      v-model="eventModal"
+      title="Detail Ruangan"
+      hide-footer 
+      title-class="font-18"
+    >
+      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
+        <div>
+            <div class="form-group">
+                <label>Ruangan</label>
+                <input
+                    v-model="room.name"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>Deskripsi Ruangan</label>
+                <textarea
+                    v-model="room.desc"
+                    rows=2
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>MS Teams Link</label>
+                <input
+                    v-model="room.msteam_link"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+        <div>
+            <div class="form-group">
+                <label>MS Teams Code</label>
+                <input
+                    v-model="room.msteam_code"
+                    type="text"
+                    class="form-control"
+                    disabled="true"
+                />
+            </div>
+        </div>
+      </div>
+    </b-modal>
   </Layout>
 </template>
