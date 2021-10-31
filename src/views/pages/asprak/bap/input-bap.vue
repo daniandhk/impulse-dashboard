@@ -175,6 +175,12 @@ export default {
             this.isIdValid(response.data);
             if(response.data){
               this.bap_data = response.data;
+              if(!this.bap_data.asprak){
+                  this.bap_data.asprak = [];
+              }
+              if(!this.bap_data.student){
+                  this.bap_data.student = [];
+              }
             }
           })
           .catch(error => {
