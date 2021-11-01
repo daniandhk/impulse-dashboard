@@ -67,3 +67,7 @@ export function downloadJournal(module_id, journal_id) {
 export function getStudentCourseScore(student_id) {
     return httpAxios.get(`/grade/all/${student_id}`);
 }
+
+export function getPresence(params) {
+    return httpAxios.get('/student/presence', { params });
+}

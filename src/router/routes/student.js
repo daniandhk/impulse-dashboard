@@ -87,4 +87,21 @@ export default [
         },
         component: () => import('../../views/pages/student/score/score-list')
     },
+    {
+        path: '/praktikan/presence',
+        name: 'praktikan-presence',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/student/presence/presence-list')
+    },
 ]
