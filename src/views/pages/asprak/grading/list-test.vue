@@ -126,6 +126,7 @@ export default {
         { key: "pretest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
         { key: "journal", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
         { key: "posttest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.total", sortable: true, label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
       ],
     };
   },

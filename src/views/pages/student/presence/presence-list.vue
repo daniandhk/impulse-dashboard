@@ -11,7 +11,7 @@ import store from '@/store';
  */
 export default {
   page: {
-    title: "Nilai",
+    title: "Presensi",
     meta: [{ name: "description" }],
   },
   components: {
@@ -23,14 +23,14 @@ export default {
   },
   data() {
     return {
-      title: "Nilai",
+      title: "Presensi",
       items: [
         {
           text: "Praktikan",
           href: "/"
         },
         {
-          text: "Nilai",
+          text: "Presensi",
           active: true,
         },
       ],
@@ -42,29 +42,27 @@ export default {
       filterOn: [],
       sortBy: "index",
       sortDesc: false,
-      dataModules: [],
+      dataPresences: [],
       fields: [
-        { key: "index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "pretest_grade", label: "Nilai Pretest", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "journal_grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "posttest_grade", label: "Nilai Posttest", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "total_grade", label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "presence", label: "Kehadiran", thClass: 'text-center', tdClass: 'text-center' },
       ],
 
       student_id: store.getters.getLoggedUser.id,
 
       dataClassCourses: [],
       class_course_data: {
-          course: "",
-          class: "",
-          staff: "",
-          year: "",
-          semester: "",
+          class_name: "",
+          course_code: "",
+          course_name: "",
+          staff_code: "",
+          staff_name: "",
           academic_year: "",
       },
 
       isFetchingData: false,
       isLoading: false,
+
     };
   },
   computed: {
@@ -72,7 +70,7 @@ export default {
      * Total no. of records
      */
     rows() {
-      return this.dataModules.length;
+      return this.dataPresences.length;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -80,8 +78,8 @@ export default {
   },
   mounted: async function() {
     // Set the initial number of items
-    this.totalRows = this.dataModules.length;
-    this.perPage = this.dataModules.length;
+    this.totalRows = this.dataPresences.length;
+    this.perPage = this.dataPresences.length;
     // Set the initial number of items
     this.loading();
     await this.getStudentCourses();
@@ -102,11 +100,10 @@ export default {
     
     async getStudentCourses(){
         return (
-            api.getStudentCourseScore(this.student_id)
+            api.getStudentCourses(this.student_id)
             .then(response => {
-                console.log(response.data.data.result)
                 if(response.data.data){
-                    this.dataClassCourses = response.data.data.result;
+                    this.dataClassCourses = response.data.data;
                 }
             })
             .catch(error => {
@@ -120,9 +117,38 @@ export default {
         );
     },
 
-    async getModules(index){
-        this.dataModules = this.dataClassCourses[index].modules;
-        return true;
+    getRequestParams(class_course_id) {
+      let params = {};
+
+      if (class_course_id) {
+        params["class_course_id"] = class_course_id;
+      }
+
+      return params;
+    },
+
+    async getPresences(class_course_id){
+        const params = this.getRequestParams(
+            class_course_id
+        );
+        return (
+            api.getPresence(params)
+            .then(response => {
+                if(response.data.data){
+                    if(response.data.data.class_course){
+                        this.dataPresences = response.data.data.class_course.presences;
+                    }
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error
+                })
+            })
+        );
     },
 
     async refreshData(index){
@@ -130,8 +156,8 @@ export default {
         if(this.dataClassCourses.length){
             this.loading();
             this.class_course_data = this.dataClassCourses[index];
-            this.class_course_data.academic_year = this.class_course_data.year + " / " + this.class_course_data.semester
-            await this.getModules(index).then(response =>{
+            let class_course_id = this.class_course_data.class_course_id;
+            await this.getPresences(class_course_id).then(response =>{
                 this.loading();
             })
         }
@@ -168,15 +194,16 @@ export default {
           <div class="card-body pt-0">
             <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
               <b-tab title-link-class="p-3" v-for="(course, index) in dataClassCourses" :key="index">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">{{course.course}}</a>
+                <template v-slot:title> 
+                  <a class="font-weight-bold active ml-sm-5 mr-lg-5" >{{course.course_name}}</a>
                 </template>
+                <div class="row"></div>
                 <div class="row mt-4">
                     <div class="col-sm-3">
                         <div class="form-group">
                             <label>Kelas</label>
                             <input
-                                v-model="class_course_data.class"
+                                v-model="class_course_data.class_name"
                                 type="text"
                                 class="form-control"
                                 disabled="true"
@@ -189,7 +216,7 @@ export default {
                         <div class="form-group">
                             <label>Mata Kuliah</label>
                             <input
-                                v-model="class_course_data.course"
+                                v-model="class_course_data.course_name"
                                 type="text"
                                 class="form-control"
                                 disabled="true"
@@ -202,7 +229,7 @@ export default {
                         <div class="form-group">
                             <label>Kode Dosen</label>
                             <input
-                                v-model="class_course_data.staff"
+                                v-model="class_course_data.staff_code"
                                 type="text"
                                 class="form-control"
                                 disabled="true"
@@ -251,7 +278,7 @@ export default {
                 <div class="table-responsive mt-2">
                   <b-table
                     class="table-centered"
-                    :items="dataModules"
+                    :items="dataPresences"
                     :fields="fields"
                     responsive="sm"
                     :per-page="perPage"
@@ -263,6 +290,24 @@ export default {
                     @filtered="onFiltered"
                     :busy.sync="isFetchingData"
                   >
+                    <template v-slot:cell(presence)="data">
+                      <b-button
+                          variant="outline-success"
+                          :disabled="true"
+                          size="sm"
+                          style="min-width: 125px;" 
+                          v-if="data.item.presence"
+                          >Hadir
+                      </b-button>
+                      <b-button
+                          variant="outline-danger"
+                          :disabled="true"
+                          size="sm"
+                          style="min-width: 125px;" 
+                          v-if="!data.item.presence"
+                          >Tidak Hadir
+                      </b-button>
+                    </template>
                   </b-table>
                 </div>
                 <!-- <div class="row">

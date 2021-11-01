@@ -1210,7 +1210,7 @@ export default {
                             class="mt-3"
                             variant="success"
                             dismissible
-                            >Data updated successfully!</b-alert>
+                            >Data berhasil diperbarui!</b-alert>
 
                             <b-alert
                             v-model="isInputTestError"
@@ -1239,14 +1239,14 @@ export default {
                             class="mt-3"
                             variant="danger"
                             dismissible
-                            >Unsaved data!</b-alert>
+                            >Data belum disimpan!</b-alert>
 
                             <b-alert
                             v-model="isLoadedData"
                             class="mt-3"
                             variant="warning"
                             dismissible
-                            >Data is loaded!</b-alert>
+                            >Data berhasil dimuat!</b-alert>
                         </div>
 
                         <hr style="margin-left: -20px; 

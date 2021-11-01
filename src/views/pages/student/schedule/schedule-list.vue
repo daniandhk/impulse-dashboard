@@ -11,7 +11,7 @@ import store from '@/store';
  */
 export default {
   page: {
-    title: "List Course",
+    title: "List Mata Kuliah",
     meta: [{ name: "description" }],
   },
   components: {
@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-      title: "List Course",
+      title: "List Mata Kuliah",
       items: [
         {
           text: "Praktikan",
@@ -300,7 +300,7 @@ export default {
                     <template v-slot:cell(room)="data">
                       <b-button
                           type="submit" 
-                          variant="primary"
+                          variant="outline-secondary"
                           @click=onClickShow(data)
                           size="sm"
                           style="min-width: 75px;" 

@@ -493,7 +493,7 @@ export default {
                 <template v-slot:cell(room)="data">
                   <b-button
                       type="submit" 
-                      variant="primary"
+                      variant="outline-secondary"
                       @click=onClickShow(data)
                       size="sm"
                       style="min-width: 75px;" 
