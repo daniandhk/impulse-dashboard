@@ -14,7 +14,7 @@ import { notificationMethods } from "@/state/helpers";
  */
 export default {
   page: {
-    title: "List Test",
+    title: "List Tes",
     meta: [{ name: "description" }],
   },
   components: {
@@ -48,7 +48,7 @@ export default {
   },
   data() {
     return {
-      title: "List Test",
+      title: "List Tes",
       items: [
         {
           text: "Asisten Praktikum",
@@ -59,7 +59,7 @@ export default {
           href: "/asprak/grading/"
         },
         {
-          text: "List Test",
+          text: "List Tes",
           active: true,
         }
       ],
@@ -120,9 +120,9 @@ export default {
       fields: [
         { key: "nim", sortable: true, label: "NIM" },
         { key: "name", sortable: true, label: "Nama" },
-        { key: "grade.pretest", sortable: true, label: "Nilai Pretest", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.pretest", sortable: true, label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.journal", sortable: true, label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.posttest", sortable: true, label: "Nilai Posttest", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.posttest", sortable: true, label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
         { key: "pretest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
         { key: "journal", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
         { key: "posttest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
@@ -340,6 +340,31 @@ export default {
         });
     },
 
+    onClickDownload(){
+      // this.loading();
+      // return (
+      //     api.downloadRekapNilai(this.schedule_data.module.id, this.test_id)
+      //     .then(response => {
+      //         let blob = new Blob([response.data])
+      //         let link = document.createElement('a')
+      //         link.href = window.URL.createObjectURL(blob)
+      //         link.download = this.dataTest.questions[0].text
+      //         link.click()
+
+      //         this.loading();
+              Swal.fire("Berhasil diunduh!", "Rekap Nilai telah terunduh.", "success");
+      //     })
+      //     .catch(error => {
+      //         Swal.fire({
+      //             icon: 'error',
+      //             title: 'Oops...',
+      //             text: 'Terjadi kesalahan!',
+      //             footer: error
+      //         })
+      //     })
+      // );
+    },
+
     loading() {
       if(this.isLoading){
         this.isLoading = false;
@@ -410,23 +435,40 @@ export default {
               </div>
           </div>
 
-          <div class="form-group text-center">
-              <label>Modul</label>
-              <multiselect 
-                class="text-center"
-                v-model="schedule_data.module.index" 
-                :options="dataModules"
-                @select="selectModule"
-                :allow-empty="false"
-                :disabled="isLoading"
-                :show-labels="false"
-              ></multiselect>
+          <div class="row">
+              <div class="col-sm-6">
+                <div class="form-group text-center">
+                    <label>Modul</label>
+                    <multiselect 
+                      class="text-center"
+                      v-model="schedule_data.module.index" 
+                      :options="dataModules"
+                      @select="selectModule"
+                      :allow-empty="false"
+                      :disabled="isLoading"
+                      :show-labels="false"
+                    ></multiselect>
+                </div>
+              </div>
+              <div class="col-sm-6">
+                <div class="text-center">
+                    <label>Rekap Nilai</label>
+                </div>
+                <div class="text-center">
+                    <b-button 
+                      variant="primary" 
+                      @click="onClickDownload" 
+                      style="width: 100%;"
+                      :disabled="isLoading"
+                    >Download Excel</b-button>
+                </div>
+              </div>
           </div>
         </div>
       </div>
       <div class="card">
         <div class="card-body">
-            <div class="row mt-4">
+            <div class="row">
             <div class="col-sm-12 col-md-6">
                 <div id="tickets-table_length" class="dataTables_length">
                 <label class="d-inline-flex align-items-center">

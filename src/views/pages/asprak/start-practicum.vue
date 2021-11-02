@@ -592,13 +592,13 @@ export default {
                     this.pretest_data.time_end = this.inputedDate(this.pretest_data.time_end);
                     if(status == 'start'){
                         this.pretest_data.is_active = true;
-                        message_header = "Started!";
-                        message_body = "Pretest has started."
+                        message_header = "Tes Awal Dimulai!";
+                        message_body = "Tes Awal berhasil dimulai."
                     }
                     if(status == 'stop'){
                         this.pretest_data.is_active = false;
-                        message_header = "Stopped!";
-                        message_body = "Pretest has stopped."
+                        message_header = "Tes Awal Berhenti!";
+                        message_body = "Tes Awal berhasil diberhentikan."
                     }
                     if(this.isPretestNew){
                         return (
@@ -665,13 +665,13 @@ export default {
                     this.journal_data.time_end = this.inputedDate(this.journal_data.time_end);
                     if(status == 'start'){
                         this.journal_data.is_active = true;
-                        message_header = "Started!";
-                        message_body = "Journal has started."
+                        message_header = "Jurnal Dimulai!";
+                        message_body = "Jurnal berhasil dimulai."
                     }
                     if(status == 'stop'){
                         this.journal_data.is_active = false;
-                        message_header = "Stopped!";
-                        message_body = "Journal has stopped."
+                        message_header = "Jurnal Berhenti!";
+                        message_body = "Jurnal berhasil diberhentikan."
                     }
                     if(this.isJournalNew){
                         return (
@@ -738,13 +738,13 @@ export default {
                     this.posttest_data.time_end = this.inputedDate(this.posttest_data.time_end);
                     if(status == 'start'){
                         this.posttest_data.is_active = true;
-                        message_header = "Started!";
-                        message_body = "Posttest has started."
+                        message_header = "Tes Akhir Dimulai!";
+                        message_body = "Tes Akhir berhasil dimulai."
                     }
                     if(status == 'stop'){
                         this.posttest_data.is_active = false;
-                        message_header = "Stopped!";
-                        message_body = "Posttest has stopped."
+                        message_header = "Tes Akhir Berhenti!";
+                        message_body = "Tes Akhir berhasil diberhentikan."
                     }
                     if(this.isPosttestNew){
                         return (
