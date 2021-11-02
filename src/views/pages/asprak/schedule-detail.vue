@@ -190,7 +190,7 @@ export default {
             }
           });
           this.on('error', function(file, response){
-            console.log(response)
+            // console.log(response)
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal mengunggah file!',
@@ -637,7 +637,7 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                // console.log(error)
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
