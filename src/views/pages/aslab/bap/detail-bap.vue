@@ -469,8 +469,8 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="text-center m-4">
-            <b-button variant="success" style="min-width: 350px;" @click="print">Print</b-button>
+        <div class="text-center mt-4 mb-4">
+            <b-button variant="success" style="width: 100%;" @click="print">Print</b-button>
         </div>
     </div>
   </Layout>
