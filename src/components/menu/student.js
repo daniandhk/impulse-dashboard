@@ -32,16 +32,16 @@ export const praktikanItems = [
             }
         ]
     },
+    // {
+    //     id: 7,
+    //     label: 'menuitems.praktikan.list.nilai',
+    //     icon: 'ri-bar-chart-grouped-fill',
+    //     link: 'praktikan-score'
+    // },
     {
         id: 7,
-        label: 'menuitems.praktikan.list.nilai',
-        icon: 'ri-bar-chart-grouped-fill',
-        link: 'praktikan-score'
-    },
-    {
-        id: 8,
         label: 'menuitems.praktikan.list.presensi',
-        icon: 'mdi mdi-account-multiple-check',
+        icon: 'ri-bar-chart-grouped-fill',
         link: 'praktikan-presence'
     },
     // {

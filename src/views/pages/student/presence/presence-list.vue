@@ -11,7 +11,7 @@ import store from '@/store';
  */
 export default {
   page: {
-    title: "Presensi",
+    title: "Nilai / Presensi",
     meta: [{ name: "description" }],
   },
   components: {
@@ -23,14 +23,14 @@ export default {
   },
   data() {
     return {
-      title: "Presensi",
+      title: "Nilai / Presensi",
       items: [
         {
           text: "Praktikan",
           href: "/"
         },
         {
-          text: "Presensi",
+          text: "Nilai / Presensi",
           active: true,
         },
       ],
@@ -45,6 +45,10 @@ export default {
       dataPresences: [],
       fields: [
         { key: "index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "grade.pretest_grade", label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.journal_grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.posttest_grade", label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.total_grade", label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
         { key: "presence", label: "Kehadiran", thClass: 'text-center', tdClass: 'text-center' },
       ],
 

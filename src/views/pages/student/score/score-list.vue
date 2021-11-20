@@ -45,9 +45,9 @@ export default {
       dataModules: [],
       fields: [
         { key: "index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "pretest_grade", label: "Nilai Pretest", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "pretest_grade", label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
         { key: "journal_grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "posttest_grade", label: "Nilai Posttest", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "posttest_grade", label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
         { key: "total_grade", label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
       ],
 
