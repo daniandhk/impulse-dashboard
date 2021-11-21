@@ -139,7 +139,18 @@ export default {
       text: {
         start: "Start",
         end: "End",
-        auth: "Auth"
+        auth: "Auth",
+        kelas: "Kelas",
+        matkul: "Mata Kuliah",
+        tahun: "Tahun / Smt",
+        modul: "Modul",
+        nama_ruangan: "Nama",
+        detail_ruangan: "Deskripsi",
+        msteam_link: "MS Teams Link",
+        msteam_code: "MS Teams Code",
+        tanggal: "Tanggal",
+        mulai: "Jam Mulai",
+        terakhir: "Jam Terakhir",
       },
 
       //data module
@@ -849,171 +860,295 @@ export default {
       <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
     </div>
     <div>
-      <div class="card">
-        <div class="card-body">
-          <div class="row">
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Kelas</label>
-                      <input
-                          v-model="class_course_data.class.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Mata Kuliah</label>
-                      <input
-                          v-model="class_course_data.course.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Tahun / Semester</label>
-                      <input
-                          v-model="class_course_data.academic_year.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-          </div>
-
-          <div class="form-group text-center">
-              <label>Modul</label>
-              <multiselect 
-                class="text-center"
-                v-model="schedule_data.module.index" 
-                :options="dataModules"
-                @select="selectModule"
-                :allow-empty="false"
-                :disabled="isLoading"
-                :show-labels="false"
-              ></multiselect>
-          </div>
+      <div class="row">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center form-group mb-0">
+                        <div>
+                            <h5 class="text-center font-size-15 text-uppercase">Kelas MK</h5>
+                            <hr style="margin-left: -28px; 
+                                        margin-right: -28px; 
+                                        height: 2px; 
+                                        background-color: #eee; 
+                                        border: 0 none; 
+                                        color: #eee;"
+                            >
+                            <div class="row mt-4">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.kelas"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="class_course_data.class.name"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.matkul"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="class_course_data.course.name"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.tahun"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="class_course_data.academic_year.name"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.modul"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <multiselect 
+                                  class="text-center"
+                                  v-model="schedule_data.module.index" 
+                                  :options="dataModules"
+                                  @select="selectModule"
+                                  :allow-empty="false"
+                                  :disabled="isLoading"
+                                  :show-labels="false"
+                                ></multiselect>
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
         </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="text-center font-size-15 text-uppercase">RUANGAN</h5>
-          <div class="row mt-4">
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label>Nama Ruangan</label>
-                    <input
-                        v-model="schedule_data.room.name"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                    />
+        <!-- end col-->
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center form-group mb-0">
+                        <div>
+                            <h5 class="text-center font-size-15 text-uppercase">Ruangan</h5>
+                            <hr style="margin-left: -28px; 
+                                        margin-right: -28px; 
+                                        height: 2px; 
+                                        background-color: #eee; 
+                                        border: 0 none; 
+                                        color: #eee;"
+                            >
+                            <div class="row mt-4">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.nama_ruangan"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="schedule_data.room.name"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.detail_ruangan"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <textarea
+                                    v-model="schedule_data.room.desc"
+                                    rows="1"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.msteam_link"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="schedule_data.room.msteam_link"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.msteam_code"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="schedule_data.room.msteam_code"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label>Detail Ruangan</label>
-                    <textarea
-                        v-model="schedule_data.room.desc"
-                        rows="1"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                    />
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label>MS Teams Link</label>
-                    <input
-                        v-model="schedule_data.room.msteam_link"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                    />
-                </div>
-            </div>
-
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label>MS Teams Code</label>
-                    <input
-                        v-model="schedule_data.room.msteam_code"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                    />
-                </div>
-            </div>
-          </div>
+            <!-- end card -->
         </div>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="text-center font-size-15 text-uppercase">JADWAL</h5>
-          <div class="row mt-4">
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Tanggal</label>
-                      <input
-                          v-model="time_date"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Jam Mulai</label>
-                      <input
-                          v-model="time_start"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Jam Terakhir</label>
-                      <input
-                          v-model="time_end"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
-              </div>
-          </div>
-          <b-alert
-              v-model="isJadwalNull"
-              class="mt-3 text-center"
-              variant="danger"
-          >Harap input jadwal di menu Jadwal!</b-alert>
+        <!-- end col-->
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="text-center form-group mb-0">
+                        <div>
+                            <h5 class="text-center font-size-15 text-uppercase">Jadwal</h5>
+                            <hr style="margin-left: -28px; 
+                                        margin-right: -28px; 
+                                        height: 2px; 
+                                        background-color: #eee; 
+                                        border: 0 none; 
+                                        color: #eee;"
+                            >
+                            <b-alert
+                                v-model="isJadwalNull"
+                                class="mt-3"
+                                variant="danger"
+                            >Harap input jadwal di menu Jadwal!</b-alert>
+                            <div class="row mt-4">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.tanggal"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="time_date"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.mulai"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="time_start"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                            <div class="row mt-2">
+                              <div class="col-sm-5">
+                                <input
+                                    v-model="text.terakhir"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="border: 0"
+                                />
+                              </div>
+                              <div class="col-sm-7">
+                                <input
+                                    v-model="time_end"
+                                    type="text"
+                                    class="form-control"
+                                    disabled="true"
+                                    style="background-color: #F0F4F6;"
+                                />
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end card -->
         </div>
+        <!-- end col-->
       </div>
       <div class="row">
         <div class="col-sm-4">
