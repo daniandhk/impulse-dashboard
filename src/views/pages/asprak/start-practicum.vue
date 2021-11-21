@@ -441,7 +441,7 @@ export default {
             icon: 'error',
             title: 'Oops...',
             text: 'ID tidak valid!',
-            footer: 'Anda dialihkan ke Menu Jadwal',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -1012,7 +1012,7 @@ export default {
               v-model="isJadwalNull"
               class="mt-3 text-center"
               variant="danger"
-          >Harap input jadwal di Menu Jadwal!</b-alert>
+          >Harap input jadwal di menu Jadwal!</b-alert>
         </div>
       </div>
       <div class="row">
@@ -1036,7 +1036,7 @@ export default {
                                 v-model="isPretestNull"
                                 class="mt-3"
                                 variant="danger"
-                            >Harap input soal di Menu Jadwal!</b-alert>
+                            >Harap input soal di menu Jadwal!</b-alert>
                             <div class="row text-left mt-4 mr-2">
                               <div class="col-sm-4">
                                 <input
@@ -1162,7 +1162,7 @@ export default {
                                 v-model="isJournalNull"
                                 class="mt-3"
                                 variant="danger"
-                            >Harap input soal di Menu Jadwal!</b-alert>
+                            >Harap input soal di menu Jadwal!</b-alert>
                             <div class="row text-left mt-4 mr-2">
                               <div class="col-sm-4">
                                 <input
@@ -1288,7 +1288,7 @@ export default {
                                 v-model="isPosttestNull"
                                 class="mt-3"
                                 variant="danger"
-                            >Harap input soal di Menu Jadwal!</b-alert>
+                            >Harap input soal di menu Jadwal!</b-alert>
                             <div class="row text-left mt-4 mr-2">
                               <div class="col-sm-4">
                                 <input

@@ -213,7 +213,7 @@ export default {
                     icon: 'error',
                     title: 'Oops...',
                     text: 'ID tidak valid!',
-                    footer: 'Anda dialihkan ke Menu Jadwal',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                     timer: 4000
                 })
                 this.$router.replace({
@@ -226,7 +226,7 @@ export default {
             icon: 'error',
             title: 'Oops...',
             text: 'ID tidak valid!',
-            footer: 'Anda dialihkan ke Menu Jadwal',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({

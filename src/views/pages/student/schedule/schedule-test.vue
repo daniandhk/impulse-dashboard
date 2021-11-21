@@ -136,7 +136,7 @@ export default {
             //         icon: 'error',
             //         title: 'Oops...',
             //         text: 'You need input Auth first!',
-            //         footer: 'Anda dialihkan ke Menu Jadwal',
+            //         footer: 'Anda dialihkan ke menu Jadwal',
             //     })
             //     this.$router.replace({
             //         name: 'praktikan-schedule-detail', 
@@ -152,7 +152,7 @@ export default {
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Tes saat ini belum dimulai!',
-                    footer: 'Anda dialihkan ke Menu Jadwal',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                 })
                 this.$router.replace({
                     name: 'praktikan-schedule-detail', 
@@ -322,7 +322,7 @@ export default {
                     icon: 'error',
                     title: 'Oops...',
                     text: 'ID tidak valid!',
-                    footer: 'Anda dialihkan ke Menu Jadwal',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                     timer: 4000
                 })
                 this.$router.back();

@@ -438,7 +438,7 @@ export default {
                     <p class="card-title-desc">Isi semua informasi dibawah ini</p>
                     <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
                     <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                        NIM sebagai Asprak dapat diatur di Menu Data Mahasiswa.
+                        NIM sebagai Asprak dapat diatur di menu Data Mahasiswa.
                     </p>
                     
                     <div class="mt-4">
