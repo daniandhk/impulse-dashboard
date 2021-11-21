@@ -908,8 +908,67 @@ export default {
       </div>
       <div class="card">
         <div class="card-body">
+          <h5 class="text-center font-size-15 text-uppercase">RUANGAN</h5>
+          <div class="row mt-4">
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>Nama Ruangan</label>
+                    <input
+                        v-model="schedule_data.room.name"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                    />
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>Detail Ruangan</label>
+                    <textarea
+                        v-model="schedule_data.room.desc"
+                        rows="1"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                    />
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>MS Teams Link</label>
+                    <input
+                        v-model="schedule_data.room.msteam_link"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                    />
+                </div>
+            </div>
+
+            <div class="col-sm-3">
+                <div class="form-group">
+                    <label>MS Teams Code</label>
+                    <input
+                        v-model="schedule_data.room.msteam_code"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                    />
+                </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
           <h5 class="text-center font-size-15 text-uppercase">JADWAL</h5>
-          <div class="row mt-2">
+          <div class="row mt-4">
               <div class="col-sm-4">
                   <div class="form-group">
                       <label>Tanggal</label>

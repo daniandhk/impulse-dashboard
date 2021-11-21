@@ -538,17 +538,6 @@ function sleep(ms) {
                 />
             </div>
         </div>
-        <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input
-                    v-model="schedule_data.date"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
         <div class="text-right mt-4">
             <button
             type="button"
