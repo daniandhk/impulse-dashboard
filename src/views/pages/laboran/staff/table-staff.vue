@@ -563,8 +563,6 @@ export default {
                                 <div class="form-group">
                                     <label for="nip">NIP</label>
                                     <input 
-                                    style="background-color: #F0F4F6;"
-                                    :disabled="true"
                                     v-model="dataEdit.nip"
                                     id="nip" 
                                     name="nip" 
