@@ -873,6 +873,7 @@ export default {
                 Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
             })
             .catch(error => {
+                this.loading();
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
