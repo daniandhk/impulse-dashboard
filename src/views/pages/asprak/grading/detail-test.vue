@@ -47,7 +47,7 @@ export default {
     },
     data() {
         return {
-            title: "Test",
+            title: "Tes",
             items: [
                 {
                     text: "Asisten Praktikum",
@@ -58,11 +58,11 @@ export default {
                     href: "/asprak/grading/"
                 },
                 {
-                    text: "List Test",
+                    text: "List Tes",
                     href: "/asprak/grading/"
                 },
                 {
-                    text: "Detail Test",
+                    text: "Detail Tes",
                     active: true,
                 }
             ],
@@ -177,7 +177,7 @@ export default {
                             icon: 'error',
                             title: 'Oops...',
                             text: 'ID tidak valid!',
-                            footer: 'Anda dialihkan ke Menu Jadwal',
+                            footer: 'Anda dialihkan ke menu Jadwal',
                             timer: 4000
                         })
                         this.$router.replace({
@@ -190,7 +190,7 @@ export default {
                         icon: 'error',
                         title: 'Oops...',
                         text: 'Terjadi kesalahan!',
-                        footer: 'Anda dialihkan ke Menu Jadwal',
+                        footer: 'Anda dialihkan ke menu Jadwal',
                         timer: 4000
                     })
                     this.$router.replace({
@@ -344,7 +344,7 @@ export default {
                     });
                 })
                 .catch(error => {
-                    console.log(error)
+                    // console.log(error)
                     this.submitted = false;
                     this.tryingToInput = false;
                     this.isInputError = true;
@@ -569,7 +569,7 @@ export default {
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <label>File Journal</label>
+                        <label>File Jurnal</label>
                     </div>
                     <div class="text-center">
                         <b-button variant="primary" @click="onClickDownload" style="min-width: 350px;">Download</b-button>
@@ -582,7 +582,7 @@ export default {
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <label>URL Jawaban Journal</label>
+                        <label>URL Jawaban Jurnal</label>
                     </div>
                     <div class="text-center">
                         <div class="form-group">

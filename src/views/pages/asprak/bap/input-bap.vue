@@ -213,7 +213,7 @@ export default {
                     icon: 'error',
                     title: 'Oops...',
                     text: 'ID tidak valid!',
-                    footer: 'Anda dialihkan ke Menu Jadwal',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                     timer: 4000
                 })
                 this.$router.replace({
@@ -226,7 +226,7 @@ export default {
             icon: 'error',
             title: 'Oops...',
             text: 'ID tidak valid!',
-            footer: 'Anda dialihkan ke Menu Jadwal',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -303,7 +303,7 @@ export default {
             });
           })
           .catch(error => {
-            console.log(error)
+            // console.log(error)
             this.submitted = false;
             this.tryingToInput = false;
             this.isInputError = true;
@@ -381,7 +381,19 @@ export default {
       <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
     </div>
     <div>
-        <form class="form-horizontal" @submit.prevent="onClickSubmit">
+        <div class="card">
+          <div class="card-body">
+            <div class="tab-pane" id="metadata">
+              <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
+              <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi input BAP :</p>
+              <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
+                  - BAP yang berhasil disimpan tidak akan bisa diubah,<br>
+                  - Pastikan setiap data yang diisi telah sesuai dan benar!
+              </p>
+            </div>
+          </div>
+        </div>
+        <form class="form-horizontal mt-2" @submit.prevent="onClickSubmit">
             <div class="card">
                 <div class="card-body">
                     <b-form-group

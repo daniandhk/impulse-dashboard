@@ -12,18 +12,18 @@ export default {
   },
   data() {
     return {
-        title: "Create Test",
+        title: "Create Tes",
         items: [
             {
             text: "Temp"
             },
             {
-            text: "Create Test",
+            text: "Create Tes",
             active: true
             }
         ],
         selected_test: "",
-        test_types: ["Pretest", "Jurnal", "Posttest"],
+        test_types: ["Tes Awal", "Jurnal", "Tes Akhir"],
         isPretestSelected: false,
         isJurnalSelected: false,
         isPosttestSelected: false,
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
       selectType(value){
-          if (value == "Pretest") {
+          if (value == "Tes Awal") {
             this.isPretestSelected = true;
             this.isJurnalSelected = false;
             this.isPosttestSelected = false;
@@ -50,7 +50,7 @@ export default {
             this.isPretestSelected = false;
             this.isPosttestSelected = false;
           }
-          else if (value == "Posttest") {
+          else if (value == "Tes Akhir") {
             this.isPosttestSelected = true;
             this.isPretestSelected = false;
             this.isJurnalSelected = false;
@@ -129,7 +129,7 @@ export default {
                             <div class="form-group mt-3">
                                 <multiselect
                                     class="text-center"
-                                    placeholder="Test Type"
+                                    placeholder="Tipe Tes"
                                     v-model="selected_test"
                                     :options="test_types"
                                     @select="selectType"

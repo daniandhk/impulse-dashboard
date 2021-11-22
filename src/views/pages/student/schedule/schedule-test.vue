@@ -11,7 +11,7 @@ import store from '@/store';
 
 export default {
     page: {
-        title: "Test",
+        title: "Tes",
         meta: [{ name: "description" }],
     },
     components: {
@@ -38,7 +38,7 @@ export default {
     },
     data() {
         return {
-            title: "Test",
+            title: "Tes",
             items: [
                 {
                     text: "Praktikan",
@@ -53,7 +53,7 @@ export default {
                     href: "/praktikan/schedule/calendar"
                 },
                 {
-                    text: "Test",
+                    text: "Tes",
                     active: true,
                 }
             ],
@@ -136,7 +136,7 @@ export default {
             //         icon: 'error',
             //         title: 'Oops...',
             //         text: 'You need input Auth first!',
-            //         footer: 'Anda dialihkan ke Menu Jadwal',
+            //         footer: 'Anda dialihkan ke menu Jadwal',
             //     })
             //     this.$router.replace({
             //         name: 'praktikan-schedule-detail', 
@@ -152,7 +152,7 @@ export default {
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Tes saat ini belum dimulai!',
-                    footer: 'Anda dialihkan ke Menu Jadwal',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                 })
                 this.$router.replace({
                     name: 'praktikan-schedule-detail', 
@@ -322,7 +322,7 @@ export default {
                     icon: 'error',
                     title: 'Oops...',
                     text: 'ID tidak valid!',
-                    footer: 'Anda dialihkan ke Menu Jadwal',
+                    footer: 'Anda dialihkan ke menu Jadwal',
                     timer: 4000
                 })
                 this.$router.back();
@@ -580,7 +580,7 @@ export default {
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <label>File Journal</label>
+                        <label>File Jurnal</label>
                     </div>
                     <div class="text-center">
                         <b-button variant="primary" @click="onClickDownload" style="min-width: 350px;">Download</b-button>
@@ -593,7 +593,7 @@ export default {
             <div class="card">
                 <div class="card-body">
                     <div class="text-center">
-                        <label>URL Upload Jawaban Journal</label>
+                        <label>URL Upload Jawaban Jurnal</label>
                     </div>
                     <div class="text-center">
                         <div class="form-group">

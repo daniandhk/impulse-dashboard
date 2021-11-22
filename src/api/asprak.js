@@ -43,3 +43,11 @@ export function updateGrade(student_id, data){
         data: data
     })
 }
+
+export function downloadRekapNilai(course_id) {
+    return httpAxios({
+        url: `/classcourse/export_recap/${course_id}`,
+        method: 'GET',
+        responseType: 'blob',
+    })
+}

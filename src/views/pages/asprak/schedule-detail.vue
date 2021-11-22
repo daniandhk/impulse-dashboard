@@ -152,10 +152,10 @@ export default {
 
       //input test
       test_id: "",
-      tests: ["Pretest", "Journal", "Posttest"],
+      tests: ["Tes Awal", "Jurnal", "Tes Akhir"],
       selected_test: "",
 
-      types: ["Multiple Choice", "Essay", "Upload File"],
+      types: ["Pilihan Ganda", "Esai", "Upload File"],
       selected_type: "",
 
       dataTest: {
@@ -190,7 +190,7 @@ export default {
             }
           });
           this.on('error', function(file, response){
-            console.log(response)
+            // console.log(response)
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal mengunggah file!',
@@ -263,7 +263,7 @@ export default {
             icon: 'error',
             title: 'Oops...',
             text: 'ID tidak valid!',
-            footer: 'Anda dialihkan ke Menu Jadwal',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -535,17 +535,17 @@ export default {
       this.isLoadedData = false;
       
       //load data
-      if(value == "Journal"){
+      if(value == "Jurnal"){
         this.selected_type = "Upload File";
         this.dataTest.type = "file";
         this.test_id = this.schedule_data.module.journal_id;
         this.dataTest.test_type = "journal";
       }
-      else if(value == "Pretest"){
+      else if(value == "Tes Awal"){
         this.test_id = this.schedule_data.module.pretest_id;
         this.dataTest.test_type = "pretest";
       }
-      else if(value == "Posttest"){
+      else if(value == "Tes Akhir"){
         this.test_id = this.schedule_data.module.posttest_id;
         this.dataTest.test_type = "posttest";
       }
@@ -573,10 +573,10 @@ export default {
       this.inputTestSuccess = false;
       this.isLoadedData = false;
 
-      if(value == "Essay"){
+      if(value == "Esai"){
         this.dataTest.type = "essay"
       }
-      else if(value == "Multiple Choice"){
+      else if(value == "Pilihan Ganda"){
         this.dataTest.type = "multiple_choice"
       }
       else if(value == "Upload File"){
@@ -604,10 +604,10 @@ export default {
                   this.dataTest.questions = [];
 
                   if(data.test.type == "multiple_choice"){
-                    this.selected_type = "Multiple Choice"
+                    this.selected_type = "Pilihan Ganda"
                   }
                   else if(data.test.type == "essay"){
-                    this.selected_type = "Essay"
+                    this.selected_type = "Esai"
                   }
                   else if(data.test.type == "file"){
                     this.selected_type = "Upload File"
@@ -637,7 +637,7 @@ export default {
                 }
             })
             .catch(error => {
-                console.log(error)
+                // console.log(error)
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
@@ -849,7 +849,7 @@ export default {
           text: 'File telah terunggah.',
       })
       this.loadData().then(result=>{
-        this.selectTest("Journal").then(rslt=>{
+        this.selectTest("Jurnal").then(rslt=>{
           this.inputTestSuccess = true;
           this.isUnsavedData = false;
           this.isLoadedData = false;
@@ -980,7 +980,7 @@ export default {
           <b-tabs nav-class="nav-tabs-custom">
             <b-tab title-link-class="p-3">
               <template v-slot:title>
-                <a class="font-weight-bold active">Edit Schedule</a>
+                <a class="font-weight-bold active">Edit Jadwal</a>
               </template>
               <template>
                 <form class="form-horizontal mt-4" @submit.prevent="updateSchedule">
@@ -1163,14 +1163,14 @@ export default {
             </b-tab>
             <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                    <a class="font-weight-bold active">Input Test</a>
+                    <a class="font-weight-bold active">Input Tes</a>
                 </template>
                 <template>
                     <div class="form-horizontal mt-4">
                       <div>
                         <div class="row">
                           <div class="form-group text-center col-sm-6">
-                              <label>Test</label>
+                              <label>Jenis Tes</label>
                               <multiselect 
                                 class="text-center"
                                 v-model="selected_test" 
@@ -1184,10 +1184,10 @@ export default {
                               <div
                                 v-if="submitted_test && !$v.dataTest.test_type.required"
                                 class="invalid-feedback text-center mt-2"
-                                >Test harus diisi!</div>
+                                >Tes harus diisi!</div>
                           </div>
                           <div class="form-group text-center col-sm-6">
-                              <label>Type</label>
+                              <label>Tipe Tes</label>
                               <multiselect 
                                 class="text-center"
                                 v-model="selected_type" 
@@ -1256,7 +1256,7 @@ export default {
                                     border: 0 none; 
                                     color: #eee;"
                         >
-                        <div v-if="selected_type == 'Multiple Choice'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
+                        <div v-if="selected_type == 'Pilihan Ganda'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
                             <div class="col-sm-12" v-for="(question, index) in dataTest.questions" :key="index" :set="v = $v.dataTest.questions.$each[index]">
                                 <div class="row">
                                     <div class="text-center col-sm-1">
@@ -1377,7 +1377,7 @@ export default {
                                 </b-button>
                             </div>
                         </div>
-                        <div v-if="selected_type == 'Essay'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
+                        <div v-if="selected_type == 'Esai'" class="pt-4 pr-3 pb-4" style="background-color:#F1F5F7; margin:-20px;">
                             <div class="col-sm-12" v-for="(question, index) in dataTest.questions" :key="index" :set="v = $v.dataTest.questions.$each[index]">
                                 <div class="row">
                                     <div class="text-center col-sm-1">
@@ -1471,10 +1471,10 @@ export default {
                                           <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                                               - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
                                               - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
-                                              - <b>File Soal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
-                                              - Batas ukuran <b>File Soal</b> adalah <b>2 MB</b>,<br>
+                                              - <b>File Soal Jurnal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
+                                              - Batas ukuran <b>File Soal Jurnal</b> adalah <b>2 MB</b>,<br>
                                               - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>
-                                              - Unggah file kembali untuk memperbarui <b>File Soal</b>, <b>Bobot Nilai</b>, dan <b>URL Upload Jawaban</b>.
+                                              - Unggah file kembali untuk memperbarui <b>Bobot Nilai</b>, <b>URL Upload Jawaban</b>, dan <b>File Soal Jurnal</b>.
                                               <!-- - Pastikan hanya ada <b>satu sheet</b>,<br>
                                               - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br> -->
                                           </p>
@@ -1517,7 +1517,7 @@ export default {
                                                     </div>
                                                 </div>
                                                 <div class="col-4" v-if="dataTest.questions[0].text">
-                                                    <label>File Journal</label>
+                                                    <label>File Soal Jurnal</label>
                                                     <div class="form-group">
                                                       <input 
                                                         v-model="dataTest.questions[0].text"

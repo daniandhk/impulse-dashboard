@@ -70,7 +70,7 @@ export default {
             <div>
                 <div class="tab-pane" id="metadata">
                     <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
-                    <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel:</p>
+                    <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi upload file Excel :</p>
                     <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
                         - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
                         - Pastikan hanya ada <b>satu sheet</b>,<br>
