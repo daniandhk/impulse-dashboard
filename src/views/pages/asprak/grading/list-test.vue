@@ -227,7 +227,7 @@ export default {
             icon: 'error',
             title: 'Oops...',
             text: 'ID tidak valid!',
-            footer: 'Anda dialihkan ke Menu Jadwal',
+            footer: 'Anda dialihkan ke menu Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -340,31 +340,6 @@ export default {
         });
     },
 
-    onClickDownload(){
-      // this.loading();
-      // return (
-      //     api.downloadRekapNilai(this.schedule_data.module.id, this.test_id)
-      //     .then(response => {
-      //         let blob = new Blob([response.data])
-      //         let link = document.createElement('a')
-      //         link.href = window.URL.createObjectURL(blob)
-      //         link.download = this.dataTest.questions[0].text
-      //         link.click()
-
-      //         this.loading();
-              Swal.fire("Berhasil diunduh!", "Rekap Nilai telah terunduh.", "success");
-      //     })
-      //     .catch(error => {
-      //         Swal.fire({
-      //             icon: 'error',
-      //             title: 'Oops...',
-      //             text: 'Terjadi kesalahan!',
-      //             footer: error
-      //         })
-      //     })
-      // );
-    },
-
     loading() {
       if(this.isLoading){
         this.isLoading = false;
@@ -435,34 +410,17 @@ export default {
               </div>
           </div>
 
-          <div class="row">
-              <div class="col-sm-6">
-                <div class="form-group text-center">
-                    <label>Modul</label>
-                    <multiselect 
-                      class="text-center"
-                      v-model="schedule_data.module.index" 
-                      :options="dataModules"
-                      @select="selectModule"
-                      :allow-empty="false"
-                      :disabled="isLoading"
-                      :show-labels="false"
-                    ></multiselect>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="text-center">
-                    <label>Rekap Nilai</label>
-                </div>
-                <div class="text-center">
-                    <b-button 
-                      variant="primary" 
-                      @click="onClickDownload" 
-                      style="width: 100%;"
-                      :disabled="isLoading"
-                    >Download Excel</b-button>
-                </div>
-              </div>
+          <div class="form-group text-center">
+              <label>Modul</label>
+              <multiselect 
+                class="text-center"
+                v-model="schedule_data.module.index" 
+                :options="dataModules"
+                @select="selectModule"
+                :allow-empty="false"
+                :disabled="isLoading"
+                :show-labels="false"
+              ></multiselect>
           </div>
         </div>
       </div>

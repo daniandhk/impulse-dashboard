@@ -1,10 +1,11 @@
 <script>
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
+import Multiselect from "vue-multiselect";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
-import moment from 'moment';
+import { required } from "vuelidate/lib/validators";
 
 import { notificationMethods } from "@/state/helpers";
 
@@ -18,7 +19,11 @@ export default {
   },
   components: {
     Layout,
+    Multiselect,
     PageHeader,
+  },
+  validations: {
+    recap_course: { required },
   },
   computed: {
     notification() {
@@ -123,6 +128,11 @@ export default {
         { key: "name", sortable: true, label: "Nama" },
       ],
 
+      coursesData: [],
+      recap_course: "",
+      course_id: "",
+      submitted_recap: false,
+
     };
   },
   methods: {
@@ -130,6 +140,7 @@ export default {
 
     async loadData(){
       await this.fetchData();
+      await this.getDataCourses();
 
       this.asprak_totalRows = this.bap_data.asprak_presence.length;
       this.asprak_perPage = this.bap_data.asprak_presence.length;
@@ -208,8 +219,63 @@ export default {
       this.student_currentPage = 1;
     },
 
-    async print () {
-      await this.$htmlToPaper('print_page');
+    async getDataCourses(){
+        return (
+            api.getListCourses()
+            .then(response => {
+                if(response.data.courses){
+                    this.coursesData = response.data.courses;
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error
+                })
+            })
+        )
+    },
+
+    selectRecapCourse(value){
+        this.course_id = value.id;
+    },
+
+    removeRecapCourse(){
+        this.course_id = "";
+    },
+
+    downloadRecap(){
+        this.submitted_recap = true;
+        this.$v.recap_course.$touch();
+        if (this.$v.recap_course.$invalid) {
+            return;
+        } else {
+            this.loading();
+            return (
+                api.downloadRekapNilai(this.course_id)
+                .then(response => {
+                    let blob = new Blob([response.data])
+                    let link = document.createElement('a')
+                    link.href = window.URL.createObjectURL(blob)
+                    link.download = this.recap_course.name + ".xlsx"
+                    link.click()
+
+                    this.loading();
+                    Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
+                })
+                .catch(error => {
+                    this.loading();
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan!',
+                        footer: error
+                    })
+                })
+            );
+        }
     },
 
     loading() {
@@ -469,8 +535,39 @@ export default {
                 </div>
             </div>
         </div>
-        <div class="text-center mt-4 mb-4">
-            <b-button variant="success" style="width: 100%;" @click="print">Print</b-button>
+        <div class="card">
+            <div class="card-body">
+                <div class="text-center form-group mb-0">
+                    <h5 class="text-center font-size-15 text-uppercase">Unduh Rekap Nilai / Presensi</h5>
+                    <div class="row row-no-gutters justify-content-center text-center mt-3">
+                        <div class="form-group m-2">
+                            <multiselect
+                                v-model="recap_course"
+                                placeholder="Mata Kuliah"
+                                :options="coursesData"
+                                style="min-width: 325px;" 
+                                label="name"
+                                track-by="name"
+                                @select="selectRecapCourse"
+                                @remove="removeRecapCourse"
+                                :show-labels="false"
+                                :class="{ 'is-invalid': submitted_recap && $v.recap_course.$error }" 
+                            ></multiselect>
+                            <div
+                            v-if="submitted_recap && !$v.recap_course.required"
+                            class="invalid-feedback"
+                            >Mata Kuliah harus dipilih!</div>
+                        </div>
+                        <div class="m-2">
+                            <button 
+                                type="button" 
+                                @click="downloadRecap" 
+                                class="btn btn-primary waves-effect"
+                            >Download</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
   </Layout>
