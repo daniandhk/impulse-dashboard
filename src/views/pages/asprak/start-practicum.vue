@@ -51,24 +51,6 @@ export default {
         auth: { required }
     },
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-  },
-  mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
-  },
-  watch: {
-    $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
-    }
-  },
   data() {
     return {
       title: "Mulai Praktikum",
@@ -231,6 +213,24 @@ export default {
       },
 
     };
+  },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  watch: {
+    $route: async function() {
+      await this.loadData().then(result=>{
+        this.loading();
+      });
+    }
+  },
+  mounted: async function() {
+    this.loading();
+    await this.loadData().then(result=>{
+      this.loading();
+    });
   },
   methods: {
     ...notificationMethods,
@@ -855,678 +855,742 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div>
       <div class="row">
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center form-group mb-0">
-                        <div>
-                            <h5 class="text-center font-size-15 text-uppercase">Kelas MK</h5>
-                            <hr style="margin-left: -28px; 
+          <div class="card">
+            <div class="card-body">
+              <div class="text-center form-group mb-0">
+                <div>
+                  <h5 class="text-center font-size-15 text-uppercase">
+                    Kelas MK
+                  </h5>
+                  <hr
+                    style="margin-left: -28px; 
                                         margin-right: -28px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                            >
-                            <div class="row mt-4">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.kelas"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="class_course_data.class.name"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.matkul"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="class_course_data.course.name"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.tahun"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="class_course_data.academic_year.name"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.modul"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <multiselect 
-                                  class="text-center"
-                                  v-model="schedule_data.module.index" 
-                                  :options="dataModules"
-                                  @select="selectModule"
-                                  :allow-empty="false"
-                                  :disabled="isLoading"
-                                  :show-labels="false"
-                                ></multiselect>
-                              </div>
-                            </div>
-                        </div>
+                  >
+                  <div class="row mt-4">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.kelas"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
                     </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="class_course_data.class.name"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.matkul"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="class_course_data.course.name"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.tahun"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="class_course_data.academic_year.name"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.modul"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <multiselect 
+                        v-model="schedule_data.module.index"
+                        class="text-center" 
+                        :options="dataModules"
+                        :allow-empty="false"
+                        :disabled="isLoading"
+                        :show-labels="false"
+                        @select="selectModule"
+                      />
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-            <!-- end card -->
+          </div>
+          <!-- end card -->
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center form-group mb-0">
-                        <div>
-                            <h5 class="text-center font-size-15 text-uppercase">Ruangan</h5>
-                            <hr style="margin-left: -28px; 
+          <div class="card">
+            <div class="card-body">
+              <div class="text-center form-group mb-0">
+                <div>
+                  <h5 class="text-center font-size-15 text-uppercase">
+                    Ruangan
+                  </h5>
+                  <hr
+                    style="margin-left: -28px; 
                                         margin-right: -28px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                            >
-                            <div class="row mt-4">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.nama_ruangan"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="schedule_data.room.name"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.detail_ruangan"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <textarea
-                                    v-model="schedule_data.room.desc"
-                                    rows="1"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.msteam_link"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="schedule_data.room.msteam_link"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.msteam_code"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="schedule_data.room.msteam_code"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                        </div>
+                  >
+                  <div class="row mt-4">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.nama_ruangan"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
                     </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="schedule_data.room.name"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.detail_ruangan"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <textarea
+                        v-model="schedule_data.room.desc"
+                        rows="1"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      />
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.msteam_link"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="schedule_data.room.msteam_link"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.msteam_code"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="schedule_data.room.msteam_code"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-            <!-- end card -->
+          </div>
+          <!-- end card -->
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center form-group mb-0">
-                        <div>
-                            <h5 class="text-center font-size-15 text-uppercase">Jadwal</h5>
-                            <hr style="margin-left: -28px; 
+          <div class="card">
+            <div class="card-body">
+              <div class="text-center form-group mb-0">
+                <div>
+                  <h5 class="text-center font-size-15 text-uppercase">
+                    Jadwal
+                  </h5>
+                  <hr
+                    style="margin-left: -28px; 
                                         margin-right: -28px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                            >
-                            <b-alert
-                                v-model="isJadwalNull"
-                                class="mt-3"
-                                variant="danger"
-                            >Harap input jadwal di menu Jadwal!</b-alert>
-                            <div class="row mt-4">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.tanggal"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="time_date"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.mulai"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="time_start"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                            <div class="row mt-2">
-                              <div class="col-sm-5">
-                                <input
-                                    v-model="text.terakhir"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-7">
-                                <input
-                                    v-model="time_end"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="background-color: #F0F4F6;"
-                                />
-                              </div>
-                            </div>
-                        </div>
+                  >
+                  <b-alert
+                    v-model="isJadwalNull"
+                    class="mt-3"
+                    variant="danger"
+                  >
+                    Harap input jadwal di menu Jadwal!
+                  </b-alert>
+                  <div class="row mt-4">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.tanggal"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
                     </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="time_date"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.mulai"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="time_start"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row mt-2">
+                    <div class="col-sm-5">
+                      <input
+                        v-model="text.terakhir"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-7">
+                      <input
+                        v-model="time_end"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
+                    </div>
+                  </div>
                 </div>
+              </div>
             </div>
-            <!-- end card -->
+          </div>
+          <!-- end card -->
         </div>
         <!-- end col-->
       </div>
       <div class="row">
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-body m-2">
-                    <div class="text-center form-group mb-0">
-                        <div>
-                            <h5 class="text-left font-size-15 text-uppercase">Tes Awal</h5>
-                            <p class="text-left mb-0">
-                                Merupakan tahapan pertama dalam praktikum.
-                            </p>
-                            <hr style="margin-left: -28px; 
+          <div class="card">
+            <div class="card-body m-2">
+              <div class="text-center form-group mb-0">
+                <div>
+                  <h5 class="text-left font-size-15 text-uppercase">
+                    Tes Awal
+                  </h5>
+                  <p class="text-left mb-0">
+                    Merupakan tahapan pertama dalam praktikum.
+                  </p>
+                  <hr
+                    style="margin-left: -28px; 
                                         margin-right: -28px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                            >
-                            <b-alert
-                                v-model="isPretestNull"
-                                class="mt-3"
-                                variant="danger"
-                            >Harap input soal di menu Jadwal!</b-alert>
-                            <div class="row text-left mt-4 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.start"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0;"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <date-picker
-                                    v-model="pretest_data.time_start"
-                                    value-type="format"
-                                    type="time"
-                                    placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPretestNull || isJadwalNull"
-                                    :class="{ 'is-invalid': submitted && $v.pretest_data.time_start.$error }"
-                                ></date-picker>
-                                <div
-                                v-if="submitted && !$v.pretest_data.time_start.required"
-                                class="invalid-feedback"
-                                >Start Time harus diisi!</div>
-                              </div>
-                            </div>
-                            <div class="row text-left mt-2 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.end"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <date-picker
-                                    v-model="pretest_data.time_end"
-                                    value-type="format"
-                                    type="time"
-                                    placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPretestNull || isJadwalNull"
-                                    :class="{ 'is-invalid': submitted && $v.pretest_data.time_end.$error }"
-                                ></date-picker>
-                                <div
-                                v-if="submitted && !$v.pretest_data.time_end.required"
-                                class="invalid-feedback"
-                                >End Time harus diisi!</div>
-                              </div>
-                            </div>
-                            <div class="row text-left mt-2 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.auth"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <input
-                                    v-model="pretest_data.auth"
-                                    type="text"
-                                    class="form-control"
-                                    :disabled="isLoading || isPretestNull || isJadwalNull"
-                                    v-bind:style="pretest_form"
-                                    :class="{ 'is-invalid': submitted && $v.pretest_data.auth.$error }"
-                                />
-                                <div
-                                  v-if="submitted && !$v.pretest_data.auth.required"
-                                  class="invalid-feedback"
-                                  >Auth harus diisi!</div>
-                              </div>
-                            </div>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('pretest')" 
-                              class="btn btn-primary mt-4 m-1" 
-                              style="min-width: 150px;"
-                            >Simpan
-                            </button>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('pretest', 'stop')" 
-                              class="btn btn-danger mt-4 m-1" 
-                              style="min-width: 150px;"
-                              v-if="isPretestStart == true"
-                            >Stop
-                            </button>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('pretest', 'start')" 
-                              class="btn btn-success mt-4 m-1" 
-                              style="min-width: 150px;"
-                              v-if="isPretestStart == false"
-                            >Start
-                            </button>
-                        </div>
+                  >
+                  <b-alert
+                    v-model="isPretestNull"
+                    class="mt-3"
+                    variant="danger"
+                  >
+                    Harap input soal di menu Jadwal!
+                  </b-alert>
+                  <div class="row text-left mt-4 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.start"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0;"
+                      >
                     </div>
+                    <div class="col-sm-8">
+                      <date-picker
+                        v-model="pretest_data.time_start"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading || isPretestNull || isJadwalNull"
+                        :class="{ 'is-invalid': submitted && $v.pretest_data.time_start.$error }"
+                      />
+                      <div
+                        v-if="submitted && !$v.pretest_data.time_start.required"
+                        class="invalid-feedback"
+                      >
+                        Start Time harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.end"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-8">
+                      <date-picker
+                        v-model="pretest_data.time_end"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading || isPretestNull || isJadwalNull"
+                        :class="{ 'is-invalid': submitted && $v.pretest_data.time_end.$error }"
+                      />
+                      <div
+                        v-if="submitted && !$v.pretest_data.time_end.required"
+                        class="invalid-feedback"
+                      >
+                        End Time harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.auth"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-8">
+                      <input
+                        v-model="pretest_data.auth"
+                        type="text"
+                        class="form-control"
+                        :disabled="isLoading || isPretestNull || isJadwalNull"
+                        :style="pretest_form"
+                        :class="{ 'is-invalid': submitted && $v.pretest_data.auth.$error }"
+                      >
+                      <div
+                        v-if="submitted && !$v.pretest_data.auth.required"
+                        class="invalid-feedback"
+                      >
+                        Auth harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    type="button"
+                    class="btn btn-primary mt-4 m-1" 
+                    style="min-width: 150px;" 
+                    @click="submitSchedule('pretest')"
+                  >
+                    Simpan
+                  </button>
+                  <button 
+                    v-if="isPretestStart == true"
+                    type="button" 
+                    class="btn btn-danger mt-4 m-1" 
+                    style="min-width: 150px;"
+                    @click="submitSchedule('pretest', 'stop')"
+                  >
+                    Stop
+                  </button>
+                  <button 
+                    v-if="isPretestStart == false"
+                    type="button" 
+                    class="btn btn-success mt-4 m-1" 
+                    style="min-width: 150px;"
+                    @click="submitSchedule('pretest', 'start')"
+                  >
+                    Start
+                  </button>
                 </div>
+              </div>
             </div>
-            <!-- end card -->
+          </div>
+          <!-- end card -->
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-body m-2">
-                    <div class="text-center form-group mb-0">
-                        <div>
-                            <h5 class="text-left font-size-15 text-uppercase">Jurnal</h5>
-                            <p class="text-left mb-0">
-                              Merupakan tahapan utama dalam praktikum.
-                            </p>
-                            <hr style="margin-left: -28px; 
+          <div class="card">
+            <div class="card-body m-2">
+              <div class="text-center form-group mb-0">
+                <div>
+                  <h5 class="text-left font-size-15 text-uppercase">
+                    Jurnal
+                  </h5>
+                  <p class="text-left mb-0">
+                    Merupakan tahapan utama dalam praktikum.
+                  </p>
+                  <hr
+                    style="margin-left: -28px; 
                                         margin-right: -28px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                            >
-                            <b-alert
-                                v-model="isJournalNull"
-                                class="mt-3"
-                                variant="danger"
-                            >Harap input soal di menu Jadwal!</b-alert>
-                            <div class="row text-left mt-4 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.start"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0;"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <date-picker
-                                    v-model="journal_data.time_start"
-                                    value-type="format"
-                                    type="time"
-                                    placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isJournalNull || isJadwalNull"
-                                    :class="{ 'is-invalid': submitted && $v.journal_data.time_start.$error }"
-                                ></date-picker>
-                                <div
-                                v-if="submitted && !$v.journal_data.time_start.required"
-                                class="invalid-feedback"
-                                >Start Time harus diisi!</div>
-                              </div>
-                            </div>
-                            <div class="row text-left mt-2 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.end"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <date-picker
-                                    v-model="journal_data.time_end"
-                                    value-type="format"
-                                    type="time"
-                                    placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isJournalNull || isJadwalNull"
-                                    :class="{ 'is-invalid': submitted && $v.journal_data.time_end.$error }"
-                                ></date-picker>
-                                <div
-                                v-if="submitted && !$v.journal_data.time_end.required"
-                                class="invalid-feedback"
-                                >End Time harus diisi!</div>
-                              </div>
-                            </div>
-                            <div class="row text-left mt-2 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.auth"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <input
-                                    v-model="journal_data.auth"
-                                    type="text"
-                                    class="form-control"
-                                    :disabled="isLoading || isJournalNull || isJadwalNull"
-                                    v-bind:style="journal_form"
-                                    :class="{ 'is-invalid': submitted && $v.journal_data.auth.$error }"
-                                />
-                                <div
-                                  v-if="submitted && !$v.journal_data.auth.required"
-                                  class="invalid-feedback"
-                                  >Auth harus diisi!</div>
-                              </div>
-                            </div>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('journal')" 
-                              class="btn btn-primary mt-4 m-1" 
-                              style="min-width: 150px;"
-                            >Simpan
-                            </button>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('journal', 'stop')" 
-                              class="btn btn-danger mt-4 m-1" 
-                              style="min-width: 150px;"
-                              v-if="isJournalStart == true"
-                            >Stop
-                            </button>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('journal', 'start')" 
-                              class="btn btn-success mt-4 m-1" 
-                              style="min-width: 150px;"
-                              v-if="isJournalStart == false"
-                            >Start
-                            </button>
-                        </div>
+                  >
+                  <b-alert
+                    v-model="isJournalNull"
+                    class="mt-3"
+                    variant="danger"
+                  >
+                    Harap input soal di menu Jadwal!
+                  </b-alert>
+                  <div class="row text-left mt-4 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.start"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0;"
+                      >
                     </div>
+                    <div class="col-sm-8">
+                      <date-picker
+                        v-model="journal_data.time_start"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading || isJournalNull || isJadwalNull"
+                        :class="{ 'is-invalid': submitted && $v.journal_data.time_start.$error }"
+                      />
+                      <div
+                        v-if="submitted && !$v.journal_data.time_start.required"
+                        class="invalid-feedback"
+                      >
+                        Start Time harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.end"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-8">
+                      <date-picker
+                        v-model="journal_data.time_end"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading || isJournalNull || isJadwalNull"
+                        :class="{ 'is-invalid': submitted && $v.journal_data.time_end.$error }"
+                      />
+                      <div
+                        v-if="submitted && !$v.journal_data.time_end.required"
+                        class="invalid-feedback"
+                      >
+                        End Time harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.auth"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-8">
+                      <input
+                        v-model="journal_data.auth"
+                        type="text"
+                        class="form-control"
+                        :disabled="isLoading || isJournalNull || isJadwalNull"
+                        :style="journal_form"
+                        :class="{ 'is-invalid': submitted && $v.journal_data.auth.$error }"
+                      >
+                      <div
+                        v-if="submitted && !$v.journal_data.auth.required"
+                        class="invalid-feedback"
+                      >
+                        Auth harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    type="button"
+                    class="btn btn-primary mt-4 m-1" 
+                    style="min-width: 150px;" 
+                    @click="submitSchedule('journal')"
+                  >
+                    Simpan
+                  </button>
+                  <button 
+                    v-if="isJournalStart == true"
+                    type="button" 
+                    class="btn btn-danger mt-4 m-1" 
+                    style="min-width: 150px;"
+                    @click="submitSchedule('journal', 'stop')"
+                  >
+                    Stop
+                  </button>
+                  <button 
+                    v-if="isJournalStart == false"
+                    type="button" 
+                    class="btn btn-success mt-4 m-1" 
+                    style="min-width: 150px;"
+                    @click="submitSchedule('journal', 'start')"
+                  >
+                    Start
+                  </button>
                 </div>
+              </div>
             </div>
-            <!-- end card -->
+          </div>
+          <!-- end card -->
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-            <div class="card">
-                <div class="card-body m-2">
-                    <div class="text-center form-group mb-0">
-                        <div>
-                            <h5 class="text-left font-size-15 text-uppercase">Tes Akhir</h5>
-                            <p class="text-left mb-0">
-                              Merupakan tahapan akhir dalam praktikum.
-                            </p>
-                            <hr style="margin-left: -28px; 
+          <div class="card">
+            <div class="card-body m-2">
+              <div class="text-center form-group mb-0">
+                <div>
+                  <h5 class="text-left font-size-15 text-uppercase">
+                    Tes Akhir
+                  </h5>
+                  <p class="text-left mb-0">
+                    Merupakan tahapan akhir dalam praktikum.
+                  </p>
+                  <hr
+                    style="margin-left: -28px; 
                                         margin-right: -28px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                            >
-                            <b-alert
-                                v-model="isPosttestNull"
-                                class="mt-3"
-                                variant="danger"
-                            >Harap input soal di menu Jadwal!</b-alert>
-                            <div class="row text-left mt-4 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.start"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0;"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <date-picker
-                                    v-model="posttest_data.time_start"
-                                    value-type="format"
-                                    type="time"
-                                    placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPosttestNull || isJadwalNull"
-                                    :class="{ 'is-invalid': submitted && $v.posttest_data.time_start.$error }"
-                                ></date-picker>
-                                <div
-                                v-if="submitted && !$v.posttest_data.time_start.required"
-                                class="invalid-feedback"
-                                >Start Time harus diisi!</div>
-                              </div>
-                            </div>
-                            <div class="row text-left mt-2 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.end"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <date-picker
-                                    v-model="posttest_data.time_end"
-                                    value-type="format"
-                                    type="time"
-                                    placeholder="HH:mm:ss"
-                                    :disabled="isLoading || isPosttestNull || isJadwalNull"
-                                    :class="{ 'is-invalid': submitted && $v.posttest_data.time_end.$error }"
-                                ></date-picker>
-                                <div
-                                v-if="submitted && !$v.posttest_data.time_end.required"
-                                class="invalid-feedback"
-                                >End Time harus diisi!</div>
-                              </div>
-                            </div>
-                            <div class="row text-left mt-2 mr-2">
-                              <div class="col-sm-4">
-                                <input
-                                    v-model="text.auth"
-                                    type="text"
-                                    class="form-control"
-                                    disabled="true"
-                                    style="border: 0"
-                                />
-                              </div>
-                              <div class="col-sm-8">
-                                <input
-                                    v-model="posttest_data.auth"
-                                    type="text"
-                                    class="form-control"
-                                    :disabled="isLoading || isPosttestNull || isJadwalNull"
-                                    v-bind:style="posttest_form"
-                                    :class="{ 'is-invalid': submitted && $v.posttest_data.auth.$error }"
-                                />
-                                <div
-                                  v-if="submitted && !$v.posttest_data.auth.required"
-                                  class="invalid-feedback"
-                                  >Auth harus diisi!</div>
-                              </div>
-                            </div>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('posttest')" 
-                              class="btn btn-primary mt-4 m-1" 
-                              style="min-width: 150px;"
-                            >Simpan
-                            </button>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('posttest', 'stop')" 
-                              class="btn btn-danger mt-4 m-1" 
-                              style="min-width: 150px;"
-                              v-if="isPosttestStart == true"
-                            >Stop
-                            </button>
-                            <button 
-                              type="button"
-                              @click="submitSchedule('posttest', 'start')" 
-                              class="btn btn-success mt-4 m-1" 
-                              style="min-width: 150px;"
-                              v-if="isPosttestStart == false"
-                            >Start
-                            </button>
-                        </div>
+                  >
+                  <b-alert
+                    v-model="isPosttestNull"
+                    class="mt-3"
+                    variant="danger"
+                  >
+                    Harap input soal di menu Jadwal!
+                  </b-alert>
+                  <div class="row text-left mt-4 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.start"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0;"
+                      >
                     </div>
+                    <div class="col-sm-8">
+                      <date-picker
+                        v-model="posttest_data.time_start"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading || isPosttestNull || isJadwalNull"
+                        :class="{ 'is-invalid': submitted && $v.posttest_data.time_start.$error }"
+                      />
+                      <div
+                        v-if="submitted && !$v.posttest_data.time_start.required"
+                        class="invalid-feedback"
+                      >
+                        Start Time harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.end"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-8">
+                      <date-picker
+                        v-model="posttest_data.time_end"
+                        value-type="format"
+                        type="time"
+                        placeholder="HH:mm:ss"
+                        :disabled="isLoading || isPosttestNull || isJadwalNull"
+                        :class="{ 'is-invalid': submitted && $v.posttest_data.time_end.$error }"
+                      />
+                      <div
+                        v-if="submitted && !$v.posttest_data.time_end.required"
+                        class="invalid-feedback"
+                      >
+                        End Time harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2 mr-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.auth"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="border: 0"
+                      >
+                    </div>
+                    <div class="col-sm-8">
+                      <input
+                        v-model="posttest_data.auth"
+                        type="text"
+                        class="form-control"
+                        :disabled="isLoading || isPosttestNull || isJadwalNull"
+                        :style="posttest_form"
+                        :class="{ 'is-invalid': submitted && $v.posttest_data.auth.$error }"
+                      >
+                      <div
+                        v-if="submitted && !$v.posttest_data.auth.required"
+                        class="invalid-feedback"
+                      >
+                        Auth harus diisi!
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    type="button"
+                    class="btn btn-primary mt-4 m-1" 
+                    style="min-width: 150px;" 
+                    @click="submitSchedule('posttest')"
+                  >
+                    Simpan
+                  </button>
+                  <button 
+                    v-if="isPosttestStart == true"
+                    type="button" 
+                    class="btn btn-danger mt-4 m-1" 
+                    style="min-width: 150px;"
+                    @click="submitSchedule('posttest', 'stop')"
+                  >
+                    Stop
+                  </button>
+                  <button 
+                    v-if="isPosttestStart == false"
+                    type="button" 
+                    class="btn btn-success mt-4 m-1" 
+                    style="min-width: 150px;"
+                    @click="submitSchedule('posttest', 'start')"
+                  >
+                    Start
+                  </button>
                 </div>
+              </div>
             </div>
-            <!-- end card -->
+          </div>
+          <!-- end card -->
         </div>
         <!-- end col-->
       </div>

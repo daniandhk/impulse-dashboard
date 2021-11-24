@@ -23,9 +23,6 @@ export default {
       course_name: { required },
     },
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       //list students
@@ -81,6 +78,9 @@ export default {
     loadCourseData() {
         return this.courseData;
     }
+  },
+  created() {
+    document.body.classList.add("auth-body-bg");
   },
   mounted: async function() {
     // Set the initial number of items
@@ -344,8 +344,16 @@ export default {
 
 <template>
   <div>
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <!-- <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
@@ -386,15 +394,18 @@ export default {
     </div> -->
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_length" class="dataTables_length">
+        <div
+          id="tickets-table_length"
+          class="dataTables_length"
+        >
           <label class="d-inline-flex align-items-center">
             Show&nbsp;
             <b-form-select 
-            v-model="perPage" 
-            size="sm" 
-            :options="pageOptions"
-            @change="handlePageSizeChange"
-            ></b-form-select>&nbsp;entries
+              v-model="perPage" 
+              size="sm" 
+              :options="pageOptions"
+              @change="handlePageSizeChange"
+            />&nbsp;entries
           </label>
         </div>
       </div>
@@ -427,18 +438,18 @@ export default {
         :sort-by="sortBy"
         :sort-desc="sortDesc"
         :filter-included-fields="filterOn"
+        :head-variant="'dark'"
         @filtered="onFiltered"
-        :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
           <a
-            href="javascript:void(0);"
-            @click=onClickDelete(data)
-            class="text-danger"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="text-danger"
             title="Delete"
+            @click="onClickDelete(data)"
           >
-            <i class="mdi mdi-trash-can font-size-18"></i>
+            <i class="mdi mdi-trash-can font-size-18" />
           </a>
         </template>
       </b-table>
@@ -449,11 +460,11 @@ export default {
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
-            v-model="currentPage" 
-            :total-rows="rows" 
-            :per-page="perPage"
-            @input="handlePageChange"
-            ></b-pagination>
+              v-model="currentPage" 
+              :total-rows="rows" 
+              :per-page="perPage"
+              @input="handlePageChange"
+            />
           </ul>
         </div>
       </div>

@@ -18,11 +18,6 @@ export default {
     DetailBAP,
     PageHeader,
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-  },
   data() {
     return {
       title: "Detail BAP",
@@ -42,6 +37,11 @@ export default {
       ],
     };
   },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
   methods: {
     ...notificationMethods,
   },
@@ -51,9 +51,12 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
     <div>
-      <DetailBAP/>
+      <DetailBAP />
     </div>
   </Layout>
 </template>

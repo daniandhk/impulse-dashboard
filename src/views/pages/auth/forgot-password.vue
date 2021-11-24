@@ -56,7 +56,7 @@ export default {
   <div>
     <div class="home-btn d-none d-sm-block">
       <a href="/">
-        <i class="mdi mdi-home-variant h2 text-white"></i>
+        <i class="mdi mdi-home-variant h2 text-white" />
       </a>
     </div>
     <div>
@@ -70,13 +70,24 @@ export default {
                     <div>
                       <div class="text-center">
                         <div>
-                          <a href="/" class="logo">
-                            <img src="@/assets/logo-lab.png" height="80" alt="logo" />
+                          <a
+                            href="/"
+                            class="logo"
+                          >
+                            <img
+                              src="@/assets/logo-lab.png"
+                              height="80"
+                              alt="logo"
+                            >
                           </a>
                         </div>
 
-                        <h4 class="font-size-18 mt-4">Reset Password</h4>
-                        <p class="text-muted">Reset your password to Impulse.</p>
+                        <h4 class="font-size-18 mt-4">
+                          Reset Password
+                        </h4>
+                        <p class="text-muted">
+                          Reset your password to Impulse.
+                        </p>
                       </div>
 
                       <div class="p-2 mt-5">
@@ -85,21 +96,29 @@ export default {
                           class="mb-4"
                           variant="danger"
                           dismissible
-                        >{{error}}</b-alert>
+                        >
+                          {{ error }}
+                        </b-alert>
 
-                        <form class="form-horizontal" @submit.prevent="tryToReset">
+                        <form
+                          class="form-horizontal"
+                          @submit.prevent="tryToReset"
+                        >
                           <div class="form-group auth-form-group-custom mb-4">
-                            <i class="ri-mail-line auti-custom-input-icon"></i>
+                            <i class="ri-mail-line auti-custom-input-icon" />
                             <label for="useremail">Email SSO</label>
                             <input
+                              id="useremail"
                               v-model="email"
                               type="email"
                               class="form-control"
-                              id="useremail"
                               placeholder="Enter email SSO"
                               :class="{ 'is-invalid': submitted && $v.email.$error }"
-                            />
-                            <div v-if="submitted && $v.email.$error" class="invalid-feedback">
+                            >
+                            <div
+                              v-if="submitted && $v.email.$error"
+                              class="invalid-feedback"
+                            >
                               <span v-if="!$v.email.required">Email SSO harus diisi!</span>
                               <span v-if="!$v.email.email">Please enter valid email.</span>
                             </div>
@@ -109,7 +128,9 @@ export default {
                             <button
                               class="btn btn-primary w-md waves-effect waves-light"
                               type="submit"
-                            >Reset</button>
+                            >
+                              Reset
+                            </button>
                           </div>
                         </form>
                       </div>
@@ -120,7 +141,9 @@ export default {
                           <router-link
                             to="/register"
                             class="font-weight-medium text-primary"
-                          >Register</router-link>
+                          >
+                            Register
+                          </router-link>
                         </p>
                         <p>
                           © 2021 Informatics Lab.
@@ -133,7 +156,9 @@ export default {
             </div>
           </div>
           <div class="col-lg-8">
-            <div class="item authentication-bg"><div class="bg-overlay"></div></div>
+            <div class="item authentication-bg">
+              <div class="bg-overlay" />
+            </div>
           </div>
         </div>
       </div>

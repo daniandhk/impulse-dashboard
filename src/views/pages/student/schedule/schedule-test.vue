@@ -18,24 +18,6 @@ export default {
         Layout,
         PageHeader
     },
-    computed: {
-        notification() {
-            return this.$store ? this.$store.state.notification : null;
-        },
-    },
-    mounted: async function() {
-        this.loading();
-        await this.loadData().then(result=>{
-            this.loading();
-        });
-    },
-    watch: {
-        $route: async function() {
-            await this.loadData().then(result=>{
-                this.loading();
-            });
-        }
-    },
     data() {
         return {
             title: "Tes",
@@ -88,6 +70,24 @@ export default {
             isEssayAnswersAvailable: false,
             isFileAnswersAvailable: false,
         }
+    },
+    computed: {
+        notification() {
+            return this.$store ? this.$store.state.notification : null;
+        },
+    },
+    watch: {
+        $route: async function() {
+            await this.loadData().then(result=>{
+                this.loading();
+            });
+        }
+    },
+    mounted: async function() {
+        this.loading();
+        await this.loadData().then(result=>{
+            this.loading();
+        });
     },
     methods: {
         ...notificationMethods,
@@ -511,113 +511,162 @@ export default {
 </script>
 
 <template>
-    <Layout>
-        <PageHeader :title="title" :items="items" />
-        <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+  <Layout>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
+    </div>
+    <div v-if="isEssay || isMultipleChoice">
+      <div
+        v-for="(question, index) in test_data.question"
+        :key="index"
+      >
+        <div class="row">
+          <div class="text-center col-sm-1">
+            <b-button 
+              class="m-1"
+              style="width: 85%; text-align: center; vertical-align: middle;" 
+              variant="outline-secondary"
+            >
+              {{ index+1 }}
+            </b-button>
+          </div>
+          <div class="card col-sm-11">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-12">
+                  <label>{{ question.question }}</label>
+                </div>
+                <div class="col-12">
+                  <div v-if="isEssay">
+                    <div class="mt-2">
+                      <textarea
+                        id="text" 
+                        v-model="dataInput.answers[index].answers"
+                        rows="4" 
+                        name="text" 
+                        type="text" 
+                        class="form-control"
+                        placeholder="Masukkan jawaban disini"
+                        :disabled="isEssayAnswersAvailable"
+                      />
+                    </div>
+                  </div>
+                  <div v-if="isMultipleChoice">
+                    <div
+                      v-for="(answer_data, idx) in question.answers"
+                      :key="idx"
+                      class="mt-2 ml-1 form-check"
+                    >
+                      <input 
+                        v-model="dataInput.questions[index].answers" 
+                        class="form-check-input" 
+                        type="checkbox"
+                        :value="answer_data.id"
+                        :disabled="isMCAnswersAvailable"
+                      >{{ answer_data.answer }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div v-if="isEssay || isMultipleChoice">
-            <div v-for="(question, index) in test_data.question" :key="index">
-                <div class="row">
-                    <div class="text-center col-sm-1">
-                        <b-button 
-                        class="m-1"
-                        style="width: 85%; text-align: center; vertical-align: middle;" 
-                        variant="outline-secondary"
-                        >{{index+1}}
-                        </b-button>
-                    </div>
-                    <div class="card col-sm-11">
-                        <div class="card-body">
-                            <div class="row">
-                                <div class="col-12">
-                                    <label>{{question.question}}</label>
-                                </div>
-                                <div class="col-12">
-                                    <div v-if="isEssay">
-                                        <div class="mt-2">
-                                            <textarea
-                                                rows=4 
-                                                v-model="dataInput.answers[index].answers"
-                                                id="text" 
-                                                name="text" 
-                                                type="text" 
-                                                class="form-control"
-                                                placeholder="Masukkan jawaban disini"
-                                                :disabled="isEssayAnswersAvailable"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div v-if="isMultipleChoice">
-                                        <div class="mt-2 ml-1 form-check" v-for="(answer, idx) in question.answers" :key="idx">
-                                            <input 
-                                                class="form-check-input" 
-                                                type="checkbox" 
-                                                v-model="dataInput.questions[index].answers"
-                                                :value="answer.id"
-                                                :disabled="isMCAnswersAvailable"
-                                            />{{answer.answer}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div v-if="!isEssayAnswersAvailable && !isMCAnswersAvailable">
-                <div class="text-center m-4">
-                    <b-button variant="success" @click="onClickSubmit" style="min-width: 250px;">Submit</b-button>
-                </div>
-            </div>
-            <div v-if="isEssayAnswersAvailable || isMCAnswersAvailable">
-                <div class="text-center m-4">
-                    <b-button variant="secondary" :disabled="true" style="min-width: 250px;">Anda telah menyelesaikan tes ini!</b-button>
-                </div>
-            </div>
+      </div>
+      <div v-if="!isEssayAnswersAvailable && !isMCAnswersAvailable">
+        <div class="text-center m-4">
+          <b-button
+            variant="success"
+            style="min-width: 250px;"
+            @click="onClickSubmit"
+          >
+            Submit
+          </b-button>
         </div>
-        <div v-if="isFile">
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center">
-                        <label>File Jurnal</label>
-                    </div>
-                    <div class="text-center">
-                        <b-button variant="primary" @click="onClickDownload" style="min-width: 350px;">Download</b-button>
-                    </div>
-                    <!-- <div class="text-center mt-2">
+      </div>
+      <div v-if="isEssayAnswersAvailable || isMCAnswersAvailable">
+        <div class="text-center m-4">
+          <b-button
+            variant="secondary"
+            :disabled="true"
+            style="min-width: 250px;"
+          >
+            Anda telah menyelesaikan tes ini!
+          </b-button>
+        </div>
+      </div>
+    </div>
+    <div v-if="isFile">
+      <div class="card">
+        <div class="card-body">
+          <div class="text-center">
+            <label>File Jurnal</label>
+          </div>
+          <div class="text-center">
+            <b-button
+              variant="primary"
+              style="min-width: 350px;"
+              @click="onClickDownload"
+            >
+              Download
+            </b-button>
+          </div>
+          <!-- <div class="text-center mt-2">
                         <p>{{test_data.question[0].question}}</p>
                     </div> -->
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="text-center">
-                        <label>URL Upload Jawaban Jurnal</label>
-                    </div>
-                    <div class="text-center">
-                        <div class="form-group">
-                            <input
-                                v-model="test_data.question[0].answers[0].answer"
-                                disabled="true"
-                                type="text" 
-                                class="form-control text-center"
-                                placeholder="https://drive.google.com/drive/folders/xxx"
-                            />
-                        </div>
-                    </div>
-                    <div v-if="!isFileAnswersAvailable">
-                        <div class="text-center m-4">
-                            <b-button variant="success" @click="onClickSubmit" style="min-width: 350px;">Konfirmasi Telah Upload</b-button>
-                        </div>
-                    </div>
-                    <div v-if="isFileAnswersAvailable">
-                        <div class="text-center m-4">
-                            <b-button variant="secondary" :disabled="true" style="min-width: 350px;">Upload Terkonfirmasi</b-button>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </Layout>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <div class="text-center">
+            <label>URL Upload Jawaban Jurnal</label>
+          </div>
+          <div class="text-center">
+            <div class="form-group">
+              <input
+                v-model="test_data.question[0].answers[0].answer"
+                disabled="true"
+                type="text" 
+                class="form-control text-center"
+                placeholder="https://drive.google.com/drive/folders/xxx"
+              >
+            </div>
+          </div>
+          <div v-if="!isFileAnswersAvailable">
+            <div class="text-center m-4">
+              <b-button
+                variant="success"
+                style="min-width: 350px;"
+                @click="onClickSubmit"
+              >
+                Konfirmasi Telah Upload
+              </b-button>
+            </div>
+          </div>
+          <div v-if="isFileAnswersAvailable">
+            <div class="text-center m-4">
+              <b-button
+                variant="secondary"
+                :disabled="true"
+                style="min-width: 350px;"
+              >
+                Upload Terkonfirmasi
+              </b-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Layout>
 </template>

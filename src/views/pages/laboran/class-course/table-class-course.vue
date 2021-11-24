@@ -11,9 +11,6 @@ export default {
   components: {
     Multiselect,
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       //list class-course
@@ -67,6 +64,9 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
+  },
+  created() {
+    document.body.classList.add("auth-body-bg");
   },
   mounted: async function() {
     // Set the initial number of items
@@ -283,8 +283,16 @@ export default {
 
 <template>
   <div>
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-12">
@@ -296,46 +304,47 @@ export default {
         <div class="col-sm-12 col-md-3">
           <div class="form-group">
             <multiselect
-                placeholder="Kelas"
-                v-model="class_data"
-                :options="dataDropdown.classes"
-                label="name"
-                track-by="name"
-                @select="selectKelas"
-                @remove="removeKelas"
-                :show-labels="false"
-            ></multiselect>
+              v-model="class_data"
+              placeholder="Kelas"
+              :options="dataDropdown.classes"
+              label="name"
+              track-by="name"
+              :show-labels="false"
+              @select="selectKelas"
+              @remove="removeKelas"
+            />
           </div>
         </div>
         <div class="col-sm-12 col-md-4">
           <div class="form-group">
             <multiselect
-                placeholder="Mata Kuliah"
-                v-model="course_data"
-                :options="dataDropdown.courses"
-                label="name"
-                track-by="name"
-                @select="selectCourse"
-                @remove="removeCourse"
-                :show-labels="false"
-            ></multiselect>
+              v-model="course_data"
+              placeholder="Mata Kuliah"
+              :options="dataDropdown.courses"
+              label="name"
+              track-by="name"
+              :show-labels="false"
+              @select="selectCourse"
+              @remove="removeCourse"
+            />
           </div>
         </div>
         <div class="col-sm-12 col-md-2">
           <div class="form-group">
             <input
-                v-if="isCourseSelected"
-                v-model="course_code"
-                :disabled="true"
-                class="form-control text-center"
-                type="text"
-                style="background-color: #F0F4F6;"
+              v-if="isCourseSelected"
+              v-model="course_code"
+              :disabled="true"
+              class="form-control text-center"
+              type="text"
+              style="background-color: #F0F4F6;"
             >
           </div>
         </div>
       </div>
     </div>
-    <hr style="margin-left: -28px; 
+    <hr
+      style="margin-left: -28px; 
                 margin-right: -28px; 
                 height: 2px; 
                 background-color: #eee; 
@@ -344,28 +353,34 @@ export default {
     >
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_length" class="dataTables_length">
+        <div
+          id="tickets-table_length"
+          class="dataTables_length"
+        >
           <label class="d-inline-flex align-items-center">
             Show&nbsp;
             <b-form-select 
-            v-model="perPage" 
-            size="sm" 
-            :options="pageOptions"
-            @change="handlePageSizeChange"
-            ></b-form-select>&nbsp;entries
+              v-model="perPage" 
+              size="sm" 
+              :options="pageOptions"
+              @change="handlePageSizeChange"
+            />&nbsp;entries
           </label>
         </div>
       </div>
       <!-- Search -->
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+        <div
+          id="tickets-table_filter"
+          class="dataTables_filter text-md-right"
+        >
           <label class="d-inline-flex align-items-center">
             Search:
             <b-form-input
               v-model="filter_search"
               type="search"
               class="form-control form-control-sm ml-2"
-            ></b-form-input>
+            />
           </label>
         </div>
       </div>
@@ -385,18 +400,18 @@ export default {
         :sort-desc="sortDesc"
         :filter="filter_search"
         :filter-included-fields="filterOn"
+        :head-variant="'dark'"
         @filtered="onFiltered"
-        :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
           <a
-            href="javascript:void(0);"
-            @click=onClickDelete(data)
-            class="text-danger"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="text-danger"
             title="Delete"
+            @click="onClickDelete(data)"
           >
-            <i class="mdi mdi-trash-can font-size-18"></i>
+            <i class="mdi mdi-trash-can font-size-18" />
           </a>
         </template>
       </b-table>
@@ -407,11 +422,11 @@ export default {
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
-            v-model="currentPage" 
-            :total-rows="rows" 
-            :per-page="perPage"
-            @input="handlePageChange"
-            ></b-pagination>
+              v-model="currentPage" 
+              :total-rows="rows" 
+              :per-page="perPage"
+              @input="handlePageChange"
+            />
           </ul>
         </div>
       </div>

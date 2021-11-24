@@ -378,9 +378,20 @@ function sleep(ms) {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="row">
       <div class="col-12">
@@ -390,7 +401,7 @@ function sleep(ms) {
               <FullCalendar
                 ref="fullCalendar"
                 :options="calendarOptions"
-              ></FullCalendar>
+              />
             </div>
           </div>
         </div>
@@ -399,152 +410,176 @@ function sleep(ms) {
 
     <!-- Edit Modal -->
     <b-modal
-      size="lg"
       v-model="eventModal"
+      size="lg"
       title="Detail Jadwal"
       hide-footer 
       title-class="font-18"
     >
-      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
+      <div
+        id="metadata"
+        class="tab-pane col-sm-12 col-md-12"
+      >
         <div class="row">
           <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Kelas</label>
-                  <input
-                      v-model="class_course_data.class.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Kelas</label>
+              <input
+                v-model="class_course_data.class.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
           <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Tahun / Semester</label>
-                  <input
-                      v-model="class_course_data.academic_year.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Tahun / Semester</label>
+              <input
+                v-model="class_course_data.academic_year.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
         </div>
         <div class="row">
           <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Mata Kuliah</label>
-                  <input
-                      v-model="class_course_data.course.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Mata Kuliah</label>
+              <input
+                v-model="class_course_data.course.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
           <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Modul</label>
-                  <input
-                      v-model="schedule_data.module.index"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Modul</label>
+              <input
+                v-model="schedule_data.module.index"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input
-                    v-model="schedule_data.date"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input
+              v-model="schedule_data.date"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-6">
-              <div class="form-group">
-                  <label>Jam Mulai</label>
-                  <input
-                      v-model="schedule_data.start"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Jam Mulai</label>
+              <input
+                v-model="schedule_data.start"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
           <div class="col-sm-6">
-              <div class="form-group">
-                  <label>Jam Terakhir</label>
-                  <input
-                      v-model="schedule_data.end"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Jam Terakhir</label>
+              <input
+                v-model="schedule_data.end"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
         </div>
         <div>
-            <div class="form-group">
-                <div class="row" style="margin:0!important;">
-                  <label class="mr-4">Ruangan</label>
-                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
-                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
-                </div>
-                <input
-                    v-model="schedule_data.room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
+          <div class="form-group">
+            <div
+              class="row"
+              style="margin:0!important;"
+            >
+              <label class="mr-4">Ruangan</label>
+              <a
+                v-if="!isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >show</a>
+              <a
+                v-if="isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >hide</a>
             </div>
+            <input
+              v-model="schedule_data.room.name"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>Deskripsi Ruangan</label>
-                <textarea
-                    v-model="schedule_data.room.desc"
-                    rows=2
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Deskripsi Ruangan</label>
+            <textarea
+              v-model="schedule_data.room.desc"
+              rows="2"
+              type="text"
+              class="form-control"
+              disabled="true"
+            />
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>MS Teams Link</label>
-                <input
-                    v-model="schedule_data.room.msteam_link"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Link</label>
+            <input
+              v-model="schedule_data.room.msteam_link"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>MS Teams Code</label>
-                <input
-                    v-model="schedule_data.room.msteam_code"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Code</label>
+            <input
+              v-model="schedule_data.room.msteam_code"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div class="text-right mt-4">
-            <button
+          <button
             type="button"
-            @click="detailModal"
             class="btn btn-success mr-2 waves-effect waves-light"
-            >Mulai Praktikum</button>
-            <button type="button" @click="closeModal" class="btn btn-light waves-effect">Batalkan</button>
+            @click="detailModal"
+          >
+            Mulai Praktikum
+          </button>
+          <button
+            type="button"
+            class="btn btn-light waves-effect"
+            @click="closeModal"
+          >
+            Batalkan
+          </button>
         </div>
       </div>
     </b-modal>

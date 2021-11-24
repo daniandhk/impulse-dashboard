@@ -32,27 +32,6 @@ export default {
     staff_code: { required },
 
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-    loadCourseData() {
-        return this.courseData;
-    },
-    loadAcademicYearData() {
-        return this.academicYearData;
-    },
-  },
-  mounted: async function() {
-    await this.loadDataDropdown();
-  },
-  watch: {
-    $route: async function() {
-      await this.loadDataDropdown().then(result=>{
-        this.loading();
-      });
-    }
-  },
   data() {
     return {
       title: "Cari Jadwal",
@@ -91,6 +70,27 @@ export default {
       staff_name: "",
       module_index: "",
     };
+  },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+    loadCourseData() {
+        return this.courseData;
+    },
+    loadAcademicYearData() {
+        return this.academicYearData;
+    },
+  },
+  watch: {
+    $route: async function() {
+      await this.loadDataDropdown().then(result=>{
+        this.loading();
+      });
+    }
+  },
+  mounted: async function() {
+    await this.loadDataDropdown();
   },
   methods: {
     ...notificationMethods,
@@ -333,166 +333,196 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="card">
-        <div class="card-body">
-            <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="findSchedule">
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                        <label class="control-label">Kelas Mata Kuliah</label>
-                        <multiselect
-                            v-model="class_data"
-                            :options="namaKelasData"
-                            label="name"
-                            track-by="name"
-                            @select="setKelas"
-                            @remove="removeKelas"
-                            :show-labels="false"
-                            :class="{ 'is-invalid': submitted && $v.class_data.$error }" 
-                        ></multiselect>
-                            <div
-                            v-if="submitted && !$v.class_data.required"
-                            class="invalid-feedback"
-                            >Kelas Mata Kuliah harus diisi!</div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                        <label class="control-label">Nama Mata Kuliah</label>
-                        <multiselect
-                            v-model="course_data"
-                            :options="loadCourseData"
-                            :disabled="isKelasNotSelected"
-                            label="name"
-                            track-by="name"
-                            @select="setCourse"
-                            @remove="removeCourse"
-                            :show-labels="false"
-                            :class="{ 'is-invalid': submitted && $v.course_data.$error }" 
-                        ></multiselect>
-                            <div
-                            v-if="submitted && !$v.course_data.required"
-                            class="invalid-feedback"
-                            >Nama Mata Kuliah harus diisi!</div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                        <label class="control-label">Kode Mata Kuliah</label>
-                        <multiselect
-                            v-model="course_data"
-                            :options="loadCourseData"
-                            :disabled="isKelasNotSelected"
-                            label="code"
-                            track-by="code"
-                            @select="setCourse"
-                            @remove="removeCourse"
-                            :show-labels="false"
-                            :class="{ 'is-invalid': submitted && $v.course_data.$error }" 
-                        ></multiselect>
-                            <div
-                            v-if="submitted && !$v.course_data.required"
-                            class="invalid-feedback"
-                            >Kode Mata Kuliah harus diisi!</div>
-                        </div>
-                    </div>
+      <div class="card-body">
+        <form
+          class="form-horizontal col-sm-12 col-md-12"
+          @submit.prevent="findSchedule"
+        >
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Kelas Mata Kuliah</label>
+                <multiselect
+                  v-model="class_data"
+                  :options="namaKelasData"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.class_data.$error }"
+                  @select="setKelas"
+                  @remove="removeKelas" 
+                />
+                <div
+                  v-if="submitted && !$v.class_data.required"
+                  class="invalid-feedback"
+                >
+                  Kelas Mata Kuliah harus diisi!
                 </div>
+              </div>
+            </div>
 
-                <div class="row">
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                        <label class="control-label">Tahun Akademik (Semester)</label>
-                        <multiselect
-                            v-model="academic_year_data"
-                            :options="loadAcademicYearData"
-                            :disabled="isCourseNotSelected"
-                            label="name"
-                            track-by="name"
-                            @select="setAcademicYear"
-                            @remove="removeAcademicYear"
-                            :show-labels="false"
-                            :class="{ 'is-invalid': submitted && $v.academic_year_data.$error }" 
-                        ></multiselect>
-                            <div
-                            v-if="submitted && !$v.academic_year_data.required"
-                            class="invalid-feedback"
-                            >Tahun Akademik (Semester) harus diisi!</div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="staff_code">Nama Dosen Mata Kuliah</label>
-                            <input
-                                v-model="staff_name"
-                                :disabled="true"
-                                id="staff_name"
-                                name="staff_name"
-                                type="text"
-                                style="background-color: #F0F4F6;"
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.staff_name.$error }"
-                            />
-                            <div
-                            v-if="submitted && !$v.staff_name.required"
-                            class="invalid-feedback"
-                            >Nama Dosen Mata Kuliah harus diisi!</div>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="staff_code">Kode Dosen Mata Kuliah</label>
-                            <input
-                                v-model="staff_code"
-                                :disabled="true"
-                                id="staff_code"
-                                name="staff_code"
-                                type="text"
-                                style="background-color: #F0F4F6;"
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.staff_code.$error }"
-                            />
-                            <div
-                            v-if="submitted && !$v.staff_code.required"
-                            class="invalid-feedback"
-                            >Kode Dosen Mata Kuliah harus diisi!</div>
-                        </div>
-                    </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Nama Mata Kuliah</label>
+                <multiselect
+                  v-model="course_data"
+                  :options="loadCourseData"
+                  :disabled="isKelasNotSelected"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.course_data.$error }"
+                  @select="setCourse"
+                  @remove="removeCourse" 
+                />
+                <div
+                  v-if="submitted && !$v.course_data.required"
+                  class="invalid-feedback"
+                >
+                  Nama Mata Kuliah harus diisi!
                 </div>
+              </div>
+            </div>
 
-                <div class="form-group text-center">
-                    <label>Modul</label>
-                    <multiselect 
-                        class="text-center"
-                        v-model="module_index" 
-                        :options="moduleData"
-                        @select="selectModule"
-                        @remove="removeModule"
-                        :show-labels="false"
-                        :class="{ 'is-invalid': submitted && $v.module_index.$error }" 
-                    ></multiselect>
-                    <div
-                    v-if="submitted && !$v.module_index.required"
-                    class="invalid-feedback"
-                    >Modul harus diisi!</div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Kode Mata Kuliah</label>
+                <multiselect
+                  v-model="course_data"
+                  :options="loadCourseData"
+                  :disabled="isKelasNotSelected"
+                  label="code"
+                  track-by="code"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.course_data.$error }"
+                  @select="setCourse"
+                  @remove="removeCourse" 
+                />
+                <div
+                  v-if="submitted && !$v.course_data.required"
+                  class="invalid-feedback"
+                >
+                  Kode Mata Kuliah harus diisi!
                 </div>
+              </div>
+            </div>
+          </div>
 
-                <div class="text-center mt-4">
-                    <button
-                    type="submit"
-                    class="btn btn-success waves-effect waves-light"
-                    style="min-width: 150px;"
-                    >Find</button>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Tahun Akademik (Semester)</label>
+                <multiselect
+                  v-model="academic_year_data"
+                  :options="loadAcademicYearData"
+                  :disabled="isCourseNotSelected"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.academic_year_data.$error }"
+                  @select="setAcademicYear"
+                  @remove="removeAcademicYear" 
+                />
+                <div
+                  v-if="submitted && !$v.academic_year_data.required"
+                  class="invalid-feedback"
+                >
+                  Tahun Akademik (Semester) harus diisi!
                 </div>
-            </form>
-        </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="staff_code">Nama Dosen Mata Kuliah</label>
+                <input
+                  id="staff_name"
+                  v-model="staff_name"
+                  :disabled="true"
+                  name="staff_name"
+                  type="text"
+                  style="background-color: #F0F4F6;"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.staff_name.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.staff_name.required"
+                  class="invalid-feedback"
+                >
+                  Nama Dosen Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="staff_code">Kode Dosen Mata Kuliah</label>
+                <input
+                  id="staff_code"
+                  v-model="staff_code"
+                  :disabled="true"
+                  name="staff_code"
+                  type="text"
+                  style="background-color: #F0F4F6;"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.staff_code.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.staff_code.required"
+                  class="invalid-feedback"
+                >
+                  Kode Dosen Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group text-center">
+            <label>Modul</label>
+            <multiselect 
+              v-model="module_index"
+              class="text-center" 
+              :options="moduleData"
+              :show-labels="false"
+              :class="{ 'is-invalid': submitted && $v.module_index.$error }"
+              @select="selectModule"
+              @remove="removeModule" 
+            />
+            <div
+              v-if="submitted && !$v.module_index.required"
+              class="invalid-feedback"
+            >
+              Modul harus diisi!
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button
+              type="submit"
+              class="btn btn-success waves-effect waves-light"
+              style="min-width: 150px;"
+            >
+              Find
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </Layout>
 </template>

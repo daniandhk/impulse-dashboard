@@ -21,24 +21,6 @@ export default {
   validations: {
     recap_course: { required },
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-  },
-  mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
-  },
-  watch: {
-    $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
-    }
-  },
   data() {
     return {
       schedule_id: this.$route.params.id,
@@ -114,6 +96,24 @@ export default {
       submitted_recap: false,
 
     };
+  },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  watch: {
+    $route: async function() {
+      await this.loadData().then(result=>{
+        this.loading();
+      });
+    }
+  },
+  mounted: async function() {
+    this.loading();
+    await this.loadData().then(result=>{
+      this.loading();
+    });
   },
   methods: {
     ...notificationMethods,
@@ -279,273 +279,295 @@ export default {
 </script>
 
 <template>
-    <div>
-        <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
-        </div>
-        <div id="print_page">
-            <div class="card">
-                <div class="card-body">
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Kelas"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.class_course.classes.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Mata Kuliah"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.class_course.courses.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Dosen"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.class_course.staffs.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Modul"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.module.index" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Tanggal"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.date" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Jam Mulai"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.time_start" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Jam Terakhir"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.time_end" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Ruangan"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.room.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Jenis Interaksi"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.bap[0].jenis" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Materi Praktikum"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.bap[0].materi" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Evaluasi Praktikum"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.bap[0].evaluasi" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6 d-inline-flex align-items-center">
-                            <h4 class="card-title">Kehadiran Asisten Praktikum</h4>
-                        </div>
-                        <!-- Search -->
-                        <div class="col-sm-12 col-md-6">
-                            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                            <label class="d-inline-flex align-items-center">
-                                Search:
-                                <b-form-input
-                                v-model="asprak_filter"
-                                type="search"
-                                class="form-control form-control-sm ml-2"
-                                ></b-form-input>
-                            </label>
-                            </div>
-                        </div>
-                        <!-- End search -->
-                    </div>
-                    <div class="table-responsive">
-                    <b-table
-                        ref="table"
-                        class="table-centered"
-                        :items="bap_data.asprak_presence"
-                        :fields="asprak_fields"
-                        responsive="sm"
-                        :per-page="asprak_perPage"
-                        :current-page="asprak_currentPage"
-                        :sort-by="asprak_sortBy"
-                        :sort-desc="asprak_sortDesc"
-                        :filter="asprak_filter"
-                        :filter-included-fields="asprak_filterOn"
-                        @filtered="asprak_onFiltered"
-                    >
-                    </b-table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-sm-12 col-md-6 d-inline-flex align-items-center">
-                            <h4 class="card-title">Kehadiran Praktikan</h4>
-                        </div>
-                        <!-- Search -->
-                        <div class="col-sm-12 col-md-6">
-                            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                            <label class="d-inline-flex align-items-center">
-                                Search:
-                                <b-form-input
-                                v-model="student_filter"
-                                type="search"
-                                class="form-control form-control-sm ml-2"
-                                ></b-form-input>
-                            </label>
-                            </div>
-                        </div>
-                        <!-- End search -->
-                    </div>
-                    <div class="table-responsive">
-                    <b-table
-                        ref="table"
-                        class="table-centered"
-                        :items="bap_data.student_presence"
-                        :fields="student_fields"
-                        responsive="sm"
-                        :per-page="student_perPage"
-                        :current-page="student_currentPage"
-                        :sort-by="student_sortBy"
-                        :sort-desc="student_sortDesc"
-                        :filter="student_filter"
-                        :filter-included-fields="student_filterOn"
-                        @filtered="student_onFiltered"
-                    >
-                    </b-table>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card">
-            <div class="card-body">
-                <div class="text-center form-group mb-0">
-                    <h5 class="text-center font-size-15 text-uppercase">Unduh Rekap Nilai / Presensi</h5>
-                    <div class="row row-no-gutters justify-content-center text-center mt-3">
-                        <div class="form-group m-2">
-                            <multiselect
-                                v-model="recap_course"
-                                placeholder="Mata Kuliah"
-                                :options="coursesData"
-                                style="min-width: 325px;" 
-                                label="name"
-                                track-by="name"
-                                @select="selectRecapCourse"
-                                @remove="removeRecapCourse"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted_recap && $v.recap_course.$error }" 
-                            ></multiselect>
-                            <div
-                            v-if="submitted_recap && !$v.recap_course.required"
-                            class="invalid-feedback"
-                            >Mata Kuliah harus dipilih!</div>
-                        </div>
-                        <div class="m-2">
-                            <button 
-                                type="button" 
-                                @click="downloadRecap" 
-                                class="btn btn-primary waves-effect"
-                            >Download</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
+    <div id="print_page">
+      <div class="card">
+        <div class="card-body">
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Kelas"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.class_course.classes.name" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Mata Kuliah"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.class_course.courses.name" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Dosen"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.class_course.staffs.name" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Modul"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.module.index" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Tanggal"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.date" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Jam Mulai"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.time_start" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Jam Terakhir"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.time_end" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Ruangan"
+          >
+            <b-form-input 
+              v-model="bap_data.schedule.room.name" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Jenis Interaksi"
+          >
+            <b-form-input 
+              v-model="bap_data.bap[0].jenis" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Materi Praktikum"
+          >
+            <b-form-input 
+              v-model="bap_data.bap[0].materi" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+
+          <b-form-group
+            label-cols-sm="2"
+            label-cols-lg="2"
+            label="Evaluasi Praktikum"
+          >
+            <b-form-input 
+              v-model="bap_data.bap[0].evaluasi" 
+              for="text" 
+              :disabled="true" 
+              style="border: none;"
+            />
+          </b-form-group>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12 col-md-6 d-inline-flex align-items-center">
+              <h4 class="card-title">
+                Kehadiran Asisten Praktikum
+              </h4>
+            </div>
+            <!-- Search -->
+            <div class="col-sm-12 col-md-6">
+              <div
+                id="tickets-table_filter"
+                class="dataTables_filter text-md-right"
+              >
+                <label class="d-inline-flex align-items-center">
+                  Search:
+                  <b-form-input
+                    v-model="asprak_filter"
+                    type="search"
+                    class="form-control form-control-sm ml-2"
+                  />
+                </label>
+              </div>
+            </div>
+            <!-- End search -->
+          </div>
+          <div class="table-responsive">
+            <b-table
+              ref="table"
+              class="table-centered"
+              :items="bap_data.asprak_presence"
+              :fields="asprak_fields"
+              responsive="sm"
+              :per-page="asprak_perPage"
+              :current-page="asprak_currentPage"
+              :sort-by="asprak_sortBy"
+              :sort-desc="asprak_sortDesc"
+              :filter="asprak_filter"
+              :filter-included-fields="asprak_filterOn"
+              @filtered="asprak_onFiltered"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12 col-md-6 d-inline-flex align-items-center">
+              <h4 class="card-title">
+                Kehadiran Praktikan
+              </h4>
+            </div>
+            <!-- Search -->
+            <div class="col-sm-12 col-md-6">
+              <div
+                id="tickets-table_filter"
+                class="dataTables_filter text-md-right"
+              >
+                <label class="d-inline-flex align-items-center">
+                  Search:
+                  <b-form-input
+                    v-model="student_filter"
+                    type="search"
+                    class="form-control form-control-sm ml-2"
+                  />
+                </label>
+              </div>
+            </div>
+            <!-- End search -->
+          </div>
+          <div class="table-responsive">
+            <b-table
+              ref="table"
+              class="table-centered"
+              :items="bap_data.student_presence"
+              :fields="student_fields"
+              responsive="sm"
+              :per-page="student_perPage"
+              :current-page="student_currentPage"
+              :sort-by="student_sortBy"
+              :sort-desc="student_sortDesc"
+              :filter="student_filter"
+              :filter-included-fields="student_filterOn"
+              @filtered="student_onFiltered"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="text-center form-group mb-0">
+          <h5 class="text-center font-size-15 text-uppercase">
+            Unduh Rekap Nilai / Presensi
+          </h5>
+          <div class="row row-no-gutters justify-content-center text-center mt-3">
+            <div class="form-group m-2">
+              <multiselect
+                v-model="recap_course"
+                placeholder="Mata Kuliah"
+                :options="coursesData"
+                style="min-width: 325px;" 
+                label="name"
+                track-by="name"
+                :show-labels="false"
+                :class="{ 'is-invalid': submitted_recap && $v.recap_course.$error }"
+                @select="selectRecapCourse"
+                @remove="removeRecapCourse" 
+              />
+              <div
+                v-if="submitted_recap && !$v.recap_course.required"
+                class="invalid-feedback"
+              >
+                Mata Kuliah harus dipilih!
+              </div>
+            </div>
+            <div class="m-2">
+              <button 
+                type="button" 
+                class="btn btn-primary waves-effect" 
+                @click="downloadRecap"
+              >
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>

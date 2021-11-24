@@ -17,9 +17,6 @@ export default {
     InputStaff,
     ImportStaff,
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       title: "Data Staff",
@@ -39,6 +36,9 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     },
   },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
   methods: {
     ...notificationMethods,
 
@@ -52,29 +52,35 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
     <div class="row">
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
+            <b-tabs
+              nav-class="nav-tabs-custom"
+              @input="refreshData"
+            >
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
                   <a class="font-weight-bold active">Data</a>
                 </template>
-                <TableStaff ref='TableStaff'/>
+                <TableStaff ref="TableStaff" />
               </b-tab>
               <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Input</a>
-                  </template>
-                  <InputStaff/>
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Input</a>
+                </template>
+                <InputStaff />
               </b-tab>
               <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Import Excel</a>
-                  </template>
-                  <ImportStaff/>
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Import Excel</a>
+                </template>
+                <ImportStaff />
               </b-tab>
             </b-tabs>
           </div>

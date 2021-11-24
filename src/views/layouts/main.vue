@@ -16,7 +16,10 @@ export default {
 
 <template>
   <div>
-    <vertical v-if="layoutType === 'vertical'" :layout="layoutType">
+    <vertical
+      v-if="layoutType === 'vertical'"
+      :layout="layoutType"
+    >
       <slot />
     </vertical>
   </div>

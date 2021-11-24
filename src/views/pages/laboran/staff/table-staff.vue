@@ -19,9 +19,6 @@ export default {
       code: { required },
     },
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       //list staff
@@ -80,6 +77,9 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
+  },
+  created() {
+    document.body.classList.add("auth-body-bg");
   },
   mounted: async function() {
     // Set the initial number of items
@@ -430,34 +430,48 @@ export default {
 
 <template>
   <div>
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_length" class="dataTables_length">
+        <div
+          id="tickets-table_length"
+          class="dataTables_length"
+        >
           <label class="d-inline-flex align-items-center">
             Show&nbsp;
             <b-form-select 
-            v-model="perPage" 
-            size="sm" 
-            :options="pageOptions"
-            @change="handlePageSizeChange"
-            ></b-form-select>&nbsp;entries
+              v-model="perPage" 
+              size="sm" 
+              :options="pageOptions"
+              @change="handlePageSizeChange"
+            />&nbsp;entries
           </label>
         </div>
       </div>
       <!-- Search -->
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+        <div
+          id="tickets-table_filter"
+          class="dataTables_filter text-md-right"
+        >
           <label class="d-inline-flex align-items-center">
             Search:
             <b-form-input
               v-model="filter"
-              @input="handleSearch"
               type="search"
               class="form-control form-control-sm ml-2"
-            ></b-form-input>
+              @input="handleSearch"
+            />
           </label>
         </div>
       </div>
@@ -473,43 +487,44 @@ export default {
         :per-page="0"
         :busy.sync="isFetchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
         :filter-included-fields="filterOn"
+        :head-variant="'dark'"
+        @sort-changed="handleSortingChange"
         @filtered="onFiltered"
-        :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
           <a
-            href="javascript:void(0);"
-            @click=onClickEdit(data)
-            class="mr-3 text-primary"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="mr-3 text-primary"
             title="Edit"
+            @click="onClickEdit(data)"
           >
-            <i class="mdi mdi-pencil font-size-18"></i>
+            <i class="mdi mdi-pencil font-size-18" />
           </a>
           <a
-            href="javascript:void(0);"
-            @click=onClickDelete(data)
-            class="text-danger"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="text-danger"
             title="Delete"
+            @click="onClickDelete(data)"
           >
-            <i class="mdi mdi-trash-can font-size-18"></i>
+            <i class="mdi mdi-trash-can font-size-18" />
           </a>
         </template>
         <template v-slot:cell(manage)="data">
           <div class="row">
             <div class="col-12 m-2">
               <b-button
-                  type="submit" 
-                  variant="danger"
-                  size="sm"
-                  @click=onClickReset(data)
-                  style="min-width: 75px;" 
-                  >Reset Password
+                type="submit" 
+                variant="danger"
+                size="sm"
+                style="min-width: 75px;"
+                @click="onClickReset(data)" 
+              >
+                Reset Password
               </b-button>
             </div>
             <!-- <div class="col-12 m-2">
@@ -531,19 +546,19 @@ export default {
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
-            v-model="currentPage" 
-            :total-rows="rows" 
-            :per-page="perPage"
-            @input="handlePageChange"
-            ></b-pagination>
+              v-model="currentPage" 
+              :total-rows="rows" 
+              :per-page="perPage"
+              @input="handlePageChange"
+            />
           </ul>
         </div>
       </div>
     </div>
     <div name="modalEdit">
       <b-modal 
-        size="lg" 
         id="modal-edit" 
+        size="lg" 
         title="Edit Staff" 
         hide-footer 
         title-class="font-18"
@@ -556,102 +571,138 @@ export default {
                   <a class="font-weight-bold active">Edit Data</a>
                 </template>
                 <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStaff">
-                          <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="nip">NIP</label>
-                                    <input 
-                                    v-model="dataEdit.nip"
-                                    id="nip" 
-                                    name="nip" 
-                                    type="text" 
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }" />
+                  <div class="mt-4">
+                    <form
+                      class="form-horizontal col-sm-12 col-md-12"
+                      @submit.prevent="editStaff"
+                    >
+                      <div
+                        id="metadata"
+                        class="tab-pane"
+                      >
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="nip">NIP</label>
+                            <input 
+                              id="nip"
+                              v-model="dataEdit.nip" 
+                              name="nip" 
+                              type="text" 
+                              class="form-control"
+                              :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }"
+                            >
 
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.nip.required"
-                                    class="invalid-feedback"
-                                    >NIP harus diisi!</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="nama">Nama Dosen</label>
-                                    <input 
-                                    v-model="dataEdit.name"
-                                    id="nama" 
-                                    name="nama" 
-                                    type="text" 
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
-
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.name.required"
-                                    class="invalid-feedback"
-                                    >Nama Dosen harus diisi!</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="code">Kode Dosen</label>
-                                    <input
-                                        v-model="dataEdit.code"
-                                        id="code"
-                                        name="code"
-                                        type="text"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
-                                    />
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.code.required"
-                                    class="invalid-feedback"
-                                    >Kode Mata Kuliah harus diisi!</div>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Simpan</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
+                            <div
+                              v-if="submitted && !$v.dataEdit.nip.required"
+                              class="invalid-feedback"
+                            >
+                              NIP harus diisi!
                             </div>
                           </div>
-                        </form>
-                    </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="nama">Nama Dosen</label>
+                            <input 
+                              id="nama"
+                              v-model="dataEdit.name" 
+                              name="nama" 
+                              type="text" 
+                              class="form-control"
+                              :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }"
+                            >
+
+                            <div
+                              v-if="submitted && !$v.dataEdit.name.required"
+                              class="invalid-feedback"
+                            >
+                              Nama Dosen harus diisi!
+                            </div>
+                          </div>
+                        </div>
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label for="code">Kode Dosen</label>
+                            <input
+                              id="code"
+                              v-model="dataEdit.code"
+                              name="code"
+                              type="text"
+                              class="form-control"
+                              :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
+                            >
+                            <div
+                              v-if="submitted && !$v.dataEdit.code.required"
+                              class="invalid-feedback"
+                            >
+                              Kode Mata Kuliah harus diisi!
+                            </div>
+                          </div>
+                        </div>
+                        <div class="text-center mt-4">
+                          <button
+                            type="submit"
+                            class="btn btn-primary mr-2 waves-effect waves-light"
+                          >
+                            Simpan
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-light waves-effect"
+                            @click="hideModal"
+                          >
+                            Batalkan
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </template>
               </b-tab>
               <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Edit Roles</a>
-                  </template>
-                  <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
-                        <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label">Roles</label>
-                                    <multiselect
-                                        v-model="role_data"
-                                        :options="roleData"
-                                        :multiple="true"
-                                        @remove="removeRole"
-                                        :show-labels="false"
-                                    ></multiselect>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Simpan</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
-                            </div>
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Edit Roles</a>
+                </template>
+                <template>
+                  <div class="mt-4">
+                    <form
+                      class="form-horizontal col-sm-12 col-md-12"
+                      @submit.prevent="editRole"
+                    >
+                      <div
+                        id="metadata"
+                        class="tab-pane"
+                      >
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            <label class="control-label">Roles</label>
+                            <multiselect
+                              v-model="role_data"
+                              :options="roleData"
+                              :multiple="true"
+                              :show-labels="false"
+                              @remove="removeRole"
+                            />
+                          </div>
                         </div>
-                        </form>
-                    </div>
+                        <div class="text-center mt-4">
+                          <button
+                            type="submit"
+                            class="btn btn-primary mr-2 waves-effect waves-light"
+                          >
+                            Simpan
+                          </button>
+                          <button
+                            type="button"
+                            class="btn btn-light waves-effect"
+                            @click="hideModal"
+                          >
+                            Batalkan
+                          </button>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </template>
               </b-tab>
             </b-tabs>
