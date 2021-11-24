@@ -51,6 +51,10 @@ export default {
       ],
 
       asprak_id: store.getters.getLoggedUser.id,
+      class_name: "",
+      course_name: "",
+      course_code: "",
+      academic_year_id: "",
 
       submitted: false,
       isFetchingData: false,

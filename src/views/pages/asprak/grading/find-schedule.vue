@@ -24,12 +24,14 @@ export default {
     PageHeader
   },
   validations: {
-    course_data: { required },
-    class_data: { required },
-    academic_year_data: { required },
-    module_index: { required },
-    staff_name: { required },
-    staff_code: { required },
+    data: {
+        course_data: { required },
+        class_data: { required },
+        academic_year_data: { required },
+        module_index: { required },
+        staff_name: { required },
+        staff_code: { required },
+    },
     recap_course: { required },
 
   },
@@ -48,6 +50,10 @@ export default {
       ],
 
       asprak_id: store.getters.getLoggedUser.id,
+      class_name: "",
+      course_name: "",
+      course_code: "",
+      academic_year_id: "",
 
       submitted: false,
       isFetchingData: false,
@@ -61,12 +67,14 @@ export default {
       moduleData: [],
       coursesData: [],
 
-      course_data: "",
-      class_data: "",
-      academic_year_data: "",
-      staff_code: "",
-      staff_name: "",
-      module_index: "",
+      data: {
+        course_data: "",
+        class_data: "",
+        academic_year_data: "",
+        staff_code: "",
+        staff_name: "",
+        module_index: "",
+      },
       recap_course: "",
       course_id: "",
       submitted_recap: false,
@@ -250,8 +258,8 @@ export default {
         this.isFetchingData = true;
 
         this.academic_year_id = value.academic_year.id;
-        this.staff_code = value.staff.code;
-        this.staff_name = value.staff.name;
+        this.data.staff_code = value.staff.code;
+        this.data.staff_name = value.staff.name;
 
         this.loading();
         await this.getDataSchedule().then(result=>{
@@ -302,8 +310,8 @@ export default {
 
     findSchedule(){
         this.submitted = true;
-        this.$v.$touch();
-        if (this.$v.$invalid) {
+        this.$v.data.$touch();
+        if (this.$v.data.$invalid) {
             return;
         } else {
             this.$router.push({
@@ -420,17 +428,17 @@ export default {
               <div class="form-group">
                 <label class="control-label">Kelas Mata Kuliah</label>
                 <multiselect
-                  v-model="class_data"
+                  v-model="data.class_data"
                   :options="namaKelasData"
                   label="name"
                   track-by="name"
                   :show-labels="false"
-                  :class="{ 'is-invalid': submitted && $v.class_data.$error }"
+                  :class="{ 'is-invalid': submitted && $v.data.class_data.$error }"
                   @select="setKelas"
                   @remove="removeKelas" 
                 />
                 <div
-                  v-if="submitted && !$v.class_data.required"
+                  v-if="submitted && !$v.data.class_data.required"
                   class="invalid-feedback"
                 >
                   Kelas Mata Kuliah harus diisi!
@@ -442,18 +450,18 @@ export default {
               <div class="form-group">
                 <label class="control-label">Nama Mata Kuliah</label>
                 <multiselect
-                  v-model="course_data"
+                  v-model="data.course_data"
                   :options="loadCourseData"
                   :disabled="isKelasNotSelected"
                   label="name"
                   track-by="name"
                   :show-labels="false"
-                  :class="{ 'is-invalid': submitted && $v.course_data.$error }"
+                  :class="{ 'is-invalid': submitted && $v.data.course_data.$error }"
                   @select="setCourse"
                   @remove="removeCourse" 
                 />
                 <div
-                  v-if="submitted && !$v.course_data.required"
+                  v-if="submitted && !$v.data.course_data.required"
                   class="invalid-feedback"
                 >
                   Nama Mata Kuliah harus diisi!
@@ -465,18 +473,18 @@ export default {
               <div class="form-group">
                 <label class="control-label">Kode Mata Kuliah</label>
                 <multiselect
-                  v-model="course_data"
+                  v-model="data.course_data"
                   :options="loadCourseData"
                   :disabled="isKelasNotSelected"
                   label="code"
                   track-by="code"
                   :show-labels="false"
-                  :class="{ 'is-invalid': submitted && $v.course_data.$error }"
+                  :class="{ 'is-invalid': submitted && $v.data.course_data.$error }"
                   @select="setCourse"
                   @remove="removeCourse" 
                 />
                 <div
-                  v-if="submitted && !$v.course_data.required"
+                  v-if="submitted && !$v.data.course_data.required"
                   class="invalid-feedback"
                 >
                   Kode Mata Kuliah harus diisi!
@@ -490,18 +498,18 @@ export default {
               <div class="form-group">
                 <label class="control-label">Tahun Akademik (Semester)</label>
                 <multiselect
-                  v-model="academic_year_data"
+                  v-model="data.academic_year_data"
                   :options="loadAcademicYearData"
                   :disabled="isCourseNotSelected"
                   label="name"
                   track-by="name"
                   :show-labels="false"
-                  :class="{ 'is-invalid': submitted && $v.academic_year_data.$error }"
+                  :class="{ 'is-invalid': submitted && $v.data.academic_year_data.$error }"
                   @select="setAcademicYear"
                   @remove="removeAcademicYear" 
                 />
                 <div
-                  v-if="submitted && !$v.academic_year_data.required"
+                  v-if="submitted && !$v.data.academic_year_data.required"
                   class="invalid-feedback"
                 >
                   Tahun Akademik (Semester) harus diisi!
@@ -514,16 +522,16 @@ export default {
                 <label for="staff_code">Nama Dosen Mata Kuliah</label>
                 <input
                   id="staff_name"
-                  v-model="staff_name"
+                  v-model="data.staff_name"
                   :disabled="true"
                   name="staff_name"
                   type="text"
                   style="background-color: #F0F4F6;"
                   class="form-control"
-                  :class="{ 'is-invalid': submitted && $v.staff_name.$error }"
+                  :class="{ 'is-invalid': submitted && $v.data.staff_name.$error }"
                 >
                 <div
-                  v-if="submitted && !$v.staff_name.required"
+                  v-if="submitted && !$v.data.staff_name.required"
                   class="invalid-feedback"
                 >
                   Nama Dosen Mata Kuliah harus diisi!
@@ -536,16 +544,16 @@ export default {
                 <label for="staff_code">Kode Dosen Mata Kuliah</label>
                 <input
                   id="staff_code"
-                  v-model="staff_code"
+                  v-model="data.staff_code"
                   :disabled="true"
                   name="staff_code"
                   type="text"
                   style="background-color: #F0F4F6;"
                   class="form-control"
-                  :class="{ 'is-invalid': submitted && $v.staff_code.$error }"
+                  :class="{ 'is-invalid': submitted && $v.data.staff_code.$error }"
                 >
                 <div
-                  v-if="submitted && !$v.staff_code.required"
+                  v-if="submitted && !$v.data.staff_code.required"
                   class="invalid-feedback"
                 >
                   Kode Dosen Mata Kuliah harus diisi!
@@ -557,16 +565,16 @@ export default {
           <div class="form-group text-center">
             <label>Modul</label>
             <multiselect 
-              v-model="module_index"
+              v-model="data.module_index"
               class="text-center" 
               :options="moduleData"
               :show-labels="false"
-              :class="{ 'is-invalid': submitted && $v.module_index.$error }"
+              :class="{ 'is-invalid': submitted && $v.data.module_index.$error }"
               @select="selectModule"
               @remove="removeModule" 
             />
             <div
-              v-if="submitted && !$v.module_index.required"
+              v-if="submitted && !$v.data.module_index.required"
               class="invalid-feedback"
             >
               Modul harus diisi!
