@@ -18,9 +18,6 @@ export default {
     Layout,
     PageHeader,
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       title: "Nilai",
@@ -77,6 +74,9 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     }
+  },
+  created() {
+    document.body.classList.add("auth-body-bg");
   },
   mounted: async function() {
     // Set the initial number of items
@@ -158,71 +158,92 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
-    <div class="row" v-if="dataClassCourses.length">
+    <div
+      v-if="dataClassCourses.length"
+      class="row"
+    >
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
-              <b-tab title-link-class="p-3" v-for="(course, index) in dataClassCourses" :key="index">
+            <b-tabs
+              nav-class="nav-tabs-custom"
+              @input="refreshData"
+            >
+              <b-tab
+                v-for="(course, index) in dataClassCourses"
+                :key="index"
+                title-link-class="p-3"
+              >
                 <template v-slot:title>
-                  <a class="font-weight-bold active">{{course.course}}</a>
+                  <a class="font-weight-bold active">{{ course.course }}</a>
                 </template>
                 <div class="row mt-4">
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Kelas</label>
-                            <input
-                                v-model="class_course_data.class"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Kelas</label>
+                      <input
+                        v-model="class_course_data.class"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
 
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Mata Kuliah</label>
-                            <input
-                                v-model="class_course_data.course"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Mata Kuliah</label>
+                      <input
+                        v-model="class_course_data.course"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
 
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Kode Dosen</label>
-                            <input
-                                v-model="class_course_data.staff"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Kode Dosen</label>
+                      <input
+                        v-model="class_course_data.staff"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
 
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Tahun / Semester</label>
-                            <input
-                                v-model="class_course_data.academic_year"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Tahun / Semester</label>
+                      <input
+                        v-model="class_course_data.academic_year"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
                 </div>
                 <!-- <div class="row mt-4">
                   <div class="col-sm-12 col-md-6">
@@ -260,10 +281,9 @@ export default {
                     :sort-desc="sortDesc"
                     :filter="filter"
                     :filter-included-fields="filterOn"
-                    @filtered="onFiltered"
                     :busy.sync="isFetchingData"
-                  >
-                  </b-table>
+                    @filtered="onFiltered"
+                  />
                 </div>
                 <!-- <div class="row">
                   <div class="col">
@@ -281,7 +301,9 @@ export default {
         </div>
       </div>
     </div>
-    <div class="row" v-if="!dataClassCourses.length">
-    </div>
+    <div
+      v-if="!dataClassCourses.length"
+      class="row"
+    />
   </Layout>
 </template>
