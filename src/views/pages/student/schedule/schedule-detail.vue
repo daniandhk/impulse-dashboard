@@ -643,14 +643,14 @@ export default {
             <div class="row mt-3">
               <div class="col-sm-4">
                 <div
-                  class="card"
+                  class="card h-100"
                   style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
                 >
                   <div class="card-body">
                     <div class="text-center form-group mb-0">
                       <div>
                         <h5 class="text-center font-size-15 text-uppercase">
-                          Kelas MK
+                          Kelas Mata Kuliah
                         </h5>
                         <hr
                           style="margin-left: -20px; 
@@ -748,7 +748,7 @@ export default {
               <!-- end col-->
               <div class="col-sm-4">
                 <div
-                  class="card"
+                  class="card h-100"
                   style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
                 >
                   <div class="card-body">
@@ -855,7 +855,7 @@ export default {
               <!-- end col-->
               <div class="col-sm-4">
                 <div
-                  class="card"
+                  class="card h-100"
                   style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
                 >
                   <div class="card-body">
@@ -943,9 +943,9 @@ export default {
           </div>
         </div>
       </div>
-      <div class="row">
+      <div class="row pb-4">
         <div class="col-sm-4">
-          <div class="card">
+          <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1055,7 +1055,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-          <div class="card">
+          <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1165,7 +1165,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-          <div class="card">
+          <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>

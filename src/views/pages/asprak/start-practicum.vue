@@ -212,6 +212,8 @@ export default {
         backgroundColor: "#F0F4F6",
       },
 
+      urlJadwal: "/asprak/schedule/",
+
     };
   },
   computed: {
@@ -408,6 +410,7 @@ export default {
 
     setId(id){
       this.schedule_data.id = id;
+      this.urlJadwal = "/asprak/schedule/detail/" + this.schedule_data.id;
     },
 
     async fetchData(){
@@ -850,311 +853,325 @@ export default {
         role="status"
       />
     </div>
-    <div>
-      <div class="row">
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-body">
-              <div class="text-center form-group mb-0">
-                <div>
-                  <h5 class="text-center font-size-15 text-uppercase">
-                    Kelas MK
-                  </h5>
-                  <hr
-                    style="margin-left: -28px; 
-                                        margin-right: -28px; 
+    <div class="pb-4">
+      <div class="card mb-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-4">
+              <div
+                class="card h-100"
+                style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
+              >
+                <div class="card-body">
+                  <div class="text-center form-group mb-0">
+                    <div>
+                      <h5 class="text-center font-size-15 text-uppercase">
+                        Kelas Mata Kuliah
+                      </h5>
+                      <hr
+                        style="margin-left: -20px; 
+                                        margin-right: -20px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                  >
-                  <div class="row mt-4">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.kelas"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
                       >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="class_course_data.class.name"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.matkul"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="class_course_data.course.name"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.tahun"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="class_course_data.academic_year.name"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.modul"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <multiselect 
-                        v-model="schedule_data.module.index"
-                        class="text-center" 
-                        :options="dataModules"
-                        :allow-empty="false"
-                        :disabled="isLoading"
-                        :show-labels="false"
-                        @select="selectModule"
-                      />
+                      <div class="row mt-4">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.kelas"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="class_course_data.class.name"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.matkul"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="class_course_data.course.name"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.tahun"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="class_course_data.academic_year.name"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.modul"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <multiselect 
+                            v-model="schedule_data.module.index"
+                            class="text-center" 
+                            :options="dataModules"
+                            :allow-empty="false"
+                            :disabled="isLoading"
+                            :show-labels="false"
+                            @select="selectModule"
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- end card -->
             </div>
-          </div>
-          <!-- end card -->
-        </div>
-        <!-- end col-->
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-body">
-              <div class="text-center form-group mb-0">
-                <div>
-                  <h5 class="text-center font-size-15 text-uppercase">
-                    Ruangan
-                  </h5>
-                  <hr
-                    style="margin-left: -28px; 
-                                        margin-right: -28px; 
+            <!-- end col-->
+            <div class="col-sm-4">
+              <div
+                class="card h-100"
+                style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
+              >
+                <div class="card-body">
+                  <div class="text-center form-group mb-0">
+                    <div>
+                      <h5 class="text-center font-size-15 text-uppercase">
+                        Ruangan
+                      </h5>
+                      <hr
+                        style="margin-left: -20px; 
+                                        margin-right: -20px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                  >
-                  <div class="row mt-4">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.nama_ruangan"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
                       >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="schedule_data.room.name"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.detail_ruangan"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <textarea
-                        v-model="schedule_data.room.desc"
-                        rows="1"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      />
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.msteam_link"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="schedule_data.room.msteam_link"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.msteam_code"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="schedule_data.room.msteam_code"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
+                      <div class="row mt-4">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.nama_ruangan"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="schedule_data.room.name"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.detail_ruangan"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <textarea
+                            v-model="schedule_data.room.desc"
+                            rows="1"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          />
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.msteam_link"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="schedule_data.room.msteam_link"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.msteam_code"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="schedule_data.room.msteam_code"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- end card -->
             </div>
-          </div>
-          <!-- end card -->
-        </div>
-        <!-- end col-->
-        <div class="col-sm-4">
-          <div class="card">
-            <div class="card-body">
-              <div class="text-center form-group mb-0">
-                <div>
-                  <h5 class="text-center font-size-15 text-uppercase">
-                    Jadwal
-                  </h5>
-                  <hr
-                    style="margin-left: -28px; 
-                                        margin-right: -28px; 
+            <!-- end col-->
+            <div class="col-sm-4">
+              <div
+                class="card h-100"
+                style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
+              >
+                <div class="card-body">
+                  <div class="text-center form-group mb-0">
+                    <div>
+                      <h5 class="text-center font-size-15 text-uppercase">
+                        Jadwal
+                      </h5>
+                      <hr
+                        style="margin-left: -20px; 
+                                        margin-right: -20px; 
                                         height: 2px; 
                                         background-color: #eee; 
                                         border: 0 none; 
                                         color: #eee;"
-                  >
-                  <b-alert
-                    v-model="isJadwalNull"
-                    class="mt-3"
-                    variant="danger"
-                  >
-                    Harap input jadwal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
-                  </b-alert>
-                  <div class="row mt-4">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.tanggal"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
                       >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="time_date"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
+                      <b-alert
+                        v-model="isJadwalNull"
+                        class="mt-3"
+                        variant="danger"
                       >
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.mulai"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="time_start"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
-                    </div>
-                  </div>
-                  <div class="row mt-2">
-                    <div class="col-sm-5">
-                      <input
-                        v-model="text.terakhir"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="border: 0"
-                      >
-                    </div>
-                    <div class="col-sm-7">
-                      <input
-                        v-model="time_end"
-                        type="text"
-                        class="form-control"
-                        disabled="true"
-                        style="background-color: #F0F4F6;"
-                      >
+                        Harap input jadwal di menu <a :href="urlJadwal"><b>Jadwal</b></a>!
+                      </b-alert>
+                      <div class="row mt-4">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.tanggal"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="time_date"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.mulai"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="time_start"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
+                      <div class="row mt-2">
+                        <div class="col-sm-5">
+                          <input
+                            v-model="text.terakhir"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="border: 0"
+                          >
+                        </div>
+                        <div class="col-sm-7">
+                          <input
+                            v-model="time_end"
+                            type="text"
+                            class="form-control"
+                            disabled="true"
+                            style="background-color: #F0F4F6;"
+                          >
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <!-- end card -->
             </div>
+            <!-- end col-->
           </div>
-          <!-- end card -->
         </div>
-        <!-- end col-->
       </div>
+      
       <div class="row">
         <div class="col-sm-4">
-          <div class="card">
+          <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1177,7 +1194,7 @@ export default {
                     class="mt-3"
                     variant="danger"
                   >
-                    Harap input soal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
+                    Harap input soal di menu <a :href="urlJadwal"><b>Jadwal</b></a>!
                   </b-alert>
                   <div class="row text-left mt-4 mr-2">
                     <div class="col-sm-4">
@@ -1294,7 +1311,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-          <div class="card">
+          <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1317,7 +1334,7 @@ export default {
                     class="mt-3"
                     variant="danger"
                   >
-                    Harap input soal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
+                    Harap input soal di menu <a :href="urlJadwal"><b>Jadwal</b></a>!
                   </b-alert>
                   <div class="row text-left mt-4 mr-2">
                     <div class="col-sm-4">
@@ -1434,7 +1451,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4">
-          <div class="card">
+          <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1457,7 +1474,7 @@ export default {
                     class="mt-3"
                     variant="danger"
                   >
-                    Harap input soal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
+                    Harap input soal di menu <a :href="urlJadwal"><b>Jadwal</b></a>!
                   </b-alert>
                   <div class="row text-left mt-4 mr-2">
                     <div class="col-sm-4">
