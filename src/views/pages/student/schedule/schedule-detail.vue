@@ -628,7 +628,7 @@ export default {
         role="status"
       />
     </div>
-    <div>
+    <div class="pb-4">
       <div class="card">
         <div class="card-body">
           <div class="text-center">
@@ -650,7 +650,7 @@ export default {
           </div>
           <div v-if="isJadwalShowed">
             <div class="row mt-3">
-              <div class="col-sm-4">
+              <div class="col-sm-4 pt-1 pb-1">
                 <div
                   class="card h-100"
                   style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
@@ -755,7 +755,7 @@ export default {
                 <!-- end card -->
               </div>
               <!-- end col-->
-              <div class="col-sm-4">
+              <div class="col-sm-4 pt-1 pb-1">
                 <div
                   class="card h-100"
                   style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
@@ -862,7 +862,7 @@ export default {
                 <!-- end card -->
               </div>
               <!-- end col-->
-              <div class="col-sm-4">
+              <div class="col-sm-4 pt-1 pb-1">
                 <div
                   class="card h-100"
                   style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
@@ -952,8 +952,8 @@ export default {
           </div>
         </div>
       </div>
-      <div class="row pb-4">
-        <div class="col-sm-4">
+      <div class="row">
+        <div class="col-sm-4 pt-1 pb-1">
           <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
@@ -1063,7 +1063,7 @@ export default {
           <!-- end card -->
         </div>
         <!-- end col-->
-        <div class="col-sm-4">
+        <div class="col-sm-4 pt-1 pb-1">
           <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
@@ -1173,7 +1173,7 @@ export default {
           <!-- end card -->
         </div>
         <!-- end col-->
-        <div class="col-sm-4">
+        <div class="col-sm-4 pt-1 pb-1">
           <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">

@@ -237,6 +237,10 @@ export default {
     ...notificationMethods,
 
     async loadData(){
+      this.isPretestStart = false;
+      this.isJournalStart = false;
+      this.isPosttestStart = false;
+
       this.setId(this.$route.params.id);
       await this.fetchData();
       await this.setDate();
@@ -440,8 +444,14 @@ export default {
       if(this.schedule_data.start){
         this.time_start = moment(String(this.schedule_data.start)).format('HH:mm:ss');
       }
+      else{
+        this.time_start = "-";
+      }
       if(this.schedule_data.end){
         this.time_end = moment(String(this.schedule_data.end)).format('HH:mm:ss');
+      }
+      else{
+        this.time_end = "-";
       }
     },
 
@@ -592,7 +602,7 @@ export default {
 
     submitSchedule(type, status = null){
         if(this.isJadwalNull){
-          Swal.fire("Jadwal belum diatur!", "Harap input jadwal di menu Jadwal.", "error");
+          Swal.fire("Jadwal belum diatur...", "Harap input jadwal di menu Jadwal!", "error");
         }
         else{
           this.submitted = true;
@@ -666,7 +676,7 @@ export default {
                   }
               }
               else{
-                Swal.fire("Soal Tes Awal kosong!", "Harap input soal di menu Jadwal.", "error");
+                Swal.fire("Soal Tes Awal kosong...", "Harap input soal di menu Jadwal!", "error");
               }
           }
           else if(type=='journal'){
@@ -736,7 +746,7 @@ export default {
                   }
               }
               else{
-                Swal.fire("Soal Jurnal kosong!", "Harap input soal di menu Jadwal.", "error");
+                Swal.fire("Soal Jurnal kosong...", "Harap input soal di menu Jadwal!", "error");
               }
           }
           else if(type=='posttest'){
@@ -806,7 +816,7 @@ export default {
                   }
               }
               else{
-                Swal.fire("Soal Tes Akhir kosong!", "Harap input soal di menu Jadwal.", "error");
+                Swal.fire("Soal Tes Akhir kosong...", "Harap input soal di menu Jadwal!", "error");
               }
           }
         }
@@ -880,7 +890,7 @@ export default {
       <div class="card mb-3">
         <div class="card-body">
           <div class="row">
-            <div class="col-sm-4">
+            <div class="col-sm-4 pt-1 pb-1">
               <div
                 class="card h-100"
                 style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
@@ -988,7 +998,7 @@ export default {
               <!-- end card -->
             </div>
             <!-- end col-->
-            <div class="col-sm-4">
+            <div class="col-sm-4 pt-1 pb-1">
               <div
                 class="card h-100"
                 style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
@@ -1095,7 +1105,7 @@ export default {
               <!-- end card -->
             </div>
             <!-- end col-->
-            <div class="col-sm-4">
+            <div class="col-sm-4 pt-1 pb-1">
               <div
                 class="card h-100"
                 style="box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);"
@@ -1193,7 +1203,7 @@ export default {
       </div>
       
       <div class="row">
-        <div class="col-sm-4">
+        <div class="col-sm-4 pt-1 pb-1">
           <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
@@ -1335,7 +1345,7 @@ export default {
           <!-- end card -->
         </div>
         <!-- end col-->
-        <div class="col-sm-4">
+        <div class="col-sm-4 pt-1 pb-1">
           <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
@@ -1477,7 +1487,7 @@ export default {
           <!-- end card -->
         </div>
         <!-- end col-->
-        <div class="col-sm-4">
+        <div class="col-sm-4 pt-1 pb-1">
           <div class="card h-100">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
