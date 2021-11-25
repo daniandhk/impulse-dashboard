@@ -52,8 +52,8 @@ export default {
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Jam Mulai" },
-        { key: "end", sortable: true, label: "Jam Terakhir" },
+        { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "class_course.staff.code", sortable: true, label: "Kode Dosen" },
         { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
@@ -238,6 +238,24 @@ export default {
       }
     },
 
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
+      }
+      else{
+        return "-";
+      }
+    },
+
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
+      }
+      else{
+        return "-";
+      }
+    },
+
     loading(isLoad) {
         var x = document.getElementById("loading");
 
@@ -383,11 +401,21 @@ export default {
             :head-variant="'dark'"
             @filtered="onFiltered"
           >
+            <template v-slot:cell(date)="data">
+              {{ dateFormatted(data.item.date) }}
+            </template>
+            <template v-slot:cell(start)="data">
+              {{ timeFormatted(data.item.start) }}
+            </template>
+            <template v-slot:cell(end)="data">
+              {{ timeFormatted(data.item.end) }}
+            </template>
             <template v-slot:cell(action)="data">
               <b-button
                 v-if="data.item.is_present" 
                 type="submit" 
                 variant="primary"
+                size="sm"
                 style="min-width: 75px;"
                 @click="onClickEdit(data)" 
               >
@@ -395,7 +423,8 @@ export default {
               </b-button>
               <b-button
                 v-if="!data.item.is_present"
-                type="submit" 
+                type="submit"
+                size="sm"
                 variant="danger"
                 style="min-width: 75px;"
               >

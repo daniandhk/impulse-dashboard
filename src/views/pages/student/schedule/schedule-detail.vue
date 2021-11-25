@@ -241,7 +241,7 @@ export default {
     },
 
     async setDate(){
-      this.time_date = this.schedule_data.date;
+      this.time_date = this.dateFormatted(this.schedule_data.date);
       if(this.schedule_data.start){
         this.time_start = moment(String(this.schedule_data.start)).format('HH:mm:ss');
       }
@@ -583,6 +583,15 @@ export default {
 
     onClickJadwal(){
       this.isJadwalShowed = !this.isJadwalShowed;
+    },
+
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
+      }
+      else{
+        return "-";
+      }
     },
 
     loading(isLoad) {

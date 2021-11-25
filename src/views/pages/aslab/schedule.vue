@@ -52,8 +52,8 @@ export default {
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Jam Mulai" },
-        { key: "end", sortable: true, label: "Jam Terakhir" },
+        { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
         { key: "action", sortable: false, }
       ],
@@ -311,14 +311,14 @@ export default {
       this.schedule_data.module = data.item.module;
       this.schedule_data.academic_year = data.item.academic_year;
       if(!data.item.start){
-        this.schedule_data.start = "empty";
-        this.schedule_data.end = "empty";
-        this.schedule_data.date = moment(String(data.item.date)).format('YYYY-MM-DD');
+        this.schedule_data.start = "-";
+        this.schedule_data.end = "-";
+        this.schedule_data.date = this.dateFormatted(data.item.date);
       } 
       else{
-        this.schedule_data.start = moment(String(data.item.start)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.end = moment(String(data.item.end)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.date = moment(String(data.item.date)).format('YYYY-MM-DD');
+        this.schedule_data.start = this.timeFormatted(data.item.start);
+        this.schedule_data.end = this.timeFormatted(data.item.end);
+        this.schedule_data.date = this.dateFormatted(data.item.date);
       }
 
       this.eventModal = true;
@@ -343,6 +343,24 @@ export default {
 
     onClickRuangan(){
       this.isRuanganShowed = !this.isRuanganShowed;
+    },
+
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
+      }
+      else{
+        return "-";
+      }
+    },
+
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
+      }
+      else{
+        return "-";
+      }
     },
 
     loading(isLoad) {
@@ -490,6 +508,15 @@ export default {
             :head-variant="'dark'"
             @filtered="onFiltered"
           >
+            <template v-slot:cell(date)="data">
+              {{ dateFormatted(data.item.date) }}
+            </template>
+            <template v-slot:cell(start)="data">
+              {{ timeFormatted(data.item.start) }}
+            </template>
+            <template v-slot:cell(end)="data">
+              {{ timeFormatted(data.item.end) }}
+            </template>
             <template v-slot:cell(room)="data">
               <b-button
                 type="submit" 

@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
 
 import { notificationMethods } from "@/state/helpers";
+import moment from 'moment';
 
 /**
  * Advanced-form component
@@ -120,6 +121,7 @@ export default {
     async loadData(){
       await this.fetchData();
       await this.getDataCourses();
+      this.setTime();
 
       this.asprak_totalRows = this.bap_data.asprak_presence.length;
       this.asprak_perPage = this.bap_data.asprak_presence.length;
@@ -260,6 +262,30 @@ export default {
                 })
             );
         }
+    },
+
+    setTime(){
+      this.bap_data.schedule.date = this.dateFormatted(this.bap_data.schedule.date);
+      this.bap_data.schedule.time_start = this.timeFormatted(this.bap_data.schedule.time_start);
+      this.bap_data.schedule.time_end = this.timeFormatted(this.bap_data.schedule.time_end);
+    },
+
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
+      }
+      else{
+        return "-";
+      }
+    },
+
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
+      }
+      else{
+        return "-";
+      }
     },
 
     loading(isLoad) {

@@ -5,6 +5,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import listPlugin from "@fullcalendar/list";
+import idLocale from "@fullcalendar/core/locales/id";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
@@ -115,6 +116,8 @@ export default {
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
+        locale: idLocale,
+        dayHeaderFormat: { weekday: 'long' },
       },
       currentEvents: [],
       eventModal: false,
@@ -241,14 +244,14 @@ export default {
       this.schedule_data.module = info.event.extendedProps.module;
       this.schedule_data.academic_year = info.event.extendedProps.academic_year;
       if(info.event.endStr == ""){
-        this.schedule_data.start = "empty";
-        this.schedule_data.end = "empty";
-        this.schedule_data.date = info.event.startStr;
+        this.schedule_data.start = "-";
+        this.schedule_data.end = "-";
+        this.schedule_data.date = this.dateFormatted(info.event.startStr);
       } 
       else{
-        this.schedule_data.start = moment(String(info.event.startStr)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.end = moment(String(info.event.endStr)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.date = moment(String(info.event.startStr)).format('YYYY-MM-DD');
+        this.schedule_data.start = this.timeFormatted(info.event.startStr);
+        this.schedule_data.end = this.timeFormatted(info.event.endStr);
+        this.schedule_data.date = this.dateFormatted(info.event.startStr);
       }
 
       this.eventModal = true;
@@ -336,6 +339,24 @@ export default {
 
     onClickRuangan(){
       this.isRuanganShowed = !this.isRuanganShowed;
+    },
+
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
+      }
+      else{
+        return "-";
+      }
+    },
+
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
+      }
+      else{
+        return "-";
+      }
     },
 
     loading(isLoad) {

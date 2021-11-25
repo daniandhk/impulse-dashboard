@@ -159,6 +159,7 @@ export default {
 
     async loadData(){
       await this.fetchData();
+      this.setTime();
 
       this.asprak_totalRows = this.bap_data.asprak.length;
       this.asprak_perPage = this.bap_data.asprak.length;
@@ -350,6 +351,30 @@ export default {
             this.dataInput = data;
         }
         this.student_selectedAll = !this.student_selectedAll;
+    },
+
+    setTime(){
+      this.bap_data.schedule.date = this.dateFormatted(this.bap_data.schedule.date);
+      this.bap_data.schedule.time_start = this.timeFormatted(this.bap_data.schedule.time_start);
+      this.bap_data.schedule.time_end = this.timeFormatted(this.bap_data.schedule.time_end);
+    },
+
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
+      }
+      else{
+        return "-";
+      }
+    },
+
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
+      }
+      else{
+        return "-";
+      }
     },
 
     loading(isLoad) {

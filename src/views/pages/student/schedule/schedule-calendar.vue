@@ -5,6 +5,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import listPlugin from "@fullcalendar/list";
+import idLocale from "@fullcalendar/core/locales/id";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
@@ -14,7 +15,6 @@ import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 
 import moment from 'moment';
-import Multiselect from "vue-multiselect";
 
 /**
  * Calendar component
@@ -110,6 +110,8 @@ export default {
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
+        locale: idLocale,
+        dayHeaderFormat: { weekday: 'long' },
       },
       currentEvents: [],
       eventModal: false,
@@ -243,28 +245,44 @@ export default {
       this.schedule_data.module = info.event.extendedProps.module;
       this.schedule_data.academic_year = info.event.extendedProps.academic_year;
       if(info.event.endStr == ""){
-        this.schedule_data.start = "empty";
-        this.schedule_data.end = "empty";
-        this.schedule_data.date = info.event.startStr;
+        this.schedule_data.start = "-";
+        this.schedule_data.end = "-";
+        this.schedule_data.date = this.dateFormatted(info.event.startStr);
       } 
       else{
-        this.schedule_data.start = moment(String(info.event.startStr)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.end = moment(String(info.event.endStr)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.date = moment(String(info.event.startStr)).format('YYYY-MM-DD');
+        this.schedule_data.start = this.timeFormatted(info.event.startStr);
+        this.schedule_data.end = this.timeFormatted(info.event.endStr);
+        this.schedule_data.date = this.dateFormatted(info.event.startStr);
       }
 
+      this.isNow = true;
+      // await this.setStart(this.schedule_data.date, this.schedule_data.start, this.schedule_data.end);
+
+      this.eventModal = true;
+    },
+
+    async setStart(date, start, end){
       let now = moment().format('YYYY-MM-DD HH:mm:ss');
-      if(this.schedule_data.start != "empty" && this.schedule_data.end != "empty"){
-        if(now >= this.schedule_data.start  && now <= this.schedule_data.end){
+      
+      let combined_start = date + " " + start;
+      let time_start = moment(String(combined_start)).format('YYYY-MM-DD HH:mm:ss');
+
+      let combined_end = date + " " + end;
+      let time_end = moment(String(combined_end)).format('YYYY-MM-DD HH:mm:ss')
+
+
+      if(start != "-" && end != "-"){
+        if(now >= time_start  && now <= time_end){
           this.isNow = true;
         }
         else{
           this.isNow = false;
         }
       }
+      else{
+        this.isNow = false;
+      }
       //v-if="isNow" di div button
-
-      this.eventModal = true;
     },
 
     closeModal() {
@@ -345,6 +363,24 @@ export default {
 
     onClickRuangan(){
       this.isRuanganShowed = !this.isRuanganShowed;
+    },
+
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
+      }
+      else{
+        return "-";
+      }
+    },
+
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
+      }
+      else{
+        return "-";
+      }
     },
 
     loading(isLoad) {
@@ -561,6 +597,7 @@ function sleep(ms) {
           <button
             type="button"
             class="btn btn-success mr-2 waves-effect waves-light"
+            :disabled="!isNow"
             @click="detailModal"
           >
             Mulai Praktikum
