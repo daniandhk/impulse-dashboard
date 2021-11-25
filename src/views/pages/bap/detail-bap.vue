@@ -204,6 +204,11 @@ export default {
             .then(response => {
                 if(response.data.courses){
                     this.coursesData = response.data.courses;
+                    
+                    let course_data = this.coursesData.find(data => data.name === this.bap_data.schedule.class_course.courses.name);
+                    if(course_data){
+                      this.recap_course = course_data;
+                    }
                 }
             })
             .catch(error => {
