@@ -58,10 +58,9 @@ export default {
   },
   mounted: async function() {
     // Set the initial number of items
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
+    this.loading(true);
+    await this.fetchData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -102,27 +101,24 @@ export default {
     },
 
     async handlePageChange(value) {
+      this.loading(true);
       this.currentPage = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+      this.loading(true);
       this.perPage = value;
       this.currentPage = 1;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async refreshData(){
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      this.loading(true);
+      await this.fetchData();
+      this.loading(false);
     },
 
     onClickDelete(data){
@@ -146,10 +142,9 @@ export default {
         api.deleteAcademicYear(id)
           .then(response => {
             Swal.fire("Berhasil dihapus!", name + " telah terhapus.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
           })
           .catch(error => {
             Swal.fire({
@@ -166,19 +161,16 @@ export default {
       this.$bvModal.hide('modal-edit');
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };

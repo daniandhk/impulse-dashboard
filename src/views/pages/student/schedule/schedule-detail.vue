@@ -192,16 +192,15 @@ export default {
   },
   watch: {
     $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
     }
   },
   mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -323,7 +322,7 @@ export default {
     },
 
     selectModule(value){
-      this.loading();
+      this.loading(true);
       const params = this.getRequestParams(
         value,
       );
@@ -348,6 +347,8 @@ export default {
                   footer: error
               })
           })
+
+      this.loading(false);
     },
 
     clearData(){
@@ -584,19 +585,16 @@ export default {
       this.isJadwalShowed = !this.isJadwalShowed;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },

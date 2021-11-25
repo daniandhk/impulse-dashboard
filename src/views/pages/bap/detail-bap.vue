@@ -104,16 +104,15 @@ export default {
   },
   watch: {
     $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
     }
   },
   mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -232,7 +231,7 @@ export default {
         if (this.$v.recap_course.$invalid) {
             return;
         } else {
-            this.loading();
+            this.loading(true);
             return (
                 api.downloadRekapNilai(this.course_id)
                 .then(response => {
@@ -242,11 +241,11 @@ export default {
                     link.download = this.recap_course.name + ".xlsx"
                     link.click()
 
-                    this.loading();
+                    this.loading(false);
                     Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
                 })
                 .catch(error => {
-                    this.loading();
+                    this.loading(false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -258,19 +257,16 @@ export default {
         }
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },

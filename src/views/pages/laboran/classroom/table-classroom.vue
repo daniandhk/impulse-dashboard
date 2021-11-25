@@ -60,11 +60,9 @@ export default {
     document.body.classList.add("auth-body-bg");
   },
   mounted: async function() {
-    // Set the initial number of items
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
+    this.loading(true);
+    await this.fetchData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -135,23 +133,22 @@ export default {
     },
 
     async handlePageChange(value) {
+      this.loading(true);
       this.currentPage = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+      this.loading(true);
       this.perPage = value;
       this.currentPage = 1;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSortingChange(value){
+      this.loading(true);
       if(value.sortBy !== this.sortBy) {
         this.sortDesc = false
       } 
@@ -164,25 +161,21 @@ export default {
         }
       }
       this.sortBy = value.sortBy;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSearch(value){
+      this.loading(true);
       this.filter = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async refreshData(){
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      this.loading(true);
+      await this.fetchData();
+      this.loading(false);
     },
 
     onClickDelete(data){
@@ -205,11 +198,10 @@ export default {
       return (
         api.deleteClassroom(id)
           .then(response => {
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
             Swal.fire("Berhasil dihapus!", name + " telah terhapus.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
           })
           .catch(error => {
             Swal.fire({
@@ -239,13 +231,12 @@ export default {
         return (
           api.editClassroom(this.idDataEdit, this.dataEdit)
             .then(response => {
+              this.loading(true);
               this.submitted = false;
+              this.fetchData();
+              this.loading(false);
               this.hideModal();
               Swal.fire("Edited!", this.dataEdit.name + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
             })
             .catch(error => {
               this.submitted = false;
@@ -266,19 +257,16 @@ export default {
       this.$bvModal.hide('modal-edit');
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };

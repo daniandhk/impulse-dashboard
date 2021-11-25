@@ -221,16 +221,15 @@ export default {
   },
   watch: {
     $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
     }
   },
   mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -452,7 +451,7 @@ export default {
             icon: 'error',
             title: 'Oops...',
             text: 'ID tidak valid!',
-            footer: 'Anda dialihkan ke menu Jadwal',
+            footer: 'Anda dialihkan ke menu Cari Jadwal',
             timer: 4000
         })
         this.$router.replace({
@@ -515,7 +514,7 @@ export default {
     },
 
     selectModule(value){
-      this.loading();
+      this.loading(true);
       const params = this.getRequestParams(
         value,
       );
@@ -540,6 +539,8 @@ export default {
                   footer: error
               })
           })
+
+        this.loading(false);
     },
 
     clearData(){
@@ -612,21 +613,18 @@ export default {
                         message_body = "Tes Awal berhasil diberhentikan."
                     }
                     if(this.isPretestNew){
+                        this.loading(true);
                         return (
                             api.inputScheduleTest(this.pretest_data)
                                 .then(response => {
                                     Swal.fire(message_header, message_body, "success");
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                 })
                                 .catch(error => {
                                     //pop up
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -637,21 +635,18 @@ export default {
                         );
                     }
                     else{
+                        this.loading(true);
                         return (
                             api.editScheduleTest(id, this.pretest_data)
                                 .then(response => {
                                     Swal.fire(message_header, message_body, "success");
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                 })
                                 .catch(error => {
                                     //pop up
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -685,21 +680,18 @@ export default {
                         message_body = "Jurnal berhasil diberhentikan."
                     }
                     if(this.isJournalNew){
+                        this.loading(true);
                         return (
                             api.inputScheduleTest(this.journal_data)
                                 .then(response => {
                                     Swal.fire(message_header, message_body, "success");
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                 })
                                 .catch(error => {
                                     //pop up
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -710,21 +702,18 @@ export default {
                         );
                     }
                     else{
+                        this.loading(true);
                         return (
                             api.editScheduleTest(id, this.journal_data)
                                 .then(response => {
                                     Swal.fire(message_header, message_body, "success");
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                 })
                                 .catch(error => {
                                     //pop up
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -758,21 +747,18 @@ export default {
                         message_body = "Tes Akhir berhasil diberhentikan."
                     }
                     if(this.isPosttestNew){
+                        this.loading(true);
                         return (
                             api.inputScheduleTest(this.posttest_data)
                                 .then(response => {
                                     Swal.fire(message_header, message_body, "success");
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                 })
                                 .catch(error => {
                                     //pop up
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -783,21 +769,18 @@ export default {
                         );
                     }
                     else{
+                        this.loading(true);
                         return (
                             api.editScheduleTest(id, this.posttest_data)
                                 .then(response => {
                                     Swal.fire(message_header, message_body, "success");
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                 })
                                 .catch(error => {
                                     //pop up
-                                    this.loading();
-                                    this.loadData().then(result=>{
-                                        this.loading();
-                                    });
+                                    this.loadData();
+                                    this.loading(false);
                                     Swal.fire({
                                         icon: 'error',
                                         title: 'Oops...',
@@ -833,19 +816,16 @@ export default {
     //   }
     // },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },
@@ -1102,7 +1082,7 @@ export default {
                     class="mt-3"
                     variant="danger"
                   >
-                    Harap input jadwal di menu Jadwal!
+                    Harap input jadwal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
                   </b-alert>
                   <div class="row mt-4">
                     <div class="col-sm-5">
@@ -1197,7 +1177,7 @@ export default {
                     class="mt-3"
                     variant="danger"
                   >
-                    Harap input soal di menu Jadwal!
+                    Harap input soal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
                   </b-alert>
                   <div class="row text-left mt-4 mr-2">
                     <div class="col-sm-4">
@@ -1337,7 +1317,7 @@ export default {
                     class="mt-3"
                     variant="danger"
                   >
-                    Harap input soal di menu Jadwal!
+                    Harap input soal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
                   </b-alert>
                   <div class="row text-left mt-4 mr-2">
                     <div class="col-sm-4">
@@ -1477,7 +1457,7 @@ export default {
                     class="mt-3"
                     variant="danger"
                   >
-                    Harap input soal di menu Jadwal!
+                    Harap input soal di menu <a href="/asprak/schedule"><b>Jadwal</b></a>!
                   </b-alert>
                   <div class="row text-left mt-4 mr-2">
                     <div class="col-sm-4">

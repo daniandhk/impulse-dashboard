@@ -78,16 +78,15 @@ export default {
     },
     watch: {
         $route: async function() {
-            await this.loadData().then(result=>{
-                this.loading();
-            });
+            this.loading(true);
+            await this.loadData();
+            this.loading(false);
         }
     },
     mounted: async function() {
-        this.loading();
-        await this.loadData().then(result=>{
-            this.loading();
-        });
+        this.loading(true);
+        await this.loadData();
+        this.loading(false);
     },
     methods: {
         ...notificationMethods,
@@ -468,7 +467,7 @@ export default {
         },
 
         onClickDownload(){
-            this.loading();
+            this.loading(true);
             return (
                 api.downloadJournal(this.schedule_test_data.schedule.module_id, this.schedule_test_data.test.id)
                 .then(response => {
@@ -478,10 +477,11 @@ export default {
                     link.download = this.test_data.question[0].question
                     link.click()
                     
-                    this.loading();
+                    this.loading(false);
                     Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
                 })
                 .catch(error => {
+                    this.loading(false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',

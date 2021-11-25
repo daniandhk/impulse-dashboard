@@ -113,16 +113,15 @@ export default {
     },
     watch: {
         $route: async function() {
-            await this.loadData().then(result=>{
-                this.loading();
-            });
+            this.loading(true);
+            await this.loadData();
+            this.loading(false);
         }
     },
     mounted: async function() {
-        this.loading();
-        await this.loadData().then(result=>{
-            this.loading();
-        });
+        this.loading(true);
+        await this.loadData();
+        this.loading(false);
     },
     methods: {
         ...notificationMethods,
@@ -309,10 +308,9 @@ export default {
                 confirmButtonText: "Ya, lanjut submit!"
             }).then(result => {
                 if (result.value) {
-                    this.loading();
-                    this.submitAnswers().then(result=>{
-                        this.loading();
-                    });
+                    this.loading(true);
+                    this.submitAnswers();
+                    this.loading(false);
                 }
             });
         },
@@ -374,7 +372,7 @@ export default {
             //     confirmButtonText: "Ya, batalkan!"
             // }).then(result => {
             //     if (result.value) {
-            //         this.loading();
+            //         this.loading(true);
             //         this.submitted = false;
             //         this.isInputCanceled = true;
 
@@ -382,14 +380,14 @@ export default {
             //             element.grade = 0;
             //         });
             //         this.countGrade();
-            //         this.loading();
+            //         this.loading(false);
             //         Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
             //     }
             // });
         },
 
         onClickDownload(){
-            this.loading();
+            this.loading(true);
             return (
                 api.downloadJournal(this.schedule_test_data.module.id, this.schedule_test_data.module.journal_id)
                 .then(response => {
@@ -399,10 +397,11 @@ export default {
                     link.download = this.test_data.test.questions[0].question
                     link.click()
                     
-                    this.loading();
+                    this.loading(false);
                     Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
                 })
                 .catch(error => {
+                    this.loading(false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',

@@ -119,16 +119,15 @@ export default {
   },
   watch: {
     $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
     }
   },
   mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -140,20 +139,18 @@ export default {
     },
 
     async handlePageChange(value) {
+        this.loading(true);
         this.currentPage = value;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+        this.loading(true);
         this.perPage = value;
         this.currentPage = 1;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     setId(id){
@@ -290,7 +287,7 @@ export default {
     },
 
     selectModule(value){
-      this.loading();
+      this.loading(true);
       const params = this.getRequestParams(
         value,
       );
@@ -305,8 +302,10 @@ export default {
                   params: { id: schedule_id }
               });
             }
+            this.loading(false);
           })
           .catch(error => {
+              this.loading(false);
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
@@ -340,19 +339,16 @@ export default {
         });
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },

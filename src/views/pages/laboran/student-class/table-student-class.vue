@@ -4,6 +4,7 @@ import * as api from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
+import tableRoomVue from '../room/table-room.vue';
 
 /**
  * Orders Component
@@ -114,13 +115,10 @@ export default {
     document.body.classList.add("auth-body-bg");
   },
   mounted: async function() {
-    // Set the initial number of items
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
-
+    this.loading(true);
+    await this.fetchData();
     this.loadDataDropdown();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -202,23 +200,22 @@ export default {
     },
 
     async handlePageChange(value) {
+      this.loading(true);
       this.currentPage = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+      this.loading(true);
       this.perPage = value;
       this.currentPage = 1;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSortingChange(value){
+      this.loading(true);
       if(value.sortBy !== this.sortBy) {
         this.sortDesc = false
       } 
@@ -231,25 +228,21 @@ export default {
         }
       }
       this.sortBy = value.sortBy;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSearch(value){
+      this.loading(true);
       this.filter = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async refreshData(){
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      this.loading(true);
+      await this.fetchData();
+      this.loading(false);
     },
 
     onClickDelete(data){
@@ -273,10 +266,9 @@ export default {
         api.deleteStudentClass(id)
           .then(response => {
             Swal.fire("Berhasil dihapus!", nim + " telah terhapus.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
           })
           .catch(error => {
             Swal.fire({
@@ -320,39 +312,35 @@ export default {
     },
 
     async selectKelas(value){
+        this.loading(true);
         this.class_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeKelas(){
+        this.loading(true);
         this.class_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async selectCourse(value){
+        this.loading(true);
         this.isCourseSelected = true;
         this.course_code = value.code;
         this.course_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeCourse(){
+        this.loading(true);
         this.isCourseSelected = false;
         this.course_code = "";
         this.course_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async onClickEdit(data){
@@ -382,10 +370,9 @@ export default {
               this.submitted = false;
               this.hideModal();
               Swal.fire("Edited!", this.dataEditDetail.nim + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
+              this.loading(true);
+              this.fetchData();
+              this.loading(false);
             })
             .catch(error => {
               this.submitted = false;
@@ -455,10 +442,9 @@ export default {
               this.submitted = false;
               this.hideModal();
               Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
+              this.loading(true);
+              this.fetchData();
+              this.loading(false);
             })
             .catch(error => {
               this.submitted = false;
@@ -484,19 +470,16 @@ export default {
       this.$bvModal.hide('modal-edit');
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };

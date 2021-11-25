@@ -10,6 +10,7 @@ import moment from 'moment';
 
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
+import tableRoomVue from '../laboran/room/table-room.vue';
 
 /**
  * Advanced-form component
@@ -129,16 +130,15 @@ export default {
   },
   watch: {
     $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
     }
   },
   mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -248,7 +248,7 @@ export default {
     },
 
     selectModule(value){
-      this.loading();
+      this.loading(true);
       const params = this.getRequestParams(
         value,
       );
@@ -276,6 +276,8 @@ export default {
                   footer: error
               })
           })
+      
+      this.loading(false);
     },
 
     async setDate(){
@@ -351,12 +353,11 @@ export default {
           confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
-              this.loading();
+              this.loading(true);
               this.submitted = false;
               this.isInputCanceled = true;
-              this.loadData().then(result=>{
-                this.loading();
-              });
+              this.loadData();
+              this.loading(false);
               Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
@@ -409,15 +410,14 @@ export default {
       return (
         api.editSchedule(id, data)
           .then(response => {
-            this.loading();
+            this.loading(true);
             this.tryingToInput = false;
             this.isInputError = false;
             this.inputSuccess = true;
             this.submitted = false;
             Swal.fire("Edited!", data.name + " has been edited.", "success");
-            this.loadData().then(result=>{
-              this.loading();
-            });
+            this.loadData();
+            this.loading(false);
           })
           .catch(error => {
             this.submitted = false;
@@ -442,19 +442,16 @@ export default {
       this.room = value;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },

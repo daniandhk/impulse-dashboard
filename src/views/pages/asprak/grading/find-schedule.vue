@@ -93,13 +93,15 @@ export default {
   },
   watch: {
     $route: async function() {
-      await this.loadDataDropdown().then(result=>{
-        this.loading();
-      });
+      this.loading(true);
+      await this.loadDataDropdown();
+      this.loading(false);
     }
   },
   mounted: async function() {
+    this.loading(true);
     await this.loadDataDropdown();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -255,18 +257,17 @@ export default {
     },
 
     async setAcademicYear(value){
+        this.loading(true);
         this.isFetchingData = true;
 
         this.academic_year_id = value.academic_year.id;
         this.data.staff_code = value.staff.code;
         this.data.staff_name = value.staff.name;
 
-        this.loading();
-        await this.getDataSchedule().then(result=>{
-            this.loading();
-        });
+        await this.getDataSchedule();
 
         this.isFetchingData = false;
+        this.loading(false);
     },
 
     selectModule(value){
@@ -354,7 +355,7 @@ export default {
         if (this.$v.recap_course.$invalid) {
             return;
         } else {
-            this.loading();
+            this.loading(true);
             return (
                 api.downloadRekapNilai(this.course_id)
                 .then(response => {
@@ -364,11 +365,11 @@ export default {
                     link.download = this.recap_course.name + ".xlsx"
                     link.click()
 
-                    this.loading();
+                    this.loading(false);
                     Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
                 })
                 .catch(error => {
-                    this.loading();
+                    this.loading(false);
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
@@ -380,19 +381,16 @@ export default {
         }
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },

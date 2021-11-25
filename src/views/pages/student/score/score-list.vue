@@ -82,12 +82,11 @@ export default {
     // Set the initial number of items
     this.totalRows = this.dataModules.length;
     this.perPage = this.dataModules.length;
-    // Set the initial number of items
-    this.loading();
+    
+    this.loading(true);
     await this.getStudentCourses();
-    await this.refreshData(0).then(result=>{
-      this.loading();
-    });
+    await this.refreshData(0);
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -128,29 +127,25 @@ export default {
     async refreshData(index){
         this.isFetchingData = true;
         if(this.dataClassCourses.length){
-            this.loading();
+            this.loading(true);
             this.class_course_data = this.dataClassCourses[index];
             this.class_course_data.academic_year = this.class_course_data.year + " / " + this.class_course_data.semester
-            await this.getModules(index).then(response =>{
-                this.loading();
-            })
+            await this.getModules(index);
+            this.loading(false);
         }
         this.isFetchingData = false;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };

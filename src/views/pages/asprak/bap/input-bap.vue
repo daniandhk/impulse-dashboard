@@ -144,16 +144,15 @@ export default {
   },
   watch: {
     $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
     }
   },
   mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -246,7 +245,7 @@ export default {
           confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
-              this.loading();
+              this.loading(true);
               this.submitted = false;
               this.isInputCanceled = true;
 
@@ -256,9 +255,8 @@ export default {
               this.dataInput.evaluasi = "";
               this.dataInput.jenis = "";
 
-              this.loadData().then(result=>{
-                this.loading();
-              });
+              this.loadData();
+              this.loading(false);
               Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
@@ -354,19 +352,16 @@ export default {
         this.student_selectedAll = !this.student_selectedAll;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },

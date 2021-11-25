@@ -97,12 +97,11 @@ export default {
     // Set the initial number of items
     this.totalRows = this.dataSchedules.length;
     this.perPage = this.dataSchedules.length;
-    // Set the initial number of items
-    this.loading();
+    
+    this.loading(true);
     await this.getStudentCourses();
-    await this.refreshData(0).then(result=>{
-      this.loading();
-    });
+    await this.refreshData(0);
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -156,12 +155,11 @@ export default {
     async refreshData(index){
         this.isFetchingData = true;
         if(this.dataClassCourses.length){
-            this.loading();
+            this.loading(true);
             this.class_course_data = this.dataClassCourses[index];
             let class_course_id = this.class_course_data.class_course_id;
-            await this.getSchedules(class_course_id).then(response =>{
-                this.loading();
-            })
+            await this.getSchedules(class_course_id);
+            this.loading(false);
         }
         this.isFetchingData = false;
     },
@@ -171,19 +169,16 @@ export default {
       this.eventModal = true;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };
