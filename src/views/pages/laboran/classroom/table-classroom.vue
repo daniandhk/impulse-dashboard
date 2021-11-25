@@ -236,7 +236,7 @@ export default {
               this.fetchData();
               this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.name + " has been edited.", "success");
+              Swal.fire("Berhasil diubah!", this.dataEdit.name + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;

@@ -415,7 +415,7 @@ export default {
             this.isInputError = false;
             this.inputSuccess = true;
             this.submitted = false;
-            Swal.fire("Edited!", data.name + " has been edited.", "success");
+            Swal.fire("Berhasil diubah!", data.name + " telah terubah.", "success");
             this.loadData();
             this.loading(false);
           })

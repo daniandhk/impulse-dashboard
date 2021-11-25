@@ -369,7 +369,7 @@ export default {
             .then(response => {
               this.submitted = false;
               this.hideModal();
-              Swal.fire("Edited!", this.dataEditDetail.nim + " has been edited.", "success");
+              Swal.fire("Berhasil diubah!", this.dataEditDetail.nim + " telah terubah.", "success");
               this.loading(true);
               this.fetchData();
               this.loading(false);
@@ -441,7 +441,7 @@ export default {
             .then(response => {
               this.submitted = false;
               this.hideModal();
-              Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
+              Swal.fire("Berhasil diubah!", this.dataEditRole.no_induk + " telah terubah.", "success");
               this.loading(true);
               this.fetchData();
               this.loading(false);

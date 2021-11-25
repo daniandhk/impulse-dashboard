@@ -264,7 +264,7 @@ export default {
               this.fetchData();
               this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
+              Swal.fire("Berhasil diubah!", this.dataEdit.nip + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;
@@ -336,7 +336,7 @@ export default {
               this.fetchData();
               this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
+              Swal.fire("Berhasil diubah!", this.dataEdit.nip + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;

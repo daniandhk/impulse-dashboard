@@ -297,7 +297,7 @@ export default {
               this.fetchData();
               this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
+              Swal.fire("Berhasil diubah!", this.dataEditRole.no_induk + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;
