@@ -513,7 +513,7 @@ export default {
               <a
                 v-b-tooltip.hover
                 href="javascript:void(0);"
-                class="mr-3 text-primary"
+                class="m-1 text-primary"
                 title="Detail"
                 @click="onClickEdit(data)"
               >
@@ -522,7 +522,7 @@ export default {
               <a
                 v-b-tooltip.hover
                 href="javascript:void(0);"
-                class="mr-3 text-primary"
+                class="m-1 text-primary"
                 title="Edit"
                 @click="editModal(data)"
               >
@@ -533,7 +533,7 @@ export default {
         </div>
         <div class="row">
           <div class="col">
-            <div class="dataTables_paginate paging_simple_numbers float-right">
+            <div class="paging_simple_numbers float-right">
               <ul class="pagination pagination-rounded mb-0">
                 <!-- pagination -->
                 <b-pagination 

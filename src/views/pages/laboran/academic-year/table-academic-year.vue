@@ -245,7 +245,7 @@ export default {
           <a
             v-b-tooltip.hover
             href="javascript:void(0);"
-            class="text-danger"
+            class="m-1 text-danger"
             title="Delete"
             @click="onClickDelete(data)"
           >
@@ -256,7 +256,7 @@ export default {
     </div>
     <div class="row">
       <div class="col">
-        <div class="dataTables_paginate paging_simple_numbers float-right">
+        <div class="paging_simple_numbers float-right">
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
