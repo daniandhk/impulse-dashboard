@@ -628,3 +628,10 @@ function sleep(ms) {
     </b-modal>
   </Layout>
 </template>
+
+<style>
+   .fc-more-popover{
+       max-height: 200px;
+       overflow-y: scroll;
+   }
+</style>
