@@ -591,210 +591,224 @@ export default {
     },
 
     submitSchedule(type, status = null){
-        this.submitted = true;
-        let message_header = "Berhasil submit!";
-        let message_body = "Form telah berhasil di submit.";
+        if(this.isJadwalNull){
+          Swal.fire("Jadwal belum diatur!", "Harap input jadwal di menu Jadwal.", "error");
+        }
+        else{
+          this.submitted = true;
+          let message_header = "Berhasil submit!";
+          let message_body = "Form telah berhasil di submit.";
 
-        if(type=='pretest'){
-            if(this.isPretestNull == false){
-                this.$v.pretest_data.$touch();
-                if (this.$v.pretest_data.$invalid) {
-                    return;
-                }
-                else{
-                    let id = this.pretest_data.id;
-                    this.pretest_data.time_start = this.inputedDate(this.pretest_data.time_start);
-                    this.pretest_data.time_end = this.inputedDate(this.pretest_data.time_end);
-                    if(status == 'start'){
-                        this.pretest_data.is_active = true;
-                        message_header = "Tes Awal Dimulai!";
-                        message_body = "Tes Awal berhasil dimulai."
-                    }
-                    if(status == 'stop'){
-                        this.pretest_data.is_active = false;
-                        message_header = "Tes Awal Berhenti!";
-                        message_body = "Tes Awal berhasil diberhentikan."
-                    }
-                    if(this.isPretestNew){
-                        this.loading(true);
-                        return (
-                            api.inputScheduleTest(this.pretest_data)
-                                .then(response => {
-                                    Swal.fire(message_header, message_body, "success");
-                                    this.loadData();
-                                    this.loading(false);
-                                })
-                                .catch(error => {
-                                    //pop up
-                                    this.loadData();
-                                    this.loading(false);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Terjadi kesalahan!',
-                                        footer: error
-                                    })
-                                })
-                        );
-                    }
-                    else{
-                        this.loading(true);
-                        return (
-                            api.editScheduleTest(id, this.pretest_data)
-                                .then(response => {
-                                    Swal.fire(message_header, message_body, "success");
-                                    this.loadData();
-                                    this.loading(false);
-                                })
-                                .catch(error => {
-                                    //pop up
-                                    this.loadData();
-                                    this.loading(false);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Terjadi kesalahan!',
-                                        footer: error
-                                    })
-                                })
-                        );
-                    }
-                }
-            }
-        }
-        else if(type=='journal'){
-            if(this.isJournalNull == false){
-                this.$v.journal_data.$touch();
-                if (this.$v.journal_data.$invalid) {
-                    return;
-                }
-                else{
-                    let id = this.journal_data.id;
-                    this.journal_data.time_start = this.inputedDate(this.journal_data.time_start);
-                    this.journal_data.time_end = this.inputedDate(this.journal_data.time_end);
-                    if(status == 'start'){
-                        this.journal_data.is_active = true;
-                        message_header = "Jurnal Dimulai!";
-                        message_body = "Jurnal berhasil dimulai."
-                    }
-                    if(status == 'stop'){
-                        this.journal_data.is_active = false;
-                        message_header = "Jurnal Berhenti!";
-                        message_body = "Jurnal berhasil diberhentikan."
-                    }
-                    if(this.isJournalNew){
-                        this.loading(true);
-                        return (
-                            api.inputScheduleTest(this.journal_data)
-                                .then(response => {
-                                    Swal.fire(message_header, message_body, "success");
-                                    this.loadData();
-                                    this.loading(false);
-                                })
-                                .catch(error => {
-                                    //pop up
-                                    this.loadData();
-                                    this.loading(false);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Terjadi kesalahan!',
-                                        footer: error
-                                    })
-                                })
-                        );
-                    }
-                    else{
-                        this.loading(true);
-                        return (
-                            api.editScheduleTest(id, this.journal_data)
-                                .then(response => {
-                                    Swal.fire(message_header, message_body, "success");
-                                    this.loadData();
-                                    this.loading(false);
-                                })
-                                .catch(error => {
-                                    //pop up
-                                    this.loadData();
-                                    this.loading(false);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Terjadi kesalahan!',
-                                        footer: error
-                                    })
-                                })
-                        );
-                    }
-                }
-            }
-        }
-        else if(type=='posttest'){
-            if(this.isPosttestNull == false){
-                this.$v.posttest_data.$touch();
-                if (this.$v.posttest_data.$invalid) {
-                    return;
-                }
-                else{
-                    let id = this.posttest_data.id;
-                    this.posttest_data.time_start = this.inputedDate(this.posttest_data.time_start);
-                    this.posttest_data.time_end = this.inputedDate(this.posttest_data.time_end);
-                    if(status == 'start'){
-                        this.posttest_data.is_active = true;
-                        message_header = "Tes Akhir Dimulai!";
-                        message_body = "Tes Akhir berhasil dimulai."
-                    }
-                    if(status == 'stop'){
-                        this.posttest_data.is_active = false;
-                        message_header = "Tes Akhir Berhenti!";
-                        message_body = "Tes Akhir berhasil diberhentikan."
-                    }
-                    if(this.isPosttestNew){
-                        this.loading(true);
-                        return (
-                            api.inputScheduleTest(this.posttest_data)
-                                .then(response => {
-                                    Swal.fire(message_header, message_body, "success");
-                                    this.loadData();
-                                    this.loading(false);
-                                })
-                                .catch(error => {
-                                    //pop up
-                                    this.loadData();
-                                    this.loading(false);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Terjadi kesalahan!',
-                                        footer: error
-                                    })
-                                })
-                        );
-                    }
-                    else{
-                        this.loading(true);
-                        return (
-                            api.editScheduleTest(id, this.posttest_data)
-                                .then(response => {
-                                    Swal.fire(message_header, message_body, "success");
-                                    this.loadData();
-                                    this.loading(false);
-                                })
-                                .catch(error => {
-                                    //pop up
-                                    this.loadData();
-                                    this.loading(false);
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Oops...',
-                                        text: 'Terjadi kesalahan!',
-                                        footer: error
-                                    })
-                                })
-                        );
-                    }
-                }
-            }
+          if(type=='pretest'){
+              if(this.isPretestNull == false){
+                  this.$v.pretest_data.$touch();
+                  if (this.$v.pretest_data.$invalid) {
+                      return;
+                  }
+                  else{
+                      let id = this.pretest_data.id;
+                      this.pretest_data.time_start = this.inputedDate(this.pretest_data.time_start);
+                      this.pretest_data.time_end = this.inputedDate(this.pretest_data.time_end);
+                      if(status == 'start'){
+                          this.pretest_data.is_active = true;
+                          message_header = "Tes Awal Dimulai!";
+                          message_body = "Tes Awal berhasil dimulai."
+                      }
+                      if(status == 'stop'){
+                          this.pretest_data.is_active = false;
+                          message_header = "Tes Awal Berhenti!";
+                          message_body = "Tes Awal berhasil diberhentikan."
+                      }
+                      if(this.isPretestNew){
+                          this.loading(true);
+                          return (
+                              api.inputScheduleTest(this.pretest_data)
+                                  .then(response => {
+                                      Swal.fire(message_header, message_body, "success");
+                                      this.loadData();
+                                      this.loading(false);
+                                  })
+                                  .catch(error => {
+                                      //pop up
+                                      this.loadData();
+                                      this.loading(false);
+                                      Swal.fire({
+                                          icon: 'error',
+                                          title: 'Oops...',
+                                          text: 'Terjadi kesalahan!',
+                                          footer: error
+                                      })
+                                  })
+                          );
+                      }
+                      else{
+                          this.loading(true);
+                          return (
+                              api.editScheduleTest(id, this.pretest_data)
+                                  .then(response => {
+                                      Swal.fire(message_header, message_body, "success");
+                                      this.loadData();
+                                      this.loading(false);
+                                  })
+                                  .catch(error => {
+                                      //pop up
+                                      this.loadData();
+                                      this.loading(false);
+                                      Swal.fire({
+                                          icon: 'error',
+                                          title: 'Oops...',
+                                          text: 'Terjadi kesalahan!',
+                                          footer: error
+                                      })
+                                  })
+                          );
+                      }
+                  }
+              }
+              else{
+                Swal.fire("Soal Tes Awal kosong!", "Harap input soal di menu Jadwal.", "error");
+              }
+          }
+          else if(type=='journal'){
+              if(this.isJournalNull == false){
+                  this.$v.journal_data.$touch();
+                  if (this.$v.journal_data.$invalid) {
+                      return;
+                  }
+                  else{
+                      let id = this.journal_data.id;
+                      this.journal_data.time_start = this.inputedDate(this.journal_data.time_start);
+                      this.journal_data.time_end = this.inputedDate(this.journal_data.time_end);
+                      if(status == 'start'){
+                          this.journal_data.is_active = true;
+                          message_header = "Jurnal Dimulai!";
+                          message_body = "Jurnal berhasil dimulai."
+                      }
+                      if(status == 'stop'){
+                          this.journal_data.is_active = false;
+                          message_header = "Jurnal Berhenti!";
+                          message_body = "Jurnal berhasil diberhentikan."
+                      }
+                      if(this.isJournalNew){
+                          this.loading(true);
+                          return (
+                              api.inputScheduleTest(this.journal_data)
+                                  .then(response => {
+                                      Swal.fire(message_header, message_body, "success");
+                                      this.loadData();
+                                      this.loading(false);
+                                  })
+                                  .catch(error => {
+                                      //pop up
+                                      this.loadData();
+                                      this.loading(false);
+                                      Swal.fire({
+                                          icon: 'error',
+                                          title: 'Oops...',
+                                          text: 'Terjadi kesalahan!',
+                                          footer: error
+                                      })
+                                  })
+                          );
+                      }
+                      else{
+                          this.loading(true);
+                          return (
+                              api.editScheduleTest(id, this.journal_data)
+                                  .then(response => {
+                                      Swal.fire(message_header, message_body, "success");
+                                      this.loadData();
+                                      this.loading(false);
+                                  })
+                                  .catch(error => {
+                                      //pop up
+                                      this.loadData();
+                                      this.loading(false);
+                                      Swal.fire({
+                                          icon: 'error',
+                                          title: 'Oops...',
+                                          text: 'Terjadi kesalahan!',
+                                          footer: error
+                                      })
+                                  })
+                          );
+                      }
+                  }
+              }
+              else{
+                Swal.fire("Soal Jurnal kosong!", "Harap input soal di menu Jadwal.", "error");
+              }
+          }
+          else if(type=='posttest'){
+              if(this.isPosttestNull == false){
+                  this.$v.posttest_data.$touch();
+                  if (this.$v.posttest_data.$invalid) {
+                      return;
+                  }
+                  else{
+                      let id = this.posttest_data.id;
+                      this.posttest_data.time_start = this.inputedDate(this.posttest_data.time_start);
+                      this.posttest_data.time_end = this.inputedDate(this.posttest_data.time_end);
+                      if(status == 'start'){
+                          this.posttest_data.is_active = true;
+                          message_header = "Tes Akhir Dimulai!";
+                          message_body = "Tes Akhir berhasil dimulai."
+                      }
+                      if(status == 'stop'){
+                          this.posttest_data.is_active = false;
+                          message_header = "Tes Akhir Berhenti!";
+                          message_body = "Tes Akhir berhasil diberhentikan."
+                      }
+                      if(this.isPosttestNew){
+                          this.loading(true);
+                          return (
+                              api.inputScheduleTest(this.posttest_data)
+                                  .then(response => {
+                                      Swal.fire(message_header, message_body, "success");
+                                      this.loadData();
+                                      this.loading(false);
+                                  })
+                                  .catch(error => {
+                                      //pop up
+                                      this.loadData();
+                                      this.loading(false);
+                                      Swal.fire({
+                                          icon: 'error',
+                                          title: 'Oops...',
+                                          text: 'Terjadi kesalahan!',
+                                          footer: error
+                                      })
+                                  })
+                          );
+                      }
+                      else{
+                          this.loading(true);
+                          return (
+                              api.editScheduleTest(id, this.posttest_data)
+                                  .then(response => {
+                                      Swal.fire(message_header, message_body, "success");
+                                      this.loadData();
+                                      this.loading(false);
+                                  })
+                                  .catch(error => {
+                                      //pop up
+                                      this.loadData();
+                                      this.loading(false);
+                                      Swal.fire({
+                                          icon: 'error',
+                                          title: 'Oops...',
+                                          text: 'Terjadi kesalahan!',
+                                          footer: error
+                                      })
+                                  })
+                          );
+                      }
+                  }
+              }
+              else{
+                Swal.fire("Soal Tes Akhir kosong!", "Harap input soal di menu Jadwal.", "error");
+              }
+          }
         }
     },
 
@@ -1299,6 +1313,7 @@ export default {
                     type="button" 
                     class="btn btn-danger mt-4 m-1" 
                     style="min-width: 150px;"
+                    :disabled="pretest_data.auth == null"
                     @click="submitSchedule('pretest', 'stop')"
                   >
                     Stop
@@ -1308,6 +1323,7 @@ export default {
                     type="button" 
                     class="btn btn-success mt-4 m-1" 
                     style="min-width: 150px;"
+                    :disabled="pretest_data.auth == null"
                     @click="submitSchedule('pretest', 'start')"
                   >
                     Start
@@ -1439,6 +1455,7 @@ export default {
                     type="button" 
                     class="btn btn-danger mt-4 m-1" 
                     style="min-width: 150px;"
+                    :disabled="journal_data.auth == null"
                     @click="submitSchedule('journal', 'stop')"
                   >
                     Stop
@@ -1448,6 +1465,7 @@ export default {
                     type="button" 
                     class="btn btn-success mt-4 m-1" 
                     style="min-width: 150px;"
+                    :disabled="journal_data.auth == null"
                     @click="submitSchedule('journal', 'start')"
                   >
                     Start
@@ -1579,6 +1597,7 @@ export default {
                     type="button" 
                     class="btn btn-danger mt-4 m-1" 
                     style="min-width: 150px;"
+                    :disabled="posttest_data.auth == null"
                     @click="submitSchedule('posttest', 'stop')"
                   >
                     Stop
@@ -1588,6 +1607,7 @@ export default {
                     type="button" 
                     class="btn btn-success mt-4 m-1" 
                     style="min-width: 150px;"
+                    :disabled="posttest_data.auth == null"
                     @click="submitSchedule('posttest', 'start')"
                   >
                     Start
