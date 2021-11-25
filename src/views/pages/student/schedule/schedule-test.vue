@@ -602,7 +602,7 @@ export default {
             :disabled="true"
             style="min-width: 250px;"
           >
-            Anda telah menyelesaikan tes ini!
+            Jawaban tes sudah tersimpan!
           </b-button>
         </div>
       </div>
