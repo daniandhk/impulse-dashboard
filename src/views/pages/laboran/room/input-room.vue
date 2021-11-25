@@ -115,130 +115,169 @@ export default {
 </script>
 
 <template>
-    <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputRoom">
-            <!-- <div title="Room Data"> -->
-            <div>
-                <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Tambah Ruangan</h4>
-                    <p class="card-title-desc">Isi semua informasi dibawah ini</p>
+  <div
+    div
+    class="row mt-4"
+  >
+    <form
+      class="form-horizontal col-sm-12 col-md-12"
+      @submit.prevent="inputRoom"
+    >
+      <!-- <div title="Room Data"> -->
+      <div>
+        <div
+          id="metadata"
+          class="tab-pane"
+        >
+          <h4 class="card-title">
+            Tambah Ruangan
+          </h4>
+          <p class="card-title-desc">
+            Isi semua informasi dibawah ini
+          </p>
                     
-                    <div>
-                        <b-alert
-                        v-model="inputSuccess"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Input data completed successfully!</b-alert>
+          <div>
+            <b-alert
+              v-model="inputSuccess"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Input data completed successfully!
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputError"
-                        class="mt-3"
-                        variant="danger"
-                        dismissible
-                        >{{inputError}}</b-alert>
+            <b-alert
+              v-model="isInputError"
+              class="mt-3"
+              variant="danger"
+              dismissible
+            >
+              {{ inputError }}
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputCanceled"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Berhasil dibatalkan!</b-alert>
+            <b-alert
+              v-model="isInputCanceled"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Berhasil dibatalkan!
+            </b-alert>
 
-                        <b-alert
-                        variant="danger"
-                        class="mt-3"
-                        v-if="notification.message"
-                        show
-                        dismissible
-                        >{{notification.message}}</b-alert>
-                    </div>
+            <b-alert
+              v-if="notification.message"
+              variant="danger"
+              class="mt-3"
+              show
+              dismissible
+            >
+              {{ notification.message }}
+            </b-alert>
+          </div>
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nama">Nama Ruangan</label>
-                                <input 
-                                v-model="dataRoom.name"
-                                id="nama" 
-                                name="nama" 
-                                type="text" 
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.dataRoom.name.$error }" />
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nama">Nama Ruangan</label>
+                <input 
+                  id="nama"
+                  v-model="dataRoom.name" 
+                  name="nama" 
+                  type="text" 
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataRoom.name.$error }"
+                >
 
-                                <div
-                                v-if="submitted && !$v.dataRoom.name.required"
-                                class="invalid-feedback"
-                                >Nama Ruangan harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nim">Deskripsi</label>
-                                <input
-                                    v-model="dataRoom.desc"
-                                    id="desc"
-                                    name="desc"
-                                    type="text"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataRoom.desc.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataRoom.desc.required"
-                                class="invalid-feedback"
-                                >Deskripsi harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nim">Link MS Teams</label>
-                                <input
-                                    v-model="dataRoom.msteam_link"
-                                    id="msteam_link"
-                                    name="msteam_link"
-                                    type="text"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataRoom.msteam_link.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataRoom.msteam_link.required"
-                                class="invalid-feedback"
-                                >Link MS Teams harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nama">Kode MS Teams</label>
-                                <input 
-                                v-model="dataRoom.msteam_code"
-                                id="msteam_code" 
-                                name="msteam_code" 
-                                type="text" 
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.dataRoom.msteam_code.$error }" />
-
-                                <div
-                                v-if="submitted && !$v.dataRoom.msteam_code.required"
-                                class="invalid-feedback"
-                                >Kode MS Teams harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <button
-                        type="submit"
-                        class="btn btn-primary mr-2 waves-effect waves-light"
-                        >Simpan</button>
-                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
-                    </div>
+                <div
+                  v-if="submitted && !$v.dataRoom.name.required"
+                  class="invalid-feedback"
+                >
+                  Nama Ruangan harus diisi!
                 </div>
+              </div>
             </div>
-        </form>
-    </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nim">Deskripsi</label>
+                <input
+                  id="desc"
+                  v-model="dataRoom.desc"
+                  name="desc"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataRoom.desc.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.dataRoom.desc.required"
+                  class="invalid-feedback"
+                >
+                  Deskripsi harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nim">Link MS Teams</label>
+                <input
+                  id="msteam_link"
+                  v-model="dataRoom.msteam_link"
+                  name="msteam_link"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataRoom.msteam_link.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.dataRoom.msteam_link.required"
+                  class="invalid-feedback"
+                >
+                  Link MS Teams harus diisi!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nama">Kode MS Teams</label>
+                <input 
+                  id="msteam_code"
+                  v-model="dataRoom.msteam_code" 
+                  name="msteam_code" 
+                  type="text" 
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataRoom.msteam_code.$error }"
+                >
+
+                <div
+                  v-if="submitted && !$v.dataRoom.msteam_code.required"
+                  class="invalid-feedback"
+                >
+                  Kode MS Teams harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button
+              type="submit"
+              class="btn btn-primary mr-2 waves-effect waves-light"
+            >
+              Simpan
+            </button>
+            <button
+              type="button"
+              class="btn btn-light waves-effect"
+              @click="cancelSubmit"
+            >
+              Batalkan
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>

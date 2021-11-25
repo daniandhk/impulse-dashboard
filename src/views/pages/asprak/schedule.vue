@@ -23,26 +23,6 @@ export default {
     PageHeader,
     Multiselect,
   },
-  computed: {
-    /**
-     * Total no. of records
-     */
-    rows() {
-      return this.totalRows;
-    },
-    datas() {
-      return this.dataSchedules;
-    },
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-  },
-  mounted: async function() {
-    this.loading();
-    await this.fetchData().then(result=>{
-      this.loading();
-    });
-  },
   data() {
     return {
       title: "Jadwal",
@@ -75,8 +55,8 @@ export default {
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Jam Mulai" },
-        { key: "end", sortable: true, label: "Jam Terakhir" },
+        { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
         { key: "action", sortable: false, }
       ],
@@ -146,6 +126,25 @@ export default {
 
       isCourseSelected: false,
     };
+  },
+  computed: {
+    /**
+     * Total no. of records
+     */
+    rows() {
+      return this.totalRows;
+    },
+    datas() {
+      return this.dataSchedules;
+    },
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  mounted: async function() {
+    this.loading(true);
+    await this.fetchData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -240,56 +239,50 @@ export default {
     },
 
     async selectKelas(value){
+        this.loading(true);
         this.class_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeKelas(){
+        this.loading(true);
         this.class_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async selectCourse(value){
+        this.loading(true);
         this.isCourseSelected = true;
         this.course_code = value.code;
         this.course_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeCourse(){
+        this.loading(true);
         this.isCourseSelected = false;
         this.course_code = "";
         this.course_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async handlePageChange(value) {
+        this.loading(true);
         this.currentPage = value;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+        this.loading(true);
         this.perPage = value;
         this.currentPage = 1;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async getClassCourse(id){
@@ -326,14 +319,14 @@ export default {
       this.schedule_data.module = data.item.module;
       this.schedule_data.academic_year = data.item.academic_year;
       if(!data.item.start){
-        this.schedule_data.start = "empty";
-        this.schedule_data.end = "empty";
-        this.schedule_data.date = moment(String(data.item.date)).format('YYYY-MM-DD');
+        this.schedule_data.start = "-";
+        this.schedule_data.end = "-";
+        this.schedule_data.date = this.dateFormatted(data.item.date);
       } 
       else{
-        this.schedule_data.start = moment(String(data.item.start)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.end = moment(String(data.item.end)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.date = moment(String(data.item.date)).format('YYYY-MM-DD');
+        this.schedule_data.start = this.timeFormatted(data.item.start);
+        this.schedule_data.end = this.timeFormatted(data.item.end);
+        this.schedule_data.date = this.dateFormatted(data.item.date);
       }
 
       this.eventModal = true;
@@ -360,19 +353,34 @@ export default {
       this.isRuanganShowed = !this.isRuanganShowed;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
       }
+      else{
+        return "-";
+      }
+    },
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
       }
+      else{
+        return "-";
+      }
+    },
+
+    loading(isLoad) {
+        var x = document.getElementById("loading");
+
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },
@@ -382,380 +390,427 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="card">
-        <div class="card-body">
-            <div class="row">
-            <div class="col-sm-12 col-md-12">
-                <label class="d-inline-flex align-items-center">
-                Filter:
-                </label>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <label class="d-inline-flex align-items-center">
+              Filter:
+            </label>
+          </div>
+          <div class="row col-sm-12 col-md-12">
+            <div class="col-sm-12 col-md-3">
+              <div class="form-group">
+                <multiselect
+                  v-model="class_data"
+                  placeholder="Kelas"
+                  :options="dataDropdown.classes"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  @select="selectKelas"
+                  @remove="removeKelas"
+                />
+              </div>
             </div>
-            <div class="row col-sm-12 col-md-12">
-                <div class="col-sm-12 col-md-3">
-                <div class="form-group">
-                    <multiselect
-                        placeholder="Kelas"
-                        v-model="class_data"
-                        :options="dataDropdown.classes"
-                        label="name"
-                        track-by="name"
-                        @select="selectKelas"
-                        @remove="removeKelas"
-                        :show-labels="false"
-                    ></multiselect>
-                </div>
-                </div>
-                <div class="col-sm-12 col-md-4">
-                <div class="form-group">
-                    <multiselect
-                        placeholder="Mata Kuliah"
-                        v-model="course_data"
-                        :options="dataDropdown.courses"
-                        label="name"
-                        track-by="name"
-                        @select="selectCourse"
-                        @remove="removeCourse"
-                        :show-labels="false"
-                    ></multiselect>
-                </div>
-                </div>
-                <div class="col-sm-12 col-md-2">
-                  <div class="form-group">
-                    <input
-                        v-if="isCourseSelected"
-                        v-model="course_code"
-                        :disabled="true"
-                        class="form-control text-center"
-                        type="text"
-                        style="background-color: #F0F4F6;"
-                    >
-                  </div>
-                </div>
+            <div class="col-sm-12 col-md-4">
+              <div class="form-group">
+                <multiselect
+                  v-model="course_data"
+                  placeholder="Mata Kuliah"
+                  :options="dataDropdown.courses"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  @select="selectCourse"
+                  @remove="removeCourse"
+                />
+              </div>
             </div>
+            <div class="col-sm-12 col-md-2">
+              <div class="form-group">
+                <input
+                  v-if="isCourseSelected"
+                  v-model="course_code"
+                  :disabled="true"
+                  class="form-control text-center"
+                  type="text"
+                  style="background-color: #F0F4F6;"
+                >
+              </div>
             </div>
-            <hr style="margin-left: -28px; 
+          </div>
+        </div>
+        <hr
+          style="margin-left: -28px; 
                         margin-right: -28px; 
                         height: 2px; 
                         background-color: #eee; 
                         border: 0 none; 
                         color: #eee;"
+        >
+        <div class="row mt-4">
+          <div class="col-sm-12 col-md-6">
+            <div
+              id="tickets-table_length"
+              class="dataTables_length"
             >
-            <div class="row mt-4">
-            <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_length" class="dataTables_length">
-                <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
-                    <b-form-select 
-                    v-model="perPage" 
-                    size="sm" 
-                    :options="pageOptions"
-                    @change="handlePageSizeChange"
-                    ></b-form-select>&nbsp;entries
-                </label>
-                </div>
+              <label class="d-inline-flex align-items-center">
+                Show&nbsp;
+                <b-form-select 
+                  v-model="perPage" 
+                  size="sm" 
+                  :options="pageOptions"
+                  @change="handlePageSizeChange"
+                />&nbsp;entries
+              </label>
             </div>
-            <!-- Search -->
-            <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                <label class="d-inline-flex align-items-center">
-                    Search:
-                    <b-form-input
-                    v-model="filter_search"
-                    type="search"
-                    class="form-control form-control-sm ml-2"
-                    ></b-form-input>
-                </label>
-                </div>
-            </div>
-            <!-- End search -->
-            </div>
-            <div class="table-responsive">
-            <b-table
-                ref="table"
-                class="table-centered"
-                :items="datas"
-                :fields="fields"
-                responsive="sm"
-                :per-page="perPage"
-                :busy.sync="isFetchingData"
-                :current-page="currentPage"
-                :sort-by="sortBy"
-                :sort-desc="sortDesc"
-                :filter="filter_search"
-                :filter-included-fields="filterOn"
-                @filtered="onFiltered"
-                :headVariant="'dark'"
+          </div>
+          <!-- Search -->
+          <div class="col-sm-12 col-md-6">
+            <div
+              id="tickets-table_filter"
+              class="dataTables_filter text-md-right"
             >
-                <template v-slot:cell(room)="data">
-                  <b-button
-                      type="submit" 
-                      variant="outline-secondary"
-                      @click=onClickShow(data)
-                      size="sm"
-                      style="min-width: 75px;" 
-                      >{{data.item.room.name}}
-                  </b-button>
-                </template>
-                <template v-slot:cell(action)="data">
-                  <a
-                      href="javascript:void(0);"
-                      @click=onClickEdit(data)
-                      class="mr-3 text-primary"
-                      v-b-tooltip.hover
-                      title="Detail"
-                  >
-                      <i class="mdi mdi-eye-outline font-size-18"></i>
-                  </a>
-                  <a
-                      href="javascript:void(0);"
-                      @click=editModal(data)
-                      class="mr-3 text-primary"
-                      v-b-tooltip.hover
-                      title="Edit"
-                  >
-                      <i class="mdi mdi-pencil font-size-18"></i>
-                  </a>
-                </template>
-            </b-table>
+              <label class="d-inline-flex align-items-center">
+                Search:
+                <b-form-input
+                  v-model="filter_search"
+                  type="search"
+                  class="form-control form-control-sm ml-2"
+                />
+              </label>
             </div>
-            <div class="row">
-            <div class="col">
-                <div class="dataTables_paginate paging_simple_numbers float-right">
-                <ul class="pagination pagination-rounded mb-0">
-                    <!-- pagination -->
-                    <b-pagination 
-                    v-model="currentPage" 
-                    :total-rows="rows" 
-                    :per-page="perPage"
-                    @input="handlePageChange"
-                    ></b-pagination>
-                </ul>
-                </div>
-            </div>
-            </div>
+          </div>
+          <!-- End search -->
         </div>
+        <div class="table-responsive">
+          <b-table
+            ref="table"
+            class="table-centered"
+            :items="datas"
+            :fields="fields"
+            responsive="sm"
+            :per-page="perPage"
+            :busy.sync="isFetchingData"
+            :current-page="currentPage"
+            :sort-by="sortBy"
+            :sort-desc="sortDesc"
+            :filter="filter_search"
+            :filter-included-fields="filterOn"
+            :head-variant="'dark'"
+            @filtered="onFiltered"
+          >
+            <template v-slot:cell(date)="data">
+              {{ dateFormatted(data.item.date) }}
+            </template>
+            <template v-slot:cell(start)="data">
+              {{ timeFormatted(data.item.start) }}
+            </template>
+            <template v-slot:cell(end)="data">
+              {{ timeFormatted(data.item.end) }}
+            </template>
+            <template v-slot:cell(room)="data">
+              <b-button
+                type="submit" 
+                variant="outline-secondary"
+                size="sm"
+                style="min-width: 75px;"
+                @click="onClickShow(data)" 
+              >
+                {{ data.item.room.name }}
+              </b-button>
+            </template>
+            <template v-slot:cell(action)="data">
+              <a
+                v-b-tooltip.hover
+                href="javascript:void(0);"
+                class="m-1 text-primary"
+                title="Detail"
+                @click="onClickEdit(data)"
+              >
+                <i class="mdi mdi-eye-outline font-size-18" />
+              </a>
+              <a
+                v-b-tooltip.hover
+                href="javascript:void(0);"
+                class="m-1 text-primary"
+                title="Edit"
+                @click="editModal(data)"
+              >
+                <i class="mdi mdi-pencil font-size-18" />
+              </a>
+            </template>
+          </b-table>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="paging_simple_numbers float-right">
+              <ul class="pagination pagination-rounded mb-0">
+                <!-- pagination -->
+                <b-pagination 
+                  v-model="currentPage" 
+                  :total-rows="rows" 
+                  :per-page="perPage"
+                  @input="handlePageChange"
+                />
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <b-modal
-      size="lg"
       v-model="eventModalRuangan"
+      size="lg"
       title="Detail Ruangan"
       hide-footer 
       title-class="font-18"
     >
-      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
+      <div
+        id="metadata"
+        class="tab-pane col-sm-12 col-md-12"
+      >
         <div>
-            <div class="form-group">
-                <label>Ruangan</label>
-                <input
-                    v-model="room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Ruangan</label>
+            <input
+              v-model="room.name"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>Deskripsi Ruangan</label>
-                <textarea
-                    v-model="room.desc"
-                    rows=2
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Deskripsi Ruangan</label>
+            <textarea
+              v-model="room.desc"
+              rows="2"
+              type="text"
+              class="form-control"
+              disabled="true"
+            />
+          </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>MS Teams Link</label>
-                <input
-                    v-model="room.msteam_link"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Link</label>
+            <input
+              v-model="room.msteam_link"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>MS Teams Code</label>
-                <input
-                    v-model="room.msteam_code"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Code</label>
+            <input
+              v-model="room.msteam_code"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
       </div>
     </b-modal>
     <!-- Edit Modal -->
     <b-modal
-      size="lg"
       v-model="eventModal"
+      size="lg"
       title="Detail Jadwal"
       hide-footer 
       title-class="font-18"
     >
-      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
+      <div
+        id="metadata"
+        class="tab-pane col-sm-12 col-md-12"
+      >
         <div>
-            <div class="form-group">
-                <label>Nama Kalender</label>
-                <input
-                    v-model="schedule_data.title"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Kelas</label>
-                  <input
-                      v-model="class_course_data.class.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-          <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Tahun / Semester</label>
-                  <input
-                      v-model="class_course_data.academic_year.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+          <div class="form-group">
+            <label>Nama Kalender</label>
+            <input
+              v-model="schedule_data.title"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
           </div>
         </div>
         <div class="row">
           <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Mata Kuliah</label>
-                  <input
-                      v-model="class_course_data.course.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Kelas</label>
+              <input
+                v-model="class_course_data.class.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
           <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Modul</label>
-                  <input
-                      v-model="schedule_data.module.index"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Tahun / Semester</label>
+              <input
+                v-model="class_course_data.academic_year.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="form-group">
+              <label>Mata Kuliah</label>
+              <input
+                v-model="class_course_data.course.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Modul</label>
+              <input
+                v-model="schedule_data.module.index"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input
-                    v-model="schedule_data.date"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input
+              v-model="schedule_data.date"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-6">
-              <div class="form-group">
-                  <label>Jam Mulai</label>
-                  <input
-                      v-model="schedule_data.start"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Jam Mulai</label>
+              <input
+                v-model="schedule_data.start"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
           <div class="col-sm-6">
-              <div class="form-group">
-                  <label>Jam Terakhir</label>
-                  <input
-                      v-model="schedule_data.end"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Jam Terakhir</label>
+              <input
+                v-model="schedule_data.end"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
         </div>
         <div>
-            <div class="form-group">
-                <div class="row" style="margin:0!important;">
-                  <label class="mr-4">Ruangan</label>
-                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
-                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
-                </div>
-                <input
-                    v-model="schedule_data.room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
+          <div class="form-group">
+            <div
+              class="row"
+              style="margin:0!important;"
+            >
+              <label class="mr-4">Ruangan</label>
+              <a
+                v-if="!isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >show</a>
+              <a
+                v-if="isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >hide</a>
             </div>
+            <input
+              v-model="schedule_data.room.name"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>Deskripsi Ruangan</label>
-                <textarea
-                    v-model="schedule_data.room.desc"
-                    rows=2
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Deskripsi Ruangan</label>
+            <textarea
+              v-model="schedule_data.room.desc"
+              rows="2"
+              type="text"
+              class="form-control"
+              disabled="true"
+            />
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>MS Teams Link</label>
-                <input
-                    v-model="schedule_data.room.msteam_link"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Link</label>
+            <input
+              v-model="schedule_data.room.msteam_link"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>MS Teams Code</label>
-                <input
-                    v-model="schedule_data.room.msteam_code"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Code</label>
+            <input
+              v-model="schedule_data.room.msteam_code"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input
-                    v-model="schedule_data.date"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input
+              v-model="schedule_data.date"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <!-- <div class="text-right mt-4">
             <button

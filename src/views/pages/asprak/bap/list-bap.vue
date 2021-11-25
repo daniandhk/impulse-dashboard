@@ -23,26 +23,6 @@ export default {
     PageHeader,
     Multiselect,
   },
-  computed: {
-    /**
-     * Total no. of records
-     */
-    rows() {
-      return this.totalRows;
-    },
-    datas() {
-      return this.dataSchedules;
-    },
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-  },
-  mounted: async function() {
-    this.loading();
-    await this.fetchData().then(result=>{
-      this.loading();
-    });
-  },
   data() {
     return {
       title: "Berita Acara Praktikum",
@@ -75,8 +55,8 @@ export default {
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Jam Mulai" },
-        { key: "end", sortable: true, label: "Jam Terakhir" },
+        { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "class_course.staff.code", sortable: true, label: "Kode Dosen" },
         { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
@@ -93,6 +73,25 @@ export default {
           academic_year: [],
       },
     };
+  },
+  computed: {
+    /**
+     * Total no. of records
+     */
+    rows() {
+      return this.totalRows;
+    },
+    datas() {
+      return this.dataSchedules;
+    },
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  mounted: async function() {
+    this.loading(true);
+    await this.fetchData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -187,52 +186,46 @@ export default {
     },
 
     async selectKelas(value){
+        this.loading(true);
         this.class_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeKelas(){
+        this.loading(true);
         this.class_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async selectCourse(value){
+        this.loading(true);
         this.course_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeCourse(){
+        this.loading(true);
         this.course_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async handlePageChange(value) {
+        this.loading(true);
         this.currentPage = value;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+        this.loading(true);
         this.perPage = value;
         this.currentPage = 1;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     /**
@@ -253,19 +246,34 @@ export default {
       }
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
       }
+      else{
+        return "-";
+      }
+    },
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
       }
+      else{
+        return "-";
+      }
+    },
+
+    loading(isLoad) {
+        var x = document.getElementById("loading");
+
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },
@@ -275,138 +283,169 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="card">
-        <div class="card-body">
-            <div class="row">
-            <div class="col-sm-12 col-md-12">
-                <label class="d-inline-flex align-items-center">
-                Filter:
-                </label>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12 col-md-12">
+            <label class="d-inline-flex align-items-center">
+              Filter:
+            </label>
+          </div>
+          <div class="row col-sm-12 col-md-12">
+            <div class="col-sm-12 col-md-3">
+              <div class="form-group">
+                <multiselect
+                  v-model="class_data"
+                  placeholder="Kelas"
+                  :options="dataDropdown.classes"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  @select="selectKelas"
+                  @remove="removeKelas"
+                />
+              </div>
             </div>
-            <div class="row col-sm-12 col-md-12">
-                <div class="col-sm-12 col-md-3">
-                <div class="form-group">
-                    <multiselect
-                        placeholder="Kelas"
-                        v-model="class_data"
-                        :options="dataDropdown.classes"
-                        label="name"
-                        track-by="name"
-                        @select="selectKelas"
-                        @remove="removeKelas"
-                        :show-labels="false"
-                    ></multiselect>
-                </div>
-                </div>
-                <div class="col-sm-12 col-md-3">
-                <div class="form-group">
-                    <multiselect
-                        placeholder="Mata Kuliah"
-                        v-model="course_data"
-                        :options="dataDropdown.courses"
-                        label="name"
-                        track-by="name"
-                        @select="selectCourse"
-                        @remove="removeCourse"
-                        :show-labels="false"
-                    ></multiselect>
-                </div>
-                </div>
+            <div class="col-sm-12 col-md-3">
+              <div class="form-group">
+                <multiselect
+                  v-model="course_data"
+                  placeholder="Mata Kuliah"
+                  :options="dataDropdown.courses"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  @select="selectCourse"
+                  @remove="removeCourse"
+                />
+              </div>
             </div>
-            </div>
-            <hr style="margin-left: -28px; 
+          </div>
+        </div>
+        <hr
+          style="margin-left: -28px; 
                         margin-right: -28px; 
                         height: 2px; 
                         background-color: #eee; 
                         border: 0 none; 
                         color: #eee;"
+        >
+        <div class="row mt-4">
+          <div class="col-sm-12 col-md-6">
+            <div
+              id="tickets-table_length"
+              class="dataTables_length"
             >
-            <div class="row mt-4">
-            <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_length" class="dataTables_length">
-                <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
-                    <b-form-select 
-                    v-model="perPage" 
-                    size="sm" 
-                    :options="pageOptions"
-                    @change="handlePageSizeChange"
-                    ></b-form-select>&nbsp;entries
-                </label>
-                </div>
+              <label class="d-inline-flex align-items-center">
+                Show&nbsp;
+                <b-form-select 
+                  v-model="perPage" 
+                  size="sm" 
+                  :options="pageOptions"
+                  @change="handlePageSizeChange"
+                />&nbsp;entries
+              </label>
             </div>
-            <!-- Search -->
-            <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                <label class="d-inline-flex align-items-center">
-                    Search:
-                    <b-form-input
-                    v-model="filter_search"
-                    type="search"
-                    class="form-control form-control-sm ml-2"
-                    ></b-form-input>
-                </label>
-                </div>
-            </div>
-            <!-- End search -->
-            </div>
-            <div class="table-responsive">
-            <b-table
-                ref="table"
-                class="table-centered"
-                :items="datas"
-                :fields="fields"
-                responsive="sm"
-                :per-page="perPage"
-                :busy.sync="isFetchingData"
-                :current-page="currentPage"
-                :sort-by="sortBy"
-                :sort-desc="sortDesc"
-                :filter="filter_search"
-                :filter-included-fields="filterOn"
-                @filtered="onFiltered"
-                :headVariant="'dark'"
+          </div>
+          <!-- Search -->
+          <div class="col-sm-12 col-md-6">
+            <div
+              id="tickets-table_filter"
+              class="dataTables_filter text-md-right"
             >
-                <template v-slot:cell(action)="data">
-                    <b-button
-                        v-if="!data.item.is_present" 
-                        type="submit" 
-                        variant="success"
-                        @click=onClickEdit(data)
-                        style="min-width: 75px;" 
-                        >Input
-                    </b-button>
-                    <b-button
-                        v-if="data.item.is_present" 
-                        type="submit" 
-                        variant="primary"
-                        @click=onClickEdit(data)
-                        style="min-width: 75px;" 
-                        >Show
-                    </b-button>
-                </template>
-            </b-table>
+              <label class="d-inline-flex align-items-center">
+                Search:
+                <b-form-input
+                  v-model="filter_search"
+                  type="search"
+                  class="form-control form-control-sm ml-2"
+                />
+              </label>
             </div>
-            <div class="row">
-            <div class="col">
-                <div class="dataTables_paginate paging_simple_numbers float-right">
-                <ul class="pagination pagination-rounded mb-0">
-                    <!-- pagination -->
-                    <b-pagination 
-                    v-model="currentPage" 
-                    :total-rows="rows" 
-                    :per-page="perPage"
-                    @input="handlePageChange"
-                    ></b-pagination>
-                </ul>
-                </div>
-            </div>
-            </div>
+          </div>
+          <!-- End search -->
         </div>
+        <div class="table-responsive">
+          <b-table
+            ref="table"
+            class="table-centered"
+            :items="datas"
+            :fields="fields"
+            responsive="sm"
+            :per-page="perPage"
+            :busy.sync="isFetchingData"
+            :current-page="currentPage"
+            :sort-by="sortBy"
+            :sort-desc="sortDesc"
+            :filter="filter_search"
+            :filter-included-fields="filterOn"
+            :head-variant="'dark'"
+            @filtered="onFiltered"
+          >
+            <template v-slot:cell(date)="data">
+              {{ dateFormatted(data.item.date) }}
+            </template>
+            <template v-slot:cell(start)="data">
+              {{ timeFormatted(data.item.start) }}
+            </template>
+            <template v-slot:cell(end)="data">
+              {{ timeFormatted(data.item.end) }}
+            </template>
+            <template v-slot:cell(action)="data">
+              <b-button
+                v-if="!data.item.is_present" 
+                type="submit" 
+                variant="success"
+                size="sm"
+                style="min-width: 75px;"
+                @click="onClickEdit(data)" 
+              >
+                Input
+              </b-button>
+              <b-button
+                v-if="data.item.is_present" 
+                type="submit" 
+                variant="primary"
+                size="sm"
+                style="min-width: 75px;"
+                @click="onClickEdit(data)" 
+              >
+                Show
+              </b-button>
+            </template>
+          </b-table>
+        </div>
+        <div class="row">
+          <div class="col">
+            <div class="paging_simple_numbers float-right">
+              <ul class="pagination pagination-rounded mb-0">
+                <!-- pagination -->
+                <b-pagination 
+                  v-model="currentPage" 
+                  :total-rows="rows" 
+                  :per-page="perPage"
+                  @input="handlePageChange"
+                />
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </Layout>
 </template>

@@ -76,15 +76,19 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
     
     <div class="row">
       <div class="col">
         <div class="card">
           <div class="card-body">
-          
-
-            <form action="#" @submit.prevent="formSubmit">
+            <form
+              action="#"
+              @submit.prevent="formSubmit"
+            >
               <div class="form-group">
                 <label>Masukkan Password Lama</label>
                 <input
@@ -94,16 +98,22 @@ export default {
                   placeholder="Password"
                   name="old_password"
                   :class="{ 'is-invalid': typesubmit && $v.typeform.old_password.$error }"
-                />
-                <div v-if="typesubmit && $v.typeform.old_password.$error" class="invalid-feedback">
+                >
+                <div
+                  v-if="typesubmit && $v.typeform.old_password.$error"
+                  class="invalid-feedback"
+                >
                   <span v-if="!$v.typeform.old_password.required">Password Lama harus diisi!</span>
                 </div>
               </div>
 
               <div class="form-group">
                 <label>Masukkan Password Baru</label>
-                <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                    - Minimal terdiri dari 6 karakter.<br>
+                <p
+                  class="card-title-desc"
+                  style="font-size: 14px; margin: 0 !important;"
+                >
+                  - Minimal terdiri dari 6 karakter.<br>
                 </p>
                 <div class="mt-4">
                   <input
@@ -113,8 +123,11 @@ export default {
                     class="form-control"
                     :class="{ 'is-invalid': typesubmit && $v.typeform.new_password.$error }"
                     placeholder="Password"
-                  />
-                  <div v-if="typesubmit && $v.typeform.new_password.$error" class="invalid-feedback">
+                  >
+                  <div
+                    v-if="typesubmit && $v.typeform.new_password.$error"
+                    class="invalid-feedback"
+                  >
                     <span v-if="!$v.typeform.new_password.required">Password Baru harus diisi!</span>
                     <span
                       v-if="!$v.typeform.new_password.minLength"
@@ -129,7 +142,7 @@ export default {
                     class="form-control"
                     :class="{ 'is-invalid': typesubmit && $v.typeform.new_password_confirmation.$error }"
                     placeholder="Re-Type Password"
-                  />
+                  >
                   <div
                     v-if="typesubmit && $v.typeform.new_password_confirmation.$error"
                     class="invalid-feedback"
@@ -144,7 +157,12 @@ export default {
               
               <div class="text-center form-group mb-0">
                 <div>
-                <button type="submit" class="btn btn-primary">Simpan</button>
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                  >
+                    Simpan
+                  </button>
                 </div>
               </div>
             </form>
@@ -153,7 +171,6 @@ export default {
         <!-- end card -->
       </div>
       <!-- end col-->
-    
     </div>
     <!-- end row -->
   </Layout>

@@ -198,180 +198,221 @@ export default {
 </script>
 
 <template>
-    <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputData">
-            <!-- <div title="Data Data"> -->
-            <div>
-                <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Tambah Kelas Mata Kuliah</h4>
-                    <p class="card-title-desc">Isi semua informasi dibawah ini</p>
+  <div
+    div
+    class="row mt-4"
+  >
+    <form
+      class="form-horizontal col-sm-12 col-md-12"
+      @submit.prevent="inputData"
+    >
+      <!-- <div title="Data Data"> -->
+      <div>
+        <div
+          id="metadata"
+          class="tab-pane"
+        >
+          <h4 class="card-title">
+            Tambah Kelas Mata Kuliah
+          </h4>
+          <p class="card-title-desc">
+            Isi semua informasi dibawah ini
+          </p>
                     
-                    <div>
-                        <b-alert
-                        v-model="inputSuccess"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Input data completed successfully!</b-alert>
+          <div>
+            <b-alert
+              v-model="inputSuccess"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Input data completed successfully!
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputError"
-                        class="mt-3"
-                        variant="danger"
-                        dismissible
-                        >{{inputError}}</b-alert>
+            <b-alert
+              v-model="isInputError"
+              class="mt-3"
+              variant="danger"
+              dismissible
+            >
+              {{ inputError }}
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputCanceled"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Berhasil dibatalkan!</b-alert>
+            <b-alert
+              v-model="isInputCanceled"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Berhasil dibatalkan!
+            </b-alert>
 
-                        <b-alert
-                        variant="danger"
-                        class="mt-3"
-                        v-if="notification.message"
-                        show
-                        dismissible
-                        >{{notification.message}}</b-alert>
-                    </div>
+            <b-alert
+              v-if="notification.message"
+              variant="danger"
+              class="mt-3"
+              show
+              dismissible
+            >
+              {{ notification.message }}
+            </b-alert>
+          </div>
 
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                            <label class="control-label">Nama Kelas</label>
-                            <multiselect
-                                v-model="dataDetail.class_data"
-                                :options="dataDropdown.classes"
-                                label="name"
-                                track-by="name"
-                                @select="selectKelas"
-                                @remove="removeKelas"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataInput.class_id.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataInput.class_id.required"
-                                class="invalid-feedback"
-                                >Nama Kelas harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                            <label class="control-label">Tahun Akademik (Semester)</label>
-                            <multiselect
-                                v-model="dataDetail.academic_year_data"
-                                :options="dataDropdown.academic_year"
-                                label="year"
-                                track-by="year"
-                                @select="selectYear"
-                                @remove="removeYear"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataInput.academic_year_id.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataInput.academic_year_id.required"
-                                class="invalid-feedback"
-                                >Tahun Akademik (Semester) harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                            <label class="control-label">Nama Mata Kuliah</label>
-                            <multiselect
-                                v-model="dataDetail.course_data"
-                                :options="dataDropdown.courses"
-                                label="name"
-                                track-by="name"
-                                @select="selectCourse"
-                                @remove="removeCourse"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataInput.course_id.required"
-                                class="invalid-feedback"
-                                >Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                            <label class="control-label">Kode Mata Kuliah</label>
-                            <multiselect
-                                v-model="dataDetail.course_data"
-                                :options="dataDropdown.courses"
-                                label="code"
-                                track-by="code"
-                                @select="selectCourse"
-                                @remove="removeCourse"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataInput.course_id.required"
-                                class="invalid-feedback"
-                                >Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                            <label class="control-label">Nama Dosen</label>
-                            <multiselect
-                                v-model="dataDetail.staff_data"
-                                :options="dataDropdown.staffs"
-                                label="name"
-                                track-by="name"
-                                @select="selectStaff"
-                                @remove="removeStaff"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataInput.staff_id.required"
-                                class="invalid-feedback"
-                                >Dosen harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="form-group">
-                            <label class="control-label">Kode Dosen</label>
-                            <multiselect
-                                v-model="dataDetail.staff_data"
-                                :options="dataDropdown.staffs"
-                                label="code"
-                                track-by="code"
-                                @select="selectStaff"
-                                @remove="removeStaff"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataInput.staff_id.required"
-                                class="invalid-feedback"
-                                >Dosen harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <button
-                        type="submit"
-                        class="btn btn-primary mr-2 waves-effect waves-light"
-                        >Simpan</button>
-                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
-                    </div>
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label">Nama Kelas</label>
+                <multiselect
+                  v-model="dataDetail.class_data"
+                  :options="dataDropdown.classes"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.class_id.$error }"
+                  @select="selectKelas"
+                  @remove="removeKelas" 
+                />
+                <div
+                  v-if="submitted && !$v.dataInput.class_id.required"
+                  class="invalid-feedback"
+                >
+                  Nama Kelas harus diisi!
                 </div>
+              </div>
             </div>
-        </form>
-    </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label">Tahun Akademik (Semester)</label>
+                <multiselect
+                  v-model="dataDetail.academic_year_data"
+                  :options="dataDropdown.academic_year"
+                  label="year"
+                  track-by="year"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.academic_year_id.$error }"
+                  @select="selectYear"
+                  @remove="removeYear" 
+                />
+                <div
+                  v-if="submitted && !$v.dataInput.academic_year_id.required"
+                  class="invalid-feedback"
+                >
+                  Tahun Akademik (Semester) harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label">Nama Mata Kuliah</label>
+                <multiselect
+                  v-model="dataDetail.course_data"
+                  :options="dataDropdown.courses"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }"
+                  @select="selectCourse"
+                  @remove="removeCourse" 
+                />
+                <div
+                  v-if="submitted && !$v.dataInput.course_id.required"
+                  class="invalid-feedback"
+                >
+                  Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label">Kode Mata Kuliah</label>
+                <multiselect
+                  v-model="dataDetail.course_data"
+                  :options="dataDropdown.courses"
+                  label="code"
+                  track-by="code"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.course_id.$error }"
+                  @select="selectCourse"
+                  @remove="removeCourse" 
+                />
+                <div
+                  v-if="submitted && !$v.dataInput.course_id.required"
+                  class="invalid-feedback"
+                >
+                  Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label">Nama Dosen</label>
+                <multiselect
+                  v-model="dataDetail.staff_data"
+                  :options="dataDropdown.staffs"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }"
+                  @select="selectStaff"
+                  @remove="removeStaff" 
+                />
+                <div
+                  v-if="submitted && !$v.dataInput.staff_id.required"
+                  class="invalid-feedback"
+                >
+                  Dosen harus diisi!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="control-label">Kode Dosen</label>
+                <multiselect
+                  v-model="dataDetail.staff_data"
+                  :options="dataDropdown.staffs"
+                  label="code"
+                  track-by="code"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.staff_id.$error }"
+                  @select="selectStaff"
+                  @remove="removeStaff" 
+                />
+                <div
+                  v-if="submitted && !$v.dataInput.staff_id.required"
+                  class="invalid-feedback"
+                >
+                  Dosen harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button
+              type="submit"
+              class="btn btn-primary mr-2 waves-effect waves-light"
+            >
+              Simpan
+            </button>
+            <button
+              type="button"
+              class="btn btn-light waves-effect"
+              @click="cancelSubmit"
+            >
+              Batalkan
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>

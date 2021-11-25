@@ -22,30 +22,6 @@ export default {
     Multiselect,
     PageHeader,
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-    /**
-     * Total no. of records
-     */
-    rows() {
-      return this.totalRows;
-    },
-  },
-  mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
-  },
-  watch: {
-    $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
-    }
-  },
   data() {
     return {
       title: "List Tes",
@@ -130,6 +106,29 @@ export default {
       ],
     };
   },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+    /**
+     * Total no. of records
+     */
+    rows() {
+      return this.totalRows;
+    },
+  },
+  watch: {
+    $route: async function() {
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
+    }
+  },
+  mounted: async function() {
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
+  },
   methods: {
     ...notificationMethods,
 
@@ -140,20 +139,18 @@ export default {
     },
 
     async handlePageChange(value) {
+        this.loading(true);
         this.currentPage = value;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+        this.loading(true);
         this.perPage = value;
         this.currentPage = 1;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     setId(id){
@@ -290,7 +287,7 @@ export default {
     },
 
     selectModule(value){
-      this.loading();
+      this.loading(true);
       const params = this.getRequestParams(
         value,
       );
@@ -305,8 +302,10 @@ export default {
                   params: { id: schedule_id }
               });
             }
+            this.loading(false);
           })
           .catch(error => {
+              this.loading(false);
               Swal.fire({
                   icon: 'error',
                   title: 'Oops...',
@@ -340,19 +339,16 @@ export default {
         });
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },
@@ -362,184 +358,207 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div>
       <div class="card">
         <div class="card-body">
           <div class="row">
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Kelas</label>
-                      <input
-                          v-model="class_course_data.class.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Kelas</label>
+                <input
+                  v-model="class_course_data.class.name"
+                  type="text"
+                  class="form-control"
+                  disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
+            </div>
 
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Mata Kuliah</label>
-                      <input
-                          v-model="class_course_data.course.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Mata Kuliah</label>
+                <input
+                  v-model="class_course_data.course.name"
+                  type="text"
+                  class="form-control"
+                  disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
+            </div>
 
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Tahun / Semester</label>
-                      <input
-                          v-model="class_course_data.academic_year.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Tahun / Semester</label>
+                <input
+                  v-model="class_course_data.academic_year.name"
+                  type="text"
+                  class="form-control"
+                  disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
+            </div>
           </div>
 
           <div class="form-group text-center">
-              <label>Modul</label>
-              <multiselect 
-                class="text-center"
-                v-model="schedule_data.module.index" 
-                :options="dataModules"
-                @select="selectModule"
-                :allow-empty="false"
-                :disabled="isLoading"
-                :show-labels="false"
-              ></multiselect>
+            <label>Modul</label>
+            <multiselect 
+              v-model="schedule_data.module.index"
+              class="text-center" 
+              :options="dataModules"
+              :allow-empty="false"
+              :disabled="isLoading"
+              :show-labels="false"
+              @select="selectModule"
+            />
           </div>
         </div>
       </div>
       <div class="card">
         <div class="card-body">
-            <div class="row">
+          <div class="row">
             <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_length" class="dataTables_length">
+              <div
+                id="tickets-table_length"
+                class="dataTables_length"
+              >
                 <label class="d-inline-flex align-items-center">
-                    Show&nbsp;
-                    <b-form-select 
+                  Show&nbsp;
+                  <b-form-select 
                     v-model="perPage" 
                     size="sm" 
                     :options="pageOptions"
                     @change="handlePageSizeChange"
-                    ></b-form-select>&nbsp;entries
+                  />&nbsp;entries
                 </label>
-                </div>
+              </div>
             </div>
             <!-- Search -->
             <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+              <div
+                id="tickets-table_filter"
+                class="dataTables_filter text-md-right"
+              >
                 <label class="d-inline-flex align-items-center">
-                    Search:
-                    <b-form-input
+                  Search:
+                  <b-form-input
                     v-model="filter_search"
                     type="search"
                     class="form-control form-control-sm ml-2"
-                    ></b-form-input>
+                  />
                 </label>
-                </div>
+              </div>
             </div>
             <!-- End search -->
-            </div>
-            <div class="table-responsive">
+          </div>
+          <div class="table-responsive">
             <b-table
-                ref="table"
-                class="table-centered"
-                :items="dataScheduleGrades"
-                :fields="fields"
-                responsive="sm"
-                :per-page="perPage"
-                :busy.sync="isFetchingData"
-                :current-page="currentPage"
-                :sort-by="sortBy"
-                :sort-desc="sortDesc"
-                :filter="filter_search"
-                :filter-included-fields="filterOn"
-                @filtered="onFiltered"
-                :headVariant="'dark'"
+              ref="table"
+              class="table-centered"
+              :items="dataScheduleGrades"
+              :fields="fields"
+              responsive="sm"
+              :per-page="perPage"
+              :busy.sync="isFetchingData"
+              :current-page="currentPage"
+              :sort-by="sortBy"
+              :sort-desc="sortDesc"
+              :filter="filter_search"
+              :filter-included-fields="filterOn"
+              :head-variant="'dark'"
+              @filtered="onFiltered"
             >
-                <template v-slot:cell(pretest)="data">
-                    <b-button
-                        v-if="data.item.test_id.pretest_id && data.item.submitted.pretest"
-                        type="submit" 
-                        variant="success"
-                        @click=onShowClick(data)
-                        style="min-width: 75px;"
-                        >Show
-                    </b-button>
-                    <b-button
-                        v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
-                        type="submit" 
-                        variant="danger"
-                        style="min-width: 75px;"
-                        >-
-                    </b-button>
-                </template>
-                <template v-slot:cell(journal)="data">
-                    <b-button
-                        v-if="data.item.test_id.journal_id && data.item.submitted.journal"
-                        type="submit" 
-                        variant="success"
-                        @click=onShowClick(data)
-                        style="min-width: 75px;"
-                        >Show
-                    </b-button>
-                    <b-button
-                        v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
-                        type="submit" 
-                        variant="danger"
-                        style="min-width: 75px;"
-                        >-
-                    </b-button>
-                </template>
-                <template v-slot:cell(posttest)="data">
-                    <b-button
-                        v-if="data.item.test_id.posttest_id && data.item.submitted.posttest"
-                        type="submit" 
-                        variant="success"
-                        @click=onShowClick(data)
-                        style="min-width: 75px;"
-                        >Show
-                    </b-button>
-                    <b-button
-                        v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
-                        type="submit" 
-                        variant="danger"
-                        style="min-width: 75px;"
-                        >-
-                    </b-button>
-                </template>
+              <template v-slot:cell(pretest)="data">
+                <b-button
+                  v-if="data.item.test_id.pretest_id && data.item.submitted.pretest"
+                  type="submit" 
+                  variant="success"
+                  style="min-width: 75px;"
+                  @click="onShowClick(data)"
+                >
+                  Show
+                </b-button>
+                <b-button
+                  v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
+                  type="submit" 
+                  variant="danger"
+                  style="min-width: 75px;"
+                >
+                  -
+                </b-button>
+              </template>
+              <template v-slot:cell(journal)="data">
+                <b-button
+                  v-if="data.item.test_id.journal_id && data.item.submitted.journal"
+                  type="submit" 
+                  variant="success"
+                  style="min-width: 75px;"
+                  @click="onShowClick(data)"
+                >
+                  Show
+                </b-button>
+                <b-button
+                  v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
+                  type="submit" 
+                  variant="danger"
+                  style="min-width: 75px;"
+                >
+                  -
+                </b-button>
+              </template>
+              <template v-slot:cell(posttest)="data">
+                <b-button
+                  v-if="data.item.test_id.posttest_id && data.item.submitted.posttest"
+                  type="submit" 
+                  variant="success"
+                  style="min-width: 75px;"
+                  @click="onShowClick(data)"
+                >
+                  Show
+                </b-button>
+                <b-button
+                  v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
+                  type="submit" 
+                  variant="danger"
+                  style="min-width: 75px;"
+                >
+                  -
+                </b-button>
+              </template>
             </b-table>
-            </div>
-            <div class="row">
+          </div>
+          <div class="row">
             <div class="col">
-                <div class="dataTables_paginate paging_simple_numbers float-right">
+              <div class="paging_simple_numbers float-right">
                 <ul class="pagination pagination-rounded mb-0">
-                    <!-- pagination -->
-                    <b-pagination 
+                  <!-- pagination -->
+                  <b-pagination 
                     v-model="currentPage" 
                     :total-rows="rows" 
                     :per-page="perPage"
                     @input="handlePageChange"
-                    ></b-pagination>
+                  />
                 </ul>
-                </div>
+              </div>
             </div>
-            </div>
+          </div>
         </div>
       </div>
     </div>

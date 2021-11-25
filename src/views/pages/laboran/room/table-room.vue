@@ -19,9 +19,6 @@ export default {
       msteam_code: { required },
     },
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       //list room
@@ -68,12 +65,13 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     },
   },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
   mounted: async function() {
-    // Set the initial number of items
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
+    this.loading(true);
+    await this.fetchData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -111,27 +109,24 @@ export default {
     },
 
     async handlePageChange(value) {
+      this.loading(true);
       this.currentPage = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+      this.loading(true);
       this.perPage = value;
       this.currentPage = 1;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async refreshData(){
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      this.loading(true);
+      await this.fetchData();
+      this.loading(false);
     },
 
     onClickDelete(data){
@@ -154,11 +149,10 @@ export default {
       return (
         api.deleteRoom(id)
           .then(response => {
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
             Swal.fire("Berhasil dihapus!", name + " telah terhapus.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
           })
           .catch(error => {
             Swal.fire({
@@ -190,13 +184,12 @@ export default {
         return (
           api.editRoom(this.idDataEdit, this.dataEdit)
             .then(response => {
+              this.loading(true);
               this.submitted = false;
+              this.fetchData();
+              this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.name + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
+              Swal.fire("Berhasil diubah!", this.dataEdit.name + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;
@@ -217,19 +210,16 @@ export default {
       this.$bvModal.hide('modal-edit');
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };
@@ -237,33 +227,47 @@ export default {
 
 <template>
   <div>
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_length" class="dataTables_length">
+        <div
+          id="tickets-table_length"
+          class="dataTables_length"
+        >
           <label class="d-inline-flex align-items-center">
             Show&nbsp;
             <b-form-select 
-            v-model="perPage" 
-            size="sm" 
-            :options="pageOptions"
-            @change="handlePageSizeChange"
-            ></b-form-select>&nbsp;entries
+              v-model="perPage" 
+              size="sm" 
+              :options="pageOptions"
+              @change="handlePageSizeChange"
+            />&nbsp;entries
           </label>
         </div>
       </div>
       <!-- Search -->
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+        <div
+          id="tickets-table_filter"
+          class="dataTables_filter text-md-right"
+        >
           <label class="d-inline-flex align-items-center">
             Search:
             <b-form-input
               v-model="filter"
               type="search"
               class="form-control form-control-sm ml-2"
-            ></b-form-input>
+            />
           </label>
         </div>
       </div>
@@ -283,130 +287,154 @@ export default {
         :sort-desc="sortDesc"
         :filter="filter"
         :filter-included-fields="filterOn"
+        :head-variant="'dark'"
         @filtered="onFiltered"
-        :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
           <a
-            href="javascript:void(0);"
-            @click=onClickEdit(data)
-            class="mr-3 text-primary"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="m-1 text-primary"
             title="Edit"
+            @click="onClickEdit(data)"
           >
-            <i class="mdi mdi-pencil font-size-18"></i>
+            <i class="mdi mdi-pencil font-size-18" />
           </a>
           <a
-            href="javascript:void(0);"
-            @click=onClickDelete(data)
-            class="text-danger"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="m-1 text-danger"
             title="Delete"
+            @click="onClickDelete(data)"
           >
-            <i class="mdi mdi-trash-can font-size-18"></i>
+            <i class="mdi mdi-trash-can font-size-18" />
           </a>
         </template>
       </b-table>
     </div>
     <div class="row">
       <div class="col">
-        <div class="dataTables_paginate paging_simple_numbers float-right">
+        <div class="paging_simple_numbers float-right">
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
-            v-model="currentPage" 
-            :total-rows="rows" 
-            :per-page="perPage"
-            @input="handlePageChange"
-            ></b-pagination>
+              v-model="currentPage" 
+              :total-rows="rows" 
+              :per-page="perPage"
+              @input="handlePageChange"
+            />
           </ul>
         </div>
       </div>
     </div>
     <div name="modalEdit">
       <b-modal 
-        size="lg" 
         id="modal-edit" 
+        size="lg" 
         title="Edit Room" 
         hide-footer 
         title-class="font-18"
       >
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRoom">
-          <div class="tab-pane" id="metadata">
+        <form
+          class="form-horizontal col-sm-12 col-md-12"
+          @submit.prevent="editRoom"
+        >
+          <div
+            id="metadata"
+            class="tab-pane"
+          >
             <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nim">Nama Ruangan</label>
-                    <input
-                        v-model="dataEdit.name"
-                        id="name"
-                        name="name"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }"
-                    />
-                    <div
-                    v-if="submitted && !$v.dataEdit.name.required"
-                    class="invalid-feedback"
-                    >Nama Ruangan harus diisi!</div>
+              <div class="form-group">
+                <label for="nim">Nama Ruangan</label>
+                <input
+                  id="name"
+                  v-model="dataEdit.name"
+                  name="name"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.dataEdit.name.required"
+                  class="invalid-feedback"
+                >
+                  Nama Ruangan harus diisi!
                 </div>
+              </div>
             </div>
             <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nama">Deskripsi</label>
-                    <input 
-                    v-model="dataEdit.desc"
-                    id="desc" 
-                    name="desc" 
-                    type="text" 
-                    class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.desc.$error }" />
+              <div class="form-group">
+                <label for="nama">Deskripsi</label>
+                <input 
+                  id="desc"
+                  v-model="dataEdit.desc" 
+                  name="desc" 
+                  type="text" 
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataEdit.desc.$error }"
+                >
 
-                    <div
-                    v-if="submitted && !$v.dataEdit.desc.required"
-                    class="invalid-feedback"
-                    >Deskripsi harus diisi!</div>
+                <div
+                  v-if="submitted && !$v.dataEdit.desc.required"
+                  class="invalid-feedback"
+                >
+                  Deskripsi harus diisi!
                 </div>
+              </div>
             </div>
             <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nim">Link MS Teams</label>
-                    <input
-                        v-model="dataEdit.msteam_link"
-                        id="msteam_link"
-                        name="msteam_link"
-                        type="text"
-                        class="form-control"
-                        :class="{ 'is-invalid': submitted && $v.dataEdit.msteam_link.$error }"
-                    />
-                    <div
-                    v-if="submitted && !$v.dataEdit.msteam_link.required"
-                    class="invalid-feedback"
-                    >Link MS Teams harus diisi!</div>
+              <div class="form-group">
+                <label for="nim">Link MS Teams</label>
+                <input
+                  id="msteam_link"
+                  v-model="dataEdit.msteam_link"
+                  name="msteam_link"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataEdit.msteam_link.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.dataEdit.msteam_link.required"
+                  class="invalid-feedback"
+                >
+                  Link MS Teams harus diisi!
                 </div>
+              </div>
             </div>
             <div class="col-sm-12">
-                <div class="form-group">
-                    <label for="nama">Kode MS Teams</label>
-                    <input 
-                    v-model="dataEdit.msteam_code"
-                    id="msteam_code" 
-                    name="msteam_code" 
-                    type="text" 
-                    class="form-control"
-                    :class="{ 'is-invalid': submitted && $v.dataEdit.msteam_code.$error }" />
+              <div class="form-group">
+                <label for="nama">Kode MS Teams</label>
+                <input 
+                  id="msteam_code"
+                  v-model="dataEdit.msteam_code" 
+                  name="msteam_code" 
+                  type="text" 
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataEdit.msteam_code.$error }"
+                >
 
-                    <div
-                    v-if="submitted && !$v.dataEdit.msteam_code.required"
-                    class="invalid-feedback"
-                    >Kode MS Teams harus diisi!</div>
+                <div
+                  v-if="submitted && !$v.dataEdit.msteam_code.required"
+                  class="invalid-feedback"
+                >
+                  Kode MS Teams harus diisi!
                 </div>
+              </div>
             </div>
             <div class="text-center mt-4">
-                <button
+              <button
                 type="submit"
                 class="btn btn-primary mr-2 waves-effect waves-light"
-                >Simpan</button>
-                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
+              >
+                Simpan
+              </button>
+              <button
+                type="button"
+                class="btn btn-light waves-effect"
+                @click="hideModal"
+              >
+                Batalkan
+              </button>
             </div>
           </div>
         </form>

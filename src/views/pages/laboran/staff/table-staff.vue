@@ -19,9 +19,6 @@ export default {
       code: { required },
     },
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       //list staff
@@ -39,8 +36,7 @@ export default {
         { key: "nip", sortable: true, label: "NIP" },
         { key: "name", sortable: true, label: "Nama" },
         { key: "code", sortable: true, label: "Kode Dosen" },
-        { key: "action", sortable: false },
-        { key: "manage", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
       ],
 
       //modal edit
@@ -81,12 +77,13 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     },
   },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
   mounted: async function() {
-    // Set the initial number of items
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
+    this.loading(true);
+    await this.fetchData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -157,23 +154,22 @@ export default {
     },
 
     async handlePageChange(value) {
+      this.loading(true);
       this.currentPage = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handlePageSizeChange(value) {
+      this.loading(true);
       this.perPage = value;
       this.currentPage = 1;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSortingChange(value){
+      this.loading(true);
       if(value.sortBy !== this.sortBy) {
         this.sortDesc = false
       } 
@@ -186,25 +182,21 @@ export default {
         }
       }
       this.sortBy = value.sortBy;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async handleSearch(value){
+      this.loading(true);
       this.filter = value;
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      await this.fetchData();
+      this.loading(false);
     },
 
     async refreshData(){
-      this.loading();
-      await this.fetchData().then(result=>{
-          this.loading();
-      });
+      this.loading(true);
+      await this.fetchData();
+      this.loading(false);
     },
 
     onClickDelete(data){
@@ -227,11 +219,10 @@ export default {
       return (
         api.deleteStaff(id)
           .then(response => {
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
             Swal.fire("Berhasil dihapus!", nip + " telah terhapus.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
           })
           .catch(error => {
             Swal.fire({
@@ -268,13 +259,12 @@ export default {
         return (
           api.editStaff(this.idDataEdit, this.dataEdit)
             .then(response => {
+              this.loading(true);
               this.submitted = false;
+              this.fetchData();
+              this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
+              Swal.fire("Berhasil diubah!", this.dataEdit.nip + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;
@@ -289,43 +279,6 @@ export default {
             })
         )
       }
-    },
-
-    onClickReset(data){
-      Swal.fire({
-          title: "Anda yakin?",
-          text: "Password " + data.item.nip + " akan diubah sesuai NIP!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#34c38f",
-          cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Ya, reset password!"
-      }).then(result => {
-          if (result.value) {
-              this.resetUserPassword(data.item.id, data.item.nip);
-          }
-      });
-    },
-
-    resetUserPassword(id, nip){
-      return (
-        api.resetUserPassword(id)
-          .then(response => {
-            Swal.fire("Berhasil diatur ulang!", "Password " + nip + " telah diubah sesuai NIP.", "success");
-            this.loading();
-            this.fetchData().then(result=>{
-                this.loading();
-            });
-          })
-          .catch(error => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Terjadi kesalahan!',
-              footer: error
-            })
-          })
-      )
     },
 
     getRoles(no_induk){
@@ -378,13 +331,12 @@ export default {
         return (
           api.setRoles(this.dataEditRole)
             .then(response => {
+              this.loading(true);
               this.submitted = false;
+              this.fetchData();
+              this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
-              this.loading();
-              this.fetchData().then(result=>{
-                  this.loading();
-              });
+              Swal.fire("Berhasil diubah!", this.dataEdit.nip + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;
@@ -410,19 +362,16 @@ export default {
       this.$bvModal.hide('modal-edit');
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };
@@ -430,34 +379,48 @@ export default {
 
 <template>
   <div>
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_length" class="dataTables_length">
+        <div
+          id="tickets-table_length"
+          class="dataTables_length"
+        >
           <label class="d-inline-flex align-items-center">
             Show&nbsp;
             <b-form-select 
-            v-model="perPage" 
-            size="sm" 
-            :options="pageOptions"
-            @change="handlePageSizeChange"
-            ></b-form-select>&nbsp;entries
+              v-model="perPage" 
+              size="sm" 
+              :options="pageOptions"
+              @change="handlePageSizeChange"
+            />&nbsp;entries
           </label>
         </div>
       </div>
       <!-- Search -->
       <div class="col-sm-12 col-md-6">
-        <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+        <div
+          id="tickets-table_filter"
+          class="dataTables_filter text-md-right"
+        >
           <label class="d-inline-flex align-items-center">
             Search:
             <b-form-input
               v-model="filter"
-              @input="handleSearch"
               type="search"
               class="form-control form-control-sm ml-2"
-            ></b-form-input>
+              @input="handleSearch"
+            />
           </label>
         </div>
       </div>
@@ -473,190 +436,199 @@ export default {
         :per-page="0"
         :busy.sync="isFetchingData"
         :current-page="currentPage"
-        @sort-changed="handleSortingChange"
         :sort-by="sortBy"
         :sort-desc="sortDesc"
         :filter-included-fields="filterOn"
+        :head-variant="'dark'"
+        @sort-changed="handleSortingChange"
         @filtered="onFiltered"
-        :headVariant="'dark'"
       >
         <template v-slot:cell(action)="data">
           <a
-            href="javascript:void(0);"
-            @click=onClickEdit(data)
-            class="mr-3 text-primary"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="m-1 text-primary"
             title="Edit"
+            @click="onClickEdit(data)"
           >
-            <i class="mdi mdi-pencil font-size-18"></i>
+            <i class="mdi mdi-pencil font-size-18" />
           </a>
           <a
-            href="javascript:void(0);"
-            @click=onClickDelete(data)
-            class="text-danger"
             v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="m-1 text-danger"
             title="Delete"
+            @click="onClickDelete(data)"
           >
-            <i class="mdi mdi-trash-can font-size-18"></i>
+            <i class="mdi mdi-trash-can font-size-18" />
           </a>
-        </template>
-        <template v-slot:cell(manage)="data">
-          <div class="row">
-            <div class="col-12 m-2">
-              <b-button
-                  type="submit" 
-                  variant="danger"
-                  size="sm"
-                  @click=onClickReset(data)
-                  style="min-width: 75px;" 
-                  >Reset Password
-              </b-button>
-            </div>
-            <!-- <div class="col-12 m-2">
-              <b-button
-                  type="submit" 
-                  variant="danger"
-                  @click=onClickReset(data)
-                  style="min-width: 75px;" 
-                  >Reset Password
-              </b-button>
-            </div> -->
-          </div>
         </template>
       </b-table>
     </div>
     <div class="row">
       <div class="col">
-        <div class="dataTables_paginate paging_simple_numbers float-right">
+        <div class="paging_simple_numbers float-right">
           <ul class="pagination pagination-rounded mb-0">
             <!-- pagination -->
             <b-pagination 
-            v-model="currentPage" 
-            :total-rows="rows" 
-            :per-page="perPage"
-            @input="handlePageChange"
-            ></b-pagination>
+              v-model="currentPage" 
+              :total-rows="rows" 
+              :per-page="perPage"
+              @input="handlePageChange"
+            />
           </ul>
         </div>
       </div>
     </div>
     <div name="modalEdit">
       <b-modal 
-        size="lg" 
         id="modal-edit" 
+        size="lg" 
         title="Edit Staff" 
         hide-footer 
         title-class="font-18"
       >
-        <div class="card">
-          <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom">
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Edit Data</a>
-                </template>
-                <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editStaff">
-                          <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="nip">NIP</label>
-                                    <input 
-                                    v-model="dataEdit.nip"
-                                    id="nip" 
-                                    name="nip" 
-                                    type="text" 
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }" />
+        <b-tabs nav-class="nav-tabs-custom">
+          <b-tab title-link-class="p-3">
+            <template v-slot:title>
+              <a class="font-weight-bold active">Edit Data</a>
+            </template>
+            <template>
+              <div class="mt-4">
+                <form
+                  class="form-horizontal col-sm-12 col-md-12"
+                  @submit.prevent="editStaff"
+                >
+                  <div
+                    id="metadata"
+                    class="tab-pane"
+                  >
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="nip">NIP</label>
+                        <input 
+                          id="nip"
+                          v-model="dataEdit.nip" 
+                          name="nip" 
+                          type="text" 
+                          class="form-control"
+                          :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }"
+                        >
 
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.nip.required"
-                                    class="invalid-feedback"
-                                    >NIP harus diisi!</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="nama">Nama Dosen</label>
-                                    <input 
-                                    v-model="dataEdit.name"
-                                    id="nama" 
-                                    name="nama" 
-                                    type="text" 
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }" />
-
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.name.required"
-                                    class="invalid-feedback"
-                                    >Nama Dosen harus diisi!</div>
-                                </div>
-                            </div>
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label for="code">Kode Dosen</label>
-                                    <input
-                                        v-model="dataEdit.code"
-                                        id="code"
-                                        name="code"
-                                        type="text"
-                                        class="form-control"
-                                        :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
-                                    />
-                                    <div
-                                    v-if="submitted && !$v.dataEdit.code.required"
-                                    class="invalid-feedback"
-                                    >Kode Mata Kuliah harus diisi!</div>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Simpan</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
-                            </div>
-                          </div>
-                        </form>
-                    </div>
-                </template>
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Edit Roles</a>
-                  </template>
-                  <template>
-                    <div class='mt-4'>
-                        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="editRole">
-                        <div class="tab-pane" id="metadata">
-                            <div class="col-sm-12">
-                                <div class="form-group">
-                                    <label class="control-label">Roles</label>
-                                    <multiselect
-                                        v-model="role_data"
-                                        :options="roleData"
-                                        :multiple="true"
-                                        @remove="removeRole"
-                                        :show-labels="false"
-                                    ></multiselect>
-                                </div>
-                            </div>
-                            <div class="text-center mt-4">
-                                <button
-                                type="submit"
-                                class="btn btn-primary mr-2 waves-effect waves-light"
-                                >Simpan</button>
-                                <button type="button" @click="hideModal" class="btn btn-light waves-effect">Batalkan</button>
-                            </div>
+                        <div
+                          v-if="submitted && !$v.dataEdit.nip.required"
+                          class="invalid-feedback"
+                        >
+                          NIP harus diisi!
                         </div>
-                        </form>
+                      </div>
                     </div>
-                </template>
-              </b-tab>
-            </b-tabs>
-          </div>
-        </div>
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="nama">Nama Dosen</label>
+                        <input 
+                          id="nama"
+                          v-model="dataEdit.name" 
+                          name="nama" 
+                          type="text" 
+                          class="form-control"
+                          :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }"
+                        >
+
+                        <div
+                          v-if="submitted && !$v.dataEdit.name.required"
+                          class="invalid-feedback"
+                        >
+                          Nama Dosen harus diisi!
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label for="code">Kode Dosen</label>
+                        <input
+                          id="code"
+                          v-model="dataEdit.code"
+                          name="code"
+                          type="text"
+                          class="form-control"
+                          :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
+                        >
+                        <div
+                          v-if="submitted && !$v.dataEdit.code.required"
+                          class="invalid-feedback"
+                        >
+                          Kode Mata Kuliah harus diisi!
+                        </div>
+                      </div>
+                    </div>
+                    <div class="text-center mt-4">
+                      <button
+                        type="submit"
+                        class="btn btn-primary mr-2 waves-effect waves-light"
+                      >
+                        Simpan
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light waves-effect"
+                        @click="hideModal"
+                      >
+                        Batalkan
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </template>
+          </b-tab>
+          <b-tab title-link-class="p-3">
+            <template v-slot:title>
+              <a class="font-weight-bold active">Edit Roles</a>
+            </template>
+            <template>
+              <div class="mt-4">
+                <form
+                  class="form-horizontal col-sm-12 col-md-12"
+                  @submit.prevent="editRole"
+                >
+                  <div
+                    id="metadata"
+                    class="tab-pane"
+                  >
+                    <div class="col-sm-12">
+                      <div class="form-group">
+                        <label class="control-label">Roles</label>
+                        <multiselect
+                          v-model="role_data"
+                          :options="roleData"
+                          :multiple="true"
+                          :show-labels="false"
+                          @remove="removeRole"
+                        />
+                      </div>
+                    </div>
+                    <div class="text-center mt-4">
+                      <button
+                        type="submit"
+                        class="btn btn-primary mr-2 waves-effect waves-light"
+                      >
+                        Simpan
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-light waves-effect"
+                        @click="hideModal"
+                      >
+                        Batalkan
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </template>
+          </b-tab>
+        </b-tabs>
       </b-modal>
     </div>
   </div>

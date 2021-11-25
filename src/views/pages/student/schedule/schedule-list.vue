@@ -5,6 +5,7 @@ import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
+import moment from 'moment';
 
 /**
  * Orders Component
@@ -17,9 +18,6 @@ export default {
   components: {
     Layout,
     PageHeader,
-  },
-  created() {
-    document.body.classList.add("auth-body-bg");
   },
   data() {
     return {
@@ -52,8 +50,8 @@ export default {
         { key: "class_course.course.code", label: "Kode Mata Kuliah" },
         { key: "title", label: "Nama Kalender" },
         { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Mulai" },
-        { key: "end", sortable: true, label: "Terakhir" },
+        { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
       ],
 
@@ -93,16 +91,18 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     }
   },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
   mounted: async function() {
     // Set the initial number of items
     this.totalRows = this.dataSchedules.length;
     this.perPage = this.dataSchedules.length;
-    // Set the initial number of items
-    this.loading();
+    
+    this.loading(true);
     await this.getStudentCourses();
-    await this.refreshData(0).then(result=>{
-      this.loading();
-    });
+    await this.refreshData(0);
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -156,12 +156,11 @@ export default {
     async refreshData(index){
         this.isFetchingData = true;
         if(this.dataClassCourses.length){
-            this.loading();
+            this.loading(true);
             this.class_course_data = this.dataClassCourses[index];
             let class_course_id = this.class_course_data.class_course_id;
-            await this.getSchedules(class_course_id).then(response =>{
-                this.loading();
-            })
+            await this.getSchedules(class_course_id);
+            this.loading(false);
         }
         this.isFetchingData = false;
     },
@@ -171,19 +170,34 @@ export default {
       this.eventModal = true;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
       }
+      else{
+        return "-";
+      }
+    },
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
       }
+      else{
+        return "-";
+      }
+    },
+
+    loading(isLoad) {
+        var x = document.getElementById("loading");
+
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   }
 };
@@ -191,72 +205,93 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
-    <div class="row" v-if="dataClassCourses.length">
+    <div
+      v-if="dataClassCourses.length"
+      class="row"
+    >
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
-              <b-tab title-link-class="p-3" v-for="(course, index) in dataClassCourses" :key="index">
+            <b-tabs
+              nav-class="nav-tabs-custom"
+              @input="refreshData"
+            >
+              <b-tab
+                v-for="(course, index) in dataClassCourses"
+                :key="index"
+                title-link-class="p-3"
+              >
                 <template v-slot:title> 
-                  <a class="font-weight-bold active ml-sm-5 mr-lg-5" >{{course.course_name}}</a>
+                  <a class="font-weight-bold active ml-sm-5 mr-lg-5">{{ course.course_name }}</a>
                 </template>
-                <div class="row"></div>
+                <div class="row" />
                 <div class="row mt-4">
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Kelas</label>
-                            <input
-                                v-model="class_course_data.class_name"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Kelas</label>
+                      <input
+                        v-model="class_course_data.class_name"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
 
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Mata Kuliah</label>
-                            <input
-                                v-model="class_course_data.course_name"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Mata Kuliah</label>
+                      <input
+                        v-model="class_course_data.course_name"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
 
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Kode Dosen</label>
-                            <input
-                                v-model="class_course_data.staff_code"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Kode Dosen</label>
+                      <input
+                        v-model="class_course_data.staff_code"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
 
-                    <div class="col-sm-3">
-                        <div class="form-group">
-                            <label>Tahun / Semester</label>
-                            <input
-                                v-model="class_course_data.academic_year"
-                                type="text"
-                                class="form-control"
-                                disabled="true"
-                                style="background-color: #F0F4F6;"
-                            />
-                        </div>
+                  <div class="col-sm-3">
+                    <div class="form-group">
+                      <label>Tahun / Semester</label>
+                      <input
+                        v-model="class_course_data.academic_year"
+                        type="text"
+                        class="form-control"
+                        disabled="true"
+                        style="background-color: #F0F4F6;"
+                      >
                     </div>
+                  </div>
                 </div>
                 <!-- <div class="row mt-4">
                   <div class="col-sm-12 col-md-6">
@@ -294,24 +329,34 @@ export default {
                     :sort-desc="sortDesc"
                     :filter="filter"
                     :filter-included-fields="filterOn"
-                    @filtered="onFiltered"
                     :busy.sync="isFetchingData"
+                    @filtered="onFiltered"
                   >
+                    <template v-slot:cell(date)="data">
+                      {{ dateFormatted(data.item.date) }}
+                    </template>
+                    <template v-slot:cell(start)="data">
+                      {{ timeFormatted(data.item.start) }}
+                    </template>
+                    <template v-slot:cell(end)="data">
+                      {{ timeFormatted(data.item.end) }}
+                    </template>
                     <template v-slot:cell(room)="data">
                       <b-button
-                          type="submit" 
-                          variant="outline-secondary"
-                          @click=onClickShow(data)
-                          size="sm"
-                          style="min-width: 75px;" 
-                          >{{data.item.room.name}}
+                        type="submit" 
+                        variant="outline-secondary"
+                        size="sm"
+                        style="min-width: 75px;"
+                        @click="onClickShow(data)" 
+                      >
+                        {{ data.item.room.name }}
                       </b-button>
                     </template>
                   </b-table>
                 </div>
                 <!-- <div class="row">
                   <div class="col">
-                    <div class="dataTables_paginate paging_simple_numbers float-right">
+                    <div class="paging_simple_numbers float-right">
                       <ul class="pagination pagination-rounded mb-0">
                         pagination
                         <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
@@ -325,61 +370,66 @@ export default {
         </div>
       </div>
     </div>
-    <div class="row" v-if="!dataClassCourses.length">
-    </div>
+    <div
+      v-if="!dataClassCourses.length"
+      class="row"
+    />
 
     <b-modal
-      size="lg"
       v-model="eventModal"
+      size="lg"
       title="Detail Ruangan"
       hide-footer 
       title-class="font-18"
     >
-      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
+      <div
+        id="metadata"
+        class="tab-pane col-sm-12 col-md-12"
+      >
         <div>
-            <div class="form-group">
-                <label>Ruangan</label>
-                <input
-                    v-model="room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Ruangan</label>
+            <input
+              v-model="room.name"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>Deskripsi Ruangan</label>
-                <textarea
-                    v-model="room.desc"
-                    rows=2
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Deskripsi Ruangan</label>
+            <textarea
+              v-model="room.desc"
+              rows="2"
+              type="text"
+              class="form-control"
+              disabled="true"
+            />
+          </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>MS Teams Link</label>
-                <input
-                    v-model="room.msteam_link"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Link</label>
+            <input
+              v-model="room.msteam_link"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>MS Teams Code</label>
-                <input
-                    v-model="room.msteam_code"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Code</label>
+            <input
+              v-model="room.msteam_code"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
       </div>
     </b-modal>

@@ -5,6 +5,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import listPlugin from "@fullcalendar/list";
+import idLocale from "@fullcalendar/core/locales/id";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
@@ -115,6 +116,8 @@ export default {
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
+        locale: idLocale,
+        dayHeaderFormat: { weekday: 'long' },
       },
       currentEvents: [],
       eventModal: false,
@@ -131,11 +134,10 @@ export default {
     },
   },
   mounted: async function() {
-    this.loading();
-    await this.fetchData().then(result=>{
-        this.loading();
-    });
+    this.loading(true);
+    await this.fetchData();
     await this.loadDataDropdown();
+    this.loading(false);
   },
   methods: {
     getRequestParams(class_name, course_name, academic_year_id) {
@@ -242,14 +244,14 @@ export default {
       this.schedule_data.module = info.event.extendedProps.module;
       this.schedule_data.academic_year = info.event.extendedProps.academic_year;
       if(info.event.endStr == ""){
-        this.schedule_data.start = "empty";
-        this.schedule_data.end = "empty";
-        this.schedule_data.date = info.event.startStr;
+        this.schedule_data.start = "-";
+        this.schedule_data.end = "-";
+        this.schedule_data.date = this.dateFormatted(info.event.startStr);
       } 
       else{
-        this.schedule_data.start = moment(String(info.event.startStr)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.end = moment(String(info.event.endStr)).format('YYYY-MM-DD HH:mm:ss');
-        this.schedule_data.date = moment(String(info.event.startStr)).format('YYYY-MM-DD');
+        this.schedule_data.start = this.timeFormatted(info.event.startStr);
+        this.schedule_data.end = this.timeFormatted(info.event.endStr);
+        this.schedule_data.date = this.dateFormatted(info.event.startStr);
       }
 
       this.eventModal = true;
@@ -304,58 +306,69 @@ export default {
     },
 
     async selectKelas(value){
+        this.loading(true);
         this.class_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeKelas(){
+        this.loading(true);
         this.class_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async selectCourse(value){
+        this.loading(true);
         this.isCourseSelected = true;
         this.course_code = value.code;
         this.course_name = value.name;
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     async removeCourse(){
+        this.loading(true);
         this.isCourseSelected = false;
         this.course_code = "";
         this.course_name = "";
-        this.loading();
-        await this.fetchData().then(result=>{
-            this.loading();
-        });
+        await this.fetchData();
+        this.loading(false);
     },
 
     onClickRuangan(){
       this.isRuanganShowed = !this.isRuanganShowed;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
       }
+      else{
+        return "-";
+      }
+    },
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
       }
+      else{
+        return "-";
+      }
+    },
+
+    loading(isLoad) {
+        var x = document.getElementById("loading");
+
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
   },
 };
@@ -369,9 +382,20 @@ function sleep(ms) {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div class="row">
       <div class="col-12">
@@ -387,40 +411,40 @@ function sleep(ms) {
                 <div class="col-sm-12 col-md-3">
                   <div class="form-group">
                     <multiselect
-                        placeholder="Kelas"
-                        v-model="class_data"
-                        :options="dataDropdown.classes"
-                        label="name"
-                        track-by="name"
-                        @select="selectKelas"
-                        @remove="removeKelas"
-                        :show-labels="false"
-                    ></multiselect>
+                      v-model="class_data"
+                      placeholder="Kelas"
+                      :options="dataDropdown.classes"
+                      label="name"
+                      track-by="name"
+                      :show-labels="false"
+                      @select="selectKelas"
+                      @remove="removeKelas"
+                    />
                   </div>
                 </div>
                 <div class="col-sm-12 col-md-4">
                   <div class="form-group">
                     <multiselect
-                        placeholder="Mata Kuliah"
-                        v-model="course_data"
-                        :options="dataDropdown.courses"
-                        label="name"
-                        track-by="name"
-                        @select="selectCourse"
-                        @remove="removeCourse"
-                        :show-labels="false"
-                    ></multiselect>
+                      v-model="course_data"
+                      placeholder="Mata Kuliah"
+                      :options="dataDropdown.courses"
+                      label="name"
+                      track-by="name"
+                      :show-labels="false"
+                      @select="selectCourse"
+                      @remove="removeCourse"
+                    />
                   </div>
                 </div>
                 <div class="col-sm-12 col-md-2">
                   <div class="form-group">
                     <input
-                        v-if="isCourseSelected"
-                        v-model="course_code"
-                        :disabled="true"
-                        class="form-control text-center"
-                        type="text"
-                        style="background-color: #F0F4F6;"
+                      v-if="isCourseSelected"
+                      v-model="course_code"
+                      :disabled="true"
+                      class="form-control text-center"
+                      type="text"
+                      style="background-color: #F0F4F6;"
                     >
                   </div>
                 </div>
@@ -430,7 +454,7 @@ function sleep(ms) {
               <FullCalendar
                 ref="fullCalendar"
                 :options="calendarOptions"
-              ></FullCalendar>
+              />
             </div>
           </div>
         </div>
@@ -439,165 +463,196 @@ function sleep(ms) {
 
     <!-- Edit Modal -->
     <b-modal
-      size="lg"
       v-model="eventModal"
+      size="lg"
       title="Detail Jadwal"
       hide-footer 
       title-class="font-18"
     >
-      <div class="tab-pane col-sm-12 col-md-12" id="metadata">
+      <div
+        id="metadata"
+        class="tab-pane col-sm-12 col-md-12"
+      >
         <div>
-            <div class="form-group">
-                <label>Nama Kalender</label>
-                <input
-                    v-model="schedule_data.title"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Kelas</label>
-                  <input
-                      v-model="class_course_data.class.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
-          </div>
-          <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Tahun / Semester</label>
-                  <input
-                      v-model="class_course_data.academic_year.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+          <div class="form-group">
+            <label>Nama Kalender</label>
+            <input
+              v-model="schedule_data.title"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
           </div>
         </div>
         <div class="row">
           <div class="col-sm-9">
-              <div class="form-group">
-                  <label>Mata Kuliah</label>
-                  <input
-                      v-model="class_course_data.course.name"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Kelas</label>
+              <input
+                v-model="class_course_data.class.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
           <div class="col-sm-3">
-              <div class="form-group">
-                  <label>Modul</label>
-                  <input
-                      v-model="schedule_data.module.index"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Tahun / Semester</label>
+              <input
+                v-model="class_course_data.academic_year.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="form-group">
+              <label>Mata Kuliah</label>
+              <input
+                v-model="class_course_data.course.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Modul</label>
+              <input
+                v-model="schedule_data.module.index"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
         </div>
         <div>
-            <div class="form-group">
-                <label>Tanggal</label>
-                <input
-                    v-model="schedule_data.date"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input
+              v-model="schedule_data.date"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div class="row">
           <div class="col-sm-6">
-              <div class="form-group">
-                  <label>Jam Mulai</label>
-                  <input
-                      v-model="schedule_data.start"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Jam Mulai</label>
+              <input
+                v-model="schedule_data.start"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
           <div class="col-sm-6">
-              <div class="form-group">
-                  <label>Jam Terakhir</label>
-                  <input
-                      v-model="schedule_data.end"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                  />
-              </div>
+            <div class="form-group">
+              <label>Jam Terakhir</label>
+              <input
+                v-model="schedule_data.end"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
           </div>
         </div>
         <div>
-            <div class="form-group">
-                <div class="row" style="margin:0!important;">
-                  <label class="mr-4">Ruangan</label>
-                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
-                  <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
-                </div>
-                <input
-                    v-model="schedule_data.room.name"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
+          <div class="form-group">
+            <div
+              class="row"
+              style="margin:0!important;"
+            >
+              <label class="mr-4">Ruangan</label>
+              <a
+                v-if="!isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >show</a>
+              <a
+                v-if="isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >hide</a>
             </div>
+            <input
+              v-model="schedule_data.room.name"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>Deskripsi Ruangan</label>
-                <textarea
-                    v-model="schedule_data.room.desc"
-                    rows=2
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>Deskripsi Ruangan</label>
+            <textarea
+              v-model="schedule_data.room.desc"
+              rows="2"
+              type="text"
+              class="form-control"
+              disabled="true"
+            />
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>MS Teams Link</label>
-                <input
-                    v-model="schedule_data.room.msteam_link"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Link</label>
+            <input
+              v-model="schedule_data.room.msteam_link"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div v-if="isRuanganShowed">
-            <div class="form-group">
-                <label>MS Teams Code</label>
-                <input
-                    v-model="schedule_data.room.msteam_code"
-                    type="text"
-                    class="form-control"
-                    disabled="true"
-                />
-            </div>
+          <div class="form-group">
+            <label>MS Teams Code</label>
+            <input
+              v-model="schedule_data.room.msteam_code"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
         </div>
         <div class="text-right mt-4">
-            <button
+          <button
             type="button"
-            @click="editModal"
             class="btn btn-info mr-2 waves-effect waves-light"
-            >Edit</button>
-            <button type="button" @click="closeModal" class="btn btn-light waves-effect">Kembali</button>
+            @click="editModal"
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            class="btn btn-light waves-effect"
+            @click="closeModal"
+          >
+            Kembali
+          </button>
         </div>
       </div>
     </b-modal>
   </Layout>
 </template>
+
+<style>
+   .fc-more-popover{
+       max-height: 200px;
+       overflow-y: scroll;
+   }
+</style>

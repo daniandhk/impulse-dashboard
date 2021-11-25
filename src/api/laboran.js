@@ -272,3 +272,6 @@ export function inputBap(schedule_id, data){
 export function resetUserPassword(user_id) {
     return httpAxios.get(`/laboran/user/reset/${user_id}`);
 }
+export function getAllAccounts(params) {
+    return httpAxios.get('/laboran/user', { params })
+}

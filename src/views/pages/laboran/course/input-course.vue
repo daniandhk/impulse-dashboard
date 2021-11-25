@@ -109,92 +109,126 @@ export default {
 </script>
 
 <template>
-    <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputCourse">
-            <!-- <div title="Course Data"> -->
-            <div>
-                <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Tambah Mata Kuliah</h4>
-                    <p class="card-title-desc">Isi semua informasi dibawah ini</p>
+  <div
+    div
+    class="row mt-4"
+  >
+    <form
+      class="form-horizontal col-sm-12 col-md-12"
+      @submit.prevent="inputCourse"
+    >
+      <!-- <div title="Course Data"> -->
+      <div>
+        <div
+          id="metadata"
+          class="tab-pane"
+        >
+          <h4 class="card-title">
+            Tambah Mata Kuliah
+          </h4>
+          <p class="card-title-desc">
+            Isi semua informasi dibawah ini
+          </p>
                     
-                    <div>
-                        <b-alert
-                        v-model="inputSuccess"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Input data completed successfully!</b-alert>
+          <div>
+            <b-alert
+              v-model="inputSuccess"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Input data completed successfully!
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputError"
-                        class="mt-3"
-                        variant="danger"
-                        dismissible
-                        >{{inputError}}</b-alert>
+            <b-alert
+              v-model="isInputError"
+              class="mt-3"
+              variant="danger"
+              dismissible
+            >
+              {{ inputError }}
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputCanceled"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Berhasil dibatalkan!</b-alert>
+            <b-alert
+              v-model="isInputCanceled"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Berhasil dibatalkan!
+            </b-alert>
 
-                        <b-alert
-                        variant="danger"
-                        class="mt-3"
-                        v-if="notification.message"
-                        show
-                        dismissible
-                        >{{notification.message}}</b-alert>
-                    </div>
+            <b-alert
+              v-if="notification.message"
+              variant="danger"
+              class="mt-3"
+              show
+              dismissible
+            >
+              {{ notification.message }}
+            </b-alert>
+          </div>
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nim">Kode Mata Kuliah</label>
-                                <input
-                                    v-model="dataCourse.code"
-                                    id="code"
-                                    name="code"
-                                    type="text"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataCourse.code.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataCourse.code.required"
-                                class="invalid-feedback"
-                                >Kode Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nama">Nama Mata Kuliah</label>
-                                <input 
-                                v-model="dataCourse.name"
-                                id="nama" 
-                                name="nama" 
-                                type="text" 
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.dataCourse.name.$error }" />
-
-                                <div
-                                v-if="submitted && !$v.dataCourse.name.required"
-                                class="invalid-feedback"
-                                >Nama Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <button
-                        type="submit"
-                        class="btn btn-primary mr-2 waves-effect waves-light"
-                        >Simpan</button>
-                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
-                    </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nim">Kode Mata Kuliah</label>
+                <input
+                  id="code"
+                  v-model="dataCourse.code"
+                  name="code"
+                  type="text"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataCourse.code.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.dataCourse.code.required"
+                  class="invalid-feedback"
+                >
+                  Kode Mata Kuliah harus diisi!
                 </div>
+              </div>
             </div>
-        </form>
-    </div>
+
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nama">Nama Mata Kuliah</label>
+                <input 
+                  id="nama"
+                  v-model="dataCourse.name" 
+                  name="nama" 
+                  type="text" 
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataCourse.name.$error }"
+                >
+
+                <div
+                  v-if="submitted && !$v.dataCourse.name.required"
+                  class="invalid-feedback"
+                >
+                  Nama Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button
+              type="submit"
+              class="btn btn-primary mr-2 waves-effect waves-light"
+            >
+              Simpan
+            </button>
+            <button
+              type="button"
+              class="btn btn-light waves-effect"
+              @click="cancelSubmit"
+            >
+              Batalkan
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>

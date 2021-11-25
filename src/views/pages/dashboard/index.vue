@@ -26,6 +26,26 @@ export default {
     StudentDashboard,
     AsprakDashboard
   },
+  data() {
+    return {
+      getRole: store.getters.getRoleUser,
+      isLaboran: false,
+      isStaff: false,
+      isAsprak: false,
+      isAslab: false,
+      isStudent: false,
+      title: "Dashboard",
+      items: [
+        {
+          text: "Impulse"
+        },
+        {
+          text: "Dashboard",
+          active: true
+        }
+      ]
+    };
+  },
   beforeMount: function(){
     this.items[0].text = this.setRole(this.getRole)
     switch(this.getRole) {
@@ -72,26 +92,6 @@ export default {
         this.isStudent = false;
     }
   },
-  data() {
-    return {
-      getRole: store.getters.getRoleUser,
-      isLaboran: false,
-      isStaff: false,
-      isAsprak: false,
-      isAslab: false,
-      isStudent: false,
-      title: "Dashboard",
-      items: [
-        {
-          text: "Impulse"
-        },
-        {
-          text: "Dashboard",
-          active: true
-        }
-      ]
-    };
-  },
   methods: {
     setRole(role){
       switch(role) {
@@ -115,13 +115,16 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
     <div>
-      <LaboranDashboard v-if="isLaboran"/>
-      <StaffDashboard v-if="isStaff"/>
-      <AslabDashboard v-if="isAslab"/>
-      <StudentDashboard v-if="isStudent"/>
-      <AsprakDashboard v-if="isAsprak"/>
+      <LaboranDashboard v-if="isLaboran" />
+      <StaffDashboard v-if="isStaff" />
+      <AslabDashboard v-if="isAslab" />
+      <StudentDashboard v-if="isStudent" />
+      <AsprakDashboard v-if="isAsprak" />
     </div>
   </Layout>
 </template>

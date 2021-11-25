@@ -30,24 +30,6 @@ export default {
       jenis: { required },
     },
   },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-  },
-  mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
-  },
-  watch: {
-    $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
-    }
-  },
   data() {
     return {
       title: "Input BAP",
@@ -155,11 +137,29 @@ export default {
 
     };
   },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  watch: {
+    $route: async function() {
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
+    }
+  },
+  mounted: async function() {
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
+  },
   methods: {
     ...notificationMethods,
 
     async loadData(){
       await this.fetchData();
+      this.setTime();
 
       this.asprak_totalRows = this.bap_data.asprak.length;
       this.asprak_perPage = this.bap_data.asprak.length;
@@ -246,7 +246,7 @@ export default {
           confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
-              this.loading();
+              this.loading(true);
               this.submitted = false;
               this.isInputCanceled = true;
 
@@ -256,9 +256,8 @@ export default {
               this.dataInput.evaluasi = "";
               this.dataInput.jenis = "";
 
-              this.loadData().then(result=>{
-                this.loading();
-              });
+              this.loadData();
+              this.loading(false);
               Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
@@ -354,19 +353,40 @@ export default {
         this.student_selectedAll = !this.student_selectedAll;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    setTime(){
+      this.bap_data.schedule.date = this.dateFormatted(this.bap_data.schedule.date);
+      this.bap_data.schedule.time_start = this.timeFormatted(this.bap_data.schedule.time_start);
+      this.bap_data.schedule.time_end = this.timeFormatted(this.bap_data.schedule.time_end);
+    },
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
+    dateFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LL');
       }
+      else{
+        return "-";
+      }
+    },
+
+    timeFormatted(date){
+      if(date){
+        return moment(date).locale('id').format('LT');
+      }
+      else{
+        return "-";
+      }
+    },
+
+    loading(isLoad) {
+        var x = document.getElementById("loading");
+
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },
@@ -376,347 +396,412 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div>
+      <div class="card">
+        <div class="card-body">
+          <div
+            id="metadata"
+            class="tab-pane"
+          >
+            <p style="color: red; font-size: 12px; margin: 0 !important;">
+              PENTING – HARAP DIBACA DENGAN TELITI
+            </p>
+            <p
+              class="mt-2"
+              style="color: black; font-size: 14px; margin-bottom: 0 !important;"
+            >
+              Deskripsi input BAP :
+            </p>
+            <p
+              class="card-title-desc"
+              style="font-size: 14px; margin: 0 !important;"
+            >
+              - BAP yang berhasil disimpan tidak akan bisa diubah,<br>
+              - Pastikan setiap data yang diisi telah sesuai dan benar!
+            </p>
+          </div>
+        </div>
+      </div>
+      <form
+        class="form-horizontal mt-2"
+        @submit.prevent="onClickSubmit"
+      >
         <div class="card">
           <div class="card-body">
-            <div class="tab-pane" id="metadata">
-              <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
-              <p class="mt-2" style="color: black; font-size: 14px; margin-bottom: 0 !important;">Deskripsi input BAP :</p>
-              <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                  - BAP yang berhasil disimpan tidak akan bisa diubah,<br>
-                  - Pastikan setiap data yang diisi telah sesuai dan benar!
-              </p>
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Kelas"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.class_course.classes.name" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Mata Kuliah"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.class_course.courses.name" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Dosen"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.class_course.staffs.name" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Modul"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.module.index" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Tanggal"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.date" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Jam Mulai"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.time_start" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Jam Terakhir"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.time_end" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Ruangan"
+            >
+              <b-form-input 
+                v-model="bap_data.schedule.room.name" 
+                for="text" 
+                :disabled="true" 
+                style="border: none;"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Jenis Interaksi"
+            >
+              <multiselect
+                v-model="dataInput.jenis"
+                :options="dataJenis"
+                :show-labels="false"
+                :class="{ 'is-invalid': submitted && $v.dataInput.jenis.$error }" 
+              />
+              <div
+                v-if="submitted && !$v.dataInput.jenis.required"
+                class="invalid-feedback"
+              >
+                Jenis Interaksi harus diisi!
+              </div>
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Materi Praktikum"
+            >
+              <div class="input-group">
+                <input
+                  v-model="dataInput.materi"
+                  type="text"
+                  class="form-control"
+                  :maxlength="max"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.materi.$error }"
+                >
+                <div class="input-group-append">
+                  <span
+                    id="basic-addon2"
+                    class="input-group-text"
+                  >{{ max - dataInput.materi.length }}</span>
+                </div>
+              </div>
+              <div
+                v-if="submitted && !$v.dataInput.materi.required"
+                class="invalid-feedback"
+              >
+                Materi Praktikum harus diisi!
+              </div>
+            </b-form-group>
+
+            <b-form-group
+              label-cols-sm="2"
+              label-cols-lg="2"
+              label="Evaluasi Praktikum"
+            >
+              <div class="input-group">
+                <input
+                  v-model="dataInput.evaluasi"
+                  type="text"
+                  class="form-control"
+                  :maxlength="max"
+                  :class="{ 'is-invalid': submitted && $v.dataInput.evaluasi.$error }"
+                >
+                <div class="input-group-append">
+                  <span
+                    id="basic-addon2"
+                    class="input-group-text"
+                  >{{ max - dataInput.evaluasi.length }}</span>
+                </div>
+              </div>
+              <div
+                v-if="submitted && !$v.dataInput.evaluasi.required"
+                class="invalid-feedback"
+              >
+                Evaluasi Praktikum harus diisi!
+              </div>
+            </b-form-group>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">
+              Kehadiran Asisten Praktikum
+            </h4>
+            <hr
+              style="margin-left: -28px; 
+                                margin-right: -28px; 
+                                height: 2px; 
+                                background-color: #eee; 
+                                border: 0 none; 
+                                color: #eee;"
+            >
+            <div class="row mt-4">
+              <div class="col-sm-12 col-md-6">
+                <b-button
+                  v-if="!asprak_selectedAll"
+                  variant="success"
+                  style="min-width: 120px;"
+                  size="sm" 
+                  @click="asprak_onSelectAll()"
+                >
+                  Select All
+                </b-button>
+                <b-button
+                  v-if="asprak_selectedAll"
+                  variant="danger"
+                  style="min-width: 120px;"
+                  size="sm" 
+                  @click="asprak_onSelectAll()"
+                >
+                  Deselect All
+                </b-button>
+              </div>
+              <!-- Search -->
+              <div class="col-sm-12 col-md-6">
+                <div
+                  id="tickets-table_filter"
+                  class="dataTables_filter text-md-right"
+                >
+                  <label class="d-inline-flex align-items-center">
+                    Search:
+                    <b-form-input
+                      v-model="asprak_filter"
+                      type="search"
+                      class="form-control form-control-sm ml-2"
+                    />
+                  </label>
+                </div>
+              </div>
+              <!-- End search -->
+            </div>
+            <div class="table-responsive">
+              <b-table
+                ref="table"
+                class="table-centered"
+                :items="bap_data.asprak"
+                :fields="asprak_fields"
+                responsive="sm"
+                :per-page="asprak_perPage"
+                :current-page="asprak_currentPage"
+                :sort-by="asprak_sortBy"
+                :sort-desc="asprak_sortDesc"
+                :filter="asprak_filter"
+                :filter-included-fields="asprak_filterOn"
+                :head-variant="'dark'"
+                @filtered="asprak_onFiltered"
+              >
+                <template v-slot:cell(action)="data">
+                  <input 
+                    v-model="dataInput.asprak"
+                    type="checkbox"
+                    :value="data.item.id"
+                  >
+                </template>
+              </b-table>
             </div>
           </div>
         </div>
-        <form class="form-horizontal mt-2" @submit.prevent="onClickSubmit">
-            <div class="card">
-                <div class="card-body">
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Kelas"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.class_course.classes.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
 
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Mata Kuliah"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.class_course.courses.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Dosen"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.class_course.staffs.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Modul"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.module.index" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Tanggal"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.date" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Jam Mulai"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.time_start" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Jam Terakhir"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.time_end" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Ruangan"
-                    >
-                        <b-form-input 
-                            for="text" 
-                            v-model="bap_data.schedule.room.name" 
-                            :disabled="true" 
-                            style="border: none;"
-                        ></b-form-input>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Jenis Interaksi"
-                    >
-                        <multiselect
-                            v-model="dataInput.jenis"
-                            :options="dataJenis"
-                            :show-labels="false"
-                            :class="{ 'is-invalid': submitted && $v.dataInput.jenis.$error }" 
-                        ></multiselect>
-                        <div
-                        v-if="submitted && !$v.dataInput.jenis.required"
-                        class="invalid-feedback"
-                        >Jenis Interaksi harus diisi!</div>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Materi Praktikum"
-                    >
-                        <div class="input-group">
-                          <input
-                              v-model="dataInput.materi"
-                              type="text"
-                              class="form-control"
-                              :maxlength="max"
-                              :class="{ 'is-invalid': submitted && $v.dataInput.materi.$error }"
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">{{max - dataInput.materi.length}}</span>
-                          </div>
-                        </div>
-                        <div
-                        v-if="submitted && !$v.dataInput.materi.required"
-                        class="invalid-feedback"
-                        >Materi Praktikum harus diisi!</div>
-                    </b-form-group>
-
-                    <b-form-group
-                        label-cols-sm="2"
-                        label-cols-lg="2"
-                        label="Evaluasi Praktikum"
-                    >
-                        <div class="input-group">
-                          <input
-                              v-model="dataInput.evaluasi"
-                              type="text"
-                              class="form-control"
-                              :maxlength="max"
-                              :class="{ 'is-invalid': submitted && $v.dataInput.evaluasi.$error }"
-                          />
-                          <div class="input-group-append">
-                            <span class="input-group-text" id="basic-addon2">{{max - dataInput.evaluasi.length}}</span>
-                          </div>
-                        </div>
-                        <div
-                        v-if="submitted && !$v.dataInput.evaluasi.required"
-                        class="invalid-feedback"
-                        >Evaluasi Praktikum harus diisi!</div>
-                    </b-form-group>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Kehadiran Asisten Praktikum</h4>
-                    <hr style="margin-left: -28px; 
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">
+              Kehadiran Praktikan
+            </h4>
+            <hr
+              style="margin-left: -28px; 
                                 margin-right: -28px; 
                                 height: 2px; 
                                 background-color: #eee; 
                                 border: 0 none; 
                                 color: #eee;"
-                    >
-                    <div class="row mt-4">
-                        <div class="col-sm-12 col-md-6">
-                            <b-button
-                                v-if="!asprak_selectedAll"
-                                variant="success"
-                                @click=asprak_onSelectAll()
-                                style="min-width: 120px;" 
-                                size="sm"
-                                >Select All
-                            </b-button>
-                            <b-button
-                                v-if="asprak_selectedAll"
-                                variant="danger"
-                                @click=asprak_onSelectAll()
-                                style="min-width: 120px;" 
-                                size="sm"
-                                >Deselect All
-                            </b-button>
-                        </div>
-                        <!-- Search -->
-                        <div class="col-sm-12 col-md-6">
-                            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                            <label class="d-inline-flex align-items-center">
-                                Search:
-                                <b-form-input
-                                v-model="asprak_filter"
-                                type="search"
-                                class="form-control form-control-sm ml-2"
-                                ></b-form-input>
-                            </label>
-                            </div>
-                        </div>
-                        <!-- End search -->
-                    </div>
-                    <div class="table-responsive">
-                    <b-table
-                        ref="table"
-                        class="table-centered"
-                        :items="bap_data.asprak"
-                        :fields="asprak_fields"
-                        responsive="sm"
-                        :per-page="asprak_perPage"
-                        :current-page="asprak_currentPage"
-                        :sort-by="asprak_sortBy"
-                        :sort-desc="asprak_sortDesc"
-                        :filter="asprak_filter"
-                        :filter-included-fields="asprak_filterOn"
-                        @filtered="asprak_onFiltered"
-                        :headVariant="'dark'"
-                    >
-                        <template v-slot:cell(action)="data">
-                            <input 
-                                type="checkbox"
-                                :value="data.item.id"
-                                v-model="dataInput.asprak" />
-                        </template>
-                    </b-table>
-                    </div>
+            >
+            <div class="row mt-4">
+              <div class="col-sm-12 col-md-6">
+                <b-button
+                  v-if="!student_selectedAll"
+                  variant="success"
+                  style="min-width: 120px;"
+                  size="sm" 
+                  @click="student_onSelectAll()"
+                >
+                  Select All
+                </b-button>
+                <b-button
+                  v-if="student_selectedAll"
+                  variant="danger"
+                  style="min-width: 120px;"
+                  size="sm" 
+                  @click="student_onSelectAll()"
+                >
+                  Deselect All
+                </b-button>
+              </div>
+              <!-- Search -->
+              <div class="col-sm-12 col-md-6">
+                <div
+                  id="tickets-table_filter"
+                  class="dataTables_filter text-md-right"
+                >
+                  <label class="d-inline-flex align-items-center">
+                    Search:
+                    <b-form-input
+                      v-model="student_filter"
+                      type="search"
+                      class="form-control form-control-sm ml-2"
+                    />
+                  </label>
                 </div>
+              </div>
+              <!-- End search -->
             </div>
+            <div class="table-responsive">
+              <b-table
+                ref="table"
+                class="table-centered"
+                :items="bap_data.student"
+                :fields="student_fields"
+                responsive="sm"
+                :per-page="student_perPage"
+                :current-page="student_currentPage"
+                :sort-by="student_sortBy"
+                :sort-desc="student_sortDesc"
+                :filter="student_filter"
+                :filter-included-fields="student_filterOn"
+                :head-variant="'dark'"
+                @filtered="student_onFiltered"
+              >
+                <template v-slot:cell(action)="data">
+                  <input 
+                    v-model="dataInput.student"
+                    type="checkbox"
+                    :value="data.item.id"
+                  >
+                </template>
+              </b-table>
+            </div>
+          </div>
+        </div>
 
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Kehadiran Praktikan</h4>
-                    <hr style="margin-left: -28px; 
-                                margin-right: -28px; 
-                                height: 2px; 
-                                background-color: #eee; 
-                                border: 0 none; 
-                                color: #eee;"
-                    >
-                    <div class="row mt-4">
-                        <div class="col-sm-12 col-md-6">
-                            <b-button
-                                v-if="!student_selectedAll"
-                                variant="success"
-                                @click=student_onSelectAll()
-                                style="min-width: 120px;" 
-                                size="sm"
-                                >Select All
-                            </b-button>
-                            <b-button
-                                v-if="student_selectedAll"
-                                variant="danger"
-                                @click=student_onSelectAll()
-                                style="min-width: 120px;" 
-                                size="sm"
-                                >Deselect All
-                            </b-button>
-                        </div>
-                        <!-- Search -->
-                        <div class="col-sm-12 col-md-6">
-                            <div id="tickets-table_filter" class="dataTables_filter text-md-right">
-                            <label class="d-inline-flex align-items-center">
-                                Search:
-                                <b-form-input
-                                v-model="student_filter"
-                                type="search"
-                                class="form-control form-control-sm ml-2"
-                                ></b-form-input>
-                            </label>
-                            </div>
-                        </div>
-                        <!-- End search -->
-                    </div>
-                    <div class="table-responsive">
-                    <b-table
-                        ref="table"
-                        class="table-centered"
-                        :items="bap_data.student"
-                        :fields="student_fields"
-                        responsive="sm"
-                        :per-page="student_perPage"
-                        :current-page="student_currentPage"
-                        :sort-by="student_sortBy"
-                        :sort-desc="student_sortDesc"
-                        :filter="student_filter"
-                        :filter-included-fields="student_filterOn"
-                        @filtered="student_onFiltered"
-                        :headVariant="'dark'"
-                    >
-                        <template v-slot:cell(action)="data">
-                            <input 
-                                type="checkbox"
-                                :value="data.item.id"
-                                v-model="dataInput.student" />
-                        </template>
-                    </b-table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card">
-                <div class="card-body text-center">
-                    <button
-                        type="submit"
-                        class="btn btn-primary mr-2 waves-effect waves-light"
-                    >Simpan</button>
-                    <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
-                </div>
-            </div>
-        </form>
+        <div class="card">
+          <div class="card-body text-center">
+            <button
+              type="submit"
+              class="btn btn-primary mr-2 waves-effect waves-light"
+            >
+              Simpan
+            </button>
+            <button
+              type="button"
+              class="btn btn-light waves-effect"
+              @click="cancelSubmit"
+            >
+              Batalkan
+            </button>
+          </div>
+        </div>
+      </form>
     </div>
   </Layout>
 </template>

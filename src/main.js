@@ -13,6 +13,7 @@ import router from './router'
 import i18n from './i18n'
 import store from './store'
 import VueHtmlToPaper from 'vue-html-to-paper'
+import { QuasarTiptapPlugin, RecommendedExtensions } from 'quasar-tiptap'
 
 import "@/assets/scss/app.scss"
 
@@ -49,6 +50,10 @@ Vue.use(VueGoogleMaps, {
     libraries: 'places',
   },
   installComponents: true
+})
+Vue.use(QuasarTiptapPlugin, {
+  language: 'en-us',
+  spellcheck: true
 })
 Vue.component('apexchart', VueApexCharts)
 

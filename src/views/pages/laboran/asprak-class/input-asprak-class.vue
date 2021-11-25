@@ -83,9 +83,6 @@ export default {
       },
     };
   },
-  mounted() {
-      this.loadDataDropdown();
-  },
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -96,6 +93,9 @@ export default {
     loadAcademicYearData() {
         return this.academicYearData;
     }
+  },
+  mounted() {
+      this.loadDataDropdown();
   },
   methods: {
     ...notificationMethods,
@@ -429,129 +429,172 @@ export default {
 </script>
 
 <template>
-    <div div class="row mt-4">
-        <form class="form-horizontal col-sm-12 col-md-12" @submit.prevent="inputStudent">
-            <!-- <div title="Student Data"> -->
-            <div>
-                <div class="tab-pane" id="metadata">
-                    <h4 class="card-title">Tambah Kelas Asisten Praktikum</h4>
-                    <p class="card-title-desc">Isi semua informasi dibawah ini</p>
-                    <p style="color: red; font-size: 12px; margin: 0 !important;">PENTING – HARAP DIBACA DENGAN TELITI</p>
-                    <p class="card-title-desc" style="font-size: 14px; margin: 0 !important;">
-                        NIM sebagai Asprak dapat diatur di menu Data Mahasiswa.
-                    </p>
+  <div
+    div
+    class="row mt-4"
+  >
+    <form
+      class="form-horizontal col-sm-12 col-md-12"
+      @submit.prevent="inputStudent"
+    >
+      <!-- <div title="Student Data"> -->
+      <div>
+        <div
+          id="metadata"
+          class="tab-pane"
+        >
+          <h4 class="card-title">
+            Tambah Kelas Asisten Praktikum
+          </h4>
+          <p class="card-title-desc">
+            Isi semua informasi dibawah ini
+          </p>
+          <p style="color: red; font-size: 12px; margin: 0 !important;">
+            PENTING – HARAP DIBACA DENGAN TELITI
+          </p>
+          <p
+            class="card-title-desc"
+            style="font-size: 14px; margin: 0 !important;"
+          >
+            NIM sebagai Asprak dapat diatur di menu Data Mahasiswa.
+          </p>
                     
-                    <div class="mt-4">
-                        <b-alert
-                        v-model="inputSuccess"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Input data completed successfully!</b-alert>
+          <div class="mt-4">
+            <b-alert
+              v-model="inputSuccess"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Input data completed successfully!
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputError"
-                        class="mt-3"
-                        variant="danger"
-                        dismissible
-                        >{{inputError}}</b-alert>
+            <b-alert
+              v-model="isInputError"
+              class="mt-3"
+              variant="danger"
+              dismissible
+            >
+              {{ inputError }}
+            </b-alert>
 
-                        <b-alert
-                        v-model="isInputCanceled"
-                        class="mt-3"
-                        variant="success"
-                        dismissible
-                        >Berhasil dibatalkan!</b-alert>
+            <b-alert
+              v-model="isInputCanceled"
+              class="mt-3"
+              variant="success"
+              dismissible
+            >
+              Berhasil dibatalkan!
+            </b-alert>
 
-                        <b-alert
-                        variant="danger"
-                        class="mt-3"
-                        v-if="notification.message"
-                        show
-                        dismissible
-                        >{{notification.message}}</b-alert>
+            <b-alert
+              v-if="notification.message"
+              variant="danger"
+              class="mt-3"
+              show
+              dismissible
+            >
+              {{ notification.message }}
+            </b-alert>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="form-group">
+                <label for="nim">NIM</label>
+                <div class="row">
+                  <div class="col-sm-8">
+                    <input
+                      id="nim"
+                      v-model="dataStudent.nim"
+                      name="nim"
+                      type="number"
+                      class="form-control"
+                      :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
+                      @input="isNimChanged"
+                    >
+                    <div
+                      v-if="submitted && !$v.dataStudent.nim.required"
+                      class="invalid-feedback"
+                    >
+                      NIM harus diisi!
                     </div>
-
-                    <div class="row">
-                        <div class="col-sm-8">
-                            <div class="form-group">
-                                <label for="nim">NIM</label>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <input
-                                            v-model="dataStudent.nim"
-                                            id="nim"
-                                            name="nim"
-                                            type="number"
-                                            class="form-control"
-                                            @input="isNimChanged"
-                                            :class="{ 'is-invalid': submitted && $v.dataStudent.nim.$error }"
-                                        />
-                                        <div
-                                        v-if="submitted && !$v.dataStudent.nim.required"
-                                        class="invalid-feedback"
-                                        >NIM harus diisi!</div>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <b-button variant="success" @click="checkNim"
-                                        :class="{ 
-                                            'is-invalid': submitted && !isNimAsprak,
-                                            'is-valid': submitted && isNimAsprak }">Cek NIM</b-button>
-                                        <div
-                                        v-if="!isNimAsprak"
-                                        class="invalid-feedback"
-                                        >NIM tidak tersedia atau bukan Asprak,<br>silahkan coba NIM lain!</div>
-                                        <div
-                                        v-if="isNimAsprak"
-                                        class="valid-feedback"
-                                        >NIM tersedia.</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                  </div>
+                  <div class="col-sm-4">
+                    <b-button
+                      variant="success"
+                      :class="{ 
+                        'is-invalid': submitted && !isNimAsprak,
+                        'is-valid': submitted && isNimAsprak }"
+                      @click="checkNim"
+                    >
+                      Cek NIM
+                    </b-button>
+                    <div
+                      v-if="!isNimAsprak"
+                      class="invalid-feedback"
+                    >
+                      NIM tidak tersedia atau bukan Asprak,<br>silahkan coba NIM lain!
                     </div>
+                    <div
+                      v-if="isNimAsprak"
+                      class="valid-feedback"
+                    >
+                      NIM tersedia.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nama">Nama Mahasiswa</label>
-                                <input 
-                                v-model="dataStudent.name"
-                                id="nama" 
-                                name="nama" 
-                                type="text" 
-                                class="form-control"
-                                disabled="true"
-                                v-bind:style="disabled_bg"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }" />
+          <div class="row">
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nama">Nama Mahasiswa</label>
+                <input 
+                  id="nama"
+                  v-model="dataStudent.name" 
+                  name="nama" 
+                  type="text" 
+                  class="form-control"
+                  disabled="true"
+                  :style="disabled_bg"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }"
+                >
 
-                                <div
-                                v-if="submitted && !$v.dataStudent.name.required"
-                                class="invalid-feedback"
-                                >Nama Mahasiswa harus diisi!</div>
-                            </div>
-                        </div>
+                <div
+                  v-if="submitted && !$v.dataStudent.name.required"
+                  class="invalid-feedback"
+                >
+                  Nama Mahasiswa harus diisi!
+                </div>
+              </div>
+            </div>
 
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <label for="nama">Kode Asprak</label>
-                                <input 
-                                v-model="dataStudent.asprak_code"
-                                id="code" 
-                                name="code" 
-                                type="text"
-                                maxlength="3"
-                                class="form-control"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.asprak_code.$error }" />
+            <div class="col-sm-6">
+              <div class="form-group">
+                <label for="nama">Kode Asprak</label>
+                <input 
+                  id="code"
+                  v-model="dataStudent.asprak_code" 
+                  name="code" 
+                  type="text"
+                  maxlength="3"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.asprak_code.$error }"
+                >
 
-                                <div
-                                v-if="submitted && !$v.dataStudent.asprak_code.required"
-                                class="invalid-feedback"
-                                >Kode Asprak harus diisi!</div>
-                            </div>
-                        </div>
+                <div
+                  v-if="submitted && !$v.dataStudent.asprak_code.required"
+                  class="invalid-feedback"
+                >
+                  Kode Asprak harus diisi!
+                </div>
+              </div>
+            </div>
 
-                        <!-- <div class="col-sm-4">
+            <!-- <div class="col-sm-4">
                             <div class="form-group">
                                 <label for="nama">Jenis Kelamin</label>
                                 <input 
@@ -590,144 +633,164 @@ export default {
                                 >Agama harus diisi!</div>
                             </div>
                         </div> -->
-                    </div>
+          </div>
 
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                            <label class="control-label">Kelas Mata Kuliah</label>
-                            <multiselect
-                                v-model="class_data"
-                                :options="namaKelasData"
-                                label="name"
-                                track-by="name"
-                                @select="setKelas"
-                                @remove="removeKelas"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.class_name.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.class_name.required"
-                                class="invalid-feedback"
-                                >Kelas Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                            <label class="control-label">Nama Mata Kuliah</label>
-                            <multiselect
-                                v-model="course_data"
-                                :options="loadCourseData"
-                                :disabled="isKelasNotSelected"
-                                label="name"
-                                track-by="name"
-                                @select="setCourse"
-                                @remove="removeCourse"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.course_name.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.course_name.required"
-                                class="invalid-feedback"
-                                >Nama Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                            <label class="control-label">Kode Mata Kuliah</label>
-                            <multiselect
-                                v-model="course_data"
-                                :options="loadCourseData"
-                                :disabled="isKelasNotSelected"
-                                label="code"
-                                track-by="code"
-                                @select="setCourse"
-                                @remove="removeCourse"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.course_code.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.course_code.required"
-                                class="invalid-feedback"
-                                >Kode Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                            <label class="control-label">Tahun Akademik (Semester)</label>
-                            <multiselect
-                                v-model="academic_year_data"
-                                :options="loadAcademicYearData"
-                                :disabled="isCourseNotSelected"
-                                label="name"
-                                track-by="name"
-                                @select="setAcademicYear"
-                                @remove="removeAcademicYear"
-                                :show-labels="false"
-                                :class="{ 'is-invalid': submitted && $v.dataStudent.academic_year.$error }" 
-                            ></multiselect>
-                                <div
-                                v-if="submitted && !$v.dataStudent.academic_year.required"
-                                class="invalid-feedback"
-                                >Tahun Akademik (Semester) harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="staff_name">Nama Dosen Mata Kuliah</label>
-                                <input
-                                    v-model="dataStudent.staff_name"
-                                    :disabled="true"
-                                    id="staff_name"
-                                    name="staff_name"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.staff_name.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.staff_name.required"
-                                class="invalid-feedback"
-                                >Nama Dosen Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="staff_code">Kode Dosen Mata Kuliah</label>
-                                <input
-                                    v-model="dataStudent.staff_code"
-                                    :disabled="true"
-                                    id="staff_code"
-                                    name="staff_code"
-                                    type="text"
-                                    style="background-color: #F0F4F6;"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': submitted && $v.dataStudent.staff_code.$error }"
-                                />
-                                <div
-                                v-if="submitted && !$v.dataStudent.staff_code.required"
-                                class="invalid-feedback"
-                                >Kode Dosen Mata Kuliah harus diisi!</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="text-center mt-4">
-                        <button
-                        type="submit"
-                        class="btn btn-primary mr-2 waves-effect waves-light"
-                        >Simpan</button>
-                        <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
-                    </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Kelas Mata Kuliah</label>
+                <multiselect
+                  v-model="class_data"
+                  :options="namaKelasData"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.class_name.$error }"
+                  @select="setKelas"
+                  @remove="removeKelas" 
+                />
+                <div
+                  v-if="submitted && !$v.dataStudent.class_name.required"
+                  class="invalid-feedback"
+                >
+                  Kelas Mata Kuliah harus diisi!
                 </div>
+              </div>
             </div>
-        </form>
-    </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Nama Mata Kuliah</label>
+                <multiselect
+                  v-model="course_data"
+                  :options="loadCourseData"
+                  :disabled="isKelasNotSelected"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.course_name.$error }"
+                  @select="setCourse"
+                  @remove="removeCourse" 
+                />
+                <div
+                  v-if="submitted && !$v.dataStudent.course_name.required"
+                  class="invalid-feedback"
+                >
+                  Nama Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Kode Mata Kuliah</label>
+                <multiselect
+                  v-model="course_data"
+                  :options="loadCourseData"
+                  :disabled="isKelasNotSelected"
+                  label="code"
+                  track-by="code"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.course_code.$error }"
+                  @select="setCourse"
+                  @remove="removeCourse" 
+                />
+                <div
+                  v-if="submitted && !$v.dataStudent.course_code.required"
+                  class="invalid-feedback"
+                >
+                  Kode Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label class="control-label">Tahun Akademik (Semester)</label>
+                <multiselect
+                  v-model="academic_year_data"
+                  :options="loadAcademicYearData"
+                  :disabled="isCourseNotSelected"
+                  label="name"
+                  track-by="name"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.academic_year.$error }"
+                  @select="setAcademicYear"
+                  @remove="removeAcademicYear" 
+                />
+                <div
+                  v-if="submitted && !$v.dataStudent.academic_year.required"
+                  class="invalid-feedback"
+                >
+                  Tahun Akademik (Semester) harus diisi!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="staff_name">Nama Dosen Mata Kuliah</label>
+                <input
+                  id="staff_name"
+                  v-model="dataStudent.staff_name"
+                  :disabled="true"
+                  name="staff_name"
+                  type="text"
+                  style="background-color: #F0F4F6;"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.staff_name.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.dataStudent.staff_name.required"
+                  class="invalid-feedback"
+                >
+                  Nama Dosen Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label for="staff_code">Kode Dosen Mata Kuliah</label>
+                <input
+                  id="staff_code"
+                  v-model="dataStudent.staff_code"
+                  :disabled="true"
+                  name="staff_code"
+                  type="text"
+                  style="background-color: #F0F4F6;"
+                  class="form-control"
+                  :class="{ 'is-invalid': submitted && $v.dataStudent.staff_code.$error }"
+                >
+                <div
+                  v-if="submitted && !$v.dataStudent.staff_code.required"
+                  class="invalid-feedback"
+                >
+                  Kode Dosen Mata Kuliah harus diisi!
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-4">
+            <button
+              type="submit"
+              class="btn btn-primary mr-2 waves-effect waves-light"
+            >
+              Simpan
+            </button>
+            <button
+              type="button"
+              class="btn btn-light waves-effect"
+              @click="cancelSubmit"
+            >
+              Batalkan
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
 </template>

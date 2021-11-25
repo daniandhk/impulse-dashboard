@@ -12,10 +12,16 @@ export default {};
               4
               <span class="error-text">
                 0
-                <img src="@/assets/images/error-img.png" alt class="error-img" />
+                <img
+                  src="@/assets/images/error-img.png"
+                  alt
+                  class="error-img"
+                >
               </span> 4
             </h1>
-            <h3 class="text-uppercase">Sorry, page not found</h3>
+            <h3 class="text-uppercase">
+              Sorry, page not found
+            </h3>
             <div class="mt-5 text-center">
               <a
                 class="btn btn-primary waves-effect waves-light"

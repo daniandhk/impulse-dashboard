@@ -71,15 +71,23 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
     <div class="row">
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Modul Praktikum</h4>
+            <h4 class="card-title">
+              Modul Praktikum
+            </h4>
             <div class="row">
               <div class="col-12">
-                <form class="form-horizontal" role="form">
+                <form
+                  class="form-horizontal"
+                  role="form"
+                >
                   <div class="form-group row">
                     <label class="col-md-2 col-form-label">Modul</label>
                     <div class="col-md-10">
@@ -102,23 +110,35 @@ export default {
     </div>
     <!-- end row -->
 
-     <div class="row">
+    <div class="row">
       <div class="col-12">
         <div class="card">
           <div class="card-body">
-            <h4 class="card-title">Feedback</h4>
+            <h4 class="card-title">
+              Feedback
+            </h4>
             <div class="row mt-4">
               <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_length" class="dataTables_length">
+                <div
+                  id="tickets-table_length"
+                  class="dataTables_length"
+                >
                   <label class="d-inline-flex align-items-center">
                     Show&nbsp;
-                    <b-form-select v-model="perPage" size="sm" :options="pageOptions"></b-form-select>&nbsp;entries
+                    <b-form-select
+                      v-model="perPage"
+                      size="sm"
+                      :options="pageOptions"
+                    />&nbsp;entries
                   </label>
                 </div>
               </div>
               <!-- Search -->
               <div class="col-sm-12 col-md-6">
-                <div id="tickets-table_filter" class="dataTables_filter text-md-right">
+                <div
+                  id="tickets-table_filter"
+                  class="dataTables_filter text-md-right"
+                >
                   <label class="d-inline-flex align-items-center">
                     Search:
                     <b-form-input
@@ -126,7 +146,7 @@ export default {
                       type="search"
                       placeholder="Search..."
                       class="form-control form-control-sm ml-2"
-                    ></b-form-input>
+                    />
                   </label>
                 </div>
               </div>
@@ -145,14 +165,18 @@ export default {
                 :filter="filter"
                 :filter-included-fields="filterOn"
                 @filtered="onFiltered"
-              ></b-table>
+              />
             </div>
             <div class="row">
               <div class="col">
-                <div class="dataTables_paginate paging_simple_numbers float-right">
+                <div class="paging_simple_numbers float-right">
                   <ul class="pagination pagination-rounded mb-0">
                     <!-- pagination -->
-                    <b-pagination v-model="currentPage" :total-rows="rows" :per-page="perPage"></b-pagination>
+                    <b-pagination
+                      v-model="currentPage"
+                      :total-rows="rows"
+                      :per-page="perPage"
+                    />
                   </ul>
                 </div>
               </div>
@@ -161,7 +185,5 @@ export default {
         </div>
       </div>
     </div>
-
-   
   </Layout>
 </template>

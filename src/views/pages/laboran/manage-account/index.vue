@@ -2,28 +2,26 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableRoom from "./table-academic-year";
-import InputRoom from "./input-academic-year";
+import TableAccount from "./table-account";
 
 export default {
   page: {
-    title: "Data Tahun Akademik",
+    title: "Kelola Akun",
   },
   components: {
     Layout,
     PageHeader,
-    TableRoom,
-    InputRoom,
+    TableAccount,
   },
   data() {
     return {
-      title: "Data Tahun Akademik",
+      title: "Kelola Akun",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Data Tahun Akademik",
+          text: "Kelola Akun",
           active: true
         }
       ],
@@ -41,7 +39,7 @@ export default {
     ...notificationMethods,
 
     refreshData(){
-        this.$refs.TableRoom.refreshData();
+        this.$refs.TableAccount.refreshData();
     }
   }
 };
@@ -58,23 +56,7 @@ export default {
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body pt-0">
-            <b-tabs
-              nav-class="nav-tabs-custom"
-              @input="refreshData"
-            >
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Data</a>
-                </template>
-                <TableRoom ref="TableRoom" />
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Input</a>
-                </template>
-                <InputRoom />
-              </b-tab>
-            </b-tabs>
+            <TableAccount ref="TableAccount" />
           </div>
         </div>
       </div>

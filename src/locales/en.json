@@ -18,6 +18,7 @@
       "main-data": "Data Utama",
       "combined-data": "Data Kelas",
       "absensi-data": "Data BAP",
+      "account-data": "Data Akun",
       "list": {
         "student": "Data Mahasiswa",
         "studentclass": "Kelas Praktikan",
@@ -28,7 +29,8 @@
         "room": "Data Ruangan",
         "class-course": "Kelas Mata Kuliah",
         "academic-year": "Data Tahun Akademik",
-        "bap": "Berita Acara Praktikum"
+        "bap": "Berita Acara Praktikum",
+        "manage-account": "Kelola Akun"
       }
     },
     "staff": {

@@ -14,7 +14,7 @@ export default {
 <template>
   <div class="card">
     <div class="card-body">
-        Dashboard Student
+      Dashboard Student
     </div>
   </div>
 </template>

@@ -15,9 +15,6 @@ export default {
     TableCourse,
     InputCourse,
   },
-  created() {
-    document.body.classList.add("auth-body-bg");
-  },
   data() {
     return {
       title: "Data Mata Kuliah",
@@ -37,6 +34,9 @@ export default {
       return this.$store ? this.$store.state.notification : null;
     },
   },
+  created() {
+    document.body.classList.add("auth-body-bg");
+  },
   methods: {
     ...notificationMethods,
 
@@ -50,23 +50,29 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
     <div class="row">
       <div class="col-lg-12">
         <div class="card">
           <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom" @input="refreshData">
+            <b-tabs
+              nav-class="nav-tabs-custom"
+              @input="refreshData"
+            >
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
                   <a class="font-weight-bold active">Data</a>
                 </template>
-                <TableCourse ref='TableCourse'/>
+                <TableCourse ref="TableCourse" />
               </b-tab>
               <b-tab title-link-class="p-3">
-                  <template v-slot:title>
-                      <a class="font-weight-bold active">Input</a>
-                  </template>
-                  <InputCourse/>
+                <template v-slot:title>
+                  <a class="font-weight-bold active">Input</a>
+                </template>
+                <InputCourse />
               </b-tab>
             </b-tabs>
           </div>

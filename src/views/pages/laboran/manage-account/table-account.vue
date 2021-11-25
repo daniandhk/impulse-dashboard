@@ -2,9 +2,7 @@
 import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
-import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
-import tableRoomVue from '../room/table-room.vue';
 
 /**
  * Orders Component
@@ -13,72 +11,27 @@ export default {
   components: {
     Multiselect,
   },
-  validations: {
-    dataEdit: {
-      student_id: { required },
-      class_id: { required },
-    },
-    dataEditDetail: {
-      nim: { required },
-      class_name: { required },
-      course_name: { required },
-    },
-  },
   data() {
     return {
-      //list students
+      //list classroom
       isFetchingData: false,
-      dataStudents: [],
+      dataAccounts: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
       filter: "",
       filterOn: [],
-      sortBy: "nim",
+      sortBy: "username",
       sortDesc: false,
       fields: [
-        { key: "nim", sortable: true, label: "NIM" },
-        { key: "name", sortable: true, label: "Nama" },
-        { key: "class_name", sortable: true, label: "Kelas MK" },
-        { key: "course_code", sortable: true, label: "Kode MK" },
-        { key: "course_name", sortable: true, label: "Nama MK" },
-        { key: "staff_code", sortable: true, label: "Kode Dosen" },
-        { key: "semester", sortable: true, label: "Semester" },
-        { key: "academic_year", sortable: true, label: "Tahun Akademik" },
+        { key: "username", sortable: true, label: "Username" },
+        { key: "name", sortable: false, label: "Nama" },
         { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
-      class_name: "",
-      course_name: "",
-      academic_year_id: "",
-      course_data: "",
-      course_code: "",
-      class_data: "",
-      dataDropdown:{
-          classes: [],
-          courses: [],
-          staffs: [],
-          academic_year: [],
-      },
-
-      //edit data
-      dataEdit: { 
-          student_id: "",
-          class_id: "",
-          },
-      dataEditDetail: { 
-          nim: "",
-          class_name: "",
-          course_name: "",
-          },
-      submitted: false,
-      isKelasEditNotSelected: true,
-      course_dataEdit: "",
-      class_dataEdit: "",
-
       //edit role
-      roleData: ['asprak', 'aslab'],
+      roleData: ['laboran', 'dosen', 'asprak', 'aslab'],
       role_data: [],
       dataEditRole: {
           no_induk: "",
@@ -89,9 +42,7 @@ export default {
           laboran: 0,
           dosen: 0,
       },
-      main_role: "student",
-
-      isCourseSelected: false,
+      main_role: "",
     };
   },
   computed: {
@@ -102,14 +53,11 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataStudents;
+      return this.dataAccounts;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
-    loadCourseData() {
-        return this.courseData;
-    }
   },
   created() {
     document.body.classList.add("auth-body-bg");
@@ -117,7 +65,6 @@ export default {
   mounted: async function() {
     this.loading(true);
     await this.fetchData();
-    this.loadDataDropdown();
     this.loading(false);
   },
   methods: {
@@ -130,19 +77,11 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(search, kelas, course, page, pageSize, orderBy, sortDesc) {
+    getRequestParams(search, page, pageSize, orderBy, sortDesc) {
       let params = {};
 
       if (search) {
         params["search"] = search;
-      }
-
-      if (kelas) {
-        params["kelas"] = kelas;
-      }
-
-      if (course) {
-        params["course"] = course;
       }
 
       if (page) {
@@ -166,25 +105,22 @@ export default {
       return params;
     },
     fetchData(){
-      this.loadDataDropdown();
       this.isFetchingData = true;
 
       const params = this.getRequestParams(
         this.filter,
-        this.class_name,
-        this.course_name,
         this.currentPage,
         this.perPage,
         this.sortBy,
         this.sortDesc
       );
       return (
-        api.getAllStudentClasses(params)
+        api.getAllAccounts(params)
           .then(response => {
             this.isFetchingData = false;
 
             this.totalRows = response.data.meta.pagination.total;
-            this.dataStudents = response.data.data;
+            this.dataAccounts = response.data.data;
           })
           .catch(error => {
             this.isFetchingData = false;
@@ -245,30 +181,30 @@ export default {
       this.loading(false);
     },
 
-    onClickDelete(data){
+    onClickReset(data){
       Swal.fire({
           title: "Anda yakin?",
-          text: data.item.nim + " akan dihapus!",
+          text: "Password " + data.item.username + " akan diubah sesuai Username!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Ya, hapus!"
+          confirmButtonText: "Ya, reset password!"
       }).then(result => {
           if (result.value) {
-              this.deleteStudent(data.item.students_class_course_id, data.item.nim);
+              this.resetUserPassword(data.item.id, data.item.username);
           }
       });
     },
 
-    deleteStudent(id, nim){
+    resetUserPassword(id, username){
       return (
-        api.deleteStudentClass(id)
+        api.resetUserPassword(id)
           .then(response => {
-            Swal.fire("Berhasil dihapus!", nim + " telah terhapus.", "success");
             this.loading(true);
             this.fetchData();
             this.loading(false);
+            Swal.fire("Berhasil diatur ulang!", "Password " + username + " telah diubah sesuai Username.", "success");
           })
           .catch(error => {
             Swal.fire({
@@ -281,112 +217,22 @@ export default {
       )
     },
 
-    async loadDataDropdown(){
-        this.getDataDropdown();
-    },
-
-    async getDataDropdown(){
-        return (
-            api.getClassCourseStaffYear()
-            .then(response => {
-                if(response.data.data){
-                    this.setDataDropdown(response.data.data);
-                }
-            })
-            .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
-                    footer: error
-                })
-            })
-        )
-    },
-
-    setDataDropdown(data){
-        data.academic_year.forEach((element, index, array) => {
-            element.year = String(element.year) + " / " + String(element.semester)
-        });
-        this.dataDropdown = data;
-    },
-
-    async selectKelas(value){
-        this.loading(true);
-        this.class_name = value.name;
-        await this.fetchData();
-        this.loading(false);
-    },
-
-    async removeKelas(){
-        this.loading(true);
-        this.class_name = "";
-        await this.fetchData();
-        this.loading(false);
-    },
-
-    async selectCourse(value){
-        this.loading(true);
-        this.isCourseSelected = true;
-        this.course_code = value.code;
-        this.course_name = value.name;
-        await this.fetchData();
-        this.loading(false);
-    },
-
-    async removeCourse(){
-        this.loading(true);
-        this.isCourseSelected = false;
-        this.course_code = "";
-        this.course_name = "";
-        await this.fetchData();
-        this.loading(false);
-    },
-
     async onClickEdit(data){
-      //edit data
-      this.dataEdit.student_id = data.item.student_id;
-      this.dataEdit.class_id = data.item.class_id;
-      this.dataEditDetail.nim = data.item.nim;
-
       //edit role
-      this.dataEditRole.no_induk = data.item.nim;
+      if(data.item.nim){
+          this.dataEditRole.no_induk = data.item.nim;
+          this.roleData = ['asprak', 'aslab'];
+          this.main_role = "student";
+      }
+      else if(data.item.nip){
+          this.dataEditRole.no_induk = data.item.nip;
+          this.roleData = ['laboran', 'dosen'];
+          this.main_role = "staff";
+      }
       this.getRoles(this.dataEditRole.no_induk);
       this.setRoles(this.role_data, this.dataEditRole);
 
       this.$bvModal.show('modal-edit');
-    },
-
-    setStudentClass(){
-      this.submitted = true;
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
-      } 
-      else {
-        return (
-          api.setStudentClass(this.dataEdit)
-            .then(response => {
-              this.submitted = false;
-              this.hideModal();
-              Swal.fire("Berhasil diubah!", this.dataEditDetail.nim + " telah terubah.", "success");
-              this.loading(true);
-              this.fetchData();
-              this.loading(false);
-            })
-            .catch(error => {
-              this.submitted = false;
-              this.hideModal();
-
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Terjadi kesalahan!',
-                footer: error
-              })
-            })
-        )
-      }
     },
 
     getRoles(no_induk){
@@ -409,8 +255,15 @@ export default {
     },
 
     setRoles(role_data, dataEditRole){
-        if (role_data.includes("student") == false){
-            role_data.push("student");
+        if(this.main_role == "student"){
+            if (role_data.includes("student") == false){
+                role_data.push("student");
+            }
+        }
+        else if(this.main_role == "staff"){
+            if (role_data.includes("staff") == false){
+                role_data.push("staff");
+            }
         }
         role_data.forEach((element, index, array) => {
             if (element == "student") {
@@ -439,12 +292,12 @@ export default {
         return (
           api.setRoles(this.dataEditRole)
             .then(response => {
-              this.submitted = false;
-              this.hideModal();
-              Swal.fire("Berhasil diubah!", this.dataEditRole.no_induk + " telah terubah.", "success");
               this.loading(true);
+              this.submitted = false;
               this.fetchData();
               this.loading(false);
+              this.hideModal();
+              Swal.fire("Berhasil diubah!", this.dataEditRole.no_induk + " telah terubah.", "success");
             })
             .catch(error => {
               this.submitted = false;
@@ -461,8 +314,15 @@ export default {
     },
 
     removeRole(value){
-        if (value == "student") {
-            this.role_data.push("student");
+        if(this.main_role == "student"){
+            if (value == "student"){
+                this.role_data.push("student");
+            }
+        }
+        else if(this.main_role == "staff"){
+            if (value == "staff"){
+                this.role_data.push("staff");
+            }
         }
     },
 
@@ -474,9 +334,11 @@ export default {
         var x = document.getElementById("loading");
 
         if(isLoad){
+            this.isFetchingData = true;
             this.isLoading = true;
             x.style.display = "block";
         } else{
+            this.isFetchingData = false;
             this.isLoading = false;
             x.style.display = "none";
         }
@@ -498,63 +360,6 @@ export default {
         role="status"
       />
     </div>
-    <div class="row mt-4">
-      <div class="col-sm-12 col-md-12">
-        <label class="d-inline-flex align-items-center">
-          Filter:
-        </label>
-      </div>
-      <div class="row col-sm-12 col-md-12">
-        <div class="col-sm-12 col-md-3">
-          <div class="form-group">
-            <multiselect
-              v-model="class_data"
-              placeholder="Kelas"
-              :options="dataDropdown.classes"
-              label="name"
-              track-by="name"
-              :show-labels="false"
-              @select="selectKelas"
-              @remove="removeKelas"
-            />
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-4">
-          <div class="form-group">
-            <multiselect
-              v-model="course_data"
-              placeholder="Mata Kuliah"
-              :options="dataDropdown.courses"
-              label="name"
-              track-by="name"
-              :show-labels="false"
-              @select="selectCourse"
-              @remove="removeCourse"
-            />
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-2">
-          <div class="form-group">
-            <input
-              v-if="isCourseSelected"
-              v-model="course_code"
-              :disabled="true"
-              class="form-control text-center"
-              type="text"
-              style="background-color: #F0F4F6;"
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-    <hr
-      style="margin-left: -28px; 
-                margin-right: -28px; 
-                height: 2px; 
-                background-color: #eee; 
-                border: 0 none; 
-                color: #eee;"
-    >
     <div class="row mt-4">
       <div class="col-sm-12 col-md-6">
         <div
@@ -582,6 +387,7 @@ export default {
             Search:
             <b-form-input
               v-model="filter"
+              placeholder="Username"
               type="search"
               class="form-control form-control-sm ml-2"
               @input="handleSearch"
@@ -609,23 +415,23 @@ export default {
         @filtered="onFiltered"
       >
         <template v-slot:cell(action)="data">
-          <!-- <a
-            href="javascript:void(0);"
-            @click=onClickEdit(data)
-            class="m-1 text-primary"
+          <a
             v-b-tooltip.hover
-            title="Edit"
+            href="javascript:void(0);"
+            class="m-1 text-primary"
+            title="Edit Roles"
+            @click="onClickEdit(data)" 
           >
-            <i class="mdi mdi-pencil font-size-18"></i>
-          </a> -->
+            <i class="mdi mdi-pencil font-size-18" />
+          </a>
           <a
             v-b-tooltip.hover
             href="javascript:void(0);"
             class="m-1 text-danger"
-            title="Delete"
-            @click="onClickDelete(data)"
+            title="Reset Password"
+            @click="onClickReset(data)" 
           >
-            <i class="mdi mdi-trash-can font-size-18" />
+            <i class="mdi mdi-account-convert font-size-18" />
           </a>
         </template>
       </b-table>
@@ -649,61 +455,63 @@ export default {
       <b-modal 
         id="modal-edit" 
         size="lg" 
-        title="Edit Student" 
+        title="Edit Roles" 
         hide-footer 
         title-class="font-18"
       >
-        <div class="col-sm-12">
-          <div class="form-group col-sm-12">
-            <label for="nim">NIM</label>
-            <input 
-              id="nip"
-              v-model="dataEditDetail.nim"
-              style="background-color: #F0F4F6;"
-              :disabled="true" 
-              name="nip" 
-              type="number" 
-              class="form-control"
-            >
-          </div>
-        </div>
-        <form
-          class="form-horizontal col-sm-12 col-md-12"
-          @submit.prevent="editRole"
-        >
-          <div
-            id="metadata"
-            class="tab-pane"
+        <div>
+          <form
+            class="form-horizontal col-sm-12 col-md-12"
+            @submit.prevent="editRole"
           >
-            <div class="col-sm-12">
-              <div class="form-group">
-                <label class="control-label">Roles</label>
-                <multiselect
-                  v-model="role_data"
-                  :options="roleData"
-                  :multiple="true"
-                  :show-labels="false"
-                  @remove="removeRole"
-                />
+            <div
+              id="metadata"
+              class="tab-pane"
+            >
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="nip">Username</label>
+                  <input 
+                    id="nip"
+                    v-model="dataEditRole.no_induk"
+                    style="background-color: #F0F4F6;"
+                    :disabled="true" 
+                    name="no_induk" 
+                    type="text" 
+                    class="form-control"
+                  >
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Roles</label>
+                  <multiselect
+                    v-model="role_data"
+                    :options="roleData"
+                    :multiple="true"
+                    :show-labels="false"
+                    @remove="removeRole"
+                  />
+                </div>
+              </div>
+              <div class="text-center mt-4">
+                <button
+                  type="submit"
+                  class="btn btn-primary mr-2 waves-effect waves-light"
+                >
+                  Simpan
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light waves-effect"
+                  @click="hideModal"
+                >
+                  Batalkan
+                </button>
               </div>
             </div>
-            <div class="text-center mt-4">
-              <button
-                type="submit"
-                class="btn btn-primary mr-2 waves-effect waves-light"
-              >
-                Simpan
-              </button>
-              <button
-                type="button"
-                class="btn btn-light waves-effect"
-                @click="hideModal"
-              >
-                Batalkan
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </b-modal>
     </div>
   </div>

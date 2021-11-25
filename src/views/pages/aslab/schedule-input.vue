@@ -10,6 +10,7 @@ import moment from 'moment';
 
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
+import tableRoomVue from '../laboran/room/table-room.vue';
 
 /**
  * Advanced-form component
@@ -36,24 +37,6 @@ export default {
     time_start: { required },
     time_end: { required },
     time_date: { required },
-  },
-  computed: {
-    notification() {
-      return this.$store ? this.$store.state.notification : null;
-    },
-  },
-  mounted: async function() {
-    this.loading();
-    await this.loadData().then(result=>{
-      this.loading();
-    });
-  },
-  watch: {
-    $route: async function() {
-      await this.loadData().then(result=>{
-        this.loading();
-      });
-    }
   },
   data() {
     return {
@@ -139,6 +122,23 @@ export default {
       isRuanganShowed: false,
 
     };
+  },
+  computed: {
+    notification() {
+      return this.$store ? this.$store.state.notification : null;
+    },
+  },
+  watch: {
+    $route: async function() {
+      this.loading(true);
+      await this.loadData();
+      this.loading(false);
+    }
+  },
+  mounted: async function() {
+    this.loading(true);
+    await this.loadData();
+    this.loading(false);
   },
   methods: {
     ...notificationMethods,
@@ -248,7 +248,7 @@ export default {
     },
 
     selectModule(value){
-      this.loading();
+      this.loading(true);
       const params = this.getRequestParams(
         value,
       );
@@ -276,6 +276,8 @@ export default {
                   footer: error
               })
           })
+      
+      this.loading(false);
     },
 
     async setDate(){
@@ -351,12 +353,11 @@ export default {
           confirmButtonText: "Ya, batalkan!"
       }).then(result => {
           if (result.value) {
-              this.loading();
+              this.loading(true);
               this.submitted = false;
               this.isInputCanceled = true;
-              this.loadData().then(result=>{
-                this.loading();
-              });
+              this.loadData();
+              this.loading(false);
               Swal.fire("Berhasil dibatalkan!", "Form telah dikosongkan.", "success");
           }
       });
@@ -409,15 +410,14 @@ export default {
       return (
         api.editSchedule(id, data)
           .then(response => {
-            this.loading();
+            this.loading(true);
             this.tryingToInput = false;
             this.isInputError = false;
             this.inputSuccess = true;
             this.submitted = false;
-            Swal.fire("Edited!", data.name + " has been edited.", "success");
-            this.loadData().then(result=>{
-              this.loading();
-            });
+            Swal.fire("Berhasil diubah!", data.name + " telah terubah.", "success");
+            this.loadData();
+            this.loading(false);
           })
           .catch(error => {
             this.submitted = false;
@@ -442,19 +442,16 @@ export default {
       this.room = value;
     },
 
-    loading() {
-      if(this.isLoading){
-        this.isLoading = false;
-      } else{
-        this.isLoading = true;
-      }
+    loading(isLoad) {
+        var x = document.getElementById("loading");
 
-      var x = document.getElementById("loading");
-      if (x.style.display === "none") {
-        x.style.display = "block";
-      } else {
-        x.style.display = "none";
-      }
+        if(isLoad){
+            this.isLoading = true;
+            x.style.display = "block";
+        } else{
+            this.isLoading = false;
+            x.style.display = "none";
+        }
     },
 
   },
@@ -464,245 +461,303 @@ export default {
 
 <template>
   <Layout>
-    <PageHeader :title="title" :items="items" />
-    <div id="loading" style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-      <b-spinner style="width: 3rem; height: 3rem;" class="m-2" variant="warning" role="status"></b-spinner>
+    <PageHeader
+      :title="title"
+      :items="items"
+    />
+    <div
+      id="loading"
+      style="display:none; z-index:100; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);"
+    >
+      <b-spinner
+        style="width: 3rem; height: 3rem;"
+        class="m-2"
+        variant="warning"
+        role="status"
+      />
     </div>
     <div>
       <div class="card">
         <div class="card-body">
           <div class="row">
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Kelas</label>
-                      <input
-                          v-model="class_course_data.class.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Kelas</label>
+                <input
+                  v-model="class_course_data.class.name"
+                  type="text"
+                  class="form-control"
+                  disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
+            </div>
 
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Mata Kuliah</label>
-                      <input
-                          v-model="class_course_data.course.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Mata Kuliah</label>
+                <input
+                  v-model="class_course_data.course.name"
+                  type="text"
+                  class="form-control"
+                  disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
+            </div>
 
-              <div class="col-sm-4">
-                  <div class="form-group">
-                      <label>Tahun / Semester</label>
-                      <input
-                          v-model="class_course_data.academic_year.name"
-                          type="text"
-                          class="form-control"
-                          disabled="true"
-                          style="background-color: #F0F4F6;"
-                      />
-                  </div>
+            <div class="col-sm-4">
+              <div class="form-group">
+                <label>Tahun / Semester</label>
+                <input
+                  v-model="class_course_data.academic_year.name"
+                  type="text"
+                  class="form-control"
+                  disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
+            </div>
           </div>
 
           <div class="form-group text-center">
-              <label>Modul</label>
-              <multiselect 
-                class="text-center"
-                v-model="schedule_data.module.index" 
-                :options="dataModules"
-                @select="selectModule"
-                :allow-empty="false"
-                :disabled="isLoading"
-                :show-labels="false"
-              ></multiselect>
+            <label>Modul</label>
+            <multiselect 
+              v-model="schedule_data.module.index"
+              class="text-center" 
+              :options="dataModules"
+              :allow-empty="false"
+              :disabled="isLoading"
+              :show-labels="false"
+              @select="selectModule"
+            />
           </div>
         </div>
       </div>
-      <form class="form-horizontal" @submit.prevent="updateSchedule">
+      <form
+        class="form-horizontal"
+        @submit.prevent="updateSchedule"
+      >
         <div class="card">
           <div class="card-body">
-
             <div>
-                <b-alert
+              <b-alert
                 v-model="inputSuccess"
                 class="mt-3"
                 variant="success"
                 dismissible
-                >Data updated successfully!</b-alert>
+              >
+                Data updated successfully!
+              </b-alert>
 
-                <b-alert
+              <b-alert
                 v-model="isInputError"
                 class="mt-3"
                 variant="danger"
                 dismissible
-                >{{inputError}}</b-alert>
+              >
+                {{ inputError }}
+              </b-alert>
 
-                <b-alert
+              <b-alert
                 v-model="isInputCanceled"
                 class="mt-3"
                 variant="success"
                 dismissible
-                >Berhasil dibatalkan!</b-alert>
+              >
+                Berhasil dibatalkan!
+              </b-alert>
 
-                <b-alert
+              <b-alert
+                v-if="notification.message"
                 variant="danger"
                 class="mt-3"
-                v-if="notification.message"
                 show
                 dismissible
-                >{{notification.message}}</b-alert>
+              >
+                {{ notification.message }}
+              </b-alert>
             </div>
 
             <div class="row mb-2 mt-2">
               <div class="form-group col-sm-12">
-                  <label>Nama untuk Kalender</label>
-                  <input 
-                    v-model="schedule_data.title"
-                    type="text"
-                    class="form-control"
-                    :disabled="isLoading"
-                    :class="{ 'is-invalid': submitted && $v.schedule_data.title.$error }"
-                  >
-                  <div
+                <label>Nama untuk Kalender</label>
+                <input 
+                  v-model="schedule_data.title"
+                  type="text"
+                  class="form-control"
+                  :disabled="isLoading"
+                  :class="{ 'is-invalid': submitted && $v.schedule_data.title.$error }"
+                >
+                <div
                   v-if="submitted && !$v.schedule_data.title.required"
                   class="invalid-feedback"
-                  >Name harus diisi!</div>
+                >
+                  Name harus diisi!
+                </div>
               </div>
             </div>
 
             <div class="row mb-2 mt-2">
               <div class="form-group col-sm-4">
-                  <label>Tanggal</label>
-                  <br />
-                  <date-picker
-                    v-model="time_date" 
-                    :first-day-of-week="1" 
-                    lang="en"
-                    :clearable=false
-                    value-type="format"
-                    :disabled="isLoading"
-                    :class="{ 'is-invalid': submitted && $v.time_date.$error }"
-                  ></date-picker>
-                  <div
+                <label>Tanggal</label>
+                <br>
+                <date-picker
+                  v-model="time_date" 
+                  :first-day-of-week="1" 
+                  lang="en"
+                  :clearable="false"
+                  value-type="format"
+                  :disabled="isLoading"
+                  :class="{ 'is-invalid': submitted && $v.time_date.$error }"
+                />
+                <div
                   v-if="submitted && !$v.time_date.required"
                   class="invalid-feedback"
-                  >Tanggal harus diisi!</div>
+                >
+                  Tanggal harus diisi!
+                </div>
               </div>
 
               <div class="form-group col-sm-4">
-                  <label>Jam Mulai</label>
-                  <br />
-                  <date-picker
-                    v-model="time_start"
-                    value-type="format"
-                    type="time"
-                    placeholder="HH:mm:ss"
-                    :disabled="isLoading"
-                    :disabled-time="notAfterTimeEnd"
-                    :class="{ 'is-invalid': submitted && $v.time_start.$error }"
-                  ></date-picker>
-                  <div
+                <label>Jam Mulai</label>
+                <br>
+                <date-picker
+                  v-model="time_start"
+                  value-type="format"
+                  type="time"
+                  placeholder="HH:mm:ss"
+                  :disabled="isLoading"
+                  :disabled-time="notAfterTimeEnd"
+                  :class="{ 'is-invalid': submitted && $v.time_start.$error }"
+                />
+                <div
                   v-if="submitted && !$v.time_start.required"
                   class="invalid-feedback"
-                  >Jam Mulai harus diisi!</div>
+                >
+                  Jam Mulai harus diisi!
+                </div>
               </div>
               
               <div class="form-group col-sm-4">
-                  <label>Jam Terakhir</label>
-                  <br />
-                  <date-picker
-                    v-model="time_end"
-                    value-type="format"
-                    type="time"
-                    placeholder="HH:mm:ss"
-                    :disabled="isLoading"
-                    :disabled-time="notBeforeTimeStart"
-                    :class="{ 'is-invalid': submitted && $v.time_end.$error }"
-                  ></date-picker>
-                  <div
+                <label>Jam Terakhir</label>
+                <br>
+                <date-picker
+                  v-model="time_end"
+                  value-type="format"
+                  type="time"
+                  placeholder="HH:mm:ss"
+                  :disabled="isLoading"
+                  :disabled-time="notBeforeTimeStart"
+                  :class="{ 'is-invalid': submitted && $v.time_end.$error }"
+                />
+                <div
                   v-if="submitted && !$v.time_end.required"
                   class="invalid-feedback"
-                  >Jam Terakhir harus diisi!</div>
+                >
+                  Jam Terakhir harus diisi!
+                </div>
               </div>
             </div>
 
             <div class="row mb-2 mt-2">
               <div class="form-group col-sm-12">
-                  <div class="row" style="margin:0!important;">
-                    <label class="mr-4">Ruangan</label>
-                    <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="!isRuanganShowed">show</a>
-                    <a href="javascript:void(0)" @click="onClickRuangan" class="font-weight-bold active" v-if="isRuanganShowed">hide</a>
-                  </div>
-                  <multiselect 
-                    v-model="schedule_data.room" 
-                    :options="dataRooms"
-                    label="name"
-                    track-by="name"
-                    @select="selectRoom"
-                    :allow-empty="false"
-                    :disabled="isLoading"
-                    :show-labels="false"
-                    :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
-                  ></multiselect>
-                  <div
+                <div
+                  class="row"
+                  style="margin:0!important;"
+                >
+                  <label class="mr-4">Ruangan</label>
+                  <a
+                    v-if="!isRuanganShowed"
+                    href="javascript:void(0)"
+                    class="font-weight-bold active"
+                    @click="onClickRuangan"
+                  >show</a>
+                  <a
+                    v-if="isRuanganShowed"
+                    href="javascript:void(0)"
+                    class="font-weight-bold active"
+                    @click="onClickRuangan"
+                  >hide</a>
+                </div>
+                <multiselect 
+                  v-model="schedule_data.room" 
+                  :options="dataRooms"
+                  label="name"
+                  track-by="name"
+                  :allow-empty="false"
+                  :disabled="isLoading"
+                  :show-labels="false"
+                  :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
+                  @select="selectRoom"
+                />
+                <div
                   v-if="submitted && !$v.schedule_data.room.id.required"
                   class="invalid-feedback"
-                  >Ruangan harus diisi!</div>
+                >
+                  Ruangan harus diisi!
+                </div>
               </div>
             </div>
 
-            <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+            <div
+              v-if="isRuanganShowed"
+              class="row mb-2 mt-2"
+            >
               <div class="form-group col-sm-12">
-                  <label>Deskripsi Ruangan</label>
-                  <textarea 
-                    v-model="room.desc"
-                    rows=2
-                    type="text"
-                    class="form-control"
-                    :disabled="true"
-                    style="background-color: #F0F4F6;"
-                  ></textarea>
+                <label>Deskripsi Ruangan</label>
+                <textarea 
+                  v-model="room.desc"
+                  rows="2"
+                  type="text"
+                  class="form-control"
+                  :disabled="true"
+                  style="background-color: #F0F4F6;"
+                />
               </div>
             </div>
 
-            <div class="row mb-2 mt-2" v-if="isRuanganShowed">
+            <div
+              v-if="isRuanganShowed"
+              class="row mb-2 mt-2"
+            >
               <div class="form-group col-sm-6">
-                  <label>MS Teams Link</label>
-                  <input 
-                    v-model="room.msteam_link"
-                    type="text"
-                    class="form-control"
-                    :disabled="true"
-                    style="background-color: #F0F4F6;"
-                  >
+                <label>MS Teams Link</label>
+                <input 
+                  v-model="room.msteam_link"
+                  type="text"
+                  class="form-control"
+                  :disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
 
               <div class="form-group col-sm-6">
-                  <label>MS Teams Code</label>
-                  <input 
-                    v-model="room.msteam_code"
-                    type="text"
-                    class="form-control"
-                    :disabled="true"
-                    style="background-color: #F0F4F6;"
-                  >
+                <label>MS Teams Code</label>
+                <input 
+                  v-model="room.msteam_code"
+                  type="text"
+                  class="form-control"
+                  :disabled="true"
+                  style="background-color: #F0F4F6;"
+                >
               </div>
             </div>
 
             <div class="text-center mt-4">
-                <button
+              <button
                 type="submit"
                 class="btn btn-primary mr-2 waves-effect waves-light"
-                >Simpan</button>
-                <button type="button" @click="cancelSubmit" class="btn btn-light waves-effect">Batalkan</button>
+              >
+                Simpan
+              </button>
+              <button
+                type="button"
+                class="btn btn-light waves-effect"
+                @click="cancelSubmit"
+              >
+                Batalkan
+              </button>
             </div>
           </div>
         </div>
