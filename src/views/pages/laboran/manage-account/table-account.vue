@@ -2,7 +2,6 @@
 import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
-import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
 
 /**
@@ -12,44 +11,27 @@ export default {
   components: {
     Multiselect,
   },
-  validations: {
-    dataEdit: {
-      nip: { required },
-      name: { required },
-      code: { required },
-    },
-  },
   data() {
     return {
-      //list staff
+      //list classroom
       isFetchingData: false,
-      dataStaffs: [],
+      dataAccounts: [],
       totalRows: 1,
       currentPage: 1,
       perPage: 10,
       pageOptions: [10, 25, 50, 100],
       filter: "",
       filterOn: [],
-      sortBy: "nip",
+      sortBy: "username",
       sortDesc: false,
       fields: [
-        { key: "nip", sortable: true, label: "NIP" },
-        { key: "name", sortable: true, label: "Nama" },
-        { key: "code", sortable: true, label: "Kode Dosen" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "username", sortable: true, label: "Username" },
+        { key: "name", sortable: false, label: "Nama" },
+        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
-      //modal edit
-      idDataEdit: "",
-      dataEdit: { 
-          nip: "",
-          code: "", 
-          name: "",
-          },
-      submitted: false,
-
       //edit role
-      roleData: ['laboran', 'dosen'],
+      roleData: ['laboran', 'dosen', 'asprak', 'aslab'],
       role_data: [],
       dataEditRole: {
           no_induk: "",
@@ -60,7 +42,7 @@ export default {
           laboran: 0,
           dosen: 0,
       },
-      main_role: "staff",
+      main_role: "",
     };
   },
   computed: {
@@ -71,7 +53,7 @@ export default {
       return this.totalRows;
     },
     datas() {
-      return this.dataStaffs;
+      return this.dataAccounts;
     },
     notification() {
       return this.$store ? this.$store.state.notification : null;
@@ -133,12 +115,12 @@ export default {
         this.sortDesc
       );
       return (
-        api.getAllStaffs(params)
+        api.getAllAccounts(params)
           .then(response => {
             this.isFetchingData = false;
 
             this.totalRows = response.data.meta.pagination.total;
-            this.dataStaffs = response.data.data;
+            this.dataAccounts = response.data.data;
           })
           .catch(error => {
             this.isFetchingData = false;
@@ -199,30 +181,30 @@ export default {
       this.loading(false);
     },
 
-    onClickDelete(data){
+    onClickReset(data){
       Swal.fire({
           title: "Anda yakin?",
-          text: data.item.nip + " akan dihapus!",
+          text: "Password " + data.item.username + " akan diubah sesuai Username!",
           icon: "warning",
           showCancelButton: true,
           confirmButtonColor: "#34c38f",
           cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Ya, hapus!"
+          confirmButtonText: "Ya, reset password!"
       }).then(result => {
           if (result.value) {
-              this.deleteStaff(data.item.id, data.item.nip);
+              this.resetUserPassword(data.item.id, data.item.username);
           }
       });
     },
 
-    deleteStaff(id, nip){
+    resetUserPassword(id, username){
       return (
-        api.deleteStaff(id)
+        api.resetUserPassword(id)
           .then(response => {
             this.loading(true);
             this.fetchData();
             this.loading(false);
-            Swal.fire("Berhasil dihapus!", nip + " telah terhapus.", "success");
+            Swal.fire("Berhasil diatur ulang!", "Password " + username + " telah diubah sesuai Username.", "success");
           })
           .catch(error => {
             Swal.fire({
@@ -235,50 +217,22 @@ export default {
       )
     },
 
-    onClickEdit(data){
-      this.idDataEdit = data.item.id;
-      this.dataEdit.nip = data.item.nip;
-      this.dataEdit.code = data.item.code;
-      this.dataEdit.name = data.item.name;
-
+    async onClickEdit(data){
       //edit role
-      this.dataEditRole.no_induk = data.item.nip;
+      if(data.item.nim){
+          this.dataEditRole.no_induk = data.item.nim;
+          this.roleData = ['asprak', 'aslab'];
+          this.main_role = "student";
+      }
+      else if(data.item.nip){
+          this.dataEditRole.no_induk = data.item.nip;
+          this.roleData = ['laboran', 'dosen'];
+          this.main_role = "staff";
+      }
       this.getRoles(this.dataEditRole.no_induk);
       this.setRoles(this.role_data, this.dataEditRole);
 
       this.$bvModal.show('modal-edit');
-    },
-
-    editStaff(){
-      this.submitted = true;
-      this.$v.$touch();
-      if (this.$v.$invalid) {
-        return;
-      } 
-      else {
-        return (
-          api.editStaff(this.idDataEdit, this.dataEdit)
-            .then(response => {
-              this.loading(true);
-              this.submitted = false;
-              this.fetchData();
-              this.loading(false);
-              this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
-            })
-            .catch(error => {
-              this.submitted = false;
-              this.hideModal();
-              
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: 'Terjadi kesalahan!',
-                footer: error
-              })
-            })
-        )
-      }
     },
 
     getRoles(no_induk){
@@ -301,8 +255,15 @@ export default {
     },
 
     setRoles(role_data, dataEditRole){
-        if (role_data.includes("staff") == false){
-            role_data.push("staff");
+        if(this.main_role == "student"){
+            if (role_data.includes("student") == false){
+                role_data.push("student");
+            }
+        }
+        else if(this.main_role == "staff"){
+            if (role_data.includes("staff") == false){
+                role_data.push("staff");
+            }
         }
         role_data.forEach((element, index, array) => {
             if (element == "student") {
@@ -336,7 +297,7 @@ export default {
               this.fetchData();
               this.loading(false);
               this.hideModal();
-              Swal.fire("Edited!", this.dataEdit.nip + " has been edited.", "success");
+              Swal.fire("Edited!", this.dataEditRole.no_induk + " has been edited.", "success");
             })
             .catch(error => {
               this.submitted = false;
@@ -353,8 +314,15 @@ export default {
     },
 
     removeRole(value){
-        if (value == "staff") {
-            this.role_data.push("staff");
+        if(this.main_role == "student"){
+            if (value == "student"){
+                this.role_data.push("student");
+            }
+        }
+        else if(this.main_role == "staff"){
+            if (value == "staff"){
+                this.role_data.push("staff");
+            }
         }
     },
 
@@ -366,9 +334,11 @@ export default {
         var x = document.getElementById("loading");
 
         if(isLoad){
+            this.isFetchingData = true;
             this.isLoading = true;
             x.style.display = "block";
         } else{
+            this.isFetchingData = false;
             this.isLoading = false;
             x.style.display = "none";
         }
@@ -417,6 +387,7 @@ export default {
             Search:
             <b-form-input
               v-model="filter"
+              placeholder="Username"
               type="search"
               class="form-control form-control-sm ml-2"
               @input="handleSearch"
@@ -448,8 +419,8 @@ export default {
             v-b-tooltip.hover
             href="javascript:void(0);"
             class="mr-3 text-primary"
-            title="Edit"
-            @click="onClickEdit(data)"
+            title="Edit Roles"
+            @click="onClickEdit(data)" 
           >
             <i class="mdi mdi-pencil font-size-18" />
           </a>
@@ -457,10 +428,10 @@ export default {
             v-b-tooltip.hover
             href="javascript:void(0);"
             class="text-danger"
-            title="Delete"
-            @click="onClickDelete(data)"
+            title="Reset Password"
+            @click="onClickReset(data)" 
           >
-            <i class="mdi mdi-trash-can font-size-18" />
+            <i class="mdi mdi-account-convert font-size-18" />
           </a>
         </template>
       </b-table>
@@ -484,154 +455,62 @@ export default {
       <b-modal 
         id="modal-edit" 
         size="lg" 
-        title="Edit Staff" 
+        title="Edit Roles" 
         hide-footer 
         title-class="font-18"
       >
-        <div class="card">
-          <div class="card-body pt-0">
-            <b-tabs nav-class="nav-tabs-custom">
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Edit Data</a>
-                </template>
-                <template>
-                  <div class="mt-4">
-                    <form
-                      class="form-horizontal col-sm-12 col-md-12"
-                      @submit.prevent="editStaff"
-                    >
-                      <div
-                        id="metadata"
-                        class="tab-pane"
-                      >
-                        <div class="col-sm-12">
-                          <div class="form-group">
-                            <label for="nip">NIP</label>
-                            <input 
-                              id="nip"
-                              v-model="dataEdit.nip" 
-                              name="nip" 
-                              type="text" 
-                              class="form-control"
-                              :class="{ 'is-invalid': submitted && $v.dataEdit.nip.$error }"
-                            >
-
-                            <div
-                              v-if="submitted && !$v.dataEdit.nip.required"
-                              class="invalid-feedback"
-                            >
-                              NIP harus diisi!
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-sm-12">
-                          <div class="form-group">
-                            <label for="nama">Nama Dosen</label>
-                            <input 
-                              id="nama"
-                              v-model="dataEdit.name" 
-                              name="nama" 
-                              type="text" 
-                              class="form-control"
-                              :class="{ 'is-invalid': submitted && $v.dataEdit.name.$error }"
-                            >
-
-                            <div
-                              v-if="submitted && !$v.dataEdit.name.required"
-                              class="invalid-feedback"
-                            >
-                              Nama Dosen harus diisi!
-                            </div>
-                          </div>
-                        </div>
-                        <div class="col-sm-12">
-                          <div class="form-group">
-                            <label for="code">Kode Dosen</label>
-                            <input
-                              id="code"
-                              v-model="dataEdit.code"
-                              name="code"
-                              type="text"
-                              class="form-control"
-                              :class="{ 'is-invalid': submitted && $v.dataEdit.code.$error }"
-                            >
-                            <div
-                              v-if="submitted && !$v.dataEdit.code.required"
-                              class="invalid-feedback"
-                            >
-                              Kode Mata Kuliah harus diisi!
-                            </div>
-                          </div>
-                        </div>
-                        <div class="text-center mt-4">
-                          <button
-                            type="submit"
-                            class="btn btn-primary mr-2 waves-effect waves-light"
-                          >
-                            Simpan
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-light waves-effect"
-                            @click="hideModal"
-                          >
-                            Batalkan
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </template>
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Edit Roles</a>
-                </template>
-                <template>
-                  <div class="mt-4">
-                    <form
-                      class="form-horizontal col-sm-12 col-md-12"
-                      @submit.prevent="editRole"
-                    >
-                      <div
-                        id="metadata"
-                        class="tab-pane"
-                      >
-                        <div class="col-sm-12">
-                          <div class="form-group">
-                            <label class="control-label">Roles</label>
-                            <multiselect
-                              v-model="role_data"
-                              :options="roleData"
-                              :multiple="true"
-                              :show-labels="false"
-                              @remove="removeRole"
-                            />
-                          </div>
-                        </div>
-                        <div class="text-center mt-4">
-                          <button
-                            type="submit"
-                            class="btn btn-primary mr-2 waves-effect waves-light"
-                          >
-                            Simpan
-                          </button>
-                          <button
-                            type="button"
-                            class="btn btn-light waves-effect"
-                            @click="hideModal"
-                          >
-                            Batalkan
-                          </button>
-                        </div>
-                      </div>
-                    </form>
-                  </div>
-                </template>
-              </b-tab>
-            </b-tabs>
-          </div>
+        <div>
+          <form
+            class="form-horizontal col-sm-12 col-md-12"
+            @submit.prevent="editRole"
+          >
+            <div
+              id="metadata"
+              class="tab-pane"
+            >
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="nip">Username</label>
+                  <input 
+                    id="nip"
+                    v-model="dataEditRole.no_induk"
+                    style="background-color: #F0F4F6;"
+                    :disabled="true" 
+                    name="no_induk" 
+                    type="text" 
+                    class="form-control"
+                  >
+                </div>
+              </div>
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label">Roles</label>
+                  <multiselect
+                    v-model="role_data"
+                    :options="roleData"
+                    :multiple="true"
+                    :show-labels="false"
+                    @remove="removeRole"
+                  />
+                </div>
+              </div>
+              <div class="text-center mt-4">
+                <button
+                  type="submit"
+                  class="btn btn-primary mr-2 waves-effect waves-light"
+                >
+                  Simpan
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-light waves-effect"
+                  @click="hideModal"
+                >
+                  Batalkan
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </b-modal>
     </div>

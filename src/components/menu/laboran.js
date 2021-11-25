@@ -85,4 +85,15 @@ export const laboranItems = [
         icon: 'ri-account-circle-line',
         link: 'laboran-bap'
     },
+    {
+        id: 16,
+        label: "menuitems.laboran.account-data",
+        isTitle: true
+    },
+    {
+        id: 17,
+        label: 'menuitems.laboran.list.manage-account',
+        icon: 'ri-user-settings-fill',
+        link: 'laboran-manage-account'
+    },
 ]

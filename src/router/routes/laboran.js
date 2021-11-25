@@ -155,7 +155,6 @@ export default [
         },
         component: () => import('../../views/pages/laboran/academic-year/index')
     },
-
     {
         path: '/laboran/bap',
         name: 'laboran-bap',
@@ -173,7 +172,6 @@ export default [
         },
         component: () => import('../../views/pages/laboran/bap/list-bap')
     },
-
     {
         path: '/laboran/bap/:id/detail',
         name: 'laboran-bap-detail',
@@ -190,5 +188,22 @@ export default [
             },
         },
         component: () => import('../../views/pages/laboran/bap/detail-bap')
+    },
+    {
+        path: '/laboran/manage-account',
+        name: 'laboran-manage-account',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/laboran/manage-account/index')
     },
 ]

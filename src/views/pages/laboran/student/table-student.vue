@@ -39,7 +39,6 @@ export default {
         { key: "gender", sortable: true, label: "Gender" },
         { key: "religion", sortable: true, label: "Religion" },
         { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
-        { key: "manage", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //modal edit
@@ -288,42 +287,6 @@ export default {
       }
     },
 
-    onClickReset(data){
-      Swal.fire({
-          title: "Anda yakin?",
-          text: "Password " + data.item.nim + " akan diubah sesuai NIM!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#34c38f",
-          cancelButtonColor: "#f46a6a",
-          confirmButtonText: "Ya, reset password!"
-      }).then(result => {
-          if (result.value) {
-              this.resetUserPassword(data.item.id, data.item.nim);
-          }
-      });
-    },
-
-    resetUserPassword(id, nim){
-      return (
-        api.resetUserPassword(id)
-          .then(response => {
-            this.loading(true);
-            this.fetchData();
-            this.loading(false);
-            Swal.fire("Berhasil diatur ulang!", "Password " + nim + " telah diubah sesuai NIM.", "success");
-          })
-          .catch(error => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'Terjadi kesalahan!',
-              footer: error
-            })
-          })
-      )
-    },
-
     getRoles(no_induk){
         return (
           api.getRoles(no_induk)
@@ -505,30 +468,6 @@ export default {
           >
             <i class="mdi mdi-trash-can font-size-18" />
           </a>
-        </template>
-        <template v-slot:cell(manage)="data">
-          <div class="row">
-            <div class="col-12 m-2">
-              <b-button
-                type="submit" 
-                variant="danger"
-                size="sm"
-                style="min-width: 75px;"
-                @click="onClickReset(data)" 
-              >
-                Reset Password
-              </b-button>
-            </div>
-            <!-- <div class="col-12 m-2">
-              <b-button
-                  type="submit" 
-                  variant="danger"
-                  @click=onClickReset(data)
-                  style="min-width: 75px;" 
-                  >Reset Password
-              </b-button>
-            </div> -->
-          </div>
         </template>
       </b-table>
     </div>
