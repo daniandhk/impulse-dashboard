@@ -339,7 +339,7 @@ export default {
     editModal(data){
       this.schedule_data.id = data.item.id;
       this.$router.push({
-          name: 'asprak-schedule-detail', 
+          name: 'asprak-schedule-edit', 
           params: { id: this.schedule_data.id }
       });
     },

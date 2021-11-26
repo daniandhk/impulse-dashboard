@@ -354,7 +354,7 @@ export default {
             if(response.data.data){
               let schedule_id = response.data.data[0].id;
               this.$router.push({
-                  name: 'asprak-schedule-detail', 
+                  name: 'asprak-schedule-edit', 
                   params: { id: schedule_id }
               });
             }
