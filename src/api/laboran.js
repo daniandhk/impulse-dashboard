@@ -275,3 +275,9 @@ export function resetUserPassword(user_id) {
 export function getAllAccounts(params) {
     return httpAxios.get('/laboran/user', { params })
 }
+export function logoutAccount(id){
+    return httpAxios({
+        url: `/laboran/user/logout/${id}`,
+        method: 'POST',
+    })
+}
