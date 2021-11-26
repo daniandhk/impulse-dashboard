@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import store from '@/store';
 
 export default {
     page: {
@@ -108,12 +107,22 @@ export default {
             isInputTestCanceled: false,
 
             isGradeInvalid: false,
+
+            editorOption: {
+                placeholder: "",
+                modules: {
+                    toolbar: false,
+                }
+            },
         }
     },
     computed: {
         notification() {
             return this.$store ? this.$store.state.notification : null;
         },
+        editor() {
+            return this.$refs.myQuillEditor.quill
+        }
     },
     watch: {
         $route: async function() {
@@ -226,6 +235,7 @@ export default {
                 .then(response => {
                     if(response.data.data){
                         this.test_data = response.data.data;
+                        console.log(this.test_data)
                     }
                 })
                 .catch(error => {
@@ -494,14 +504,14 @@ export default {
               style="margin-bottom:1px!important"
             >
               <div class="card-body">
-                <div class="col-12">
+                <div>
                   <label>Soal</label>
-                  <div class="output ql-snow">
-                    <div
-                      class="ql-editor"
-                      v-html="question.question"
-                    />
-                  </div>
+                  <quill-editor
+                    ref="myQuillEditor"
+                    v-model="question.question"
+                    :options="editorOption"
+                    :disabled="true"
+                  />
                 </div>
               </div>
             </div>
@@ -511,10 +521,12 @@ export default {
                   <div class="col-12">
                     <label>Jawaban</label>
                     <div v-if="isEssay">
-                      <div class="mt-2">
-                        <div
-                          class="ql-editor"
-                          v-html="test_data.grade[index].student_answer.answers"
+                      <div>
+                        <quill-editor
+                          ref="myQuillEditor"
+                          v-model="test_data.grade[index].student_answer.answers"
+                          :options="editorOption"
+                          :disabled="true"
                         />
                       </div>
                     </div>
@@ -522,21 +534,22 @@ export default {
                       <div
                         v-for="(answer, idx) in question.answers"
                         :key="idx"
-                        class="mt-2 ml-1 form-check"
+                        class="ml-1 form-check"
                       >
                         <input 
                           v-model="test_data.grade[index].student_answer" 
-                          class="form-check-input mt-3" 
+                          class="form-check-input" 
                           type="checkbox"
                           :value="answer.id"
                           :disabled="true"
                         >
-                        <div class="output ql-snow mb-1">
-                          <div
-                            class="ql-editor"
-                            v-html="answer.answer"
-                          />
-                        </div>
+                        <quill-editor
+                          ref="myQuillEditor"
+                          v-model="answer.answer"
+                          :options="editorOption"
+                          :disabled="true"
+                          class="pt-1 mb-4"
+                        />
                       </div>
                     </div>
                   </div>
@@ -556,7 +569,7 @@ export default {
                         v-model="text.nilai"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0; max-width:80px!important;"
                       >
                       <input
@@ -573,7 +586,7 @@ export default {
                         v-model="text.slash"
                         type="text"
                         class="form-control mr-2 ml-2"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0; max-width:30px!important; text-align:center;"
                       >
                       <input
@@ -581,7 +594,7 @@ export default {
                         style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                       >
                     </div>
                     <div
@@ -656,7 +669,7 @@ export default {
             <div class="form-group">
               <input
                 v-model="test_data.test.questions[0].answers[0].answer"
-                disabled="true"
+                :disabled="true"
                 type="text" 
                 class="form-control text-center"
                 placeholder="https://drive.google.com/drive/folders/xxx"
@@ -673,7 +686,7 @@ export default {
                 v-model="text.nilai"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
                 style="border: 0; max-width:80px!important;"
               >
               <input
@@ -689,7 +702,7 @@ export default {
                 v-model="text.slash"
                 type="text"
                 class="form-control mr-2 ml-2"
-                disabled="true"
+                :disabled="true"
                 style="border: 0; max-width:30px!important; text-align:center;"
               >
               <input
@@ -697,7 +710,7 @@ export default {
                 style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>

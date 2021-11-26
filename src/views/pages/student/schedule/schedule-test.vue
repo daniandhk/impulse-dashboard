@@ -107,12 +107,22 @@ export default {
                     ],
                 }
             },
+
+            editorOption: {
+                placeholder: "",
+                modules: {
+                    toolbar: false,
+                }
+            },
         }
     },
     computed: {
         notification() {
             return this.$store ? this.$store.state.notification : null;
         },
+        editor() {
+            return this.$refs.myQuillEditor.quill
+        }
     },
     watch: {
         $route: async function() {
@@ -588,12 +598,12 @@ export default {
               <div class="card-body">
                 <div class="col-12">
                   <label>Soal</label>
-                  <div class="output ql-snow">
-                    <div
-                      class="ql-editor"
-                      v-html="question.question"
-                    />
-                  </div>
+                  <quill-editor
+                    ref="myQuillEditor"
+                    v-model="question.question"
+                    :options="editorOption"
+                    disabled="true"
+                  />
                 </div>
               </div>
             </div>
@@ -602,17 +612,19 @@ export default {
                 <div class="col-12">
                   <label>Jawaban</label>
                   <div v-if="isEssay">
-                    <div class="mt-2">
+                    <div>
                       <quill-editor
                         v-if="!isEssayAnswersAvailable"
                         ref="myQuillEditor"
                         v-model="dataInput.answers[index].answers"
                         :options="editorJawaban"
                       />
-                      <div
+                      <quill-editor
                         v-if="isEssayAnswersAvailable"
-                        class="ql-editor"
-                        v-html="dataInput.answers[index].answers"
+                        ref="myQuillEditor"
+                        v-model="dataInput.answers[index].answers"
+                        :options="editorOption"
+                        disabled="true"
                       />
                     </div>
                   </div>
@@ -620,21 +632,22 @@ export default {
                     <div
                       v-for="(answer_data, idx) in question.answers"
                       :key="idx"
-                      class="mt-2 ml-1 form-check"
+                      class="ml-1 form-check"
                     >
                       <input 
                         v-model="dataInput.questions[index].answers"
-                        class="form-check-input mt-3" 
+                        class="form-check-input" 
                         type="checkbox"
                         :value="answer_data.id"
                         :disabled="isMCAnswersAvailable"
                       >
-                      <div class="output ql-snow mb-1">
-                        <div
-                          class="ql-editor"
-                          v-html="answer_data.answer"
-                        />
-                      </div>
+                      <quill-editor
+                        ref="myQuillEditor"
+                        v-model="answer_data.answer"
+                        :options="editorOption"
+                        disabled="true"
+                        class="pt-1 mb-4"
+                      />
                     </div>
                   </div>
                 </div>
