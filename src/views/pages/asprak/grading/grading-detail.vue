@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import store from '@/store';
 
 export default {
     page: {
@@ -35,9 +34,13 @@ export default {
                     text: "Asisten Praktikum",
                     href: "/"
                 },
+                // {
+                //     text: "Penilaian",
+                //     href: "/asprak/schedule-grading/"
+                // },
                 {
-                    text: "Penilaian",
-                    href: "/asprak/schedule-grading/"
+                    text: "Jadwal",
+                    href: "/asprak/schedule"
                 },
                 {
                     text: "List Test",
@@ -104,12 +107,22 @@ export default {
             isInputTestCanceled: false,
 
             isGradeInvalid: false,
+
+            editorOption: {
+                placeholder: "",
+                modules: {
+                    toolbar: false,
+                }
+            },
         }
     },
     computed: {
         notification() {
             return this.$store ? this.$store.state.notification : null;
         },
+        editor() {
+            return this.$refs.myQuillEditor.quill
+        }
     },
     watch: {
         $route: async function() {
@@ -222,6 +235,7 @@ export default {
                 .then(response => {
                     if(response.data.data){
                         this.test_data = response.data.data;
+                        console.log(this.test_data)
                     }
                 })
                 .catch(error => {
@@ -465,7 +479,10 @@ export default {
         role="status"
       />
     </div>
-    <div v-if="isEssay || isMultipleChoice">
+    <div
+      v-if="isEssay || isMultipleChoice"
+      class="mb-4"
+    >
       <div
         v-for="(question, index) in test_data.test.questions"
         :key="index"
@@ -481,92 +498,111 @@ export default {
               {{ index+1 }}
             </b-button>
           </div>
-          <div class="card col-sm-11">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-12">
-                  <label>{{ question.question }}</label>
+          <div class="row col-sm-11">
+            <div
+              class="card col-sm-11"
+              style="margin-bottom:1px!important"
+            >
+              <div class="card-body">
+                <div>
+                  <label>Soal</label>
+                  <quill-editor
+                    ref="myQuillEditor"
+                    v-model="question.question"
+                    :options="editorOption"
+                    :disabled="true"
+                  />
                 </div>
-                <div class="col-12">
-                  <div v-if="isEssay">
-                    <div class="mt-2">
-                      <textarea
-                        id="text" 
-                        v-model="test_data.grade[index].student_answer.answers" 
-                        rows="4" 
-                        name="text" 
-                        type="text"
-                        class="form-control"
-                        placeholder="Masukkan jawaban disini"
-                        :disabled="true"
-                      />
+              </div>
+            </div>
+            <div class="card col-sm-11">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-12">
+                    <label>Jawaban</label>
+                    <div v-if="isEssay">
+                      <div>
+                        <quill-editor
+                          ref="myQuillEditor"
+                          v-model="test_data.grade[index].student_answer.answers"
+                          :options="editorOption"
+                          :disabled="true"
+                        />
+                      </div>
+                    </div>
+                    <div v-if="isMultipleChoice">
+                      <div
+                        v-for="(answer, idx) in question.answers"
+                        :key="idx"
+                        class="ml-1 form-check"
+                      >
+                        <input 
+                          v-model="test_data.grade[index].student_answer" 
+                          class="form-check-input" 
+                          type="checkbox"
+                          :value="answer.id"
+                          :disabled="true"
+                        >
+                        <quill-editor
+                          ref="myQuillEditor"
+                          v-model="answer.answer"
+                          :options="editorOption"
+                          :disabled="true"
+                          class="pt-1 mb-4"
+                        />
+                      </div>
                     </div>
                   </div>
-                  <div v-if="isMultipleChoice">
-                    <div
-                      v-for="(answer, idx) in question.answers"
-                      :key="idx"
-                      class="mt-2 ml-1 form-check"
-                    >
-                      <input 
-                        v-model="test_data.grade[index].student_answer" 
-                        class="form-check-input" 
-                        type="checkbox"
-                        :value="answer.id"
-                        :disabled="true"
-                      >{{ answer.answer }}
-                    </div>
-                  </div>
-                </div>
-                <div class="col-12">
-                  <hr
-                    style="margin-left: -34px; 
+                  <div class="col-12">
+                    <hr
+                      style="margin-left: -34px; 
                                                 margin-right: -34px; 
                                                 height: 2px; 
                                                 background-color: #eee; 
                                                 border: 0 none; 
                                                 color: #eee;"
-                  >
-                </div>
-                <div class="col-12">
-                  <div class="row text-left ml-1">
-                    <input
-                      v-model="text.nilai"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
-                      style="border: 0; max-width:80px!important;"
-                    >
-                    <input
-                      v-model="test_data.grade[index].grade"
-                      style="max-width:80px!important; text-align:center;"
-                      type="number"
-                      :max="question.weight"
-                      :min="0"
-                      class="form-control"
-                      :class="{ 'is-invalid': submitted && v.grade.$error }"
-                      @input="countGrade"
-                    >
-                    <input
-                      v-model="text.slash"
-                      type="text"
-                      class="form-control mr-2 ml-2"
-                      disabled="true"
-                      style="border: 0; max-width:30px!important; text-align:center;"
-                    >
-                    <input
-                      v-model="question.weight"
-                      style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
-                      type="text"
-                      class="form-control"
-                      disabled="true"
                     >
                   </div>
-                  <div
-                    v-if="submitted && !v.grade.$error.required"
-                    class="invalid-feedback"
-                  >
-                    Nilai harus diisi!
+                  <div class="col-12">
+                    <div class="row text-left ml-1">
+                      <input
+                        v-model="text.nilai"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                        style="border: 0; max-width:80px!important;"
+                      >
+                      <input
+                        v-model="test_data.grade[index].grade"
+                        style="max-width:80px!important; text-align:center;"
+                        type="number"
+                        :max="question.weight"
+                        :min="0"
+                        class="form-control"
+                        :class="{ 'is-invalid': submitted && v.grade.$error }"
+                        @input="countGrade"
+                      >
+                      <input
+                        v-model="text.slash"
+                        type="text"
+                        class="form-control mr-2 ml-2"
+                        :disabled="true"
+                        style="border: 0; max-width:30px!important; text-align:center;"
+                      >
+                      <input
+                        v-model="question.weight"
+                        style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                      >
+                    </div>
+                    <div
+                      v-if="submitted && !v.grade.$error.required"
+                      class="invalid-feedback"
+                    >
+                      Nilai harus diisi!
+                    </div>
                   </div>
                 </div>
               </div>
@@ -633,7 +669,7 @@ export default {
             <div class="form-group">
               <input
                 v-model="test_data.test.questions[0].answers[0].answer"
-                disabled="true"
+                :disabled="true"
                 type="text" 
                 class="form-control text-center"
                 placeholder="https://drive.google.com/drive/folders/xxx"
@@ -650,7 +686,7 @@ export default {
                 v-model="text.nilai"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
                 style="border: 0; max-width:80px!important;"
               >
               <input
@@ -666,7 +702,7 @@ export default {
                 v-model="text.slash"
                 type="text"
                 class="form-control mr-2 ml-2"
-                disabled="true"
+                :disabled="true"
                 style="border: 0; max-width:30px!important; text-align:center;"
               >
               <input
@@ -674,7 +710,7 @@ export default {
                 style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>

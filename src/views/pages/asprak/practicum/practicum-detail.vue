@@ -59,9 +59,13 @@ export default {
           text: "Asisten Praktikum",
           href: "/"
         },
+        // {
+        //   text: "Praktikum",
+        //   href: "/asprak/schedule-practicum"
+        // },
         {
-          text: "Praktikum",
-          href: "/asprak/schedule-practicum"
+          text: "Jadwal",
+          href: "/asprak/schedule"
         },
         {
           text: "Mulai Praktikum",
@@ -891,7 +895,12 @@ export default {
     <div class="pb-4">
       <div class="card mb-3">
         <div class="card-body">
-          <div class="row">
+          <div class="text-center">
+            <h5 class="text-center font-size-15 text-uppercase">
+              INFORMASI
+            </h5>
+          </div>
+          <div class="row mt-3">
             <div class="col-sm-4 pt-1 pb-1">
               <div
                 class="card h-100"

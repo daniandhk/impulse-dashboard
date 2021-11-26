@@ -41,7 +41,7 @@ export default {
       sortDesc: false,
       dataPresences: [],
       fields: [
-        { key: "index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "grade.index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center' },
         { key: "grade.pretest_grade", label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.journal_grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.posttest_grade", label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
@@ -137,9 +137,9 @@ export default {
         return (
             api.getPresence(params)
             .then(response => {
-                if(response.data.data){
-                    if(response.data.data.class_course){
-                        this.dataPresences = response.data.data.class_course.presences;
+                if(response.data){
+                    if(response.data.class_course.length){
+                        this.dataPresences = response.data.class_course[0].modules;
                     }
                 }
             })

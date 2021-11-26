@@ -27,7 +27,8 @@ export default {
       fields: [
         { key: "username", sortable: true, label: "Username" },
         { key: "name", sortable: false, label: "Nama" },
-        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "logout", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //edit role
@@ -330,6 +331,47 @@ export default {
       this.$bvModal.hide('modal-edit');
     },
 
+    onClickLogout(data){
+      Swal.fire({
+          title: "Anda yakin?",
+          text: "Akun " + data.item.username + " akan di logout paksa!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#34c38f",
+          cancelButtonColor: "#f46a6a",
+          confirmButtonText: "Ya, logout paksa!"
+      }).then(result => {
+          if (result.value) {
+              this.logoutAccount(data.item.id, data.item.username);
+          }
+      });
+    },
+
+    logoutAccount(id, username){
+      return (
+        api.logoutAccount(id)
+          .then(response => {
+            this.loading(true);
+            this.fetchData();
+            this.loading(false);
+            if(response.data.success){
+              Swal.fire("Berhasil logout!", "Akun " + username + " telah di logout paksa.", "success");
+            }
+            else{
+              Swal.fire("Oops", response.data.message, "error");
+            }
+          })
+          .catch(error => {
+            Swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'Terjadi kesalahan!',
+              footer: error.response.data.message
+            })
+          })
+      )
+    },
+
     loading(isLoad) {
         var x = document.getElementById("loading");
 
@@ -432,6 +474,17 @@ export default {
             @click="onClickReset(data)" 
           >
             <i class="mdi mdi-account-convert font-size-18" />
+          </a>
+        </template>
+        <template v-slot:cell(logout)="data">
+          <a
+            v-b-tooltip.hover
+            href="javascript:void(0);"
+            class="m-1 text-danger"
+            title="Logout"
+            @click="onClickLogout(data)" 
+          >
+            <i class="mdi mdi-login-variant font-size-18" />
           </a>
         </template>
       </b-table>

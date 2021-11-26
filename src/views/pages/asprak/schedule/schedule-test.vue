@@ -12,6 +12,16 @@ import store from '@/store';
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 
+import Quill from 'quill';
+import ImageResize from "../../../modules/image-resize.min";
+import { ImageDrop } from 'quill-image-drop-module';
+
+Quill.register('modules/imageResize', ImageResize);
+Quill.register('modules/imageDrop', ImageDrop);
+// import theme style
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+
 /**
  * Advanced-form component
  */
@@ -164,12 +174,72 @@ export default {
 
       isRuanganShowed: false,
 
+      editorPertanyaan: {
+        placeholder: "Masukkan pertanyaan disini",
+        modules: {
+          imageDrop: true,
+          imageResize: {
+            displayStyles: {
+              backgroundColor: 'black',
+              border: 'none',
+              color: 'white'
+            },
+            modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+          },
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            ['clean'],
+            ['link', 'image', 'video']
+          ],
+        }
+      },
+      editorJawaban: {
+        placeholder: "Masukkan jawaban disini",
+        modules: {
+          imageDrop: true,
+          imageResize: {
+            displayStyles: {
+              backgroundColor: 'black',
+              border: 'none',
+              color: 'white'
+            },
+            modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+          },
+          toolbar: [
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote', 'code-block'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'font': [] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'align': [] }],
+            ['clean'],
+            ['link', 'image', 'video']
+          ],
+        }
+      },
+
     };
   },
   computed: {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
+    editor() {
+      return this.$refs.myQuillEditor.quill
+    }
   },
   watch: {
     $route: async function() {
@@ -946,12 +1016,10 @@ export default {
                           <div class="col-12">
                             <label for="text">Pertanyaan</label>
                             <div class="form-group">
-                              <textarea
-                                v-model="question.text" 
-                                rows="2"
-                                type="text" 
-                                class="form-control"
-                                placeholder="Masukkan pertanyaan disini"
+                              <quill-editor
+                                ref="myQuillEditor"
+                                v-model="question.text"
+                                :options="editorPertanyaan"
                                 :class="{ 'is-invalid': submitted_test && v.text.$error }"
                                 @input="inputedData"
                               />
@@ -999,12 +1067,10 @@ export default {
                                 </div>
                                 <div class="col-sm-10 col-md-9 col-lg-10 mt-1">
                                   <div class="form-group">
-                                    <textarea
-                                      v-model="answer.text" 
-                                      rows="2"
-                                      type="text" 
-                                      class="form-control"
-                                      placeholder="Masukkan jawaban disini"
+                                    <quill-editor
+                                      ref="myQuillEditor"
+                                      v-model="answer.text"
+                                      :options="editorJawaban"
                                       @input="inputedData"
                                     />
                                   </div>
@@ -1105,12 +1171,10 @@ export default {
                           <div class="col-12">
                             <label for="text">Pertanyaan</label>
                             <div class="form-group">
-                              <textarea
-                                v-model="question.text" 
-                                rows="2"
-                                type="text" 
-                                class="form-control"
-                                placeholder="Masukkan pertanyaan disini"
+                              <quill-editor
+                                ref="myQuillEditor"
+                                v-model="question.text"
+                                :options="editorPertanyaan"
                                 :class="{ 'is-invalid': submitted_test && v.text.$error }"
                                 @input="inputedData"
                               />
@@ -1128,12 +1192,10 @@ export default {
                           <div class="col-12">
                             <label>Jawaban Benar</label>
                             <div class="form-group">
-                              <textarea
-                                v-model="question.answer" 
-                                rows="4"
-                                type="text" 
-                                class="form-control"
-                                placeholder="Masukkan jawaban disini"
+                              <quill-editor
+                                ref="myQuillEditor"
+                                v-model="question.answer"
+                                :options="editorJawaban"
                                 @input="inputedData"
                               />
                             </div>
@@ -1320,3 +1382,30 @@ export default {
     </div>
   </Layout>
 </template>
+
+<style lang="scss" scoped>
+  .example {
+    display: flex;
+    flex-direction: column;
+    .editor {
+      height: 40rem;
+      overflow: hidden;
+    }
+    .output {
+      width: 100%;
+      height: 20rem;
+      margin: 0;
+      border: 1px solid #ccc;
+      overflow-y: auto;
+      resize: vertical;
+      &.code {
+        padding: 1rem;
+        height: 16rem;
+      }
+      &.ql-snow {
+        border-top: none;
+        height: 24rem;
+      }
+    }
+  }
+</style>
