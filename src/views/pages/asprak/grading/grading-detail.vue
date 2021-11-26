@@ -35,9 +35,13 @@ export default {
                     text: "Asisten Praktikum",
                     href: "/"
                 },
+                // {
+                //     text: "Penilaian",
+                //     href: "/asprak/schedule-grading/"
+                // },
                 {
-                    text: "Penilaian",
-                    href: "/asprak/schedule-grading/"
+                    text: "Jadwal",
+                    href: "/asprak/schedule"
                 },
                 {
                     text: "List Test",

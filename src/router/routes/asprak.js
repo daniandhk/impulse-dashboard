@@ -38,23 +38,23 @@ export default [
         component: () => import('../../views/pages/asprak/schedule/schedule-edit')
     },
 
-    {
-        path: '/asprak/schedule-practicum/',
-        name: 'asprak-practicum',
-        meta: {
-            authRequired: true,
-            beforeResolve(routeTo, routeFrom, next) {
-                let role = store.getters.getRoleUser
-                if(role && role == 'asprak'){
-                    next()
-                }
-                else{
-                    next({ name: 'error-404' })
-                }
-            },
-        },
-        component: () => import('../../views/pages/asprak/practicum/practicum-schedule')
-    },
+    // {
+    //     path: '/asprak/schedule-practicum/',
+    //     name: 'asprak-practicum',
+    //     meta: {
+    //         authRequired: true,
+    //         beforeResolve(routeTo, routeFrom, next) {
+    //             let role = store.getters.getRoleUser
+    //             if(role && role == 'asprak'){
+    //                 next()
+    //             }
+    //             else{
+    //                 next({ name: 'error-404' })
+    //             }
+    //         },
+    //     },
+    //     component: () => import('../../views/pages/asprak/practicum/practicum-schedule')
+    // },
 
     {
         path: '/asprak/schedule/:id/practicum',
@@ -128,23 +128,23 @@ export default [
         component: () => import('../../views/pages/asprak/bap/detail-bap')
     },
 
-    {
-        path: '/asprak/schedule-grading/',
-        name: 'asprak-grading',
-        meta: {
-            authRequired: true,
-            beforeResolve(routeTo, routeFrom, next) {
-                let role = store.getters.getRoleUser
-                if(role && role == 'asprak'){
-                    next()
-                }
-                else{
-                    next({ name: 'error-404' })
-                }
-            },
-        },
-        component: () => import('../../views/pages/asprak/grading/grading-schedule')
-    },
+    // {
+    //     path: '/asprak/schedule-grading/',
+    //     name: 'asprak-grading',
+    //     meta: {
+    //         authRequired: true,
+    //         beforeResolve(routeTo, routeFrom, next) {
+    //             let role = store.getters.getRoleUser
+    //             if(role && role == 'asprak'){
+    //                 next()
+    //             }
+    //             else{
+    //                 next({ name: 'error-404' })
+    //             }
+    //         },
+    //     },
+    //     component: () => import('../../views/pages/asprak/grading/grading-schedule')
+    // },
 
     {
         path: '/asprak/schedule/:id/grading',

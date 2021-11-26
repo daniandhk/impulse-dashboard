@@ -21,20 +21,20 @@ export const asprakItems = [
         link: 'asprak-schedule',
         icon: 'ri-profile-line'
     },
+    // {
+    //     id: 5,
+    //     label: 'menuitems.asprak.list.start-practicum',
+    //     link: 'asprak-practicum',
+    //     icon: 'ri-play-circle-line'
+    // },
+    // {
+    //     id: 6,
+    //     label: 'menuitems.asprak.list.grading',
+    //     icon: 'ri-bar-chart-fill',
+    //     link: 'asprak-grading'
+    // },
     {
         id: 5,
-        label: 'menuitems.asprak.list.start-practicum',
-        link: 'asprak-practicum',
-        icon: 'ri-play-circle-line'
-    },
-    {
-        id: 6,
-        label: 'menuitems.asprak.list.grading',
-        icon: 'ri-bar-chart-fill',
-        link: 'asprak-grading'
-    },
-    {
-        id: 7,
         label: 'menuitems.asprak.list.absensi-asprak',
         icon: 'ri-account-circle-line',
         link: 'asprak-bap'
