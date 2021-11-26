@@ -210,12 +210,19 @@ export default {
             }
           })
           .catch(error => {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Terjadi kesalahan!',
-                  footer: error
-              })
+              if(error.response.status == 401){
+                this.$router.replace({
+                    name: 'login', params: { tokenExpired: true }
+                });
+              }
+              else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error.response.data.message
+                })
+              }
           })
       );
     },
@@ -240,12 +247,19 @@ export default {
             }
           })
           .catch(error => {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  text: 'Terjadi kesalahan!',
-                  footer: error
-              })
+              if(error.response.status == 401){
+                this.$router.replace({
+                    name: 'login', params: { tokenExpired: true }
+                });
+              }
+              else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error.response.data.message
+                })
+              }
           })
       );
     },
@@ -311,12 +325,19 @@ export default {
                 }
             })
             .catch(error => {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
-                    footer: error
-                })
+                if(error.response.status == 401){
+                  this.$router.replace({
+                      name: 'login', params: { tokenExpired: true }
+                  });
+                }
+                else{
+                  Swal.fire({
+                      icon: 'error',
+                      title: 'Oops...',
+                      text: 'Terjadi kesalahan!',
+                      footer: error.response.data.message
+                  })
+                }
             })
         )
     },

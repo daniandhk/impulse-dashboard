@@ -60,12 +60,19 @@ export default {
                 Swal.fire("Updated!", "You password has been updated.", "success");
               })
               .catch(error => {
-                  Swal.fire({
-                      icon: 'error',
-                      title: 'Oops...',
-                      text: 'Check again you Old Password!',
-                      footer: error
-                  })
+                  if(error.response.status == 401){
+                    this.$router.replace({
+                        name: 'login', params: { tokenExpired: true }
+                    });
+                  }
+                  else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan!',
+                        footer: error.response.data.message
+                    })
+                  }
               })
           );
       }
