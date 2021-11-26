@@ -5,9 +5,18 @@ import PageHeader from "@/components/page-header";
 import * as api from '@/api';
 import Swal from "sweetalert2";
 
-import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
+
+import Quill from 'quill';
+import ImageResize from "../../../modules/image-resize.min";
+import { ImageDrop } from 'quill-image-drop-module';
+
+Quill.register('modules/imageResize', ImageResize);
+Quill.register('modules/imageDrop', ImageDrop);
+// import theme style
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
 
 export default {
     page: {
@@ -69,6 +78,35 @@ export default {
             isMCAnswersAvailable: false,
             isEssayAnswersAvailable: false,
             isFileAnswersAvailable: false,
+
+            editorJawaban: {
+                placeholder: "Masukkan jawaban disini",
+                modules: {
+                    imageDrop: true,
+                    imageResize: {
+                        displayStyles: {
+                        backgroundColor: 'black',
+                        border: 'none',
+                        color: 'white'
+                        },
+                        modules: [ 'Resize', 'DisplaySize', 'Toolbar' ]
+                    },
+                    toolbar: [
+                        ['bold', 'italic', 'underline', 'strike'],
+                        ['blockquote', 'code-block'],
+                        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                        [{ 'script': 'sub' }, { 'script': 'super' }],
+                        [{ 'indent': '-1' }, { 'indent': '+1' }],
+                        [{ 'direction': 'rtl' }],
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        [{ 'font': [] }],
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        ['clean'],
+                        ['link', 'image', 'video']
+                    ],
+                }
+            },
         }
     },
     computed: {
@@ -542,24 +580,39 @@ export default {
               {{ index+1 }}
             </b-button>
           </div>
-          <div class="card col-sm-11">
-            <div class="card-body">
-              <div class="row">
+          <div class="row col-sm-11">
+            <div
+              class="card col-12"
+              style="margin-bottom:1px!important"
+            >
+              <div class="card-body">
                 <div class="col-12">
-                  <label>{{ question.question }}</label>
+                  <label>Soal</label>
+                  <div class="output ql-snow">
+                    <div
+                      class="ql-editor"
+                      v-html="question.question"
+                    />
+                  </div>
                 </div>
+              </div>
+            </div>
+            <div class="card col-12">
+              <div class="card-body">
                 <div class="col-12">
+                  <label>Jawaban</label>
                   <div v-if="isEssay">
                     <div class="mt-2">
-                      <textarea
-                        id="text" 
+                      <quill-editor
+                        v-if="!isEssayAnswersAvailable"
+                        ref="myQuillEditor"
                         v-model="dataInput.answers[index].answers"
-                        rows="4" 
-                        name="text" 
-                        type="text" 
-                        class="form-control"
-                        placeholder="Masukkan jawaban disini"
-                        :disabled="isEssayAnswersAvailable"
+                        :options="editorJawaban"
+                      />
+                      <div
+                        v-if="isEssayAnswersAvailable"
+                        class="ql-editor"
+                        v-html="dataInput.answers[index].answers"
                       />
                     </div>
                   </div>
@@ -570,12 +623,18 @@ export default {
                       class="mt-2 ml-1 form-check"
                     >
                       <input 
-                        v-model="dataInput.questions[index].answers" 
-                        class="form-check-input" 
+                        v-model="dataInput.questions[index].answers"
+                        class="form-check-input mt-3" 
                         type="checkbox"
                         :value="answer_data.id"
                         :disabled="isMCAnswersAvailable"
-                      >{{ answer_data.answer }}
+                      >
+                      <div class="output ql-snow mb-1">
+                        <div
+                          class="ql-editor"
+                          v-html="answer_data.answer"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
