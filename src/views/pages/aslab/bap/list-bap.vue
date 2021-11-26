@@ -52,7 +52,7 @@ export default {
       :items="items"
     />
     <div>
-      <ListBAP />
+      <ListBAP status="aslab" />
     </div>
   </Layout>
 </template>

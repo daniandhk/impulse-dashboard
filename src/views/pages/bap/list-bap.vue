@@ -17,6 +17,7 @@ export default {
   components: {
     Multiselect,
   },
+  props: ['status'],
   data() {
     return {
 
@@ -256,10 +257,18 @@ export default {
      */
     async onClickEdit(data) {
       if(data.item.is_present){
-        this.$router.push({
-            name: 'aslab-bap-detail', 
-            params: { id: data.item.id }
-        });
+        if(this.status == "aslab"){
+            this.$router.push({
+                name: 'aslab-bap-detail', 
+                params: { id: data.item.id }
+            });
+        }
+        if(this.status == "laboran"){
+            this.$router.push({
+                name: 'laboran-bap-detail', 
+                params: { id: data.item.id }
+            });
+        }
       }
     },
 

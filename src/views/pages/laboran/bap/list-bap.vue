@@ -52,7 +52,7 @@ export default {
       :items="items"
     />
     <div>
-      <ListBAP />
+      <ListBAP status="laboran" />
     </div>
   </Layout>
 </template>
