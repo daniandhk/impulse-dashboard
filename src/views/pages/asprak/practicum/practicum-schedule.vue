@@ -25,7 +25,7 @@ export default {
   },
   data() {
     return {
-      title: "Penilaian",
+      title: "Praktikum",
       items: [
         {
           text: "Asisten Praktikum",
