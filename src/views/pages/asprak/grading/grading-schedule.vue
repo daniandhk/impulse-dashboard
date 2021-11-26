@@ -1,13 +1,15 @@
 <script>
-import Layout from "../../layouts/main";
+import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
+import store from '@/store';
 
 import { notificationMethods } from "@/state/helpers";
 import Multiselect from "vue-multiselect";
 import moment from 'moment';
+import { required } from "vuelidate/lib/validators";
 
 /**
  * Advanced-form component
@@ -22,42 +24,25 @@ export default {
     PageHeader,
     Multiselect,
   },
+  validations: {
+    recap_course: { required },
+
+  },
   data() {
     return {
-      title: "Jadwal",
+      title: "Penilaian",
       items: [
         {
-          text: "Asisten Lab",
+          text: "Asisten Praktikum",
           href: "/"
         },
         {
-          text: "Jadwal",
+          text: "Penilaian",
           active: true,
         },
       ],
 
-      //list class-course
-      isFetchingData: false,
-      dataSchedules: [],
-      totalRows: 1,
-      currentPage: 1,
-      perPage: 10,
-      pageOptions: [10, 25, 50, 100],
-      filter_search: "",
-      filterOn: [],
-      sortBy: "title",
-      sortDesc: false,
-      fields: [
-        { key: "title", sortable: true, label: "Nama Kalender" },
-        { key: "class_course.class.name", sortable: true, label: "Kelas" },
-        { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
-        { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "action", label: "Aksi", sortable: false, }
-      ],
-
+      asprak_id: store.getters.getLoggedUser.id,
       class_name: "",
       course_name: "",
       academic_year_id: "",
@@ -81,6 +66,26 @@ export default {
         {name: "Modul 13", index: 13},
         {name: "Modul 14", index: 14}
       ],
+
+      //list class-course
+      isFetchingData: false,
+      dataSchedules: [],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      pageOptions: [10, 25, 50, 100],
+      filter_search: "",
+      filterOn: [],
+      sortBy: "title",
+      sortDesc: false,
+      fields: [
+        { key: "title", sortable: true, label: "Nama Kalender" },
+        { key: "class_course.class.name", sortable: true, label: "Kelas" },
+        { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
+        { key: "date", sortable: true, label: "Tanggal" },
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center' },
+      ],
+
       dataDropdown:{
           classes: [],
           courses: [],
@@ -140,6 +145,11 @@ export default {
       isRuanganShowed: false,
 
       isCourseSelected: false,
+
+      recap_course: "",
+      course_id: "",
+      submitted_recap: false,
+      coursesData: [],
     };
   },
   computed: {
@@ -169,7 +179,7 @@ export default {
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
     },
-    getRequestParams(class_name, course_name, academic_year_id, module_index) {
+    getRequestParams(class_name, course_name, academic_year_id, module_index, asprak_id) {
       let params = {};
 
       if (class_name) {
@@ -188,6 +198,10 @@ export default {
         params["module_index"] = module_index;
       }
 
+      if (asprak_id) {
+        params["asprak_id"] = asprak_id;
+      }
+
       return params;
     },
     async fetchData(){
@@ -198,7 +212,8 @@ export default {
         this.class_name,
         this.course_name,
         this.academic_year_id,
-        this.module_index
+        this.module_index,
+        this.asprak_id,
       );
 
       return (
@@ -225,6 +240,7 @@ export default {
 
     async loadDataDropdown(){
         this.getDataDropdown();
+        this.getDataCourses();
     },
 
     async getDataDropdown(){
@@ -365,10 +381,10 @@ export default {
       this.eventModal = false;
     },
 
-    editModal(data){
+    viewTest(data){
       this.schedule_data.id = data.item.id;
       this.$router.push({
-          name: 'aslab-schedule-input', 
+          name: 'asprak-grading-list', 
           params: { id: this.schedule_data.id }
       });
     },
@@ -398,6 +414,73 @@ export default {
       else{
         return "-";
       }
+    },
+
+    inputSoal(data){
+      this.schedule_data.id = data.item.id;
+      this.$router.push({
+          name: 'asprak-schedule-test', 
+          params: { id: this.schedule_data.id }
+      });
+    },
+
+    async getDataCourses(){
+        return (
+            api.getListCourses()
+            .then(response => {
+                if(response.data.courses){
+                    this.coursesData = response.data.courses;
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error
+                })
+            })
+        )
+    },
+
+    selectRecapCourse(value){
+        this.course_id = value.id;
+    },
+
+    removeRecapCourse(){
+        this.course_id = "";
+    },
+
+    downloadRecap(){
+        this.submitted_recap = true;
+        this.$v.recap_course.$touch();
+        if (this.$v.recap_course.$invalid) {
+            return;
+        } else {
+            this.loading(true);
+            return (
+                api.downloadRekapNilai(this.course_id)
+                .then(response => {
+                    let blob = new Blob([response.data])
+                    let link = document.createElement('a')
+                    link.href = window.URL.createObjectURL(blob)
+                    link.download = this.recap_course.name + ".xlsx"
+                    link.click()
+
+                    this.loading(false);
+                    Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
+                })
+                .catch(error => {
+                    this.loading(false);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Terjadi kesalahan!',
+                        footer: error
+                    })
+                })
+            );
+        }
     },
 
     loading(isLoad) {
@@ -562,41 +645,15 @@ export default {
             <template v-slot:cell(date)="data">
               {{ dateFormatted(data.item.date) }}
             </template>
-            <template v-slot:cell(start)="data">
-              {{ timeFormatted(data.item.start) }}
-            </template>
-            <template v-slot:cell(end)="data">
-              {{ timeFormatted(data.item.end) }}
-            </template>
-            <template v-slot:cell(room)="data">
-              <b-button
-                type="submit" 
-                variant="outline-secondary"
-                size="sm"
-                style="min-width: 75px;"
-                @click="onClickShow(data)" 
-              >
-                {{ data.item.room.name }}
-              </b-button>
-            </template>
             <template v-slot:cell(action)="data">
               <a
                 v-b-tooltip.hover
                 href="javascript:void(0);"
                 class="m-1 text-primary"
-                title="Detail"
-                @click="onClickEdit(data)"
+                title="Penilaian Tes"
+                @click="viewTest(data)"
               >
-                <i class="mdi mdi-eye-outline font-size-18" />
-              </a>
-              <a
-                v-b-tooltip.hover
-                href="javascript:void(0);"
-                class="m-1 text-primary"
-                title="Edit"
-                @click="editModal(data)"
-              >
-                <i class="mdi mdi-pencil font-size-18" />
+                <i class="mdi mdi-file-document-edit font-size-22" />
               </a>
             </template>
           </b-table>
@@ -613,6 +670,54 @@ export default {
                   @input="handlePageChange"
                 />
               </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <div class="text-center form-group mb-0">
+          <h5 class="text-center font-size-15 text-uppercase">
+            Unduh Rekap Nilai / Presensi
+          </h5>
+          <hr
+            style="margin-left: -20px; 
+                        margin-right: -20px; 
+                        height: 2px; 
+                        background-color: #eee; 
+                        border: 0 none; 
+                        color: #eee;"
+          >
+          <div class="row row-no-gutters justify-content-center text-center mt-3">
+            <div class="form-group m-2">
+              <multiselect
+                v-model="recap_course"
+                placeholder="Mata Kuliah"
+                :options="coursesData"
+                style="min-width: 325px;" 
+                label="name"
+                track-by="name"
+                :show-labels="false"
+                :class="{ 'is-invalid': submitted_recap && $v.recap_course.$error }"
+                @select="selectRecapCourse"
+                @remove="removeRecapCourse" 
+              />
+              <div
+                v-if="submitted_recap && !$v.recap_course.required"
+                class="invalid-feedback"
+              >
+                Mata Kuliah harus dipilih!
+              </div>
+            </div>
+            <div class="m-2">
+              <button 
+                type="button" 
+                class="btn btn-primary waves-effect" 
+                @click="downloadRecap"
+              >
+                Download
+              </button>
             </div>
           </div>
         </div>
@@ -858,9 +963,9 @@ export default {
         <!-- <div class="text-right mt-4">
             <button
             type="button"
-            @click="editModal"
+            @click="viewTest"
             class="btn btn-info mr-2 waves-effect waves-light"
-            >Edit</button>
+            >Detail</button>
             <button type="button" @click="closeModal" class="btn btn-light waves-effect">Kembali</button>
         </div> -->
       </div>

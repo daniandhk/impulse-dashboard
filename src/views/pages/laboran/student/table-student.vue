@@ -38,7 +38,7 @@ export default {
         { key: "name", sortable: true, label: "Nama" },
         { key: "gender", sortable: true, label: "Gender" },
         { key: "religion", sortable: true, label: "Religion" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
       ],
 
       //modal edit

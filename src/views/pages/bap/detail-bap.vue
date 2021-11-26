@@ -562,6 +562,14 @@ export default {
           <h5 class="text-center font-size-15 text-uppercase">
             Unduh Rekap Nilai / Presensi
           </h5>
+          <hr
+            style="margin-left: -20px; 
+                        margin-right: -20px; 
+                        height: 2px; 
+                        background-color: #eee; 
+                        border: 0 none; 
+                        color: #eee;"
+          >
           <div class="row row-no-gutters justify-content-center text-center mt-3">
             <div class="form-group m-2">
               <multiselect

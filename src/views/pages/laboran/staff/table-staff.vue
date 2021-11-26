@@ -36,7 +36,7 @@ export default {
         { key: "nip", sortable: true, label: "NIP" },
         { key: "name", sortable: true, label: "Nama" },
         { key: "code", sortable: true, label: "Kode Dosen" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
       ],
 
       //modal edit

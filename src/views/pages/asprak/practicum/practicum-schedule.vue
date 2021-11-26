@@ -15,8 +15,8 @@ import moment from 'moment';
  */
 export default {
   page: {
-      title: "List BAP",
-      meta: [{ name: "description" }],
+    title: "Jadwal",
+    meta: [{ name: "description" }],
   },
   components: {
     Layout,
@@ -25,14 +25,14 @@ export default {
   },
   data() {
     return {
-      title: "Berita Acara Praktikum",
+      title: "Praktikum",
       items: [
         {
           text: "Asisten Praktikum",
           href: "/"
         },
         {
-          text: "BAP",
+          text: "Praktikum",
           active: true,
         },
       ],
@@ -80,11 +80,9 @@ export default {
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
         { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "class_course.staff.code", sortable: true, label: "Kode Dosen" },
-        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center' },
       ],
-
-      isCourseSelected: false,
 
       dataDropdown:{
           classes: [],
@@ -92,6 +90,59 @@ export default {
           staffs: [],
           academic_year: [],
       },
+      schedule_data: {
+        id: "",
+        title: "",
+        start: "",
+        end: "",
+        room: {
+          name: "",
+        },
+        class_course: {
+          id: "",
+          class: {
+            name: "",
+          },
+          course: {
+            name: "",
+          },
+          staff: {
+            name: "",
+          },
+        },
+        module: {
+          index: "",
+        },
+        academic_year: {
+          year: "",
+          semester: "",
+        },
+        date: ""
+      },
+      class_course_data: {
+        class: {
+          name: "",
+        },
+        course: {
+          name: "",
+        },
+        academic_year: {
+          name: "",
+        }
+      },
+      eventModal: false,
+      eventModalRuangan: false,
+
+      room: {
+        name: "",
+        desc: "",
+        msteam_link: "",
+        msteam_code: "",
+      },
+
+      isRuanganShowed: false,
+
+      isCourseSelected: false,
     };
   },
   computed: {
@@ -159,7 +210,7 @@ export default {
       );
 
       return (
-        api.getListBap(params)
+        api.getAllSchedules(params)
           .then(response => {
             if (response.data.data){
               this.totalRows = response.data.data.length;
@@ -241,8 +292,8 @@ export default {
     async selectCourse(value){
         this.loading(true);
         this.isCourseSelected = true;
-        this.course_name = value.name;
         this.course_code = value.code;
+        this.course_name = value.name;
         await this.fetchData();
         this.loading(false);
     },
@@ -250,8 +301,8 @@ export default {
     async removeCourse(){
         this.loading(true);
         this.isCourseSelected = false;
-        this.course_name = "";
         this.course_code = "";
+        this.course_name = "";
         await this.fetchData();
         this.loading(false);
     },
@@ -271,22 +322,48 @@ export default {
         this.loading(false);
     },
 
+    async getClassCourse(id){
+      return (
+        api.showClassCourse(id)
+          .then(response => {
+            if(response.data.data){
+              this.class_course_data = response.data.data;
+              this.class_course_data.academic_year.name = String(this.class_course_data.academic_year.name) + " / " + String(this.class_course_data.academic_year.semester);
+            }
+          })
+          .catch(error => {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: 'Terjadi kesalahan!',
+                  footer: error
+              })
+          })
+      );
+    },
+
     /**
      * Modal open for deta event
      */
-    async onClickEdit(data) {
-      if(data.item.is_present){
-        this.$router.push({
-            name: 'asprak-bap-detail', 
-            params: { id: data.item.id }
-        });
-      }
-      else{
-        this.$router.push({
-            name: 'asprak-bap-input', 
-            params: { id: data.item.id }
-        });
-      }
+    async onStartClick(data) {
+      this.schedule_data.id = data.item.id;
+      this.$router.push({
+          name: 'asprak-practicum-detail', 
+          params: { id: this.schedule_data.id }
+      });
+    },
+
+    closeModal() {
+      this.eventModal = false;
+    },
+
+    onClickShow(data) {
+      this.room = data.item.room;
+      this.eventModalRuangan = true;
+    },
+
+    onClickRuangan(){
+      this.isRuanganShowed = !this.isRuanganShowed;
     },
 
     dateFormatted(date){
@@ -475,27 +552,27 @@ export default {
             <template v-slot:cell(end)="data">
               {{ timeFormatted(data.item.end) }}
             </template>
+            <template v-slot:cell(room)="data">
+              <b-button
+                type="submit" 
+                variant="outline-secondary"
+                size="sm"
+                style="min-width: 75px;"
+                @click="onClickShow(data)" 
+              >
+                {{ data.item.room.name }}
+              </b-button>
+            </template>
             <template v-slot:cell(action)="data">
-              <b-button
-                v-if="!data.item.is_present" 
-                type="submit" 
-                variant="success"
-                size="sm"
-                style="min-width: 75px;"
-                @click="onClickEdit(data)" 
+              <a
+                v-b-tooltip.hover
+                href="javascript:void(0);"
+                class="m-1 text-success"
+                title="Mulai Praktikum"
+                @click="onStartClick(data)"
               >
-                Input
-              </b-button>
-              <b-button
-                v-if="data.item.is_present" 
-                type="submit" 
-                variant="primary"
-                size="sm"
-                style="min-width: 75px;"
-                @click="onClickEdit(data)" 
-              >
-                Show
-              </b-button>
+                <i class="mdi mdi-play-circle font-size-22" />
+              </a>
             </template>
           </b-table>
         </div>
@@ -516,5 +593,252 @@ export default {
         </div>
       </div>
     </div>
+    <b-modal
+      v-model="eventModalRuangan"
+      size="lg"
+      title="Detail Ruangan"
+      hide-footer 
+      title-class="font-18"
+    >
+      <div
+        id="metadata"
+        class="tab-pane col-sm-12 col-md-12"
+      >
+        <div>
+          <div class="form-group">
+            <label>Ruangan</label>
+            <input
+              v-model="room.name"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label>Deskripsi Ruangan</label>
+            <textarea
+              v-model="room.desc"
+              rows="2"
+              type="text"
+              class="form-control"
+              disabled="true"
+            />
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label>MS Teams Link</label>
+            <input
+              v-model="room.msteam_link"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label>MS Teams Code</label>
+            <input
+              v-model="room.msteam_code"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+      </div>
+    </b-modal>
+    <!-- Edit Modal -->
+    <b-modal
+      v-model="eventModal"
+      size="lg"
+      title="Detail Jadwal"
+      hide-footer 
+      title-class="font-18"
+    >
+      <div
+        id="metadata"
+        class="tab-pane col-sm-12 col-md-12"
+      >
+        <div>
+          <div class="form-group">
+            <label>Nama Kalender</label>
+            <input
+              v-model="schedule_data.title"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="form-group">
+              <label>Kelas</label>
+              <input
+                v-model="class_course_data.class.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Tahun / Semester</label>
+              <input
+                v-model="class_course_data.academic_year.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-9">
+            <div class="form-group">
+              <label>Mata Kuliah</label>
+              <input
+                v-model="class_course_data.course.name"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group">
+              <label>Modul</label>
+              <input
+                v-model="schedule_data.module.index"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input
+              v-model="schedule_data.date"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Jam Mulai</label>
+              <input
+                v-model="schedule_data.start"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="form-group">
+              <label>Jam Terakhir</label>
+              <input
+                v-model="schedule_data.end"
+                type="text"
+                class="form-control"
+                disabled="true"
+              >
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="form-group">
+            <div
+              class="row"
+              style="margin:0!important;"
+            >
+              <label class="mr-4">Ruangan</label>
+              <a
+                v-if="!isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >show</a>
+              <a
+                v-if="isRuanganShowed"
+                href="javascript:void(0)"
+                class="font-weight-bold active"
+                @click="onClickRuangan"
+              >hide</a>
+            </div>
+            <input
+              v-model="schedule_data.room.name"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <div v-if="isRuanganShowed">
+          <div class="form-group">
+            <label>Deskripsi Ruangan</label>
+            <textarea
+              v-model="schedule_data.room.desc"
+              rows="2"
+              type="text"
+              class="form-control"
+              disabled="true"
+            />
+          </div>
+        </div>
+        <div v-if="isRuanganShowed">
+          <div class="form-group">
+            <label>MS Teams Link</label>
+            <input
+              v-model="schedule_data.room.msteam_link"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <div v-if="isRuanganShowed">
+          <div class="form-group">
+            <label>MS Teams Code</label>
+            <input
+              v-model="schedule_data.room.msteam_code"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <div v-if="isRuanganShowed">
+          <div class="form-group">
+            <label>Tanggal</label>
+            <input
+              v-model="schedule_data.date"
+              type="text"
+              class="form-control"
+              disabled="true"
+            >
+          </div>
+        </div>
+        <!-- <div class="text-right mt-4">
+            <button
+            type="button"
+            @click="editModal"
+            class="btn btn-info mr-2 waves-effect waves-light"
+            >Detail</button>
+            <button type="button" @click="closeModal" class="btn btn-light waves-effect">Kembali</button>
+        </div> -->
+      </div>
+    </b-modal>
   </Layout>
 </template>

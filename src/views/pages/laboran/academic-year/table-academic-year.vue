@@ -35,7 +35,7 @@ export default {
       fields: [
         { key: "year", sortable: true, label: "Tahun Akademik" },
         { key: "semester", sortable: true, label: "Semester" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
     };
   },

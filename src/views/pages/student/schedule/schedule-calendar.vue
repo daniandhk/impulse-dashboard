@@ -255,24 +255,18 @@ export default {
         this.schedule_data.date = this.dateFormatted(info.event.startStr);
       }
 
-      this.isNow = true;
-      // await this.setStart(this.schedule_data.date, this.schedule_data.start, this.schedule_data.end);
+      // testing
+      // this.isNow = true;
+      await this.setStart(this.schedule_data.date, this.schedule_data.start, this.schedule_data.end);
 
       this.eventModal = true;
     },
 
     async setStart(date, start, end){
       let now = moment().format('YYYY-MM-DD HH:mm:ss');
-      
-      let combined_start = date + " " + start;
-      let time_start = moment(String(combined_start)).format('YYYY-MM-DD HH:mm:ss');
-
-      let combined_end = date + " " + end;
-      let time_end = moment(String(combined_end)).format('YYYY-MM-DD HH:mm:ss')
-
 
       if(start != "-" && end != "-"){
-        if(now >= time_start  && now <= time_end){
+        if(now >= start  && now <= end){
           this.isNow = true;
         }
         else{

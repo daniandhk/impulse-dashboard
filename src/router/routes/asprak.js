@@ -17,12 +17,12 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/schedule')
+        component: () => import('../../views/pages/asprak/schedule/schedule-list')
     },
 
     {
-        path: '/asprak/schedule/detail/:id',
-        name: 'asprak-schedule-detail',
+        path: '/asprak/schedule/:id',
+        name: 'asprak-schedule-edit',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -35,12 +35,12 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/schedule-detail')
+        component: () => import('../../views/pages/asprak/schedule/schedule-edit')
     },
 
     {
-        path: '/asprak/schedule/find',
-        name: 'asprak-find-practicum',
+        path: '/asprak/schedule-practicum/',
+        name: 'asprak-practicum',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -53,12 +53,12 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/find-practicum')
+        component: () => import('../../views/pages/asprak/practicum/practicum-schedule')
     },
 
     {
-        path: '/asprak/schedule/practicum/:id',
-        name: 'asprak-start-practicum',
+        path: '/asprak/schedule/:id/practicum',
+        name: 'asprak-practicum-detail',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -71,11 +71,11 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/start-practicum')
+        component: () => import('../../views/pages/asprak/practicum/practicum-detail')
     },
 
     {
-        path: '/asprak/bap',
+        path: '/asprak/schedule-bap/',
         name: 'asprak-bap',
         meta: {
             authRequired: true,
@@ -93,7 +93,7 @@ export default [
     },
 
     {
-        path: '/asprak/bap/:id',
+        path: '/asprak/schedule/:id/bap/create',
         name: 'asprak-bap-input',
         meta: {
             authRequired: true,
@@ -111,7 +111,7 @@ export default [
     },
 
     {
-        path: '/asprak/bap/:id/detail',
+        path: '/asprak/schedule/:id/bap',
         name: 'asprak-bap-detail',
         meta: {
             authRequired: true,
@@ -129,7 +129,7 @@ export default [
     },
 
     {
-        path: '/asprak/grading',
+        path: '/asprak/schedule-grading/',
         name: 'asprak-grading',
         meta: {
             authRequired: true,
@@ -143,11 +143,11 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/grading/find-schedule')
+        component: () => import('../../views/pages/asprak/grading/grading-schedule')
     },
 
     {
-        path: '/asprak/grading/:id',
+        path: '/asprak/schedule/:id/grading',
         name: 'asprak-grading-list',
         meta: {
             authRequired: true,
@@ -161,11 +161,11 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/grading/list-test')
+        component: () => import('../../views/pages/asprak/grading/grading-list')
     },
 
     {
-        path: '/asprak/grading/:id/:student_id/:type/:test_id',
+        path: '/asprak/:id/grading/:student_id/:type/:test_id',
         name: 'asprak-grading-detail',
         meta: {
             authRequired: true,
@@ -179,13 +179,12 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/grading/detail-test')
+        component: () => import('../../views/pages/asprak/grading/grading-detail')
     },
 
-    //unused
     {
-        path: '/asprak/lihat-feedback',
-        name: 'asprak-lihat-feedback',
+        path: '/asprak/schedule/:id/create-test',
+        name: 'asprak-schedule-test',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -198,6 +197,25 @@ export default [
                 }
             },
         },
-        component: () => import('../../views/pages/asprak/feedback/lihat-feedback')
+        component: () => import('../../views/pages/asprak/schedule/schedule-test')
     },
+
+    //unused
+    // {
+    //     path: '/asprak/lihat-feedback',
+    //     name: 'asprak-lihat-feedback',
+    //     meta: {
+    //         authRequired: true,
+    //         beforeResolve(routeTo, routeFrom, next) {
+    //             let role = store.getters.getRoleUser
+    //             if(role && role == 'asprak'){
+    //                 next()
+    //             }
+    //             else{
+    //                 next({ name: 'error-404' })
+    //             }
+    //         },
+    //     },
+    //     component: () => import('../../views/pages/asprak/feedback/lihat-feedback')
+    // },
 ]

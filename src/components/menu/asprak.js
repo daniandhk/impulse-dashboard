@@ -24,7 +24,7 @@ export const asprakItems = [
     {
         id: 5,
         label: 'menuitems.asprak.list.start-practicum',
-        link: 'asprak-find-practicum',
+        link: 'asprak-practicum',
         icon: 'ri-play-circle-line'
     },
     {

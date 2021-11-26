@@ -308,7 +308,7 @@ export default {
             return;
         } else {
             this.$router.push({
-                name: 'asprak-start-practicum', 
+                name: 'asprak-practicum-detail', 
                 params: { id: this.schedule_id }
             });
         }

@@ -539,7 +539,7 @@ export default {
             if(response.data.data){
               let schedule_id = response.data.data[0].id;
               this.$router.push({
-                  name: 'asprak-start-practicum', 
+                  name: 'asprak-practicum-detail', 
                   params: { id: schedule_id }
               });
             }

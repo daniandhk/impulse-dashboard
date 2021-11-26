@@ -20,3 +20,4 @@ vYY.MM.DD.XX [XX = date's version start from 00]
 - right-sidebar.vue         (ada scss nya)
 - register.vue
 - forgot-password.vue
+- asprak/temp
