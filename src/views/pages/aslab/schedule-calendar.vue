@@ -79,8 +79,26 @@ export default {
       class_name: "",
       course_name: "",
       academic_year_id: "",
+      module_index: "",
       course_data: "",
       class_data: "",
+      module_data: "",
+      dataModules: [
+        {name: "Modul 1", index: 1}, 
+        {name: "Modul 2", index: 2}, 
+        {name: "Modul 3", index: 3}, 
+        {name: "Modul 4", index: 4}, 
+        {name: "Modul 5", index: 5}, 
+        {name: "Modul 6", index: 6},
+        {name: "Modul 7", index: 7},
+        {name: "Modul 8", index: 8},
+        {name: "Modul 9", index: 9},
+        {name: "Modul 10", index: 10},
+        {name: "Modul 11", index: 11},
+        {name: "Modul 12", index: 12},
+        {name: "Modul 13", index: 13},
+        {name: "Modul 14", index: 14}
+      ],
       dataDropdown:{
           classes: [],
           courses: [],
@@ -140,7 +158,7 @@ export default {
     this.loading(false);
   },
   methods: {
-    getRequestParams(class_name, course_name, academic_year_id) {
+    getRequestParams(class_name, course_name, academic_year_id, module_index) {
       let params = {};
 
       if (class_name) {
@@ -155,6 +173,10 @@ export default {
         params["academic_year_id"] = academic_year_id;
       }
 
+      if (module_index) {
+        params["module_index"] = module_index;
+      }
+
       return params;
     },
     async getSchedules() {
@@ -162,6 +184,7 @@ export default {
         this.class_name,
         this.course_name,
         this.academic_year_id,
+        this.module_index
       );
 
       return (
@@ -305,6 +328,20 @@ export default {
         this.dataDropdown = data;
     },
 
+    async selectModule(value){
+        this.loading(true);
+        this.module_index = value.index;
+        await this.fetchData();
+        this.loading(false);
+    },
+
+    async removeModule(){
+        this.loading(true);
+        this.module_index = "";
+        await this.fetchData();
+        this.loading(false);
+    },
+
     async selectKelas(value){
         this.loading(true);
         this.class_name = value.name;
@@ -408,7 +445,21 @@ function sleep(ms) {
                 </label>
               </div>
               <div class="row col-sm-12 col-md-12">
-                <div class="col-sm-12 col-md-3">
+                <div class="col-sm-12 col-md-2">
+                  <div class="form-group">
+                    <multiselect
+                      v-model="module_data"
+                      placeholder="Modul"
+                      :options="dataModules"
+                      label="name"
+                      track-by="name"
+                      :show-labels="false"
+                      @select="selectModule"
+                      @remove="removeModule"
+                    />
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-2">
                   <div class="form-group">
                     <multiselect
                       v-model="class_data"
