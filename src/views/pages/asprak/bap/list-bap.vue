@@ -81,7 +81,7 @@ export default {
         { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
         { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "class_course.staff.code", sortable: true, label: "Kode Dosen" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       isCourseSelected: false,

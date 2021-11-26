@@ -83,7 +83,7 @@ export default {
         { key: "class_course.class.name", sortable: true, label: "Kelas" },
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center' },
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center' },
       ],
 
       dataDropdown:{

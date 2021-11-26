@@ -27,7 +27,7 @@ export default {
       fields: [
         { key: "username", sortable: true, label: "Username" },
         { key: "name", sortable: false, label: "Nama" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       //edit role

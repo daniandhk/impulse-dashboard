@@ -58,7 +58,7 @@ export default {
         { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
         { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "action", sortable: false, }
+        { key: "action", label: "Aksi", sortable: false, }
       ],
 
       class_name: "",

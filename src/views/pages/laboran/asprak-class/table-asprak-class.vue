@@ -46,7 +46,7 @@ export default {
         { key: "class_course.staffs.code", sortable: false, label: "Kode Dosen" },
         { key: "class_course.academic_years.semester", sortable: false, label: "Semester" },
         { key: "class_course.academic_years.year", sortable: false, label: "Tahun Akademik" },
-        { key: "action", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
+        { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],
 
       class_name: "",
