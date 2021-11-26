@@ -9,7 +9,8 @@ export default {
     return {
       loginData: {
 				username: "",
-        password: ""
+        password: "",
+        user_agent: "",
 			},
       submitted: false,
       authError: null,
@@ -35,7 +36,8 @@ export default {
   validations: {
     loginData: {
       username: { required },
-      password: { required }
+      password: { required },
+      user_agent: { required },
     }
   },
   methods: {
@@ -44,6 +46,7 @@ export default {
     // and password they provided.
     tryToLogIn() {
       loading();
+      this.loginData.user_agent = navigator.userAgent;
       this.submitted = true;
       // stop here if form is invalid
       this.$v.$touch();
