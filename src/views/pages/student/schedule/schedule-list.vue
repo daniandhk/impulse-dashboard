@@ -47,12 +47,12 @@ export default {
       dataSchedules: [],
       fields: [
         { key: "module.index", sortable: true, label: "Modul" },
-        { key: "class_course.course.code", label: "Kode Mata Kuliah" },
         { key: "title", label: "Nama Kalender" },
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
         { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "practicum", sortable: false, label: "Praktikum", thClass: 'text-center', tdClass: 'text-center' },
       ],
 
       student_id: store.getters.getLoggedUser.id,
@@ -140,6 +140,7 @@ export default {
             .then(response => {
                 if(response.data.data){
                     this.dataSchedules = response.data.data;
+                    console.log(this.dataSchedules)
                 }
             })
             .catch(error => {
@@ -168,6 +169,31 @@ export default {
     onClickShow(data) {
       this.room = data.item.room;
       this.eventModal = true;
+    },
+
+    onClickPracticum(data){
+      let schedule_id = data.item.id;
+
+      this.$router.push({
+          name: 'praktikan-schedule-detail', 
+          params: { id: schedule_id }
+      });
+    },
+
+    isNow(data){
+      let now = moment().format('YYYY-MM-DD HH:mm:ss');
+
+      if(data.item.start && data.item.end){
+        if(now >= data.item.start  && now <= data.item.end){
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      else{
+        return false;
+      }
     },
 
     dateFormatted(date){
@@ -350,6 +376,27 @@ export default {
                         @click="onClickShow(data)" 
                       >
                         {{ data.item.room.name }}
+                      </b-button>
+                    </template>
+                    <template v-slot:cell(practicum)="data">
+                      <b-button
+                        v-if="isNow(data)" 
+                        type="submit"
+                        variant="success"
+                        size="sm"
+                        style="min-width: 125px;"
+                        @click="onClickPracticum(data)" 
+                      >
+                        Mulai Praktikum
+                      </b-button>
+                      <b-button
+                        v-if="!isNow(data)" 
+                        type="submit"
+                        variant="secondary"
+                        size="sm"
+                        style="min-width: 125px;"
+                      >
+                        -
                       </b-button>
                     </template>
                   </b-table>
