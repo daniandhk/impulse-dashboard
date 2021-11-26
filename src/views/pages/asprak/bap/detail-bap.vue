@@ -28,7 +28,7 @@ export default {
         },
         {
           text: "BAP",
-          href: "/asprak/bap"
+          href: "/asprak/schedule-bap"
         },
         {
           text: "Detail",
