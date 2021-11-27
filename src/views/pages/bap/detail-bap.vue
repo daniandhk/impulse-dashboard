@@ -216,6 +216,7 @@ export default {
                     
                     let course_data = this.coursesData.find(data => data.name === this.bap_data.schedule.class_course.courses.name);
                     if(course_data){
+                      this.selectRecapCourse(course_data);
                       this.recap_course = course_data;
                     }
                 }

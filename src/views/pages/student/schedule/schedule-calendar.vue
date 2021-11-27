@@ -246,6 +246,7 @@ export default {
      * Modal open for deta event
      */
     async detailEvent(info) {
+      this.isNow = false;
       //info.event = title, start, end, id
       //info.event.extendedProps = other fields
 
@@ -258,29 +259,32 @@ export default {
       this.schedule_data.class_course = info.event.extendedProps.class_course;
       this.schedule_data.module = info.event.extendedProps.module;
       this.schedule_data.academic_year = info.event.extendedProps.academic_year;
+
       if(info.event.endStr == ""){
         this.schedule_data.start = "-";
         this.schedule_data.end = "-";
         this.schedule_data.date = this.dateFormatted(info.event.startStr);
       } 
       else{
+        // testing
+        // this.isNow = true;
+        await this.setStart(info.event.startStr, info.event.endStr);
+
         this.schedule_data.start = this.timeFormatted(info.event.startStr);
         this.schedule_data.end = this.timeFormatted(info.event.endStr);
         this.schedule_data.date = this.dateFormatted(info.event.startStr);
       }
 
-      // testing
-      // this.isNow = true;
-      await this.setStart(this.schedule_data.date, this.schedule_data.start, this.schedule_data.end);
-
       this.eventModal = true;
     },
 
-    async setStart(date, start, end){
+    async setStart(start, end){
       let now = moment().format('YYYY-MM-DD HH:mm:ss');
-
       if(start != "-" && end != "-"){
-        if(now >= start  && now <= end){
+        let date_start = moment(start).format('YYYY-MM-DD HH:mm:ss');
+        let date_end = moment(end).format('YYYY-MM-DD HH:mm:ss');
+
+        if(now >= date_start  && now <= date_end){
           this.isNow = true;
         }
         else{
@@ -612,7 +616,7 @@ function sleep(ms) {
           <button
             type="button"
             class="btn btn-success mr-2 waves-effect waves-light"
-            :disabled="!isNow"
+            :disabled="isNow == false"
             @click="detailModal"
           >
             Mulai Praktikum
