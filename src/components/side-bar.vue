@@ -34,6 +34,73 @@ export default {
   computed: {
     ...layoutComputed,
   },
+  watch: {
+    $route: {
+      handler: "onRoutechange",
+      immediate: true,
+      deep: true,
+    },
+    type: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          switch (newVal) {
+            case "dark":
+              document.body.setAttribute("data-sidebar", "dark");
+              document.body.removeAttribute("data-topbar");
+              document.body.removeAttribute("data-sidebar-size");
+              break;
+            case "light":
+              document.body.setAttribute("data-topbar", "dark");
+              document.body.removeAttribute("data-sidebar");
+              document.body.removeAttribute("data-sidebar-size");
+              document.body.classList.remove("vertical-collpsed");
+              break;
+            case "compact":
+              document.body.setAttribute("data-sidebar-size", "small");
+              document.body.setAttribute("data-sidebar", "dark");
+              document.body.classList.remove("vertical-collpsed");
+              document.body.removeAttribute("data-topbar", "dark");
+              break;
+            case "icon":
+              document.body.setAttribute("data-keep-enlarged", "true");
+              document.body.classList.add("vertical-collpsed");
+              document.body.setAttribute("data-sidebar", "dark");
+              document.body.removeAttribute("data-topbar", "dark");
+              break;
+            case "colored":
+              document.body.setAttribute("data-sidebar", "colored");
+              document.body.removeAttribute("data-keep-enlarged");
+              document.body.classList.remove("vertical-collpsed");
+              document.body.removeAttribute("data-sidebar-size");
+              break;
+            default:
+              document.body.setAttribute("data-sidebar", "dark");
+              break;
+          }
+        }
+      },
+    },
+    width: {
+      immediate: true,
+      handler(newVal, oldVal) {
+        if (newVal !== oldVal) {
+          switch (newVal) {
+            case "boxed":
+              document.body.setAttribute("data-layout-size", "boxed");
+              break;
+            case "fluid":
+              document.body.setAttribute("data-layout-mode", "fluid");
+              document.body.removeAttribute("data-layout-size");
+              break;
+            default:
+              document.body.setAttribute("data-layout-mode", "fluid");
+              break;
+          }
+        }
+      },
+    },
+  },
   beforeMount: function(){
     switch(this.getRole) {
       case "staff":
@@ -126,90 +193,37 @@ export default {
       }, 300);
     },
   },
-  watch: {
-    $route: {
-      handler: "onRoutechange",
-      immediate: true,
-      deep: true,
-    },
-    type: {
-      immediate: true,
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          switch (newVal) {
-            case "dark":
-              document.body.setAttribute("data-sidebar", "dark");
-              document.body.removeAttribute("data-topbar");
-              document.body.removeAttribute("data-sidebar-size");
-              break;
-            case "light":
-              document.body.setAttribute("data-topbar", "dark");
-              document.body.removeAttribute("data-sidebar");
-              document.body.removeAttribute("data-sidebar-size");
-              document.body.classList.remove("vertical-collpsed");
-              break;
-            case "compact":
-              document.body.setAttribute("data-sidebar-size", "small");
-              document.body.setAttribute("data-sidebar", "dark");
-              document.body.classList.remove("vertical-collpsed");
-              document.body.removeAttribute("data-topbar", "dark");
-              break;
-            case "icon":
-              document.body.setAttribute("data-keep-enlarged", "true");
-              document.body.classList.add("vertical-collpsed");
-              document.body.setAttribute("data-sidebar", "dark");
-              document.body.removeAttribute("data-topbar", "dark");
-              break;
-            case "colored":
-              document.body.setAttribute("data-sidebar", "colored");
-              document.body.removeAttribute("data-keep-enlarged");
-              document.body.classList.remove("vertical-collpsed");
-              document.body.removeAttribute("data-sidebar-size");
-              break;
-            default:
-              document.body.setAttribute("data-sidebar", "dark");
-              break;
-          }
-        }
-      },
-    },
-    width: {
-      immediate: true,
-      handler(newVal, oldVal) {
-        if (newVal !== oldVal) {
-          switch (newVal) {
-            case "boxed":
-              document.body.setAttribute("data-layout-size", "boxed");
-              break;
-            case "fluid":
-              document.body.setAttribute("data-layout-mode", "fluid");
-              document.body.removeAttribute("data-layout-size");
-              break;
-            default:
-              document.body.setAttribute("data-layout-mode", "fluid");
-              break;
-          }
-        }
-      },
-    },
-  },
 };
 </script>
 <template>
   <!-- ========== Left Sidebar Start ========== -->
   <div class="vertical-menu">
-    <simplebar class="h-100" ref="currentMenu" id="my-element">
+    <simplebar
+      id="my-element"
+      ref="currentMenu"
+      class="h-100"
+    >
       <!--- Sidemenu -->
       <div id="sidebar-menu">
         <!-- Left Menu Start -->
-        <ul class="metismenu list-unstyled" id="side-menu">
+        <ul
+          id="side-menu"
+          class="metismenu list-unstyled"
+        >
           <template v-for="item in menuItems">
-            <li class="menu-title" v-if="item.isTitle" :key="item.id">
+            <li
+              v-if="item.isTitle"
+              :key="item.id"
+              class="menu-title"
+            >
               {{ $t(item.label) }}
             </li>
 
             <!--end Layouts menu -->
-            <li v-if="!item.isTitle && !item.isLayout" :key="item.id">
+            <li
+              v-if="!item.isTitle && !item.isLayout"
+              :key="item.id"
+            >
               <a
                 v-if="hasItems(item)"
                 href="javascript:void(0);"
@@ -219,91 +233,106 @@ export default {
                   'has-dropdown': item.badge,
                 }"
               >
-                <i :class="`bx ${item.icon}`" v-if="item.icon"></i>
+                <i
+                  v-if="item.icon"
+                  :class="`bx ${item.icon}`"
+                />
                 <span>{{ $t(item.label) }}</span>
                 <span
-                  :class="`badge badge-pill badge-${item.badge.variant} float-right`"
                   v-if="item.badge"
-                  >{{ $t(item.badge.text) }}</span
-                >
+                  :class="`badge badge-pill badge-${item.badge.variant} float-right`"
+                >{{ $t(item.badge.text) }}</span>
               </a>
 
               <router-link
-                :to="{name: item.link, params: {type: item.params}}"
                 v-if="item.hasParams && !hasItems(item)"
+                :to="{name: item.link, params: {type: item.params}}"
                 class="side-nav-link-ref"
               >
-                <i :class="`bx ${item.icon}`" v-if="item.icon"></i>
+                <i
+                  v-if="item.icon"
+                  :class="`bx ${item.icon}`"
+                />
                 <span>{{ $t(item.label) }}</span>
                 <span
-                  :class="`badge badge-pill badge-${item.badge.variant} float-right`"
                   v-if="item.badge"
-                  >{{ $t(item.badge.text) }}</span
-                >
+                  :class="`badge badge-pill badge-${item.badge.variant} float-right`"
+                >{{ $t(item.badge.text) }}</span>
               </router-link>
 
               <router-link
-                :to="{name: item.link}"
                 v-else-if="!hasItems(item)"
+                :to="{name: item.link}"
                 class="side-nav-link-ref"
               >
-                <i :class="`bx ${item.icon}`" v-if="item.icon"></i>
+                <i
+                  v-if="item.icon"
+                  :class="`bx ${item.icon}`"
+                />
                 <span>{{ $t(item.label) }}</span>
                 <span
-                  :class="`badge badge-pill badge-${item.badge.variant} float-right`"
                   v-if="item.badge"
-                  >{{ $t(item.badge.text) }}</span
-                >
+                  :class="`badge badge-pill badge-${item.badge.variant} float-right`"
+                >{{ $t(item.badge.text) }}</span>
               </router-link>
 
-              <ul v-if="hasItems(item)" class="sub-menu" aria-expanded="false">
-                <li v-for="(subitem, index) of item.subItems" :key="index">
+              <ul
+                v-if="hasItems(item)"
+                class="sub-menu"
+                aria-expanded="false"
+              >
+                <li
+                  v-for="(subitem, index) of item.subItems"
+                  :key="index"
+                >
                   <router-link
-                    :to="{name: subitem.link, params: {type: subitem.params}}"
                     v-if="subitem.hasParams && !hasItems(subitem)"
+                    :to="{name: subitem.link, params: {type: subitem.params}}"
                     class="side-nav-link-ref"
-                    >{{ $t(subitem.label) }}</router-link
                   >
+                    {{ $t(subitem.label) }}
+                  </router-link>
                   <router-link
-                    :to="{name: subitem.link}"
                     v-else-if="!hasItems(subitem)"
+                    :to="{name: subitem.link}"
                     class="side-nav-link-ref"
-                    >{{ $t(subitem.label) }}</router-link
                   >
+                    {{ $t(subitem.label) }}
+                  </router-link>
                   <a
                     v-if="hasItems(subitem)"
                     class="side-nav-link-a-ref has-arrow"
                     href="javascript:void(0);"
-                    >{{ subitem.label }}</a
-                  >
+                  >{{ subitem.label }}</a>
                   <ul
                     v-if="hasItems(subitem)"
                     class="sub-menu mm-collapse"
                     aria-expanded="false"
                   >
                     <li
-                      v-for="(subSubitem, index) of subitem.subItems"
-                      :key="index"
+                      v-for="(subSubitem, subIndex) of subitem.subItems"
+                      :key="subIndex"
                     >
                       <router-link
+                        v-if="subSubitem.hasParams"
                         :to="{name: subSubitem.link, params: {type: subSubitem.params}}"
-                         v-if="subSubitem.hasParams"
                         class="side-nav-link-ref"
-                        >{{ $t(subSubitem.label) }}</router-link
                       >
+                        {{ $t(subSubitem.label) }}
+                      </router-link>
                       <router-link
-                        :to="{name: subSubitem.link}"
                         v-else
+                        :to="{name: subSubitem.link}"
                         class="side-nav-link-ref"
-                        >{{ $t(subSubitem.label) }}</router-link
                       >
+                        {{ $t(subSubitem.label) }}
+                      </router-link>
                     </li>
                   </ul>
                 </li>
               </ul>
             </li>
           </template>
-
         </ul>
       </div>
       <!-- Sidebar -->
