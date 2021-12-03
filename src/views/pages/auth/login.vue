@@ -150,7 +150,7 @@ function loading() {
                           variant="danger"
                           dismissible
                         >
-                          Your login has expired.
+                          Sesi login anda telah berakhir.
                         </b-alert>
 
                         <b-alert
@@ -184,7 +184,7 @@ function loading() {
                               v-model="loginData.username"
                               type="text"
                               class="form-control"
-                              placeholder="Enter NIM/NIP"
+                              placeholder="Masukkan NIM/NIP"
                               :class="{ 'is-invalid': submitted && $v.loginData.username.$error }"
                             >
                             <div 
@@ -203,7 +203,7 @@ function loading() {
                               v-model="loginData.password"
                               type="password"
                               class="form-control"
-                              placeholder="Enter password"
+                              placeholder="Masukkan password"
                               :class="{ 'is-invalid': submitted && $v.loginData.password.$error }"
                             >
                             <div
