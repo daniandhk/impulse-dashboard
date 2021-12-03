@@ -48,6 +48,15 @@ const baseRoutes = [
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
+                let loggedUser = store.getters.getLoggedUser
+                if(loggedUser){
+                    api.logout(loggedUser.user_id).then(response => {
+                        //
+                    })
+                    .catch(error => {
+                        //
+                    });
+                }
                 store.dispatch('logOut')
                 const authRequiredOnPreviousRoute = routeFrom.matched.some(
                     (route) => route.push('/login')

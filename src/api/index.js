@@ -45,3 +45,10 @@ export function changePassword(data){
         data: data
     })
 }
+
+export function logout(user_id){
+    return httpAxios({
+        url: `/auth/logout/${user_id}`,
+        method: 'POST',
+    })
+}
