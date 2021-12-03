@@ -235,7 +235,7 @@ export default {
                 .then(response => {
                     if(response.data.data){
                         this.test_data = response.data.data;
-                        console.log(this.test_data)
+                        // console.log(this.test_data)
                     }
                 })
                 .catch(error => {

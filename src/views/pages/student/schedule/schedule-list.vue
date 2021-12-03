@@ -147,7 +147,7 @@ export default {
             .then(response => {
                 if(response.data.data){
                     this.dataSchedules = response.data.data;
-                    console.log(this.dataSchedules)
+                    // console.log(this.dataSchedules)
                 }
             })
             .catch(error => {
