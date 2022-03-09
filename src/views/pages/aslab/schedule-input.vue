@@ -571,7 +571,9 @@ export default {
               :options="dataModules"
               :allow-empty="false"
               :disabled="isLoading"
-              :show-labels="false"
+              select-label=""
+              selected-label="x"
+              deselect-label="x"
               @select="selectModule"
             />
           </div>
@@ -730,7 +732,9 @@ export default {
                   track-by="name"
                   :allow-empty="false"
                   :disabled="isLoading"
-                  :show-labels="false"
+                  select-label=""
+                  selected-label="x"
+                  deselect-label="x"
                   :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
                   @select="selectRoom"
                 />

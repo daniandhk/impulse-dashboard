@@ -570,7 +570,9 @@ export default {
                     v-model="role_data"
                     :options="roleData"
                     :multiple="true"
-                    :show-labels="false"
+                    select-label=""
+                    selected-label="x"
+                    deselect-label="x"
                     @remove="removeRole"
                   />
                 </div>

@@ -47,9 +47,9 @@ export default {
       course_name: "",
       academic_year_id: "",
       module_index: "",
-      course_data: "",
-      class_data: "",
-      module_data: "",
+      course_data: null,
+      class_data: null,
+      module_data: null,
       dataModules: [
         {name: "Modul 1", index: 1}, 
         {name: "Modul 2", index: 2}, 
@@ -518,6 +518,15 @@ export default {
         }
     },
 
+    resetFilter(){
+      this.removeModule()
+      this.module_data = null
+      this.removeKelas()
+      this.class_data = null
+      this.removeCourse()
+      this.course_data = null
+    },
+
     loading(isLoad) {
         var x = document.getElementById("loading");
 
@@ -569,7 +578,9 @@ export default {
                   :options="dataModules"
                   label="name"
                   track-by="name"
-                  :show-labels="false"
+                  select-label=""
+                  selected-label="x"
+                  deselect-label="x"
                   @select="selectModule"
                   @remove="removeModule"
                 />
@@ -583,7 +594,9 @@ export default {
                   :options="dataDropdown.classes"
                   label="name"
                   track-by="name"
-                  :show-labels="false"
+                  select-label=""
+                  selected-label="x"
+                  deselect-label="x"
                   @select="selectKelas"
                   @remove="removeKelas"
                 />
@@ -597,22 +610,41 @@ export default {
                   :options="dataDropdown.courses"
                   label="name"
                   track-by="name"
-                  :show-labels="false"
+                  select-label=""
+                  selected-label="x"
+                  deselect-label="x"
                   @select="selectCourse"
                   @remove="removeCourse"
                 />
               </div>
             </div>
-            <div class="col-sm-12 col-md-2">
+            <div
+              v-if="isCourseSelected"
+              class="col-sm-12 col-md-2"
+            >
               <div class="form-group">
                 <input
-                  v-if="isCourseSelected"
                   v-model="course_code"
                   :disabled="true"
                   class="form-control text-center"
                   type="text"
                   style="background-color: #F0F4F6;"
                 >
+              </div>
+            </div>
+            <div
+              v-if="(course_data != null || class_data != null || module_data != null)"
+              class="col-sm-12 col-md-2"
+            >
+              <div class="form-group">
+                <button 
+                  
+                  type="button"
+                  class="btn btn-secondary"
+                  @click="resetFilter"
+                >
+                  Reset
+                </button>
               </div>
             </div>
           </div>
@@ -733,7 +765,9 @@ export default {
                 style="min-width: 325px;" 
                 label="name"
                 track-by="name"
-                :show-labels="false"
+                select-label=""
+                selected-label="x"
+                deselect-label="x"
                 :class="{ 'is-invalid': submitted_recap && $v.recap_course.$error }"
                 @select="selectRecapCourse"
                 @remove="removeRecapCourse" 

@@ -1063,7 +1063,9 @@ export default {
                             :options="dataModules"
                             :allow-empty="false"
                             :disabled="isLoading"
-                            :show-labels="false"
+                            select-label=""
+                            selected-label="x"
+                            deselect-label="x"
                             @select="selectModule"
                           />
                         </div>
