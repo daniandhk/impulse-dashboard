@@ -17,6 +17,7 @@ export default {
   components: {
     Multiselect,
   },
+  // eslint-disable-next-line
   props: ['status'],
   data() {
     return {
