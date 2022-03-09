@@ -55,6 +55,14 @@ router.beforeEach((routeTo, routeFrom, next) => {
         next()
       })
       .catch(error => {
+        if(loggedUser){
+            api.logout(loggedUser.user_id).then(response => {
+                //
+            })
+            .catch(error => {
+                //
+            });
+        }
         store.dispatch('logOut')
         //console.log(error)
         redirectToLogin("expired")
