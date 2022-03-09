@@ -767,7 +767,7 @@ export default {
                 disabled="true"
                 type="text" 
                 class="form-control text-center"
-                placeholder="https://drive.google.com/drive/folders/xxx"
+                placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
               >
             </div>
           </div>

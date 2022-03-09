@@ -1736,7 +1736,7 @@ export default {
                                         v-model="dataTest.questions[0].answer"
                                         type="text" 
                                         class="form-control"
-                                        placeholder="https://drive.google.com/drive/folders/xxx"
+                                        placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
                                         @input="inputedData"
                                       >
                                     </div>
