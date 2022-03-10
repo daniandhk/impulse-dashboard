@@ -2,6 +2,7 @@
 import simplebar from "simplebar-vue";
 import i18n from "../i18n";
 import store from '@/store';
+import moment from 'moment';
 
 export default {
   components: {  },
@@ -9,8 +10,33 @@ export default {
     return {
       current_language: "en",
       getRole: store.getters.getRoleUser,
-      user: store.getters.getLoggedUser
+      user: store.getters.getLoggedUser,
+
+      interval: null,
+      time: Intl.DateTimeFormat(navigator.language, {
+              hour: 'numeric',
+              minute: 'numeric',
+              second: 'numeric'
+            }).format(),
+      date: moment().locale('id').format('dddd, LL'),
+      //
     };
+  },
+  beforeDestroy() {
+    // prevent memory leak
+    clearInterval(this.interval)
+  },
+  created() {
+    // update the time every second
+    this.interval = setInterval(() => {
+      // Concise way to format time according to system locale.
+      // In my case this returns "3:48:00 am"
+      this.time = Intl.DateTimeFormat(navigator.language, {
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric'
+      }).format()
+    }, 1000)
   },
   methods: {
     toggleMenu() {
@@ -165,16 +191,22 @@ export default {
         </b-dropdown>
       </div>
 
-      <div class="d-flex">
-        <!-- <div class="dropdown d-none d-lg-inline-block ml-1">
-          <button
-            type="button"
-            class="btn header-item noti-icon waves-effect"
-            @click="initFullScreen"
-          >
-            <i class="ri-fullscreen-line"></i>
-          </button>
-        </div> -->
+      <div class="d-flex align-items-center">
+        <div
+          id="div-time"
+          class="mr-4 ml-1 d-flex align-items-center"
+        >
+          <i
+            class="ri-time-line mr-1"
+          />
+          {{ time }}
+        </div>
+        <b-tooltip
+          target="div-time"
+          variant="dark"
+        >
+          {{ date }}
+        </b-tooltip>
 
         <b-dropdown
           right

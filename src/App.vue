@@ -8,7 +8,7 @@
 import appConfig from "@/app.config";
 
 export default {
-  name: "app",
+  name: "App",
   page: {
     // All subcomponent titles will be injected into this template.
     titleTemplate(title) {
