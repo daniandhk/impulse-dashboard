@@ -123,8 +123,8 @@ export default {
       inputError: null,
 
       text: {
-        start: "Start",
-        end: "End",
+        start: "Mulai",
+        end: "Berakhir",
         auth: "Auth",
         kelas: "Kelas",
         matkul: "Mata Kuliah",
@@ -1342,7 +1342,7 @@ export default {
                         v-if="submitted && !$v.pretest_data.time_start.required"
                         class="invalid-feedback"
                       >
-                        Start Time harus diisi!
+                        Waktu Mulai harus diisi!
                       </div>
                     </div>
                   </div>
@@ -1369,7 +1369,7 @@ export default {
                         v-if="submitted && !$v.pretest_data.time_end.required"
                         class="invalid-feedback"
                       >
-                        End Time harus diisi!
+                        Waktu Berakhir harus diisi!
                       </div>
                     </div>
                   </div>
@@ -1484,7 +1484,7 @@ export default {
                         v-if="submitted && !$v.journal_data.time_start.required"
                         class="invalid-feedback"
                       >
-                        Start Time harus diisi!
+                        Waktu Mulai harus diisi!
                       </div>
                     </div>
                   </div>
@@ -1511,7 +1511,7 @@ export default {
                         v-if="submitted && !$v.journal_data.time_end.required"
                         class="invalid-feedback"
                       >
-                        End Time harus diisi!
+                        Waktu Berakhir harus diisi!
                       </div>
                     </div>
                   </div>
@@ -1626,7 +1626,7 @@ export default {
                         v-if="submitted && !$v.posttest_data.time_start.required"
                         class="invalid-feedback"
                       >
-                        Start Time harus diisi!
+                        Waktu Mulai harus diisi!
                       </div>
                     </div>
                   </div>
@@ -1653,7 +1653,7 @@ export default {
                         v-if="submitted && !$v.posttest_data.time_end.required"
                         class="invalid-feedback"
                       >
-                        End Time harus diisi!
+                        Waktu Berakhir harus diisi!
                       </div>
                     </div>
                   </div>

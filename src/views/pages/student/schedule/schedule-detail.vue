@@ -99,8 +99,8 @@ export default {
       inputError: null,
 
       text: {
-        start: "Start",
-        end: "End",
+        start: "Mulai",
+        end: "Berakhir",
         auth: "Auth",
         kelas: "Kelas",
         matkul: "Mata Kuliah",
