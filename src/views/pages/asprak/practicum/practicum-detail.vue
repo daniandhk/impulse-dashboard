@@ -647,8 +647,8 @@ export default {
         }
         else{
           this.submitted = true;
-          let message_header = "Berhasil submit!";
-          let message_body = "Form telah berhasil di submit.";
+          let message_header = "Berhasil disimpan!";
+          let message_body = "Informasi tes berhasil disimpan.";
 
           if(type=='pretest'){
               if(this.isPretestNull == false){
