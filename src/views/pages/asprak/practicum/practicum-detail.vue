@@ -935,6 +935,174 @@ export default {
       }
     },
 
+    notAfterTimeEndPretest(date) {
+      if((this.time_end && this.time_start) || this.pretest_data.time_end){
+        //notAfterTimeEnd
+        let hours_end = this.time_end.split(':')[0];
+        let minutes_end = this.time_end.split(':')[1];
+        let seconds_end = this.time_end.split(':')[2];
+
+        //notBeforeTimeStart
+        let hours_start = this.time_start.split(':')[0];
+        let minutes_start = this.time_start.split(':')[1];
+        let seconds_start = this.time_start.split(':')[2];
+
+        if(this.pretest_data.time_end){
+          let hours_pretest = this.pretest_data.time_end.split(':')[0];
+          let minutes_pretest = this.pretest_data.time_end.split(':')[1];
+          let seconds_pretest = this.pretest_data.time_end.split(':')[2];
+
+          return date > new Date(new Date().setHours(hours_pretest, minutes_pretest, seconds_pretest, 0)) 
+                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+        else{
+          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+      }
+    },
+
+    notBeforeTimeStartPretest(date) {
+      if((this.time_end && this.time_start) || this.pretest_data.time_start){
+        //notAfterTimeEnd
+        let hours_end = this.time_end.split(':')[0];
+        let minutes_end = this.time_end.split(':')[1];
+        let seconds_end = this.time_end.split(':')[2];
+
+        //notBeforeTimeStart
+        let hours_start = this.time_start.split(':')[0];
+        let minutes_start = this.time_start.split(':')[1];
+        let seconds_start = this.time_start.split(':')[2];
+
+        if(this.pretest_data.time_start){
+          let hours_test = this.pretest_data.time_start.split(':')[0];
+          let minutes_test = this.pretest_data.time_start.split(':')[1];
+          let seconds_test = this.pretest_data.time_start.split(':')[2];
+
+          return date < new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
+                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+        else{
+          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+      }
+    },
+
+    notAfterTimeEndJournal(date) {
+      if((this.time_end && this.time_start) || this.journal_data.time_end){
+        //notAfterTimeEnd
+        let hours_end = this.time_end.split(':')[0];
+        let minutes_end = this.time_end.split(':')[1];
+        let seconds_end = this.time_end.split(':')[2];
+
+        //notBeforeTimeStart
+        let hours_start = this.time_start.split(':')[0];
+        let minutes_start = this.time_start.split(':')[1];
+        let seconds_start = this.time_start.split(':')[2];
+
+        if(this.journal_data.time_end){
+          let hours_test = this.journal_data.time_end.split(':')[0];
+          let minutes_test = this.journal_data.time_end.split(':')[1];
+          let seconds_test = this.journal_data.time_end.split(':')[2];
+
+          return date > new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
+                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+        else{
+          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+      }
+    },
+
+    notBeforeTimeStartJournal(date) {
+      if((this.time_end && this.time_start) || this.journal_data.time_start){
+        //notAfterTimeEnd
+        let hours_end = this.time_end.split(':')[0];
+        let minutes_end = this.time_end.split(':')[1];
+        let seconds_end = this.time_end.split(':')[2];
+
+        //notBeforeTimeStart
+        let hours_start = this.time_start.split(':')[0];
+        let minutes_start = this.time_start.split(':')[1];
+        let seconds_start = this.time_start.split(':')[2];
+
+        if(this.journal_data.time_start){
+          let hours_test = this.journal_data.time_start.split(':')[0];
+          let minutes_test = this.journal_data.time_start.split(':')[1];
+          let seconds_test = this.journal_data.time_start.split(':')[2];
+
+          return date < new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
+                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+        else{
+          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+      }
+    },
+
+    notAfterTimeEndPosttest(date) {
+      if((this.time_end && this.time_start) || this.posttest_data.time_end){
+        //notAfterTimeEnd
+        let hours_end = this.time_end.split(':')[0];
+        let minutes_end = this.time_end.split(':')[1];
+        let seconds_end = this.time_end.split(':')[2];
+
+        //notBeforeTimeStart
+        let hours_start = this.time_start.split(':')[0];
+        let minutes_start = this.time_start.split(':')[1];
+        let seconds_start = this.time_start.split(':')[2];
+
+        if(this.posttest_data.time_end){
+          let hours_test = this.posttest_data.time_end.split(':')[0];
+          let minutes_test = this.posttest_data.time_end.split(':')[1];
+          let seconds_test = this.posttest_data.time_end.split(':')[2];
+
+          return date > new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
+                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+        else{
+          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+      }
+    },
+
+    notBeforeTimeStartPosttest(date) {
+      if((this.time_end && this.time_start) || this.posttest_data.time_start){
+        //notAfterTimeEnd
+        let hours_end = this.time_end.split(':')[0];
+        let minutes_end = this.time_end.split(':')[1];
+        let seconds_end = this.time_end.split(':')[2];
+
+        //notBeforeTimeStart
+        let hours_start = this.time_start.split(':')[0];
+        let minutes_start = this.time_start.split(':')[1];
+        let seconds_start = this.time_start.split(':')[2];
+
+        if(this.posttest_data.time_start){
+          let hours_test = this.posttest_data.time_start.split(':')[0];
+          let minutes_test = this.posttest_data.time_start.split(':')[1];
+          let seconds_test = this.posttest_data.time_start.split(':')[2];
+
+          return date < new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
+                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+        else{
+          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+        }
+      }
+    },
+
     loading(isLoad) {
         var x = document.getElementById("loading");
 
@@ -1335,6 +1503,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
+                        :disabled-time="notAfterTimeEndPretest"
                         :disabled="isLoading || isPretestNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.pretest_data.time_start.$error }"
                       />
@@ -1362,6 +1531,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
+                        :disabled-time="notBeforeTimeStartPretest"
                         :disabled="isLoading || isPretestNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.pretest_data.time_end.$error }"
                       />
@@ -1477,6 +1647,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
+                        :disabled-time="notAfterTimeEndJournal"
                         :disabled="isLoading || isJournalNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.journal_data.time_start.$error }"
                       />
@@ -1504,6 +1675,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
+                        :disabled-time="notBeforeTimeStartJournal"
                         :disabled="isLoading || isJournalNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.journal_data.time_end.$error }"
                       />
@@ -1619,6 +1791,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
+                        :disabled-time="notAfterTimeEndPosttest"
                         :disabled="isLoading || isPosttestNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.posttest_data.time_start.$error }"
                       />
@@ -1646,6 +1819,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
+                        :disabled-time="notBeforeTimeStartPosttest"
                         :disabled="isLoading || isPosttestNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.posttest_data.time_end.$error }"
                       />
