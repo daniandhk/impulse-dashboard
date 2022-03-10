@@ -443,7 +443,6 @@ export default {
       
       //load data
       if(value == "Jurnal"){
-        this.dataTest.type = "file";
         this.test_id = this.schedule_data.module.journal_id;
         this.dataTest.test_type = "journal";
       }
@@ -762,7 +761,7 @@ export default {
       
       formData.append('module_id', this.schedule_data.module.id);
       formData.append('type', 'file');
-      formData.append('test_type', 'journal');
+      formData.append('test_type', this.dataTest.test_type);
       formData.append('questions', questions);
       formData.append('weight', this.dataTest.questions[0].weight);
       formData.append('answer', this.dataTest.questions[0].answer);
@@ -776,11 +775,9 @@ export default {
           text: 'File telah terunggah.',
       })
       this.loadData().then(result=>{
-        this.selectTest("Jurnal").then(rslt=>{
-          this.inputTestSuccess = true;
-          this.isUnsavedData = false;
-          this.isLoadedData = false;
-        });
+        this.inputTestSuccess = true;
+        this.isUnsavedData = false;
+        this.isLoadedData = false;
       });
       this.loading(false);
     },

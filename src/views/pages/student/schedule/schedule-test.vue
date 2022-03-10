@@ -709,7 +709,10 @@ export default {
       />
     </div>
     <div v-if="isEssay || isMultipleChoice">
-      <p class="text-center pb-2">
+      <p
+        v-if="!isEssayAnswersAvailable || !isMCAnswersAvailable"
+        class="text-center pb-2"
+      >
         Harap submit jawaban sebelum waktu pengerjaan berakhir. Selamat mengerjakan!
       </p>
       <div
@@ -825,7 +828,10 @@ export default {
       </div>
     </div>
     <div v-if="isFile">
-      <p class="text-center pb-4">
+      <p
+        v-if="!isFileAnswersAvailable"
+        class="text-center pb-4"
+      >
         Harap konfirmasi upload jawaban sebelum waktu pengerjaan berakhir. Selamat mengerjakan!
       </p>
       <div class="card">
