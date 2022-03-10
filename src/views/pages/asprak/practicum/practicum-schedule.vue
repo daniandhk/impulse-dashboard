@@ -664,7 +664,7 @@ export default {
               v-model="room.name"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -676,7 +676,7 @@ export default {
               rows="2"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             />
           </div>
         </div>
@@ -687,7 +687,7 @@ export default {
               v-model="room.msteam_link"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -698,7 +698,7 @@ export default {
               v-model="room.msteam_code"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -723,7 +723,7 @@ export default {
               v-model="schedule_data.title"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -735,7 +735,7 @@ export default {
                 v-model="class_course_data.class.name"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>
@@ -746,7 +746,7 @@ export default {
                 v-model="class_course_data.academic_year.name"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>
@@ -759,7 +759,7 @@ export default {
                 v-model="class_course_data.course.name"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>
@@ -770,7 +770,7 @@ export default {
                 v-model="schedule_data.module.index"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>
@@ -782,7 +782,7 @@ export default {
               v-model="schedule_data.date"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -794,7 +794,7 @@ export default {
                 v-model="schedule_data.start"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>
@@ -805,7 +805,7 @@ export default {
                 v-model="schedule_data.end"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>
@@ -834,7 +834,7 @@ export default {
               v-model="schedule_data.room.name"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -846,7 +846,7 @@ export default {
               rows="2"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             />
           </div>
         </div>
@@ -857,7 +857,7 @@ export default {
               v-model="schedule_data.room.msteam_link"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -868,7 +868,7 @@ export default {
               v-model="schedule_data.room.msteam_code"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -879,7 +879,7 @@ export default {
               v-model="schedule_data.date"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>

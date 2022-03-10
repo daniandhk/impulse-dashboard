@@ -600,7 +600,7 @@ export default {
                   name="nama" 
                   type="text" 
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   :style="disabled_bg"
                   :class="{ 'is-invalid': submitted && $v.dataStudent.name.$error }"
                 >
@@ -645,7 +645,7 @@ export default {
                                 name="nama" 
                                 type="text" 
                                 class="form-control"
-                                disabled="true"
+                                :disabled="true"
                                 v-bind:style="disabled_bg"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.gender.$error }" />
 
@@ -665,7 +665,7 @@ export default {
                                 name="nama" 
                                 type="text" 
                                 class="form-control"
-                                disabled="true"
+                                :disabled="true"
                                 v-bind:style="disabled_bg"
                                 :class="{ 'is-invalid': submitted && $v.dataStudent.religion.$error }" />
 

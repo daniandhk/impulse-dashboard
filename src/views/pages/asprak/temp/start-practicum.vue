@@ -992,7 +992,7 @@ export default {
                             v-model="text.kelas"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1001,7 +1001,7 @@ export default {
                             v-model="class_course_data.class.name"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1012,7 +1012,7 @@ export default {
                             v-model="text.matkul"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1021,7 +1021,7 @@ export default {
                             v-model="class_course_data.course.name"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1032,7 +1032,7 @@ export default {
                             v-model="text.tahun"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1041,7 +1041,7 @@ export default {
                             v-model="class_course_data.academic_year.name"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1052,7 +1052,7 @@ export default {
                             v-model="text.modul"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1102,7 +1102,7 @@ export default {
                             v-model="text.nama_ruangan"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1111,7 +1111,7 @@ export default {
                             v-model="schedule_data.room.name"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1122,7 +1122,7 @@ export default {
                             v-model="text.detail_ruangan"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1132,7 +1132,7 @@ export default {
                             rows="1"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           />
                         </div>
@@ -1143,7 +1143,7 @@ export default {
                             v-model="text.msteam_link"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1152,7 +1152,7 @@ export default {
                             v-model="schedule_data.room.msteam_link"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1163,7 +1163,7 @@ export default {
                             v-model="text.msteam_code"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1172,7 +1172,7 @@ export default {
                             v-model="schedule_data.room.msteam_code"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1216,7 +1216,7 @@ export default {
                             v-model="text.tanggal"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1225,7 +1225,7 @@ export default {
                             v-model="time_date"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1236,7 +1236,7 @@ export default {
                             v-model="text.mulai"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1245,7 +1245,7 @@ export default {
                             v-model="time_start"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1256,7 +1256,7 @@ export default {
                             v-model="text.terakhir"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="border: 0"
                           >
                         </div>
@@ -1265,7 +1265,7 @@ export default {
                             v-model="time_end"
                             type="text"
                             class="form-control"
-                            disabled="true"
+                            :disabled="true"
                             style="background-color: #F0F4F6;"
                           >
                         </div>
@@ -1314,7 +1314,7 @@ export default {
                         v-model="text.start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0;"
                       >
                     </div>
@@ -1341,7 +1341,7 @@ export default {
                         v-model="text.end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1368,7 +1368,7 @@ export default {
                         v-model="text.auth"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1456,7 +1456,7 @@ export default {
                         v-model="text.start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0;"
                       >
                     </div>
@@ -1483,7 +1483,7 @@ export default {
                         v-model="text.end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1510,7 +1510,7 @@ export default {
                         v-model="text.auth"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1598,7 +1598,7 @@ export default {
                         v-model="text.start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0;"
                       >
                     </div>
@@ -1625,7 +1625,7 @@ export default {
                         v-model="text.end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1652,7 +1652,7 @@ export default {
                         v-model="text.auth"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
