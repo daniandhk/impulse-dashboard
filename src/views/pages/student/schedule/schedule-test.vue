@@ -1,13 +1,11 @@
 <script>
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
-
 import * as api from '@/api';
 import Swal from "sweetalert2";
-
 import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
-
+import moment from 'moment';
 import Quill from 'quill';
 import ImageResize from "../../../modules/image-resize.min";
 import { ImageDrop } from 'quill-image-drop-module';
@@ -114,6 +112,9 @@ export default {
                     toolbar: false,
                 }
             },
+
+            isTimeEnded: false,
+            //
         }
     },
     computed: {
@@ -122,6 +123,9 @@ export default {
         },
         editor() {
             return this.$refs.myQuillEditor.quill
+        },
+        timeEnd() {
+            return this.schedule_test_data.time_end
         }
     },
     watch: {
@@ -131,10 +135,25 @@ export default {
             this.loading(false);
         }
     },
-    mounted: async function() {
-        this.loading(true);
+    // mounted: async function() {
+    //     this.loading(true);
+    //     await this.loadData();
+    //     this.loading(false);
+    // },
+    beforeDestroy() {
+        // prevent memory leak
+        clearInterval(this.interval)
+    },
+    created: async function() {
+        // this.loading(true);
         await this.loadData();
-        this.loading(false);
+        // this.loading(false);
+
+        // update the time every second
+        this.interval = setInterval(() => {
+            // Concise way to format time according to system locale.
+            this.setTimeEnd()
+        }, 1000)
     },
     methods: {
         ...notificationMethods,
@@ -405,7 +424,7 @@ export default {
         },
 
         onClickSubmit(){
-            let text = "Jawaban yang kosong akan tetap ter-submit!";
+            let text = "Jawaban yang kosong akan tetap disimpan!";
             let confirm = "Ya, lanjut submit!";
             if(this.isFile){
                 text = "Pastikan jawaban diunggah ke URL yang telah disediakan!"
@@ -596,6 +615,61 @@ export default {
             );
         },
 
+        setTimeEnd(){
+            let date_now = moment().locale('id').format('MM/DD/YYYY')
+            let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'))
+            let day = moment().locale('id').day()
+            let hour = moment().locale('id').hour()
+            let minute = moment().locale('id').minute()
+            let second = moment().locale('id').second()
+            let remain_time = schedule_time_end.subtract({ hours: hour, minutes: minute, seconds: second})
+            if(remain_time.day() == day){
+                this.isTimeEnded = false
+                let time_end = remain_time.format('HH:mm:ss')
+
+                if(time_end == '00:00:01'){
+                    this.onTimeEndedPopup()
+                }
+                else if(remain_time.second() == 0 && (remain_time.minute() == 5 || remain_time.minute() == 2 || remain_time.minute() == 1)){
+                    this.onTimeWarningPopup(remain_time.minute())
+                }
+            }
+            else{
+                this.isTimeEnded = true
+                let time_end = '00:00:00'
+            }
+        },
+
+        onTimeEndedPopup(){
+            let text = "Harap hubungi Asprak untuk penambahan waktu."
+            if(this.isMultipleChoice || this.isEssay){
+                text = "Harap catat jawaban untuk mengisi kembali dan hubungi Asprak untuk penambahan waktu."
+            }
+            if(this.isFile){
+                text = "Harap hubungi Asprak untuk penambahan waktu dan konfirmasi upload jawaban."
+            }
+            Swal.fire({
+                icon: 'error',
+                title: 'Waktu pengerjaan telah berakhir!',
+                text: text,
+            })
+        },
+
+        onTimeWarningPopup(minute){
+            let text = "Harap submit jawaban sebelum waktu berakhir."
+            if(this.isMultipleChoice || this.isEssay){
+                text = "Harap submit jawaban sebelum waktu berakhir."
+            }
+            if(this.isFile){
+                text = "Harap konfirmasi upload jawaban sebelum waktu berakhir."
+            }
+            Swal.fire({
+                icon: 'info',
+                title: 'Waktu pengerjaan tersisa ' + minute + " menit lagi!",
+                text: text,
+            })
+        },
+
         loading() {
             if(this.isLoading){
                 this.isLoading = false;
@@ -615,7 +689,10 @@ export default {
 </script>
 
 <template>
-  <Layout>
+  <Layout
+    v-if="timeEnd"
+    :time-end="timeEnd"
+  >
     <PageHeader
       :title="title"
       :items="items"
@@ -632,6 +709,9 @@ export default {
       />
     </div>
     <div v-if="isEssay || isMultipleChoice">
+      <p class="text-center pb-2">
+        Harap submit jawaban sebelum waktu pengerjaan berakhir. Selamat mengerjakan!
+      </p>
       <div
         v-for="(question, index) in test_data.question"
         :key="index"
@@ -658,7 +738,7 @@ export default {
                     ref="myQuillEditor"
                     v-model="question.question"
                     :options="editorOption"
-                    disabled="true"
+                    :disabled="true"
                   />
                 </div>
               </div>
@@ -680,7 +760,7 @@ export default {
                         ref="myQuillEditor"
                         v-model="dataInput.answers[index].answers"
                         :options="editorOption"
-                        disabled="true"
+                        :disabled="true"
                       />
                     </div>
                   </div>
@@ -701,7 +781,7 @@ export default {
                         ref="myQuillEditor"
                         v-model="answer_data.answer"
                         :options="editorOption"
-                        disabled="true"
+                        :disabled="true"
                         class="pt-1 mb-4"
                       />
                     </div>
@@ -715,11 +795,20 @@ export default {
       <div v-if="!isEssayAnswersAvailable && !isMCAnswersAvailable">
         <div class="text-center m-4">
           <b-button
+            v-if="!isTimeEnded"
             variant="success"
             style="min-width: 250px;"
             @click="onClickSubmit"
           >
-            Submit
+            Submit Jawaban
+          </b-button>
+          <b-button
+            v-if="isTimeEnded"
+            variant="danger"
+            style="min-width: 250px;"
+            @click="onTimeEndedPopup"
+          >
+            Waktu pengerjaan telah berakhir!
           </b-button>
         </div>
       </div>
@@ -736,6 +825,9 @@ export default {
       </div>
     </div>
     <div v-if="isFile">
+      <p class="text-center pb-4">
+        Harap konfirmasi upload jawaban sebelum waktu pengerjaan berakhir. Selamat mengerjakan!
+      </p>
       <div class="card">
         <div class="card-body">
           <div class="text-center">
@@ -764,7 +856,7 @@ export default {
             <div class="form-group">
               <input
                 v-model="test_data.question[0].answers[0].answer"
-                disabled="true"
+                :disabled="true"
                 type="text" 
                 class="form-control text-center"
                 placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
@@ -774,11 +866,20 @@ export default {
           <div v-if="!isFileAnswersAvailable">
             <div class="text-center m-4">
               <b-button
+                v-if="!isTimeEnded"
                 variant="success"
                 style="min-width: 350px;"
                 @click="onClickSubmit"
               >
-                Konfirmasi Telah Upload
+                Konfirmasi Upload Jawaban
+              </b-button>
+              <b-button
+                v-if="isTimeEnded"
+                variant="success"
+                style="min-width: 350px;"
+                @click="onTimeEndedPopup"
+              >
+                Waktu pengerjaan telah berakhir!
               </b-button>
             </div>
           </div>
@@ -789,7 +890,7 @@ export default {
                 :disabled="true"
                 style="min-width: 350px;"
               >
-                Upload Terkonfirmasi
+                Upload jawaban sudah terkonfirmasi!
               </b-button>
             </div>
           </div>

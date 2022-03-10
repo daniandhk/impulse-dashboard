@@ -6,6 +6,12 @@ import moment from 'moment';
 
 export default {
   components: {  },
+  props: {
+    timeEnd: {
+      type: String,
+      default: null,
+    },
+  },
   data() {
     return {
       current_language: "en",
@@ -13,12 +19,9 @@ export default {
       user: store.getters.getLoggedUser,
 
       interval: null,
-      time: Intl.DateTimeFormat(navigator.language, {
-              hour: 'numeric',
-              minute: 'numeric',
-              second: 'numeric'
-            }).format(),
+      time: moment().locale('id').format('HH:mm:ss'),
       date: moment().locale('id').format('dddd, LL'),
+      time_end: "",
       //
     };
   },
@@ -30,12 +33,10 @@ export default {
     // update the time every second
     this.interval = setInterval(() => {
       // Concise way to format time according to system locale.
-      // In my case this returns "3:48:00 am"
-      this.time = Intl.DateTimeFormat(navigator.language, {
-        hour: 'numeric',
-        minute: 'numeric',
-        second: 'numeric'
-      }).format()
+      this.time = moment().locale('id').format('HH:mm:ss')
+      if(this.timeEnd){
+        this.setTimeEnd()
+      }
     }, 1000)
   },
   methods: {
@@ -102,6 +103,22 @@ export default {
         }  
       }
       this.$refs.dropdown.visible = false
+    },
+
+    setTimeEnd(){
+      let date_now = moment().locale('id').format('MM/DD/YYYY')
+      let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'))
+      let day = moment().locale('id').day()
+      let hour = moment().locale('id').hour()
+      let minute = moment().locale('id').minute()
+      let second = moment().locale('id').second()
+      let remain_time = schedule_time_end.subtract({ hours: hour, minutes: minute, seconds: second})
+      if(remain_time.day() == day){
+        this.time_end = remain_time.format('HH:mm:ss')
+      }
+      else{
+        this.time_end = '00:00:00'
+      }
     }
   }
 };
@@ -199,13 +216,18 @@ export default {
           <i
             class="ri-time-line mr-1"
           />
-          {{ time }}
+          <div v-if="!timeEnd">
+            {{ time }}
+          </div>
+          <div v-if="timeEnd">
+            Sisa waktu: {{ time_end }}
+          </div>
         </div>
         <b-tooltip
           target="div-time"
           variant="dark"
         >
-          {{ date }}
+          {{ date }}<br>pukul {{ time }}
         </b-tooltip>
 
         <b-dropdown
