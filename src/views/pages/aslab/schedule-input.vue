@@ -592,7 +592,7 @@ export default {
                 variant="success"
                 dismissible
               >
-                Data updated successfully!
+                Data berhasil diperbarui!
               </b-alert>
 
               <b-alert
