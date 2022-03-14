@@ -6,7 +6,9 @@ import DatePicker from "vue2-datepicker";
 
 import * as api from '@/api';
 import Swal from "sweetalert2";
-import moment from 'moment';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+const moment = extendMoment(Moment);
 
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
@@ -124,6 +126,8 @@ export default {
 
       text: {
         start: "Mulai",
+        duration: "Durasi",
+        minute: "Menit",
         end: "Berakhir",
         auth: "Auth",
         kelas: "Kelas",
@@ -206,18 +210,40 @@ export default {
 
       isJadwalNull: false,
 
-      pretest_form: {
+      pretest_auth_form: {
         backgroundColor: "#F0F4F6",
       },
-      journal_form: {
+      journal_auth_form: {
         backgroundColor: "#F0F4F6",
       },
-      posttest_form: {
+      posttest_auth_form: {
         backgroundColor: "#F0F4F6",
       },
 
       urlJadwal: "/asprak/schedule/",
       urlSoal: "/asprak/schedule/",
+
+      pretest_duration: 0,
+      journal_duration: 0,
+      posttest_duration: 0,
+
+      pretest_duration_form: {
+        backgroundColor: "#F0F4F6",
+      },
+      journal_duration_form: {
+        backgroundColor: "#F0F4F6",
+      },
+      posttest_duration_form: {
+        backgroundColor: "#F0F4F6",
+      },
+
+      isPretestTimeInvalid: false,
+      isJournalTimeInvalid: false,
+      isPosttestTimeInvalid: false,
+
+      isPretestDurationBelowZero: false,
+      isJournalDurationBelowZero: false,
+      isPosttestDurationBelowZero: false,
 
     };
   },
@@ -242,6 +268,8 @@ export default {
     ...notificationMethods,
 
     async loadData(){
+      this.clearData();
+
       this.isPretestStart = false;
       this.isJournalStart = false;
       this.isPosttestStart = false;
@@ -255,20 +283,15 @@ export default {
       await this.getTestSchedule(this.schedule_data.id, this.schedule_data.module.journal_id, 'journal');
 
       this.setSchedule();
+      this.checkDuration();
     },
 
     setSchedule(){
       if(this.schedule_data.date == null || this.schedule_data.start == null || this.schedule_data.end == null){
         this.isJadwalNull = true;
-        this.isActive('pretest', false);
-        this.isActive('journal', false);
-        this.isActive('posttest', false);
       }
       else{
         this.isJadwalNull = false;
-        this.isActive('pretest', true);
-        this.isActive('journal', true);
-        this.isActive('posttest', true);
       }
     },
 
@@ -367,26 +390,26 @@ export default {
     isActive(type, status){
       if(type == 'pretest'){
         if(status){
-          this.pretest_form.backgroundColor = "";
+          this.pretest_auth_form.backgroundColor = "";
         }
         else{
-          this.pretest_form.backgroundColor = "#F0F4F6";
+          this.pretest_auth_form.backgroundColor = "#F0F4F6";
         }
       }
       else if(type == 'journal'){
         if(status){
-          this.journal_form.backgroundColor = "";
+          this.journal_auth_form.backgroundColor = "";
         }
         else{
-          this.journal_form.backgroundColor = "#F0F4F6";
+          this.journal_auth_form.backgroundColor = "#F0F4F6";
         }
       }
       else if(type == 'posttest'){
         if(status){
-          this.posttest_form.backgroundColor = "";
+          this.posttest_auth_form.backgroundColor = "";
         }
         else{
-          this.posttest_form.backgroundColor = "#F0F4F6";
+          this.posttest_auth_form.backgroundColor = "#F0F4F6";
         }
       }
     },
@@ -598,6 +621,8 @@ export default {
     },
 
     clearData(){
+      this.submitted = false;
+
       this.schedule_data.title = "";
       this.time_start = null;
       this.time_end = null;
@@ -605,16 +630,19 @@ export default {
 
       this.pretest_data.time_start = "";
       this.pretest_data.time_end = "";
+      this.pretest_data.auth = "";
       this.pretest_data.is_active = false;
       this.pretest_data.auth = null;
 
       this.journal_data.time_start = "";
       this.journal_data.time_end = "";
+      this.journal_data.auth = "";
       this.journal_data.is_active = false;
       this.journal_data.auth = null;
 
       this.posttest_data.time_start = "";
       this.posttest_data.time_end = "";
+      this.posttest_data.auth = "";
       this.posttest_data.is_active = false;
       this.posttest_data.auth = null;
 
@@ -623,13 +651,25 @@ export default {
       this.isPosttestNew = false;
 
       this.isPretestNull = false;
-      this.isActive('pretest', true);
+      this.isActive('pretest', false);
 
       this.isJournalNull = false;
-      this.isActive('journal', true);
+      this.isActive('journal', false);
 
       this.isPosttestNull = false;
-      this.isActive('posttest', true);
+      this.isActive('posttest', false);
+
+      this.pretest_duration = 0;
+      this.journal_duration = 0;
+      this.posttest_duration = 0;
+
+      this.isPretestTimeInvalid = false;
+      this.isJournalTimeInvalid = false;
+      this.isPosttestTimeInvalid = false;
+
+      this.isPretestDurationBelowZero = false;
+      this.isJournalDurationBelowZero = false;
+      this.isPosttestDurationBelowZero = false;
     },
 
     setDateTest(data){
@@ -654,6 +694,9 @@ export default {
               if(this.isPretestNull == false){
                   this.$v.pretest_data.$touch();
                   if (this.$v.pretest_data.$invalid) {
+                      return;
+                  }
+                  else if (this.isPretestTimeInvalid) {
                       return;
                   }
                   else{
@@ -740,6 +783,9 @@ export default {
                   if (this.$v.journal_data.$invalid) {
                       return;
                   }
+                  else if (this.isJournalTimeInvalid) {
+                      return;
+                  }
                   else{
                       let id = this.journal_data.id;
                       this.journal_data.time_start = this.inputedDate(this.journal_data.time_start);
@@ -824,6 +870,9 @@ export default {
                   if (this.$v.posttest_data.$invalid) {
                       return;
                   }
+                  else if (this.isPosttestTimeInvalid) {
+                      return;
+                  }
                   else{
                       let id = this.posttest_data.id;
                       this.posttest_data.time_start = this.inputedDate(this.posttest_data.time_start);
@@ -905,27 +954,6 @@ export default {
         }
     },
 
-    //minor
-    // disableEndPretest(date) {
-    //   if(this.time_end){
-    //     let hours = this.time_end.split(':')[0];
-    //     let minutes = this.time_end.split(':')[1];
-    //     let seconds = this.time_end.split(':')[2];
-        
-    //     return date > new Date(new Date().setHours(hours, minutes, seconds, 0));
-    //   }
-    // },
-
-    // disableStartPretest(date) {
-    //   if(this.time_start){
-    //     let hours = this.time_start.split(':')[0];
-    //     let minutes = this.time_start.split(':')[1];
-    //     let seconds = this.time_start.split(':')[2];
-        
-    //     return date < new Date(new Date().setHours(hours, minutes-30, seconds, 0));
-    //   }
-    // },
-
     dateFormatted(date){
       if(date){
         return moment(date).locale('id').format('LL');
@@ -935,8 +963,8 @@ export default {
       }
     },
 
-    notAfterTimeEndPretest(date) {
-      if((this.time_end && this.time_start) || this.pretest_data.time_end){
+    timeLimitPretest(date) {
+      if(this.time_end && this.time_start){
         //notAfterTimeEnd
         let hours_end = this.time_end.split(':')[0];
         let minutes_end = this.time_end.split(':')[1];
@@ -947,24 +975,13 @@ export default {
         let minutes_start = this.time_start.split(':')[1];
         let seconds_start = this.time_start.split(':')[2];
 
-        if(this.pretest_data.time_end){
-          let hours_pretest = this.pretest_data.time_end.split(':')[0];
-          let minutes_pretest = this.pretest_data.time_end.split(':')[1];
-          let seconds_pretest = this.pretest_data.time_end.split(':')[2];
-
-          return date > new Date(new Date().setHours(hours_pretest, minutes_pretest, seconds_pretest, 0)) 
-                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
-        }
-        else{
-          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
-        }
+        return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
       }
     },
 
-    notBeforeTimeStartPretest(date) {
-      if((this.time_end && this.time_start) || this.pretest_data.time_start){
+    timeLimitJournal(date) {
+      if(this.time_end && this.time_start){
         //notAfterTimeEnd
         let hours_end = this.time_end.split(':')[0];
         let minutes_end = this.time_end.split(':')[1];
@@ -975,24 +992,13 @@ export default {
         let minutes_start = this.time_start.split(':')[1];
         let seconds_start = this.time_start.split(':')[2];
 
-        if(this.pretest_data.time_start){
-          let hours_test = this.pretest_data.time_start.split(':')[0];
-          let minutes_test = this.pretest_data.time_start.split(':')[1];
-          let seconds_test = this.pretest_data.time_start.split(':')[2];
-
-          return date < new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
-                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
-        }
-        else{
-          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
-        }
+        return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
       }
     },
 
-    notAfterTimeEndJournal(date) {
-      if((this.time_end && this.time_start) || this.journal_data.time_end){
+    timeLimitPosttest(date) {
+      if(this.time_end && this.time_start){
         //notAfterTimeEnd
         let hours_end = this.time_end.split(':')[0];
         let minutes_end = this.time_end.split(':')[1];
@@ -1003,103 +1009,165 @@ export default {
         let minutes_start = this.time_start.split(':')[1];
         let seconds_start = this.time_start.split(':')[2];
 
-        if(this.journal_data.time_end){
-          let hours_test = this.journal_data.time_end.split(':')[0];
-          let minutes_test = this.journal_data.time_end.split(':')[1];
-          let seconds_test = this.journal_data.time_end.split(':')[2];
-
-          return date > new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
-                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
-        }
-        else{
-          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
-        }
+        return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
+                || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
       }
     },
 
-    notBeforeTimeStartJournal(date) {
-      if((this.time_end && this.time_start) || this.journal_data.time_start){
-        //notAfterTimeEnd
-        let hours_end = this.time_end.split(':')[0];
-        let minutes_end = this.time_end.split(':')[1];
-        let seconds_end = this.time_end.split(':')[2];
+    onPretestTimeChange(){
+      if(this.pretest_data.time_start){
+        this.pretest_duration_form.backgroundColor = ""
 
-        //notBeforeTimeStart
-        let hours_start = this.time_start.split(':')[0];
-        let minutes_start = this.time_start.split(':')[1];
-        let seconds_start = this.time_start.split(':')[2];
+        if(this.pretest_duration){
+          if(this.pretest_duration <= 0){
+            this.isPretestDurationBelowZero = true;
+          }
+          else{
+            this.isPretestDurationBelowZero = false;
 
-        if(this.journal_data.time_start){
-          let hours_test = this.journal_data.time_start.split(':')[0];
-          let minutes_test = this.journal_data.time_start.split(':')[1];
-          let seconds_test = this.journal_data.time_start.split(':')[2];
+            let date = this.time_date
+            this.pretest_data.time_end = moment(date + ' ' + this.pretest_data.time_start).add(this.pretest_duration, 'minutes').format('HH:mm:ss')
 
-          return date < new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
-                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+            let date_end = moment(date + ' ' + this.time_end)
+            let test_end = moment(date + ' ' + this.pretest_data.time_end)
+
+            if(test_end > date_end){
+              this.isPretestTimeInvalid = true;
+            }
+            else{
+              this.isPretestTimeInvalid = false;
+            }
+          }
         }
         else{
-          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+          this.pretest_data.time_end = null;
+          this.isPretestTimeInvalid = false;
+          this.isPretestDurationBelowZero = false;
         }
+      }
+      else{
+        this.pretest_duration_form.backgroundColor = "#F0F4F6"
+        this.pretest_data.time_end = null;
+        this.isPretestTimeInvalid = false;
+        this.isPretestDurationBelowZero = false;
       }
     },
 
-    notAfterTimeEndPosttest(date) {
-      if((this.time_end && this.time_start) || this.posttest_data.time_end){
-        //notAfterTimeEnd
-        let hours_end = this.time_end.split(':')[0];
-        let minutes_end = this.time_end.split(':')[1];
-        let seconds_end = this.time_end.split(':')[2];
+    onJournalTimeChange(){
+      if(this.journal_data.time_start){
+        this.journal_duration_form.backgroundColor = ""
 
-        //notBeforeTimeStart
-        let hours_start = this.time_start.split(':')[0];
-        let minutes_start = this.time_start.split(':')[1];
-        let seconds_start = this.time_start.split(':')[2];
+        if(this.journal_duration){
+          if(this.journal_duration <= 0){
+            this.isJournalDurationBelowZero = true;
+          }
+          else{
+            this.isJournalDurationBelowZero = false;
 
-        if(this.posttest_data.time_end){
-          let hours_test = this.posttest_data.time_end.split(':')[0];
-          let minutes_test = this.posttest_data.time_end.split(':')[1];
-          let seconds_test = this.posttest_data.time_end.split(':')[2];
+            let date = this.time_date
+            this.journal_data.time_end = moment(date + ' ' + this.journal_data.time_start).add(this.journal_duration, 'minutes').format('HH:mm:ss')
 
-          return date > new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
-                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+            let date_end = moment(date + ' ' + this.time_end)
+            let test_end = moment(date + ' ' + this.journal_data.time_end)
+
+            console.log(date_end)
+
+            if(test_end > date_end){
+              this.isJournalTimeInvalid = true;
+            }
+            else{
+              this.isJournalTimeInvalid = false;
+            }
+          }
         }
         else{
-          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+          this.journal_data.time_end = null;
+          this.isJournalTimeInvalid = false;
+          this.isJournalDurationBelowZero = false;
         }
+      }
+      else{
+        this.journal_duration_form.backgroundColor = "#F0F4F6"
+        this.journal_data.time_end = null;
+        this.isJournalTimeInvalid = false;
+        this.isJournalDurationBelowZero = false;
       }
     },
 
-    notBeforeTimeStartPosttest(date) {
-      if((this.time_end && this.time_start) || this.posttest_data.time_start){
-        //notAfterTimeEnd
-        let hours_end = this.time_end.split(':')[0];
-        let minutes_end = this.time_end.split(':')[1];
-        let seconds_end = this.time_end.split(':')[2];
+    onPosttestTimeChange(){
+      if(this.posttest_data.time_start){
+        this.posttest_duration_form.backgroundColor = ""
 
-        //notBeforeTimeStart
-        let hours_start = this.time_start.split(':')[0];
-        let minutes_start = this.time_start.split(':')[1];
-        let seconds_start = this.time_start.split(':')[2];
+        if(this.posttest_duration){
+          if(this.posttest_duration <= 0){
+            this.isPosttestDurationBelowZero = true;
+          }
+          else{
+            this.isPosttestDurationBelowZero = false;
 
-        if(this.posttest_data.time_start){
-          let hours_test = this.posttest_data.time_start.split(':')[0];
-          let minutes_test = this.posttest_data.time_start.split(':')[1];
-          let seconds_test = this.posttest_data.time_start.split(':')[2];
+            let date = this.time_date
+            this.posttest_data.time_end = moment(date + ' ' + this.posttest_data.time_start).add(this.posttest_duration, 'minutes').format('HH:mm:ss')
 
-          return date < new Date(new Date().setHours(hours_test, minutes_test, seconds_test, 0)) 
-                  || date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+            let date_end = moment(date + ' ' + this.time_end)
+            let test_end = moment(date + ' ' + this.posttest_data.time_end)
+
+            if(test_end > date_end){
+              this.isPosttestTimeInvalid = true;
+            }
+            else{
+              this.isPosttestTimeInvalid = false;
+            }
+          }
         }
         else{
-          return date > new Date(new Date().setHours(hours_end, minutes_end, seconds_end, 0)) 
-                  || date < new Date(new Date().setHours(hours_start, minutes_start, seconds_start, 0));
+          this.posttest_data.time_end = null;
+          this.isPosttestTimeInvalid = false;
+          this.isPosttestDurationBelowZero = false;
         }
+      }
+      else{
+        this.posttest_duration_form.backgroundColor = "#F0F4F6"
+        this.posttest_data.time_end = null;
+        this.isPosttestTimeInvalid = false;
+        this.isPosttestDurationBelowZero = false;
+      }
+    },
+
+    checkDuration(){
+      if(this.pretest_data.time_start && this.pretest_data.time_end){
+        let date = this.time_date
+        let start = moment(date + ' ' + this.pretest_data.time_start)
+        let end = moment(date + ' ' + this.pretest_data.time_end)
+        let range = moment().range(start, end)
+        this.pretest_duration = range.diff('minutes')
+        this.pretest_duration_form.backgroundColor = ""
+      }
+      else{
+        this.pretest_duration_form.backgroundColor = "#F0F4F6"
+      }
+
+      if(this.journal_data.time_start && this.journal_data.time_end){
+        let date = this.time_date
+        let start = moment(date + ' ' + this.journal_data.time_start)
+        let end = moment(date + ' ' + this.journal_data.time_end)
+        let range = moment().range(start, end)
+        this.journal_duration = range.diff('minutes')
+        this.journal_duration_form.backgroundColor = ""
+      }
+      else{
+        this.journal_duration_form.backgroundColor = "#F0F4F6"
+      }
+
+      if(this.posttest_data.time_start && this.posttest_data.time_end){
+        let date = this.time_date
+        let start = moment(date + ' ' + this.posttest_data.time_start)
+        let end = moment(date + ' ' + this.posttest_data.time_end)
+        let range = moment().range(start, end)
+        this.posttest_duration = range.diff('minutes')
+        this.posttest_duration_form.backgroundColor = ""
+      }
+      else{
+        this.posttest_duration_form.backgroundColor = "#F0F4F6"
       }
     },
 
@@ -1462,10 +1530,10 @@ export default {
       
       <div class="row">
         <div class="col-sm-4 pt-1 pb-1">
-          <div class="card h-100">
+          <div class="card">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
-                <div>
+                <div class="mb-0">
                   <h5 class="text-left font-size-15 text-uppercase">
                     Tes Awal
                   </h5>
@@ -1487,7 +1555,7 @@ export default {
                   >
                     Harap input soal di menu <a :href="urlSoal"><b>Input Soal</b></a>!
                   </b-alert>
-                  <div class="row text-left mt-4 mr-2">
+                  <div class="row text-left mt-4">
                     <div class="col-sm-4">
                       <input
                         v-model="text.start"
@@ -1503,9 +1571,10 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
-                        :disabled-time="notAfterTimeEndPretest"
+                        :disabled-time="timeLimitPretest"
                         :disabled="isLoading || isPretestNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.pretest_data.time_start.$error }"
+                        @input="onPretestTimeChange"
                       />
                       <div
                         v-if="submitted && !$v.pretest_data.time_start.required"
@@ -1515,7 +1584,52 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.duration"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                        style="border: 0;"
+                      >
+                    </div>
+                    <div class="col-sm-5">
+                      <input
+                        v-model="pretest_duration"
+                        type="number"
+                        class="form-control"
+                        min="0"
+                        :disabled="isLoading || isPretestNull || isJadwalNull || !pretest_data.time_start"
+                        :style="pretest_duration_form"
+                        :class="{
+                          'is-invalid': (submitted && isPretestTimeInvalid) || isPretestDurationBelowZero}"
+                        @input="onPretestTimeChange"
+                      >
+                      <div
+                        v-if="isPretestTimeInvalid"
+                        class="invalid-feedback"
+                      >
+                        Durasi tes melebihi Jam Terakhir di Jadwal!
+                      </div>
+                      <div
+                        v-if="isPretestDurationBelowZero"
+                        class="invalid-feedback"
+                      >
+                        Durasi tes harus valid!
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <input
+                        v-model="text.minute"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                        style="border: 0;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.end"
@@ -1531,8 +1645,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
-                        :disabled-time="notBeforeTimeStartPretest"
-                        :disabled="isLoading || isPretestNull || isJadwalNull"
+                        :disabled="true"
                         :class="{ 'is-invalid': submitted && $v.pretest_data.time_end.$error }"
                       />
                       <div
@@ -1543,7 +1656,7 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.auth"
@@ -1559,7 +1672,7 @@ export default {
                         type="text"
                         class="form-control"
                         :disabled="isLoading || isPretestNull || isJadwalNull"
-                        :style="pretest_form"
+                        :style="pretest_auth_form"
                         :class="{ 'is-invalid': submitted && $v.pretest_data.auth.$error }"
                       >
                       <div
@@ -1572,32 +1685,46 @@ export default {
                   </div>
                   <button 
                     type="button"
-                    class="btn btn-primary mt-4 m-1" 
-                    style="min-width: 150px;" 
+                    class="btn btn-primary mt-4" 
+                    style="min-width: 100%;" 
                     @click="submitSchedule('pretest')"
                   >
                     Simpan
                   </button>
-                  <button 
+                  <hr
+                    style="margin-left: -28px; 
+                                        margin-right: -28px; 
+                                        height: 2px; 
+                                        background-color: #eee; 
+                                        border: 0 none; 
+                                        color: #eee;"
+                  >
+                  <b-button
                     v-if="isPretestStart == true"
-                    type="button" 
-                    class="btn btn-danger mt-4 m-1" 
-                    style="min-width: 150px;"
                     :disabled="pretest_data.auth == null"
+                    class="mt-2 mb-1"
+                    style="min-width: 100%;"
+                    variant="danger"
                     @click="submitSchedule('pretest', 'stop')"
                   >
-                    Stop
-                  </button>
-                  <button 
+                    <b-icon
+                      icon="stop-fill"
+                      aria-hidden="true"
+                    /> Stop Tes Awal
+                  </b-button>
+                  <b-button
                     v-if="isPretestStart == false"
-                    type="button" 
-                    class="btn btn-success mt-4 m-1" 
-                    style="min-width: 150px;"
                     :disabled="pretest_data.auth == null"
+                    class="mt-2 mb-1"
+                    style="min-width: 100%;"
+                    variant="success"
                     @click="submitSchedule('pretest', 'start')"
                   >
-                    Start
-                  </button>
+                    <b-icon
+                      icon="play-fill"
+                      aria-hidden="true"
+                    /> Mulai Tes Awal
+                  </b-button>
                 </div>
               </div>
             </div>
@@ -1606,7 +1733,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4 pt-1 pb-1">
-          <div class="card h-100">
+          <div class="card">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1631,7 +1758,7 @@ export default {
                   >
                     Harap input soal di menu <a :href="urlSoal"><b>Input Soal</b></a>!
                   </b-alert>
-                  <div class="row text-left mt-4 mr-2">
+                  <div class="row text-left mt-4">
                     <div class="col-sm-4">
                       <input
                         v-model="text.start"
@@ -1647,9 +1774,10 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
-                        :disabled-time="notAfterTimeEndJournal"
+                        :disabled-time="timeLimitJournal"
                         :disabled="isLoading || isJournalNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.journal_data.time_start.$error }"
+                        @input="onJournalTimeChange"
                       />
                       <div
                         v-if="submitted && !$v.journal_data.time_start.required"
@@ -1659,7 +1787,52 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.duration"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                        style="border: 0;"
+                      >
+                    </div>
+                    <div class="col-sm-5">
+                      <input
+                        v-model="journal_duration"
+                        type="number"
+                        class="form-control"
+                        min="0"
+                        :disabled="isLoading || isJournalNull || isJadwalNull || !journal_data.time_start"
+                        :style="journal_duration_form"
+                        :class="{
+                          'is-invalid': (submitted && isJournalTimeInvalid) || isJournalDurationBelowZero}"
+                        @input="onJournalTimeChange"
+                      >
+                      <div
+                        v-if="isJournalTimeInvalid"
+                        class="invalid-feedback"
+                      >
+                        Durasi tes melebihi Jam Terakhir di Jadwal!
+                      </div>
+                      <div
+                        v-if="isJournalDurationBelowZero"
+                        class="invalid-feedback"
+                      >
+                        Durasi tes harus valid!
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <input
+                        v-model="text.minute"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                        style="border: 0;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.end"
@@ -1675,8 +1848,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
-                        :disabled-time="notBeforeTimeStartJournal"
-                        :disabled="isLoading || isJournalNull || isJadwalNull"
+                        :disabled="true"
                         :class="{ 'is-invalid': submitted && $v.journal_data.time_end.$error }"
                       />
                       <div
@@ -1687,7 +1859,7 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.auth"
@@ -1703,7 +1875,7 @@ export default {
                         type="text"
                         class="form-control"
                         :disabled="isLoading || isJournalNull || isJadwalNull"
-                        :style="journal_form"
+                        :style="journal_auth_form"
                         :class="{ 'is-invalid': submitted && $v.journal_data.auth.$error }"
                       >
                       <div
@@ -1716,32 +1888,46 @@ export default {
                   </div>
                   <button 
                     type="button"
-                    class="btn btn-primary mt-4 m-1" 
-                    style="min-width: 150px;" 
+                    class="btn btn-primary mt-4" 
+                    style="min-width: 100%;"
                     @click="submitSchedule('journal')"
                   >
                     Simpan
                   </button>
-                  <button 
+                  <hr
+                    style="margin-left: -28px; 
+                                        margin-right: -28px; 
+                                        height: 2px; 
+                                        background-color: #eee; 
+                                        border: 0 none; 
+                                        color: #eee;"
+                  >
+                  <b-button
                     v-if="isJournalStart == true"
-                    type="button" 
-                    class="btn btn-danger mt-4 m-1" 
-                    style="min-width: 150px;"
                     :disabled="journal_data.auth == null"
+                    class="mt-2 mb-1"
+                    style="min-width: 100%;"
+                    variant="danger"
                     @click="submitSchedule('journal', 'stop')"
                   >
-                    Stop
-                  </button>
-                  <button 
+                    <b-icon
+                      icon="stop-fill"
+                      aria-hidden="true"
+                    /> Stop Jurnal
+                  </b-button>
+                  <b-button
                     v-if="isJournalStart == false"
-                    type="button" 
-                    class="btn btn-success mt-4 m-1" 
-                    style="min-width: 150px;"
                     :disabled="journal_data.auth == null"
+                    class="mt-2 mb-1"
+                    style="min-width: 100%;"
+                    variant="success"
                     @click="submitSchedule('journal', 'start')"
                   >
-                    Start
-                  </button>
+                    <b-icon
+                      icon="play-fill"
+                      aria-hidden="true"
+                    /> Mulai Jurnal
+                  </b-button>
                 </div>
               </div>
             </div>
@@ -1750,7 +1936,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4 pt-1 pb-1">
-          <div class="card h-100">
+          <div class="card">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1775,7 +1961,7 @@ export default {
                   >
                     Harap input soal di menu <a :href="urlSoal"><b>Input Soal</b></a>!
                   </b-alert>
-                  <div class="row text-left mt-4 mr-2">
+                  <div class="row text-left mt-4">
                     <div class="col-sm-4">
                       <input
                         v-model="text.start"
@@ -1791,9 +1977,10 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
-                        :disabled-time="notAfterTimeEndPosttest"
+                        :disabled-time="timeLimitPosttest"
                         :disabled="isLoading || isPosttestNull || isJadwalNull"
                         :class="{ 'is-invalid': submitted && $v.posttest_data.time_start.$error }"
+                        @input="onPosttestTimeChange"
                       />
                       <div
                         v-if="submitted && !$v.posttest_data.time_start.required"
@@ -1803,7 +1990,52 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
+                    <div class="col-sm-4">
+                      <input
+                        v-model="text.duration"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                        style="border: 0;"
+                      >
+                    </div>
+                    <div class="col-sm-5">
+                      <input
+                        v-model="posttest_duration"
+                        type="number"
+                        class="form-control"
+                        min="0"
+                        :disabled="isLoading || isPosttestNull || isJadwalNull || !posttest_data.time_start"
+                        :style="posttest_duration_form"
+                        :class="{
+                          'is-invalid': (submitted && isPosttestTimeInvalid) || isPosttestDurationBelowZero}"
+                        @input="onPosttestTimeChange"
+                      >
+                      <div
+                        v-if="isPosttestTimeInvalid"
+                        class="invalid-feedback"
+                      >
+                        Durasi tes melebihi Jam Terakhir di Jadwal!
+                      </div>
+                      <div
+                        v-if="isPosttestDurationBelowZero"
+                        class="invalid-feedback"
+                      >
+                        Durasi tes harus valid!
+                      </div>
+                    </div>
+                    <div class="col-sm-3">
+                      <input
+                        v-model="text.minute"
+                        type="text"
+                        class="form-control"
+                        :disabled="true"
+                        style="border: 0;"
+                      >
+                    </div>
+                  </div>
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.end"
@@ -1819,8 +2051,7 @@ export default {
                         value-type="format"
                         type="time"
                         placeholder="HH:mm:ss"
-                        :disabled-time="notBeforeTimeStartPosttest"
-                        :disabled="isLoading || isPosttestNull || isJadwalNull"
+                        :disabled="true"
                         :class="{ 'is-invalid': submitted && $v.posttest_data.time_end.$error }"
                       />
                       <div
@@ -1831,7 +2062,7 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.auth"
@@ -1847,7 +2078,7 @@ export default {
                         type="text"
                         class="form-control"
                         :disabled="isLoading || isPosttestNull || isJadwalNull"
-                        :style="posttest_form"
+                        :style="posttest_auth_form"
                         :class="{ 'is-invalid': submitted && $v.posttest_data.auth.$error }"
                       >
                       <div
@@ -1860,32 +2091,46 @@ export default {
                   </div>
                   <button 
                     type="button"
-                    class="btn btn-primary mt-4 m-1" 
-                    style="min-width: 150px;" 
+                    class="btn btn-primary mt-4" 
+                    style="min-width: 100%;"
                     @click="submitSchedule('posttest')"
                   >
                     Simpan
                   </button>
-                  <button 
+                  <hr
+                    style="margin-left: -28px; 
+                                        margin-right: -28px; 
+                                        height: 2px; 
+                                        background-color: #eee; 
+                                        border: 0 none; 
+                                        color: #eee;"
+                  >
+                  <b-button
                     v-if="isPosttestStart == true"
-                    type="button" 
-                    class="btn btn-danger mt-4 m-1" 
-                    style="min-width: 150px;"
                     :disabled="posttest_data.auth == null"
+                    class="mt-2 mb-1"
+                    style="min-width: 100%;"
+                    variant="danger"
                     @click="submitSchedule('posttest', 'stop')"
                   >
-                    Stop
-                  </button>
-                  <button 
+                    <b-icon
+                      icon="stop-fill"
+                      aria-hidden="true"
+                    /> Stop Tes Akhir
+                  </b-button>
+                  <b-button
                     v-if="isPosttestStart == false"
-                    type="button" 
-                    class="btn btn-success mt-4 m-1" 
-                    style="min-width: 150px;"
                     :disabled="posttest_data.auth == null"
+                    class="mt-2 mb-1"
+                    style="min-width: 100%;"
+                    variant="success"
                     @click="submitSchedule('posttest', 'start')"
                   >
-                    Start
-                  </button>
+                    <b-icon
+                      icon="play-fill"
+                      aria-hidden="true"
+                    /> Mulai Tes Akhir
+                  </b-button>
                 </div>
               </div>
             </div>
