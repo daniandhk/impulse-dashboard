@@ -693,10 +693,7 @@ export default {
           if(type=='pretest'){
               if(this.isPretestNull == false){
                   this.$v.pretest_data.$touch();
-                  if (this.$v.pretest_data.$invalid) {
-                      return;
-                  }
-                  else if (this.isPretestTimeInvalid) {
+                  if (this.$v.pretest_data.$invalid || this.isPretestTimeInvalid || this.isPretestDurationBelowZero) {
                       return;
                   }
                   else{
@@ -780,10 +777,7 @@ export default {
           else if(type=='journal'){
               if(this.isJournalNull == false){
                   this.$v.journal_data.$touch();
-                  if (this.$v.journal_data.$invalid) {
-                      return;
-                  }
-                  else if (this.isJournalTimeInvalid) {
+                  if (this.$v.journal_data.$invalid || this.isJournalTimeInvalid || this.isJournalDurationBelowZero) {
                       return;
                   }
                   else{
@@ -867,10 +861,7 @@ export default {
           else if(type=='posttest'){
               if(this.isPosttestNull == false){
                   this.$v.posttest_data.$touch();
-                  if (this.$v.posttest_data.$invalid) {
-                      return;
-                  }
-                  else if (this.isPosttestTimeInvalid) {
+                  if (this.$v.posttest_data.$invalid || this.isPosttestTimeInvalid || this.isPosttestDurationBelowZero) {
                       return;
                   }
                   else{
