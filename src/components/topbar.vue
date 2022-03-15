@@ -2,7 +2,9 @@
 import simplebar from "simplebar-vue";
 import i18n from "../i18n";
 import store from '@/store';
-import moment from 'moment';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+const moment = extendMoment(Moment);
 
 export default {
   components: {  },
@@ -10,6 +12,10 @@ export default {
     timeEnd: {
       type: String,
       default: null,
+    },
+    isDone: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
@@ -22,6 +28,7 @@ export default {
       time: moment().locale('id').format('HH:mm:ss'),
       date: moment().locale('id').format('dddd, LL'),
       time_end: "",
+      is_late: false,
       //
     };
   },
@@ -106,20 +113,29 @@ export default {
     },
 
     setTimeEnd(){
+      let now = moment().locale('id')
       let date_now = moment().locale('id').format('MM/DD/YYYY')
-      let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'))
-      let day = moment().locale('id').day()
-      let hour = moment().locale('id').hour()
-      let minute = moment().locale('id').minute()
-      let second = moment().locale('id').second()
-      let remain_time = schedule_time_end.subtract({ hours: hour, minutes: minute, seconds: second})
-      if(remain_time.day() == day){
-        this.time_end = remain_time.format('HH:mm:ss')
+      let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
+
+      let range = moment().range(now, schedule_time_end)
+      let time_diff = range.diff()
+      let sec = range.diff('seconds')
+
+      if(sec > 0){
+        this.time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+        this.is_late = false;
+      }
+      else if(sec == 0){
+        this.time_end = '00:00:00';
+        this.is_late = false;
       }
       else{
-        this.time_end = '00:00:00'
+        range = moment().range(schedule_time_end, now)
+        time_diff = range.diff()
+        this.time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+        this.is_late = true;
       }
-    }
+    },
   }
 };
 </script>
@@ -216,11 +232,17 @@ export default {
           <i
             class="ri-time-line mr-1"
           />
-          <div v-if="!timeEnd">
+          <div v-if="!timeEnd || isDone">
             {{ time }}
           </div>
-          <div v-if="timeEnd">
+          <div v-if="timeEnd && !isDone && !is_late">
             Sisa waktu: {{ time_end }}
+          </div>
+          <div
+            v-if="timeEnd && !isDone && is_late"
+            style="color:red;"
+          >
+            Terlambat: {{ time_end }}
           </div>
         </div>
         <b-tooltip

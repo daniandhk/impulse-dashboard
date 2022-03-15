@@ -9,6 +9,10 @@ export default {
       type: String,
       default: null,
     },
+    isDone: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {};
@@ -25,6 +29,7 @@ export default {
     <vertical
       v-if="layoutType === 'vertical'"
       :time-end="timeEnd"
+      :is-done="isDone"
       :layout="layoutType"
     >
       <slot />

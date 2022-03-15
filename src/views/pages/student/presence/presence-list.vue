@@ -42,9 +42,9 @@ export default {
       dataPresences: [],
       fields: [
         { key: "grade.index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "grade.pretest_grade", label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.journal_grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.posttest_grade", label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.pretest.grade", label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.journal.grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.posttest.grade", label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.total_grade", label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
         { key: "presence", label: "Kehadiran", thClass: 'text-center', tdClass: 'text-center' },
       ],
@@ -147,6 +147,7 @@ export default {
                 if(response.data){
                     if(response.data.class_course.length){
                         this.dataPresences = response.data.class_course[0].modules;
+                        console.log(this.dataPresences)
                     }
                 }
             })

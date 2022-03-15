@@ -5,7 +5,10 @@ import * as api from '@/api';
 import Swal from "sweetalert2";
 import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
-import moment from 'moment';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+const moment = extendMoment(Moment);
+
 import Quill from 'quill';
 import ImageResize from "../../../modules/image-resize.min";
 import { ImageDrop } from 'quill-image-drop-module';
@@ -112,8 +115,6 @@ export default {
                     toolbar: false,
                 }
             },
-
-            isTimeEnded: false,
             //
         }
     },
@@ -616,43 +617,25 @@ export default {
         },
 
         setTimeEnd(){
+            let now = moment().locale('id')
             let date_now = moment().locale('id').format('MM/DD/YYYY')
-            let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'))
-            let day = moment().locale('id').day()
-            let hour = moment().locale('id').hour()
-            let minute = moment().locale('id').minute()
-            let second = moment().locale('id').second()
-            let remain_time = schedule_time_end.subtract({ hours: hour, minutes: minute, seconds: second})
-            if(remain_time.day() == day){
-                this.isTimeEnded = false
-                let time_end = remain_time.format('HH:mm:ss')
+            let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
 
-                if(time_end == '00:00:01'){
-                    this.onTimeEndedPopup()
-                }
-                else if(remain_time.second() == 0 && (remain_time.minute() == 5 || remain_time.minute() == 2 || remain_time.minute() == 1)){
-                    this.onTimeWarningPopup(remain_time.minute())
+            let range = moment().range(now, schedule_time_end)
+            let time_diff = range.diff()
+
+            if(time_diff >= 0){
+                let time_end = moment.utc(time_diff).locale('id');
+                
+                if(time_end.second() == 0 && (time_end.minute() == 5 || time_end.minute() == 2 || time_end.minute() == 1)){
+                    this.onTimeWarningPopup(time_end.minute())
                 }
             }
-            else{
-                this.isTimeEnded = true
-                let time_end = '00:00:00'
-            }
-        },
-
-        onTimeEndedPopup(){
-            let text = "Harap hubungi Asprak untuk penambahan waktu."
-            if(this.isMultipleChoice || this.isEssay){
-                text = "Harap catat jawaban untuk mengisi kembali dan hubungi Asprak untuk penambahan waktu."
-            }
-            if(this.isFile){
-                text = "Harap hubungi Asprak untuk penambahan waktu dan konfirmasi upload jawaban."
-            }
-            Swal.fire({
-                icon: 'error',
-                title: 'Waktu pengerjaan telah berakhir!',
-                text: text,
-            })
+            // else{
+            //     range = moment().range(schedule_time_end, now)
+            //     time_diff = range.diff()
+            //     let time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+            // }
         },
 
         onTimeWarningPopup(minute){
@@ -692,6 +675,7 @@ export default {
   <Layout
     v-if="timeEnd"
     :time-end="timeEnd"
+    :is-done="isEssayAnswersAvailable || isMCAnswersAvailable || isFileAnswersAvailable"
   >
     <PageHeader
       :title="title"
@@ -709,12 +693,6 @@ export default {
       />
     </div>
     <div v-if="isEssay || isMultipleChoice">
-      <p
-        v-if="!isEssayAnswersAvailable || !isMCAnswersAvailable"
-        class="text-center pb-2"
-      >
-        Harap submit jawaban sebelum waktu pengerjaan berakhir. Selamat mengerjakan!
-      </p>
       <div
         v-for="(question, index) in test_data.question"
         :key="index"
@@ -798,20 +776,11 @@ export default {
       <div v-if="!isEssayAnswersAvailable && !isMCAnswersAvailable">
         <div class="text-center m-4">
           <b-button
-            v-if="!isTimeEnded"
             variant="success"
             style="min-width: 250px;"
             @click="onClickSubmit"
           >
             Submit Jawaban
-          </b-button>
-          <b-button
-            v-if="isTimeEnded"
-            variant="danger"
-            style="min-width: 250px;"
-            @click="onTimeEndedPopup"
-          >
-            Waktu pengerjaan telah berakhir!
           </b-button>
         </div>
       </div>
@@ -828,12 +797,6 @@ export default {
       </div>
     </div>
     <div v-if="isFile">
-      <p
-        v-if="!isFileAnswersAvailable"
-        class="text-center pb-4"
-      >
-        Harap konfirmasi upload jawaban sebelum waktu pengerjaan berakhir. Selamat mengerjakan!
-      </p>
       <div class="card">
         <div class="card-body">
           <div class="text-center">
@@ -872,20 +835,11 @@ export default {
           <div v-if="!isFileAnswersAvailable">
             <div class="text-center m-4">
               <b-button
-                v-if="!isTimeEnded"
                 variant="success"
                 style="min-width: 350px;"
                 @click="onClickSubmit"
               >
                 Konfirmasi Upload Jawaban
-              </b-button>
-              <b-button
-                v-if="isTimeEnded"
-                variant="success"
-                style="min-width: 350px;"
-                @click="onTimeEndedPopup"
-              >
-                Waktu pengerjaan telah berakhir!
               </b-button>
             </div>
           </div>

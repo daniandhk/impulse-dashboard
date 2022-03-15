@@ -1061,7 +1061,7 @@ export default {
             let date_end = moment(date + ' ' + this.time_end)
             let test_end = moment(date + ' ' + this.journal_data.time_end)
 
-            console.log(date_end)
+            // console.log(date_end)
 
             if(test_end > date_end){
               this.isJournalTimeInvalid = true;

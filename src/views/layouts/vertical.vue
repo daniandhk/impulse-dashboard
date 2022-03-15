@@ -13,6 +13,10 @@ export default {
       type: String,
       default: null,
     },
+    isDone: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -80,6 +84,7 @@ export default {
     <div id="layout-wrapper">
       <Topbar
         :time-end="timeEnd"
+        :is-done="isDone"
       />
       <SideBar
         :is-condensed="isMenuCondensed"
