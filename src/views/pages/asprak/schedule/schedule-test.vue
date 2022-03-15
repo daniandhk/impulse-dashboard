@@ -443,7 +443,6 @@ export default {
       
       //load data
       if(value == "Jurnal"){
-        this.dataTest.type = "file";
         this.test_id = this.schedule_data.module.journal_id;
         this.dataTest.test_type = "journal";
       }
@@ -762,7 +761,7 @@ export default {
       
       formData.append('module_id', this.schedule_data.module.id);
       formData.append('type', 'file');
-      formData.append('test_type', 'journal');
+      formData.append('test_type', this.dataTest.test_type);
       formData.append('questions', questions);
       formData.append('weight', this.dataTest.questions[0].weight);
       formData.append('answer', this.dataTest.questions[0].answer);
@@ -776,11 +775,9 @@ export default {
           text: 'File telah terunggah.',
       })
       this.loadData().then(result=>{
-        this.selectTest("Jurnal").then(rslt=>{
-          this.inputTestSuccess = true;
-          this.isUnsavedData = false;
-          this.isLoadedData = false;
-        });
+        this.inputTestSuccess = true;
+        this.isUnsavedData = false;
+        this.isLoadedData = false;
       });
       this.loading(false);
     },
@@ -871,7 +868,7 @@ export default {
                   v-model="class_course_data.class.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -884,7 +881,7 @@ export default {
                   v-model="class_course_data.course.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -897,7 +894,7 @@ export default {
                   v-model="class_course_data.academic_year.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -912,7 +909,9 @@ export default {
               :options="dataModules"
               :allow-empty="false"
               :disabled="isLoading"
-              :show-labels="false"
+              select-label=""
+              selected-label="x"
+              deselect-label="x"
               @select="selectModule"
             />
           </div>
@@ -930,7 +929,9 @@ export default {
                     class="text-center" 
                     :options="tests"
                     :disabled="isLoading"
-                    :show-labels="false"
+                    select-label=""
+                    selected-label="x"
+                    deselect-label="x"
                     :class="{ 'is-invalid': submitted_test && $v.dataTest.test_type.$error,}"
                     @select="selectTest"
                     @remove="removeTest"
@@ -949,7 +950,9 @@ export default {
                     class="text-center" 
                     :options="types"
                     :disabled="isLoading"
-                    :show-labels="false"
+                    select-label=""
+                    selected-label="x"
+                    deselect-label="x"
                     :class="{ 'is-invalid': submitted_test && $v.dataTest.type.$error,}"
                     @select="selectType"
                     @remove="removeType"
@@ -1348,7 +1351,7 @@ export default {
                                   v-model="dataTest.questions[0].answer"
                                   type="text" 
                                   class="form-control"
-                                  placeholder="https://drive.google.com/drive/folders/xxx"
+                                  placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
                                   @input="inputedData"
                                 >
                               </div>
@@ -1363,7 +1366,7 @@ export default {
                                   v-model="dataTest.questions[0].text"
                                   type="text" 
                                   class="form-control"
-                                  disabled="true"
+                                  :disabled="true"
                                 >
                               </div>
                               <div class="form-group">

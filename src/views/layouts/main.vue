@@ -4,6 +4,16 @@ import Vertical from "./vertical";
 
 export default {
   components: { Vertical},
+  props: {
+    timeEnd: {
+      type: String,
+      default: null,
+    },
+    isDone: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {};
   },
@@ -18,6 +28,8 @@ export default {
   <div>
     <vertical
       v-if="layoutType === 'vertical'"
+      :time-end="timeEnd"
+      :is-done="isDone"
       :layout="layoutType"
     >
       <slot />

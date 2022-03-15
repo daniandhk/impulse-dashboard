@@ -1005,7 +1005,7 @@ export default {
                   v-model="class_course_data.class.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -1018,7 +1018,7 @@ export default {
                   v-model="class_course_data.course.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -1031,7 +1031,7 @@ export default {
                   v-model="class_course_data.academic_year.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -1046,7 +1046,9 @@ export default {
               :options="dataModules"
               :allow-empty="false"
               :disabled="isLoading"
-              :show-labels="false"
+              select-label=""
+              selected-label="x"
+              deselect-label="x"
               @select="selectModule"
             />
           </div>
@@ -1071,7 +1073,7 @@ export default {
                       variant="success"
                       dismissible
                     >
-                      Data updated successfully!
+                      Data berhasil diperbarui!
                     </b-alert>
 
                     <b-alert
@@ -1211,7 +1213,9 @@ export default {
                         track-by="name"
                         :allow-empty="false"
                         :disabled="isLoading"
-                        :show-labels="false"
+                        select-label=""
+                        selected-label="x"
+                        deselect-label="x"
                         :class="{ 'is-invalid': submitted && $v.schedule_data.room.id.$error }"
                         @select="selectRoom"
                       />
@@ -1301,7 +1305,9 @@ export default {
                           class="text-center" 
                           :options="tests"
                           :disabled="isLoading"
-                          :show-labels="false"
+                          select-label=""
+                          selected-label="x"
+                          deselect-label="x"
                           :class="{ 'is-invalid': submitted_test && $v.dataTest.test_type.$error,}"
                           @select="selectTest"
                           @remove="removeTest"
@@ -1320,7 +1326,9 @@ export default {
                           class="text-center" 
                           :options="types"
                           :disabled="isLoading"
-                          :show-labels="false"
+                          select-label=""
+                          selected-label="x"
+                          deselect-label="x"
                           :class="{ 'is-invalid': submitted_test && $v.dataTest.type.$error,}"
                           @select="selectType"
                           @remove="removeType"
@@ -1728,7 +1736,7 @@ export default {
                                         v-model="dataTest.questions[0].answer"
                                         type="text" 
                                         class="form-control"
-                                        placeholder="https://drive.google.com/drive/folders/xxx"
+                                        placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
                                         @input="inputedData"
                                       >
                                     </div>
@@ -1743,7 +1751,7 @@ export default {
                                         v-model="dataTest.questions[0].text"
                                         type="text" 
                                         class="form-control"
-                                        disabled="true"
+                                        :disabled="true"
                                       >
                                     </div>
                                     <div class="form-group">

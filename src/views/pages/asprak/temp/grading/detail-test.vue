@@ -555,7 +555,7 @@ export default {
                       v-model="text.nilai"
                       type="text"
                       class="form-control"
-                      disabled="true"
+                      :disabled="true"
                       style="border: 0; max-width:80px!important;"
                     >
                     <input
@@ -572,7 +572,7 @@ export default {
                       v-model="text.slash"
                       type="text"
                       class="form-control mr-2 ml-2"
-                      disabled="true"
+                      :disabled="true"
                       style="border: 0; max-width:30px!important; text-align:center;"
                     >
                     <input
@@ -580,7 +580,7 @@ export default {
                       style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
                       type="text"
                       class="form-control"
-                      disabled="true"
+                      :disabled="true"
                     >
                   </div>
                   <div
@@ -654,10 +654,10 @@ export default {
             <div class="form-group">
               <input
                 v-model="test_data.test.questions[0].answers[0].answer"
-                disabled="true"
+                :disabled="true"
                 type="text" 
                 class="form-control text-center"
-                placeholder="https://drive.google.com/drive/folders/xxx"
+                placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
               >
             </div>
           </div>
@@ -671,7 +671,7 @@ export default {
                 v-model="text.nilai"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
                 style="border: 0; max-width:80px!important;"
               >
               <input
@@ -687,7 +687,7 @@ export default {
                 v-model="text.slash"
                 type="text"
                 class="form-control mr-2 ml-2"
-                disabled="true"
+                :disabled="true"
                 style="border: 0; max-width:30px!important; text-align:center;"
               >
               <input
@@ -695,7 +695,7 @@ export default {
                 style="max-width:60px!important; text-align:center; background-color: #F0F4F6;"
                 type="text"
                 class="form-control"
-                disabled="true"
+                :disabled="true"
               >
             </div>
           </div>

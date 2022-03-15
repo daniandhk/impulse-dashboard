@@ -1,12 +1,13 @@
 <script>
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
-
 import * as api from '@/api';
 import Swal from "sweetalert2";
-
 import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+const moment = extendMoment(Moment);
 
 import Quill from 'quill';
 import ImageResize from "../../../modules/image-resize.min";
@@ -114,6 +115,7 @@ export default {
                     toolbar: false,
                 }
             },
+            //
         }
     },
     computed: {
@@ -122,6 +124,9 @@ export default {
         },
         editor() {
             return this.$refs.myQuillEditor.quill
+        },
+        timeEnd() {
+            return this.schedule_test_data.time_end
         }
     },
     watch: {
@@ -131,10 +136,25 @@ export default {
             this.loading(false);
         }
     },
-    mounted: async function() {
-        this.loading(true);
+    // mounted: async function() {
+    //     this.loading(true);
+    //     await this.loadData();
+    //     this.loading(false);
+    // },
+    beforeDestroy() {
+        // prevent memory leak
+        clearInterval(this.interval)
+    },
+    created: async function() {
+        // this.loading(true);
         await this.loadData();
-        this.loading(false);
+        // this.loading(false);
+
+        // update the time every second
+        this.interval = setInterval(() => {
+            // Concise way to format time according to system locale.
+            this.setTimeEnd()
+        }, 1000)
     },
     methods: {
         ...notificationMethods,
@@ -405,7 +425,7 @@ export default {
         },
 
         onClickSubmit(){
-            let text = "Jawaban yang kosong akan tetap ter-submit!";
+            let text = "Jawaban yang kosong akan tetap disimpan!";
             let confirm = "Ya, lanjut submit!";
             if(this.isFile){
                 text = "Pastikan jawaban diunggah ke URL yang telah disediakan!"
@@ -596,6 +616,43 @@ export default {
             );
         },
 
+        setTimeEnd(){
+            let now = moment().locale('id')
+            let date_now = moment().locale('id').format('MM/DD/YYYY')
+            let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
+
+            let range = moment().range(now, schedule_time_end)
+            let time_diff = range.diff()
+
+            if(time_diff >= 0){
+                let time_end = moment.utc(time_diff).locale('id');
+                
+                if(time_end.second() == 0 && (time_end.minute() == 5 || time_end.minute() == 2 || time_end.minute() == 1)){
+                    this.onTimeWarningPopup(time_end.minute())
+                }
+            }
+            // else{
+            //     range = moment().range(schedule_time_end, now)
+            //     time_diff = range.diff()
+            //     let time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+            // }
+        },
+
+        onTimeWarningPopup(minute){
+            let text = "Harap submit jawaban sebelum waktu berakhir."
+            if(this.isMultipleChoice || this.isEssay){
+                text = "Harap submit jawaban sebelum waktu berakhir."
+            }
+            if(this.isFile){
+                text = "Harap konfirmasi upload jawaban sebelum waktu berakhir."
+            }
+            Swal.fire({
+                icon: 'info',
+                title: 'Waktu pengerjaan tersisa ' + minute + " menit lagi!",
+                text: text,
+            })
+        },
+
         loading() {
             if(this.isLoading){
                 this.isLoading = false;
@@ -615,7 +672,11 @@ export default {
 </script>
 
 <template>
-  <Layout>
+  <Layout
+    v-if="timeEnd"
+    :time-end="timeEnd"
+    :is-done="isEssayAnswersAvailable || isMCAnswersAvailable || isFileAnswersAvailable"
+  >
     <PageHeader
       :title="title"
       :items="items"
@@ -658,7 +719,7 @@ export default {
                     ref="myQuillEditor"
                     v-model="question.question"
                     :options="editorOption"
-                    disabled="true"
+                    :disabled="true"
                   />
                 </div>
               </div>
@@ -680,7 +741,7 @@ export default {
                         ref="myQuillEditor"
                         v-model="dataInput.answers[index].answers"
                         :options="editorOption"
-                        disabled="true"
+                        :disabled="true"
                       />
                     </div>
                   </div>
@@ -701,7 +762,7 @@ export default {
                         ref="myQuillEditor"
                         v-model="answer_data.answer"
                         :options="editorOption"
-                        disabled="true"
+                        :disabled="true"
                         class="pt-1 mb-4"
                       />
                     </div>
@@ -719,7 +780,7 @@ export default {
             style="min-width: 250px;"
             @click="onClickSubmit"
           >
-            Submit
+            Submit Jawaban
           </b-button>
         </div>
       </div>
@@ -764,10 +825,10 @@ export default {
             <div class="form-group">
               <input
                 v-model="test_data.question[0].answers[0].answer"
-                disabled="true"
+                :disabled="true"
                 type="text" 
                 class="form-control text-center"
-                placeholder="https://drive.google.com/drive/folders/xxx"
+                placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
               >
             </div>
           </div>
@@ -778,7 +839,7 @@ export default {
                 style="min-width: 350px;"
                 @click="onClickSubmit"
               >
-                Konfirmasi Telah Upload
+                Konfirmasi Upload Jawaban
               </b-button>
             </div>
           </div>
@@ -789,7 +850,7 @@ export default {
                 :disabled="true"
                 style="min-width: 350px;"
               >
-                Upload Terkonfirmasi
+                Upload jawaban sudah terkonfirmasi!
               </b-button>
             </div>
           </div>

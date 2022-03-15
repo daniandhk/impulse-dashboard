@@ -2,15 +2,49 @@
 import simplebar from "simplebar-vue";
 import i18n from "../i18n";
 import store from '@/store';
+import Moment from 'moment';
+import { extendMoment } from 'moment-range';
+const moment = extendMoment(Moment);
 
 export default {
   components: {  },
+  props: {
+    timeEnd: {
+      type: String,
+      default: null,
+    },
+    isDone: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       current_language: "en",
       getRole: store.getters.getRoleUser,
-      user: store.getters.getLoggedUser
+      user: store.getters.getLoggedUser,
+
+      interval: null,
+      time: moment().locale('id').format('HH:mm:ss'),
+      date: moment().locale('id').format('dddd, LL'),
+      time_end: "",
+      is_late: false,
+      //
     };
+  },
+  beforeDestroy() {
+    // prevent memory leak
+    clearInterval(this.interval)
+  },
+  created() {
+    // update the time every second
+    this.interval = setInterval(() => {
+      // Concise way to format time according to system locale.
+      this.time = moment().locale('id').format('HH:mm:ss')
+      if(this.timeEnd){
+        this.setTimeEnd()
+      }
+    }, 1000)
   },
   methods: {
     toggleMenu() {
@@ -76,7 +110,32 @@ export default {
         }  
       }
       this.$refs.dropdown.visible = false
-    }
+    },
+
+    setTimeEnd(){
+      let now = moment().locale('id')
+      let date_now = moment().locale('id').format('MM/DD/YYYY')
+      let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
+
+      let range = moment().range(now, schedule_time_end)
+      let time_diff = range.diff()
+      let sec = range.diff('seconds')
+
+      if(sec > 0){
+        this.time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+        this.is_late = false;
+      }
+      else if(sec == 0){
+        this.time_end = '00:00:00';
+        this.is_late = false;
+      }
+      else{
+        range = moment().range(schedule_time_end, now)
+        time_diff = range.diff()
+        this.time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+        this.is_late = true;
+      }
+    },
   }
 };
 </script>
@@ -165,16 +224,33 @@ export default {
         </b-dropdown>
       </div>
 
-      <div class="d-flex">
-        <!-- <div class="dropdown d-none d-lg-inline-block ml-1">
-          <button
-            type="button"
-            class="btn header-item noti-icon waves-effect"
-            @click="initFullScreen"
+      <div class="d-flex align-items-center">
+        <div
+          id="div-time"
+          class="mr-4 ml-1 d-flex align-items-center"
+        >
+          <i
+            class="ri-time-line mr-1"
+          />
+          <div v-if="!timeEnd || isDone">
+            {{ time }}
+          </div>
+          <div v-if="timeEnd && !isDone && !is_late">
+            Sisa waktu: {{ time_end }}
+          </div>
+          <div
+            v-if="timeEnd && !isDone && is_late"
+            style="color:red;"
           >
-            <i class="ri-fullscreen-line"></i>
-          </button>
-        </div> -->
+            Terlambat: {{ time_end }}
+          </div>
+        </div>
+        <b-tooltip
+          target="div-time"
+          variant="dark"
+        >
+          {{ date }}<br>pukul {{ time }}
+        </b-tooltip>
 
         <b-dropdown
           right

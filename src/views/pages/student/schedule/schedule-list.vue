@@ -288,7 +288,7 @@ export default {
                         v-model="class_course_data.class_name"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
@@ -301,7 +301,7 @@ export default {
                         v-model="class_course_data.course_name"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
@@ -314,7 +314,7 @@ export default {
                         v-model="class_course_data.staff_code"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
@@ -327,7 +327,7 @@ export default {
                         v-model="class_course_data.academic_year"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
@@ -454,7 +454,7 @@ export default {
               v-model="room.name"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -466,7 +466,7 @@ export default {
               rows="2"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             />
           </div>
         </div>
@@ -477,7 +477,7 @@ export default {
               v-model="room.msteam_link"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>
@@ -488,7 +488,7 @@ export default {
               v-model="room.msteam_code"
               type="text"
               class="form-control"
-              disabled="true"
+              :disabled="true"
             >
           </div>
         </div>

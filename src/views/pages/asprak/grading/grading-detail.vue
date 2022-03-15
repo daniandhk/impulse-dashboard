@@ -43,7 +43,7 @@ export default {
                     href: "/asprak/schedule"
                 },
                 {
-                    text: "List Test",
+                    text: "List Tes",
                     href: "/asprak/schedule-grading/"
                 },
                 {
@@ -114,6 +114,8 @@ export default {
                     toolbar: false,
                 }
             },
+
+            isKunjawShowed: false,
         }
     },
     computed: {
@@ -235,7 +237,6 @@ export default {
                 .then(response => {
                     if(response.data.data){
                         this.test_data = response.data.data;
-                        // console.log(this.test_data)
                     }
                 })
                 .catch(error => {
@@ -262,39 +263,39 @@ export default {
 
         async setAnswers(){
             if(!this.test_data.grade){
-                this.test_data.grade = [];
-                this.test_data.test.questions.forEach((element, index, array) => {
-                    if(this.test_data.test.type == "essay"){
-                        let data = {
-                            grade: 0,
-                            student_answer: {
-                                answer: ""
-                            }
-                        }
-                        this.test_data.grade.push(data);
-                    }
-                    if(this.test_data.test.type == "multiple_choice"){
-                        let data = {
-                            grade: 0,
-                            student_answer: []
-                        }
-                        this.test_data.grade.push(data);
-                    }
-                    if(this.test_data.test.type == "file"){
-                        let data = {
-                            grade: 0,
-                        }
-                        this.test_data.grade.push(data);
-                    }
-                });
+              this.test_data.grade = [];
+              this.test_data.test.questions.forEach((element, index, array) => {
+                  if(this.test_data.test.type == "essay"){
+                      let data = {
+                          grade: 0,
+                          student_answer: {
+                              answer: ""
+                          }
+                      }
+                      this.test_data.grade.push(data);
+                  }
+                  if(this.test_data.test.type == "multiple_choice"){
+                      let data = {
+                          grade: 0,
+                          student_answer: []
+                      }
+                      this.test_data.grade.push(data);
+                  }
+                  if(this.test_data.test.type == "file"){
+                      let data = {
+                          grade: 0,
+                      }
+                      this.test_data.grade.push(data);
+                  }
+              });
             }
 
             this.test_data.grade.forEach((element, index, array) => {
-                if(Array.isArray(element.student_answer)){
-                    element.student_answer.forEach((element_answer, index_answer, array_answer) => {
-                        element.student_answer[index_answer] = element_answer.answer_id;
-                    });
-                }
+              if(Array.isArray(element.student_answer)){
+                  element.student_answer.forEach((element_answer, index_answer, array_answer) => {
+                      element.student_answer[index_answer] = element_answer.answer_id;
+                  });
+              }
             });
         },
 
@@ -466,6 +467,37 @@ export default {
             }
         },
 
+        onKunjawClick(){
+          this.isKunjawShowed = !this.isKunjawShowed
+        },
+
+        formatTime(time){
+          if(time){
+            let hours = time.split(':')[0];
+            let minutes = time.split(':')[1];
+            let seconds = time.split(':')[2];
+
+            let string_hours = ""
+            let string_minutes = ""
+            let string_seconds = ""
+
+            if(hours != '00'){
+              string_hours = hours + " jam"
+            }
+            if(minutes != '00'){
+              string_minutes = minutes + " menit"
+            }
+            if(seconds != '00'){
+              string_seconds = seconds + " detik"
+            }
+
+            return string_hours + " " + string_minutes + " " + string_seconds
+          }
+          else{
+            return ""
+          }
+        },
+
         loading() {
             if(this.isLoading){
                 this.isLoading = false;
@@ -502,8 +534,35 @@ export default {
       />
     </div>
     <div
+      v-if="isEssay || isMultipleChoice || isFile"
+      class="text-center"
+    >
+      <div
+        v-if="!test_data.is_late"
+        class="m-3"
+      >
+        <b>Status Submit Jawaban</b><br>
+        Lebih cepat <b>{{ formatTime(test_data.submitted_time) }}</b> dari batas waktu.
+        <i
+          style="color:#179A73;"
+          class="ri-check-line mr-2 font-size-18"
+        />
+      </div>
+      <div
+        v-if="test_data.is_late"
+        class="m-3"
+      >
+        <b>Status Submit</b><br>
+        Terlambat <b>{{ formatTime(test_data.submitted_time) }}</b> dari batas waktu.
+        <i
+          style="color:#FF3D60;"
+          class="ri-close-line mr-2 font-size-18"
+        />
+      </div>
+    </div>
+    <div
       v-if="isEssay || isMultipleChoice"
-      class="mb-4"
+      class="mb-5"
     >
       <div
         v-for="(question, index) in test_data.test.questions"
@@ -537,7 +596,10 @@ export default {
                 </div>
               </div>
             </div>
-            <div class="card col-sm-11">
+            <div
+              class="card col-sm-11"
+              style="margin-bottom:1px!important"
+            >
               <div class="card-body">
                 <div class="row">
                   <div class="col-12">
@@ -629,6 +691,64 @@ export default {
                 </div>
               </div>
             </div>
+            <div
+              style="width:100%;"
+              class="mb-4"
+            >
+              <div class="mt-1 mb-1">
+                <b-button
+                  variant="outline-info"
+                  style="min-width: 150px;"
+                  @click="onKunjawClick"
+                >
+                  Kunci Jawaban
+                </b-button>
+              </div>
+              <div
+                v-if="isKunjawShowed"
+                class="card col-sm-11"
+              >
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-12">
+                      <label>Kunci Jawaban</label>
+                      <div v-if="isEssay">
+                        <div>
+                          <quill-editor
+                            ref="myQuillEditor"
+                            v-model="question.answers[0].answer"
+                            :options="editorOption"
+                            :disabled="true"
+                          />
+                        </div>
+                      </div>
+                      <div v-if="isMultipleChoice">
+                        <div
+                          v-for="(answer, idx) in question.answers"
+                          :key="idx"
+                          class="ml-1 form-check"
+                        >
+                          <input 
+                            v-model="answer.is_answer" 
+                            class="form-check-input" 
+                            type="checkbox"
+                            :value="answer.is_answer"
+                            :disabled="true"
+                          >
+                          <quill-editor
+                            ref="myQuillEditor"
+                            v-model="answer.answer"
+                            :options="editorOption"
+                            :disabled="true"
+                            class="pt-1 mb-4"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -644,7 +764,7 @@ export default {
           style="min-width: 250px;"
           @click="onClickSubmit"
         >
-          Submit
+          Simpan Nilai
         </b-button>
         <button
           type="button"
@@ -663,7 +783,10 @@ export default {
       </div>
     </div>
     <div v-if="isFile">
-      <div class="card">
+      <div
+        class="card"
+        style="margin-bottom:1px!important;"
+      >
         <div class="card-body">
           <div class="text-center">
             <label>File Jurnal</label>
@@ -683,7 +806,7 @@ export default {
         </div>
       </div>
       <div class="card">
-        <div class="card-body">
+        <div class="card-body mt-4">
           <div class="text-center">
             <label>URL Jawaban Jurnal</label>
           </div>
@@ -694,7 +817,7 @@ export default {
                 :disabled="true"
                 type="text" 
                 class="form-control text-center"
-                placeholder="https://drive.google.com/drive/folders/xxx"
+                placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
               >
             </div>
           </div>
@@ -750,7 +873,7 @@ export default {
           style="min-width: 250px;"
           @click="onClickSubmit"
         >
-          Submit
+          Simpan Nilai
         </b-button>
         <button
           type="button"

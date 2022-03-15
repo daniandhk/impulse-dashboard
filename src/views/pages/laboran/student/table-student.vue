@@ -592,7 +592,9 @@ export default {
                         <multiselect
                           v-model="dataEdit.gender"
                           :options="genderData"
-                          :show-labels="false"
+                          select-label=""
+                          selected-label="x"
+                          deselect-label="x"
                           :class="{ 'is-invalid': submitted && $v.dataEdit.gender.$error }" 
                         />
                         <div
@@ -609,7 +611,9 @@ export default {
                         <multiselect
                           v-model="dataEdit.religion"
                           :options="religionData"
-                          :show-labels="false"
+                          select-label=""
+                          selected-label="x"
+                          deselect-label="x"
                           :class="{ 'is-invalid': submitted && $v.dataEdit.religion.$error }" 
                         />
                         <div
@@ -661,7 +665,9 @@ export default {
                           v-model="role_data"
                           :options="roleData"
                           :multiple="true"
-                          :show-labels="false"
+                          select-label=""
+                          selected-label="x"
+                          deselect-label="x"
                           @remove="removeRole"
                         />
                       </div>

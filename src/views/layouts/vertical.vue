@@ -8,6 +8,16 @@ import Footer from "@/components/footer";
 
 export default {
   components: { Topbar, SideBar, Footer },
+  props: {
+    timeEnd: {
+      type: String,
+      default: null,
+    },
+    isDone: {
+      type: Boolean,
+      default: false,
+    },
+  },
   data() {
     return {
       isMenuCondensed: false,
@@ -72,7 +82,10 @@ export default {
 
     <!-- Begin page -->
     <div id="layout-wrapper">
-      <Topbar />
+      <Topbar
+        :time-end="timeEnd"
+        :is-done="isDone"
+      />
       <SideBar
         :is-condensed="isMenuCondensed"
         :type="leftSidebarType"

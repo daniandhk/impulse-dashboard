@@ -100,12 +100,9 @@ export default {
       fields: [
         { key: "nim", sortable: true, label: "NIM" },
         { key: "name", sortable: true, label: "Nama" },
-        { key: "grade.pretest", sortable: true, label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.journal", sortable: true, label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.posttest", sortable: true, label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "pretest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
-        { key: "journal", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
-        { key: "posttest", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "pretest", label: "Tes Awal", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "journal", label: "Jurnal", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
+        { key: "posttest", label: "Tes Akhir", sortable: false, thClass: 'text-center', tdClass: 'text-center', },
         { key: "grade.total", sortable: true, label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
       ],
     };
@@ -423,7 +420,7 @@ export default {
                   v-model="class_course_data.class.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -436,7 +433,7 @@ export default {
                   v-model="class_course_data.course.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -449,7 +446,7 @@ export default {
                   v-model="class_course_data.academic_year.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -464,7 +461,9 @@ export default {
               :options="dataModules"
               :allow-empty="false"
               :disabled="isLoading"
-              :show-labels="false"
+              select-label=""
+              selected-label="x"
+              deselect-label="x"
               @select="selectModule"
             />
           </div>
@@ -526,66 +525,183 @@ export default {
             >
               <template v-slot:cell(pretest)="data">
                 <b-button
-                  v-if="data.item.test_id.pretest_id && data.item.submitted.pretest"
+                  v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && !data.item.is_late.pretest"
+                  id="test-pretest"
                   type="submit" 
                   size="sm" 
-                  variant="success"
+                  variant="outline-info"
                   style="min-width: 75px;"
                   @click="onShowClick(data)"
                 >
-                  Show
+                  {{ data.item.grade.pretest }}
                 </b-button>
+                <b-tooltip
+                  v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && !data.item.is_late.pretest"
+                  target="test-pretest"
+                  variant="dark"
+                  placement="right"
+                >
+                  Lihat Jawaban
+                </b-tooltip>
+
                 <b-button
-                  v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
+                  v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && data.item.is_late.pretest"
+                  id="late-pretest"
                   type="submit" 
                   size="sm" 
-                  variant="danger"
+                  variant="outline-warning"
+                  style="min-width: 75px;"
+                  @click="onShowClick(data)"
+                >
+                  {{ data.item.grade.pretest }}
+                </b-button>
+                <b-tooltip
+                  v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && data.item.is_late.pretest"
+                  target="late-pretest"
+                  variant="dark"
+                  placement="right"
+                >
+                  Lihat Jawaban<br>(Submit Terlambat)
+                </b-tooltip>
+
+                <b-button
+                  v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
+                  id="null-pretest"
+                  type="submit" 
+                  size="sm" 
+                  variant="outline-danger"
                   style="min-width: 75px;"
                 >
                   -
                 </b-button>
+                <b-tooltip
+                  v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
+                  target="null-pretest"
+                  variant="dark"
+                  placement="right"
+                >
+                  Tes Belum Dimulai
+                </b-tooltip>
               </template>
               <template v-slot:cell(journal)="data">
                 <b-button
-                  v-if="data.item.test_id.journal_id && data.item.submitted.journal"
+                  v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && !data.item.is_late.journal"
+                  id="test-journal"
                   type="submit" 
                   size="sm" 
-                  variant="success"
+                  variant="outline-info"
                   style="min-width: 75px;"
                   @click="onShowClick(data)"
                 >
-                  Show
+                  {{ data.item.grade.journal }}
                 </b-button>
+                <b-tooltip
+                  v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && !data.item.is_late.journal"
+                  target="test-journal"
+                  variant="dark"
+                  placement="right"
+                >
+                  Lihat Jawaban
+                </b-tooltip>
+
                 <b-button
-                  v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
+                  v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && data.item.is_late.journal"
+                  id="late-journal"
                   type="submit" 
                   size="sm" 
-                  variant="danger"
+                  variant="outline-warning"
+                  style="min-width: 75px;"
+                  @click="onShowClick(data)"
+                >
+                  {{ data.item.grade.journal }}
+                </b-button>
+                <b-tooltip
+                  v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && data.item.is_late.journal"
+                  target="late-journal"
+                  variant="dark"
+                  placement="right"
+                >
+                  Lihat Jawaban<br>(Submit Terlambat)
+                </b-tooltip>
+
+                <b-button
+                  v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
+                  id="null-journal"
+                  type="submit" 
+                  size="sm" 
+                  variant="outline-danger"
                   style="min-width: 75px;"
                 >
                   -
                 </b-button>
+                <b-tooltip
+                  v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
+                  target="null-journal"
+                  variant="dark"
+                  placement="right"
+                >
+                  Tes Belum Dimulai
+                </b-tooltip>
               </template>
               <template v-slot:cell(posttest)="data">
                 <b-button
-                  v-if="data.item.test_id.posttest_id && data.item.submitted.posttest"
+                  v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && !data.item.is_late.posttest"
+                  id="test-posttest"
                   type="submit" 
                   size="sm" 
-                  variant="success"
+                  variant="outline-info"
                   style="min-width: 75px;"
                   @click="onShowClick(data)"
                 >
-                  Show
+                  {{ data.item.grade.posttest }}
                 </b-button>
+                <b-tooltip
+                  v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && !data.item.is_late.posttest"
+                  target="test-posttest"
+                  variant="dark"
+                  placement="right"
+                >
+                  Lihat Jawaban
+                </b-tooltip>
+
                 <b-button
-                  v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
+                  v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && data.item.is_late.posttest"
+                  id="late-posttest"
                   type="submit" 
                   size="sm" 
-                  variant="danger"
+                  variant="outline-warning"
+                  style="min-width: 75px;"
+                  @click="onShowClick(data)"
+                >
+                  {{ data.item.grade.posttest }}
+                </b-button>
+                <b-tooltip
+                  v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && data.item.is_late.posttest"
+                  target="late-posttest"
+                  variant="dark"
+                  placement="right"
+                >
+                  Lihat Jawaban<br>(Submit Terlambat)
+                </b-tooltip>
+
+                <b-button
+                  v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
+                  id="null-posttest"
+                  type="submit" 
+                  size="sm" 
+                  variant="outline-danger"
                   style="min-width: 75px;"
                 >
                   -
                 </b-button>
+                <b-tooltip
+                  v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
+                  target="null-posttest"
+                  variant="dark"
+                  placement="right"
+                >
+                  Tes Belum Dimulai
+                </b-tooltip>
               </template>
             </b-table>
           </div>

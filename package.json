@@ -31,6 +31,7 @@
     "leaflet": "^1.7.1",
     "metismenujs": "^1.2.1",
     "moment": "^2.29.1",
+    "moment-range": "^4.0.2",
     "pdfjs-dist": "^2.5.207",
     "quasar-tiptap": "^1.9.1",
     "quill-image-drop-module": "^1.0.3",

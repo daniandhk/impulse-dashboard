@@ -135,7 +135,9 @@ export default {
                   class="text-center"
                   placeholder="Tipe Tes"
                   :options="test_types"
-                  :show-labels="false"
+                  select-label=""
+                  selected-label="x"
+                  deselect-label="x"
                   @select="selectType"
                   @remove="removeType"
                 />

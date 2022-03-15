@@ -1,12 +1,10 @@
 <script>
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
-import Multiselect from "vue-multiselect";
-
+import store from '@/store';
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import moment from 'moment';
-
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 
@@ -99,8 +97,8 @@ export default {
       inputError: null,
 
       text: {
-        start: "Start",
-        end: "End",
+        start: "Mulai",
+        end: "Berakhir",
         auth: "Auth",
         kelas: "Kelas",
         matkul: "Mata Kuliah",
@@ -183,6 +181,10 @@ export default {
       isAuthPosttestWrong: false,
 
       isJadwalShowed: false,
+
+      isPretestSubmitted: false,
+      isJournalSubmitted: false,
+      isPosttestSubmitted: false,
     };
   },
   computed: {
@@ -212,6 +214,9 @@ export default {
       await this.getTestSchedule(this.schedule_data.id, this.schedule_data.module.pretest_id, 'pretest');
       await this.getTestSchedule(this.schedule_data.id, this.schedule_data.module.journal_id, 'journal');
       await this.getTestSchedule(this.schedule_data.id, this.schedule_data.module.posttest_id, 'posttest');
+      await this.checkAnsweredTest(this.schedule_data.module.pretest_id, 'pretest');
+      await this.checkAnsweredTest(this.schedule_data.module.journal_id, 'journal');
+      await this.checkAnsweredTest(this.schedule_data.module.posttest_id, 'posttest');
     },
 
     setId(id){
@@ -447,6 +452,81 @@ export default {
       }
     },
 
+    async checkAnsweredTest(test_id, type){
+      let student_id = store.getters.getLoggedUser.id
+      if(test_id){
+        return api.getSpecificTest(student_id, test_id)
+          .then(response => {
+            if(response.data.data){
+              let data = response.data.data
+              if(type == 'pretest'){
+                if(data.submitted){
+                  this.isPretestSubmitted = true;
+                  this.pretest_form.backgroundColor = "#F0F4F6";
+                }
+                else{
+                  this.isPretestSubmitted = false;
+                  if(this.pretest_data.is_active){
+                    this.pretest_form.backgroundColor = "";
+                  }
+                  else{
+                    this.pretest_form.backgroundColor = "#F0F4F6";
+                  }
+                }
+              }
+              else if(type == 'journal'){
+                if(data.submitted){
+                  this.isJournalSubmitted = true;
+                  this.journal_form.backgroundColor = "#F0F4F6";
+                }
+                else{
+                  this.isJournalSubmitted = false;
+                  if(this.journal_data.is_active){
+                    this.journal_form.backgroundColor = "";
+                  }
+                  else{
+                    this.journal_form.backgroundColor = "#F0F4F6";
+                  }
+                }
+              }
+              else if(type == 'posttest'){
+                if(data.submitted){
+                  this.isPosttestSubmitted = true;
+                  this.posttest_form.backgroundColor = "#F0F4F6";
+                }
+                else{
+                  this.isPosttestSubmitted = false;
+                  if(this.posttest_form.is_active){
+                    this.posttest_form.backgroundColor = "";
+                  }
+                  else{
+                    this.posttest_form.backgroundColor = "#F0F4F6";
+                  }
+                }
+              }
+            }
+          })
+          .catch(error => {
+              if(error.response.status == 401){
+                this.$router.replace({
+                    name: 'login', params: { tokenExpired: true }
+                });
+              }
+              else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Terjadi kesalahan!',
+                    footer: error.response.data.message
+                })
+              }
+          })
+      }
+      else{
+        // isDatNull
+      }
+    },
+
     setDateTest(data){
       if(data.time_start){
         data.time_start = moment(String(data.time_start)).format('HH:mm:ss');
@@ -508,6 +588,18 @@ export default {
       this.submitted = true;
       if(type == 'pretest'){
         if(this.pretest_data.is_active){
+          if(this.isPretestSubmitted){
+            this.$router.push({
+                name: 'praktikan-schedule-test', 
+                params: { 
+                  id: this.pretest_data.test.id, 
+                  schedule_test_id: this.pretest_data.id, 
+                  type: "pretest",
+                  auth: this.dataInput.auth_pretest,
+                }
+            });
+            return;
+          }
           this.$v.dataInput.auth_pretest.$touch();
           if (this.$v.dataInput.auth_pretest.$invalid) {
             this.isAuthPretestWrong = false;
@@ -544,6 +636,18 @@ export default {
       }
       else if(type == 'journal'){
         if(this.journal_data.is_active){
+          if(this.isJournalSubmitted){
+            this.$router.push({
+                name: 'praktikan-schedule-test', 
+                params: { 
+                  id: this.journal_data.test.id, 
+                  schedule_test_id: this.journal_data.id, 
+                  type: "journal",
+                  auth: this.dataInput.auth_pretest,
+                }
+            });
+            return;
+          }
           this.$v.dataInput.auth_journal.$touch();
           if (this.$v.dataInput.auth_journal.$invalid) {
             this.isAuthJournalWrong = false;
@@ -580,6 +684,18 @@ export default {
       }
       else if(type == 'posttest'){
         if(this.posttest_data.is_active){
+          if(this.isPosttestSubmitted){
+            this.$router.push({
+                name: 'praktikan-schedule-test', 
+                params: { 
+                  id: this.posttest_data.test.id, 
+                  schedule_test_id: this.posttest_data.id, 
+                  type: "posttest",
+                  auth: this.dataInput.auth_pretest,
+                }
+            });
+            return;
+          }
           this.$v.dataInput.auth_posttest.$touch();
           if (this.$v.dataInput.auth_posttest.$invalid) {
             this.isAuthPosttestWrong = false;
@@ -710,7 +826,7 @@ export default {
                               v-model="text.kelas"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -719,7 +835,7 @@ export default {
                               v-model="class_course_data.class.name"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -730,7 +846,7 @@ export default {
                               v-model="text.matkul"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -739,7 +855,7 @@ export default {
                               v-model="class_course_data.course.name"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -750,7 +866,7 @@ export default {
                               v-model="text.tahun"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -759,7 +875,7 @@ export default {
                               v-model="class_course_data.academic_year.name"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -770,7 +886,7 @@ export default {
                               v-model="text.modul"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -779,7 +895,7 @@ export default {
                               v-model="schedule_data.module.index"
                               type="text"
                               class="form-control text-center bg-#00000 "
-                              disabled="true"
+                              :disabled="true"
                             >
                           </div>
                         </div>
@@ -815,7 +931,7 @@ export default {
                               v-model="text.nama_ruangan"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -824,7 +940,7 @@ export default {
                               v-model="schedule_data.room.name"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -835,7 +951,7 @@ export default {
                               v-model="text.detail_ruangan"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -845,7 +961,7 @@ export default {
                               rows="1"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             />
                           </div>
@@ -856,7 +972,7 @@ export default {
                               v-model="text.msteam_link"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -865,7 +981,7 @@ export default {
                               v-model="schedule_data.room.msteam_link"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -876,7 +992,7 @@ export default {
                               v-model="text.msteam_code"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -885,7 +1001,7 @@ export default {
                               v-model="schedule_data.room.msteam_code"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -922,7 +1038,7 @@ export default {
                               v-model="text.tanggal"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -931,7 +1047,7 @@ export default {
                               v-model="time_date"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -942,7 +1058,7 @@ export default {
                               v-model="text.mulai"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -951,7 +1067,7 @@ export default {
                               v-model="time_start"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -962,7 +1078,7 @@ export default {
                               v-model="text.terakhir"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="border: 0"
                             >
                           </div>
@@ -971,7 +1087,7 @@ export default {
                               v-model="time_end"
                               type="text"
                               class="form-control"
-                              disabled="true"
+                              :disabled="true"
                               style="background-color: #F0F4F6;"
                             >
                           </div>
@@ -989,7 +1105,7 @@ export default {
       </div>
       <div class="row">
         <div class="col-sm-4 pt-1 pb-1">
-          <div class="card h-100">
+          <div class="card">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1007,13 +1123,13 @@ export default {
                                         border: 0 none; 
                                         color: #eee;"
                   >
-                  <div class="row text-left mt-4 mr-2">
+                  <div class="row text-left mt-4">
                     <div class="col-sm-4">
                       <input
                         v-model="text.start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0;"
                       >
                     </div>
@@ -1022,18 +1138,18 @@ export default {
                         v-model="pretest_data.time_start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1042,18 +1158,18 @@ export default {
                         v-model="pretest_data.time_end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.auth"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1062,7 +1178,7 @@ export default {
                         v-model="dataInput.auth_pretest"
                         type="text"
                         class="form-control"
-                        :disabled="!pretest_data.is_active"
+                        :disabled="!pretest_data.is_active || isPretestSubmitted"
                         :style="pretest_form"
                         :class="{ 'is-invalid': submitted && $v.dataInput.auth_pretest.$error }"
                         @input="changedAuth('pretest')"
@@ -1076,14 +1192,18 @@ export default {
                     </div>
                   </div>
                   <button 
+                    v-if="!isPretestSubmitted"
                     type="submit" 
                     class="btn btn-success mt-4" 
-                    style="min-width: 150px;" 
+                    style="min-width: 100%;" 
                     :class="{
                       'is-invalid': submitted && isAuthPretestWrong}"
                     @click="checkAuth('pretest')" 
                   >
-                    Mulai Tes Awal
+                    <b-icon
+                      icon="play-fill"
+                      aria-hidden="true"
+                    /> Mulai Tes Awal
                   </button>
                   <div
                     v-if="isAuthPretestWrong"
@@ -1091,6 +1211,15 @@ export default {
                   >
                     Auth salah, harap coba kembali!
                   </div>
+                  <button 
+                    v-if="isPretestSubmitted"
+                    type="submit" 
+                    class="btn btn-light mt-4" 
+                    style="min-width: 100%;"
+                    @click="checkAuth('pretest')" 
+                  >
+                    Lihat Jawaban
+                  </button>
                 </div>
               </div>
             </div>
@@ -1099,7 +1228,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4 pt-1 pb-1">
-          <div class="card h-100">
+          <div class="card">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1117,13 +1246,13 @@ export default {
                                         border: 0 none; 
                                         color: #eee;"
                   >
-                  <div class="row text-left mt-4 mr-2">
+                  <div class="row text-left mt-4">
                     <div class="col-sm-4">
                       <input
                         v-model="text.start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0;"
                       >
                     </div>
@@ -1132,18 +1261,18 @@ export default {
                         v-model="journal_data.time_start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1152,18 +1281,18 @@ export default {
                         v-model="journal_data.time_end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.auth"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1172,7 +1301,7 @@ export default {
                         v-model="dataInput.auth_journal"
                         type="text"
                         class="form-control"
-                        :disabled="!journal_data.is_active"
+                        :disabled="!journal_data.is_active || isJournalSubmitted"
                         :style="journal_form"
                         :class="{ 'is-invalid': submitted && $v.dataInput.auth_journal.$error }"
                         @input="changedAuth('journal')"
@@ -1186,14 +1315,18 @@ export default {
                     </div>
                   </div>
                   <button 
+                    v-if="!isJournalSubmitted"
                     type="submit" 
                     class="btn btn-success mt-4" 
-                    style="min-width: 150px;" 
+                    style="min-width: 100%;" 
                     :class="{
                       'is-invalid': submitted && isAuthJournalWrong}"
                     @click="checkAuth('journal')" 
                   >
-                    Mulai Jurnal
+                    <b-icon
+                      icon="play-fill"
+                      aria-hidden="true"
+                    /> Mulai Jurnal
                   </button>
                   <div
                     v-if="isAuthJournalWrong"
@@ -1201,6 +1334,15 @@ export default {
                   >
                     Auth salah, harap coba kembali!
                   </div>
+                  <button 
+                    v-if="isJournalSubmitted"
+                    type="submit" 
+                    class="btn btn-light mt-4" 
+                    style="min-width: 100%;"
+                    @click="checkAuth('journal')" 
+                  >
+                    Lihat Jawaban
+                  </button>
                 </div>
               </div>
             </div>
@@ -1209,7 +1351,7 @@ export default {
         </div>
         <!-- end col-->
         <div class="col-sm-4 pt-1 pb-1">
-          <div class="card h-100">
+          <div class="card">
             <div class="card-body m-2">
               <div class="text-center form-group mb-0">
                 <div>
@@ -1227,13 +1369,13 @@ export default {
                                         border: 0 none; 
                                         color: #eee;"
                   >
-                  <div class="row text-left mt-4 mr-2">
+                  <div class="row text-left mt-4">
                     <div class="col-sm-4">
                       <input
                         v-model="text.start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0;"
                       >
                     </div>
@@ -1242,18 +1384,18 @@ export default {
                         v-model="posttest_data.time_start"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1262,18 +1404,18 @@ export default {
                         v-model="posttest_data.time_end"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="background-color: #F0F4F6;"
                       >
                     </div>
                   </div>
-                  <div class="row text-left mt-2 mr-2">
+                  <div class="row text-left mt-2">
                     <div class="col-sm-4">
                       <input
                         v-model="text.auth"
                         type="text"
                         class="form-control"
-                        disabled="true"
+                        :disabled="true"
                         style="border: 0"
                       >
                     </div>
@@ -1282,7 +1424,7 @@ export default {
                         v-model="dataInput.auth_posttest"
                         type="text"
                         class="form-control"
-                        :disabled="!posttest_data.is_active"
+                        :disabled="!posttest_data.is_active || isPosttestSubmitted"
                         :style="posttest_form"
                         :class="{ 'is-invalid': submitted && $v.dataInput.auth_posttest.$error }"
                         @input="changedAuth('posttest')"
@@ -1295,15 +1437,19 @@ export default {
                       </div>
                     </div>
                   </div>
-                  <button 
+                  <button
+                    v-if="!isPosttestSubmitted"
                     type="submit" 
                     class="btn btn-success mt-4" 
-                    style="min-width: 150px;" 
+                    style="min-width: 100%;" 
                     :class="{
                       'is-invalid': submitted && isAuthPosttestWrong}"
                     @click="checkAuth('posttest')" 
                   >
-                    Mulai Tes Akhir
+                    <b-icon
+                      icon="play-fill"
+                      aria-hidden="true"
+                    /> Mulai Tes Akhir
                   </button>
                   <div
                     v-if="isAuthPosttestWrong"
@@ -1311,6 +1457,15 @@ export default {
                   >
                     Auth salah, harap coba kembali!
                   </div>
+                  <button 
+                    v-if="isPosttestSubmitted"
+                    type="submit" 
+                    class="btn btn-light mt-4" 
+                    style="min-width: 100%;"
+                    @click="checkAuth('posttest')" 
+                  >
+                    Lihat Jawaban
+                  </button>
                 </div>
               </div>
             </div>

@@ -419,7 +419,7 @@ export default {
                   v-model="class_course_data.class.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -432,7 +432,7 @@ export default {
                   v-model="class_course_data.course.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -445,7 +445,7 @@ export default {
                   v-model="class_course_data.academic_year.name"
                   type="text"
                   class="form-control"
-                  disabled="true"
+                  :disabled="true"
                   style="background-color: #F0F4F6;"
                 >
               </div>
@@ -460,7 +460,9 @@ export default {
               :options="dataModules"
               :allow-empty="false"
               :disabled="isLoading"
-              :show-labels="false"
+              select-label=""
+              selected-label="x"
+              deselect-label="x"
               @select="selectModule"
             />
           </div>
