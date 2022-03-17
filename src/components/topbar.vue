@@ -32,6 +32,11 @@ export default {
       //
     };
   },
+  computed: {
+    isSmallScreen() {
+      return this.$screen.breakpoint == 'xs' || this.$screen.breakpoint == 'sm';
+    },
+  },
   beforeDestroy() {
     // prevent memory leak
     clearInterval(this.interval)
@@ -82,13 +87,14 @@ export default {
       this.current_language = i18n.locale;
     },
     setRole(role){
+      console.log(this.isSmallScreen)
       switch(role) {
         case "staff":
           return "Staff"
         case "aslab":
-          return "Asisten Lab"
+          return this.isSmallScreen ? "Aslab" : "Asisten Lab"
         case "asprak":
-          return "Asisten Praktikum"
+          return this.isSmallScreen ? "Asprak" : "Asisten Praktikum"
         case "student":
           return "Praktikan"
         case "laboran":
@@ -264,28 +270,25 @@ export default {
               src="@/assets/images/users/default-avatar.png"
               alt="Header Avatar"
             >
-            <span class="d-none d-xl-inline-block ml-1">{{ user.name }}</span>
+            <span class="d-none d-xl-inline-block ml-2 mr-1">{{ user.name }}</span>
             <i class="mdi mdi-chevron-down d-none d-xl-inline-block" />
           </template>
           <!-- item-->
           <a class="dropdown-item">
-            <i class="ri-user-line align-middle mr-1" />
-            {{ user.username }}
+            <i class="ri-user-line align-middle mr-2" />{{ user.username }}
           </a>
           <a
             class="dropdown-item d-block"
             href="/settings/change-password"
           >
-            <i class="ri-settings-2-line align-middle mr-1" />
-            Pengaturan
+            <i class="ri-settings-2-line align-middle mr-2" />Pengaturan
           </a>
           <div class="dropdown-divider" />
           <a
             class="dropdown-item text-danger"
             href="/logout"
           >
-            <i class="ri-shut-down-line align-middle mr-1 text-danger" />
-            Logout
+            <i class="ri-shut-down-line align-middle mr-2 text-danger" />Logout
           </a>
         </b-dropdown>
       </div>

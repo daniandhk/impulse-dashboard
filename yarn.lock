@@ -10692,6 +10692,11 @@
   "resolved" "https://registry.npmjs.org/vue-router/-/vue-router-3.5.2.tgz"
   "version" "3.5.2"
 
+"vue-screen@^1.5.6":
+  "integrity" "sha512-UL+5RLDUQw6OlvAkBWgDi56pvlWS3cx1rQ8zrQGN9oRMNtrOXEx9bUkS/+/zKs/z4py9lJDILLSd+h4ruoUhQg=="
+  "resolved" "https://registry.npmjs.org/vue-screen/-/vue-screen-1.5.6.tgz"
+  "version" "1.5.6"
+
 "vue-slide-bar@^1.2.0":
   "integrity" "sha512-SewM0C1lt7s0vrp9N1u3dA0yVNEj2kTs+m2bHhe+Mc/NYmjqcU3IcbKlVrrbWOkAjrLFYQ3OmsvVEl60Xzb8+w=="
   "resolved" "https://registry.npmjs.org/vue-slide-bar/-/vue-slide-bar-1.2.0.tgz"

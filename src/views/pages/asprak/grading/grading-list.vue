@@ -526,7 +526,7 @@ export default {
               <template v-slot:cell(pretest)="data">
                 <b-button
                   v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && !data.item.is_late.pretest"
-                  id="test-pretest"
+                  :id="'test-pretest' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-info"
@@ -537,7 +537,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && !data.item.is_late.pretest"
-                  target="test-pretest"
+                  :target="'test-pretest' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -546,7 +546,7 @@ export default {
 
                 <b-button
                   v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && data.item.is_late.pretest"
-                  id="late-pretest"
+                  :id="'late-pretest' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-warning"
@@ -557,7 +557,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="(data.item.test_id.pretest_id && data.item.submitted.pretest) && data.item.is_late.pretest"
-                  target="late-pretest"
+                  :target="'late-pretest' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -566,7 +566,7 @@ export default {
 
                 <b-button
                   v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
-                  id="null-pretest"
+                  :id="'null-pretest' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-danger"
@@ -576,7 +576,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="!data.item.test_id.pretest_id || !data.item.submitted.pretest"
-                  target="null-pretest"
+                  :target="'null-pretest' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -586,7 +586,7 @@ export default {
               <template v-slot:cell(journal)="data">
                 <b-button
                   v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && !data.item.is_late.journal"
-                  id="test-journal"
+                  :id="'test-journal' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-info"
@@ -597,7 +597,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && !data.item.is_late.journal"
-                  target="test-journal"
+                  :target="'test-journal' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -606,7 +606,7 @@ export default {
 
                 <b-button
                   v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && data.item.is_late.journal"
-                  id="late-journal"
+                  :id="'late-journal' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-warning"
@@ -617,7 +617,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="(data.item.test_id.journal_id && data.item.submitted.journal) && data.item.is_late.journal"
-                  target="late-journal"
+                  :target="'late-journal' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -626,7 +626,7 @@ export default {
 
                 <b-button
                   v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
-                  id="null-journal"
+                  :id="'null-journal' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-danger"
@@ -636,7 +636,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="!data.item.test_id.journal_id || !data.item.submitted.journal"
-                  target="null-journal"
+                  :target="'null-journal' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -646,7 +646,7 @@ export default {
               <template v-slot:cell(posttest)="data">
                 <b-button
                   v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && !data.item.is_late.posttest"
-                  id="test-posttest"
+                  :id="'test-posttest' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-info"
@@ -657,7 +657,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && !data.item.is_late.posttest"
-                  target="test-posttest"
+                  :target="'test-posttest' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -666,7 +666,7 @@ export default {
 
                 <b-button
                   v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && data.item.is_late.posttest"
-                  id="late-posttest"
+                  :id="'late-posttest' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-warning"
@@ -677,7 +677,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="(data.item.test_id.posttest_id && data.item.submitted.posttest) && data.item.is_late.posttest"
-                  target="late-posttest"
+                  :target="'late-posttest' + data.index"
                   variant="dark"
                   placement="right"
                 >
@@ -686,7 +686,7 @@ export default {
 
                 <b-button
                   v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
-                  id="null-posttest"
+                  :id="'null-posttest' + data.index"
                   type="submit" 
                   size="sm" 
                   variant="outline-danger"
@@ -696,7 +696,7 @@ export default {
                 </b-button>
                 <b-tooltip
                   v-if="!data.item.test_id.posttest_id || !data.item.submitted.posttest"
-                  target="null-posttest"
+                  :target="'null-posttest' + data.index"
                   variant="dark"
                   placement="right"
                 >

@@ -48,6 +48,7 @@ export default {
       loading();
       this.loginData.user_agent = navigator.userAgent;
       this.submitted = true;
+      this.tokenExpired = false;
       // stop here if form is invalid
       this.$v.$touch();
 

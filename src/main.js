@@ -12,6 +12,7 @@ import router from './router'
 import i18n from './i18n'
 import store from './store'
 import VueHtmlToPaper from 'vue-html-to-paper'
+import VueScreen from 'vue-screen';
 
 import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css' // import styles
@@ -47,6 +48,7 @@ Vue.use(VueSweetalert2);
 Vue.use(VueMask)
 Vue.use(Notification);
 Vue.use(require('vue-chartist'))
+Vue.use(VueScreen);
 Vue.use(VueQuillEditor, /* { default global options } */)
 Vue.component('apexchart', VueApexCharts)
 
