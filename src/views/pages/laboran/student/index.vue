@@ -7,7 +7,7 @@ import InputStudent from "./input-student";
 
 export default {
   page: {
-    title: "Data Mahasiswa",
+    title: "Data Praktikan",
   },
   components: {
     Layout,
@@ -17,13 +17,13 @@ export default {
   },
   data() {
     return {
-      title: "Data Mahasiswa",
+      title: "Data Praktikan",
       items: [
         {
           text: "Laboran"
         },
         {
-          text: "Data Mahasiswa",
+          text: "Data Praktikan",
           active: true
         }
       ],

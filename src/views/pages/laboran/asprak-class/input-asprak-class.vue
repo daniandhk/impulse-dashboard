@@ -497,7 +497,7 @@ export default {
             class="card-title-desc"
             style="font-size: 14px; margin: 0 !important;"
           >
-            NIM sebagai Asprak dapat diatur di menu Data Mahasiswa.
+            NIM sebagai Asprak dapat diatur di menu Data Praktikan.
           </p>
                     
           <div class="mt-4">

@@ -88,7 +88,7 @@ export default {
             class="card-title-desc"
             style="font-size: 14px; margin: 0 !important;"
           >
-            - Pastikan NIM yang digunakan tersedia di <a href="/laboran/student"><b>Data Mahasiswa</b></a>,<br>
+            - Pastikan NIM yang digunakan tersedia di <a href="/laboran/student"><b>Data Praktikan</b></a>,<br>
             - Pastikan kode mata kuliah yang digunakan tersedia di <a href="/laboran/class-course"><b>Kelas Mata Kuliah</b></a>,<br>
             - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
             - Pastikan hanya ada <b>satu sheet</b>,<br>
