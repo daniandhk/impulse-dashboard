@@ -148,7 +148,6 @@ export default {
             }
           });
           this.on('error', function(file, response){
-            // console.log(response)
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal mengunggah file!',
@@ -542,7 +541,6 @@ export default {
                 }
             })
             .catch(error => {
-                // console.log(error)
                 if(error.response.status == 401){
                   this.$router.replace({
                       name: 'login', params: { tokenExpired: true }

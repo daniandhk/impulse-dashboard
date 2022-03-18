@@ -87,7 +87,6 @@ export default {
       this.current_language = i18n.locale;
     },
     setRole(role){
-      console.log(this.isSmallScreen)
       switch(role) {
         case "staff":
           return "Staff"

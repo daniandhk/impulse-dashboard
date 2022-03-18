@@ -361,7 +361,6 @@ export default {
         this.dataStudent.staff_code = value.staff.code;
         this.dataStudent.staff_name = value.staff.name;
         await this.getDataClassCourse().then(response=>{
-            // console.log(this.classCourseData)
             this.dataInput.class_course_id = this.classCourseData.id;
         });
 

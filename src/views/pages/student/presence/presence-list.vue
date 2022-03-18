@@ -147,7 +147,6 @@ export default {
                 if(response.data){
                     if(response.data.class_course.length){
                         this.dataPresences = response.data.class_course[0].modules;
-                        console.log(this.dataPresences)
                     }
                 }
             })

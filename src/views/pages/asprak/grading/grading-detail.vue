@@ -364,7 +364,6 @@ export default {
                     });
                 })
                 .catch(error => {
-                    // console.log(error)
                     this.submitted = false;
                     this.tryingToInput = false;
                     this.isInputError = true;

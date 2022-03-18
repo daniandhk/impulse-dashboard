@@ -19,7 +19,6 @@ const baseRoutes = [
                 if (store.getters.getLoggedUser) {
                     // Redirect to the home page instead
                     return api.validateUser().then(response => {
-                        // console.log(response.data.data)
                         response.data.data.token = store.getters.getLoggedUser.token
                         store.commit('LOGGED_USER', response.data.data)
 
@@ -31,7 +30,6 @@ const baseRoutes = [
                     })
                     .catch(error => {
                         store.dispatch('logOut')
-                        //console.log(error)
                         next({params: { tokenExpired: true }})
                     })
                     

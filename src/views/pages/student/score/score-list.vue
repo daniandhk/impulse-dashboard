@@ -103,7 +103,6 @@ export default {
         return (
             api.getStudentCourseScore(this.student_id)
             .then(response => {
-                // console.log(response.data.data.result)
                 if(response.data.data){
                     this.dataClassCourses = response.data.data.result;
                 }
