@@ -22,7 +22,7 @@ export default {
       title: "Kelas Asisten Praktikum",
       items: [
         {
-          text: "Laboran"
+          text: "Asisten Lab"
         },
         {
           text: "Kelas Asisten Praktikum",

@@ -4,7 +4,6 @@ import * as api from '@/api';
 import Swal from "sweetalert2";
 import { required } from "vuelidate/lib/validators";
 import Multiselect from "vue-multiselect";
-import tableRoomVue from '../room/table-room.vue';
 
 /**
  * Orders Component

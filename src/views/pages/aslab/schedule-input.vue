@@ -10,7 +10,6 @@ import moment from 'moment';
 
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
-import tableRoomVue from '../laboran/room/table-room.vue';
 
 /**
  * Advanced-form component

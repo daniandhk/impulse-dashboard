@@ -2,30 +2,28 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableStudent from "./table-student-class";
-import InputStudent from "./input-student-class";
-import ImportStudent from "./import-student-class";
+import TableStudent from "./table-student";
+import InputStudent from "./input-student";
 
 export default {
   page: {
-    title: "Kelas Praktikan",
+    title: "Data Praktikan",
   },
   components: {
     Layout,
     PageHeader,
     TableStudent,
     InputStudent,
-    ImportStudent
   },
   data() {
     return {
-      title: "Kelas Praktikan",
+      title: "Data Praktikan",
       items: [
         {
-          text: "Laboran"
+          text: "Asisten Lab"
         },
         {
-          text: "Kelas Praktikan",
+          text: "Data Praktikan",
           active: true
         }
       ],
@@ -75,12 +73,6 @@ export default {
                   <a class="font-weight-bold active">Input</a>
                 </template>
                 <InputStudent />
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
-                  <a class="font-weight-bold active">Import Excel</a>
-                </template>
-                <ImportStudent />
               </b-tab>
             </b-tabs>
           </div>

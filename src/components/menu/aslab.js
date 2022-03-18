@@ -34,8 +34,20 @@ export const aslabItems = [
     },
     {
         id: 7,
-        label: 'menuitems.aslab.list.bap',
-        icon: 'ri-account-circle-line',
-        link: 'aslab-bap'
+        label: 'menuitems.aslab.list.student',
+        icon: 'ri-team-fill',
+        link: 'aslab-student'
+    },
+    {
+        id: 8,
+        label: 'menuitems.aslab.list.studentclass',
+        icon: 'mdi mdi-school',
+        link: 'aslab-studentclass'
+    },
+    {
+        id: 9,
+        label: 'menuitems.aslab.list.asprakclass',
+        icon: 'mdi mdi-assistant',
+        link: 'aslab-asprakclass'
     },
 ]

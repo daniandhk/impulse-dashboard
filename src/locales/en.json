@@ -20,9 +20,6 @@
       "absensi-data": "Data BAP",
       "account-data": "Data Akun",
       "list": {
-        "student": "Data Praktikan",
-        "studentclass": "Kelas Praktikan",
-        "asprakclass": "Kelas Asisten Praktikum",
         "staff": "Data Staff",
         "course": "Data Mata Kuliah",
         "classroom": "Data Kelas",
@@ -38,11 +35,15 @@
     },
     "aslab": {
       "text": "Asisten Lab",
+      "main-data": "Data Utama",
+      "combined-data": "Data Kelas",
       "list":{
+        "student": "Data Praktikan",
+        "studentclass": "Kelas Praktikan",
+        "asprakclass": "Kelas Asisten Praktikum",
         "jadwal": "Jadwal",
         "kalender": "Kalender",
-        "list": "List Jadwal",
-        "bap": "Berita Acara Praktikum"
+        "list": "List Jadwal"
       }
     },
     "asprak": {
