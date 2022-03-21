@@ -251,10 +251,18 @@ export default {
           </div>
         </div>
         <b-tooltip
+          v-if="timeEnd"
           target="div-time"
           variant="dark"
         >
-          {{ date }}<br>pukul {{ time }}
+          Deadline: {{ timeEnd }}
+        </b-tooltip>
+        <b-tooltip
+          v-if="!timeEnd"
+          target="div-time"
+          variant="dark"
+        >
+          {{ date }}
         </b-tooltip>
 
         <b-dropdown
