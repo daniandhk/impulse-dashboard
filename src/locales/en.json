@@ -3,6 +3,9 @@
     "dropdown": {
       "roles": {
         "text": "Available Roles"
+      },
+      "language": {
+        "text": "Language"
       }
     }
   },

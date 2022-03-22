@@ -20,7 +20,7 @@ export default {
   },
   data() {
     return {
-      current_language: "en",
+      current_language: store.getters.getAppLanguage,
       getRole: store.getters.getRoleUser,
       user: store.getters.getLoggedUser,
 
@@ -29,7 +29,19 @@ export default {
       date: moment().locale('id').format('dddd, LL'),
       time_end: "",
       is_late: false,
-      //
+      
+      languages: [
+        {
+          flag: require("@/assets/images/flags/us.jpg"),
+          language: "en",
+          title: "English"
+        },
+        {
+          flag: require("@/assets/images/flags/id.png"),
+          language: "id",
+          title: "Indonesian"
+        },
+      ],
     };
   },
   computed: {
@@ -44,6 +56,7 @@ export default {
   created() {
     // update the time every second
     this.interval = setInterval(() => {
+      console.log(store.getters.getAppLanguage)
       // Concise way to format time according to system locale.
       this.time = moment().locale('id').format('HH:mm:ss')
       if(this.timeEnd){
@@ -83,8 +96,12 @@ export default {
       }
     },
     setLanguage(locale) {
-      i18n.locale = locale;
-      this.current_language = i18n.locale;
+      if(this.current_language != locale){
+        store.commit('APP_LANGUAGE', locale)
+        this.current_language = store.getters.getAppLanguage
+        location.reload()
+      }
+      this.$refs.dropdown.visible = false
     },
     setRole(role){
       switch(role) {
@@ -266,6 +283,7 @@ export default {
         </b-tooltip>
 
         <b-dropdown
+          ref="dropdown"
           right
           variant="black"
           toggle-class="header-item"
@@ -288,8 +306,30 @@ export default {
             class="dropdown-item d-block"
             href="/settings/change-password"
           >
-            <i class="ri-settings-2-line align-middle mr-2" />Pengaturan
+            <i class="ri-settings-2-line align-middle mr-2" />Ubah Password
           </a>
+          <div class="dropdown-divider" />
+          <b-dropdown-group
+            id="dropdown-group-1"
+            :header="$t('navbar.dropdown.language.text')"
+          >
+            <b-dropdown-item
+              v-for="(entry, i) in languages"
+              :key="`Lang${i}`"
+              class="notify-item"
+              :value="entry"
+              :link-class="{'active': entry.language === current_language}"
+              @click="setLanguage(entry.language)"
+            >
+              <img
+                :src="`${entry.flag}`"
+                alt="user-image"
+                class="mr-2"
+                height="12"
+              >
+              <span class="align-middle">{{ entry.title }}</span>
+            </b-dropdown-item>
+          </b-dropdown-group>
           <div class="dropdown-divider" />
           <a
             class="dropdown-item text-danger"
