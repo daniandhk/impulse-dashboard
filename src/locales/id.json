@@ -9,6 +9,61 @@
         }
       }
     },
+    "component": {
+      "form": {
+        "blank-notification": "harus diisi!"
+      },
+      "button": {
+        "submit": "Submit",
+        "cancel": "Batalkan"
+      }
+    },
+    "praktikan": {
+      "text": "Praktikan",
+      "ticketing": {
+        "text": "Ticketing",
+        "remotepc": {
+          "text": "Request Remote PC IFLAB",
+          "desc": "Setelah mengisi form berikut, harap konfirmasi ke LABORAN, ASLAB, atau OA IFLAB.",
+          "title-list": {
+            "text": "Ticketing Anda"
+          },
+          "data-day": ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
+          "name": {
+            "text": "Nama"
+          },
+          "nim": {
+            "text": "NIM"
+          },
+          "course": {
+            "text": "MK Praktikum",
+            "desc": "contoh: Jaringan Komputer"
+          },
+          "class": {
+            "text": "Kelas Praktikum",
+            "desc": "contoh: IF-42-03"
+          },
+          "schedule-day": {
+            "text": "Jadwal Praktikum (Hari)"
+          },
+          "schedule-session": {
+            "text": "Jadwal Praktikum (Sesi)"
+          },
+          "username": {
+            "text": "Username SSO",
+            "desc": "untuk kepentingan connect internet TUNE"
+          },
+          "password": {
+            "text": "Password SSO",
+            "desc": "untuk kepentingan connect internet TUNE"
+          },
+          "problem": {
+            "text": "Kendala pada device pribadi",
+            "desc": "Silakan tulis kendala yang dialami pada device pribadi dan sertakan buktinya dalam bentuk PDF"
+          }
+        }
+      }
+    },
     "menuitems": {
       "menu": {
         "text": "Menu"

@@ -70,23 +70,6 @@ export default [
         },
         component: () => import('../../views/pages/student/schedule/schedule-test')
     },
-    // {
-    //     path: '/praktikan/score',
-    //     name: 'praktikan-score',
-    //     meta: {
-    //         authRequired: true,
-    //         beforeResolve(routeTo, routeFrom, next) {
-    //             let role = store.getters.getRoleUser
-    //             if(role && role == 'student'){
-    //                 next()
-    //             }
-    //             else{
-    //                 next({ name: 'error-404' })
-    //             }
-    //         },
-    //     },
-    //     component: () => import('../../views/pages/student/score/score-list')
-    // },
     {
         path: '/praktikan/presence',
         name: 'praktikan-presence',
@@ -103,5 +86,22 @@ export default [
             },
         },
         component: () => import('../../views/pages/student/presence/presence-list')
+    },
+    {
+        path: '/praktikan/remote-pc',
+        name: 'praktikan-remotepc',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && role == 'student'){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/student/ticketing/remotepc/index')
     },
 ]

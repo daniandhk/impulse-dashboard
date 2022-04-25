@@ -9,6 +9,61 @@
       }
     }
   },
+  "component": {
+    "form": {
+      "blank-notification": "must be filled!"
+    },
+    "button": {
+      "submit": "Submit",
+      "cancel": "Cancel"
+    }
+  },
+  "praktikan": {
+    "text": "Student",
+    "ticketing": {
+      "text": "Ticketing",
+      "remotepc": {
+        "text": "Request Remote PC IFLAB",
+        "desc": "After filling out the following form, please confirm to LABORAN, ASLAB, or OA IFLAB.",
+          "title-list": {
+            "text": "Your Ticketing"
+          },
+        "data-day": ["Monday", "Tuesday", "Wednesday", "Thrusday", "Friday", "Saturday"],
+        "name": {
+          "text": "Name"
+        },
+        "nim": {
+          "text": "NIM"
+        },
+        "course": {
+          "text": "Practicum Course",
+          "desc": "e.g Jaringan Komputer"
+        },
+        "class": {
+          "text": "Practicum Class",
+          "desc": "e.g IF-42-03"
+        },
+        "schedule-day": {
+          "text": "Practicum Schedule (Day)"
+        },
+        "schedule-session": {
+          "text": "Practicum Schedule (Session)"
+        },
+        "username": {
+          "text": "Username SSO",
+          "desc": "for connecting to the internet TUNE"
+        },
+        "password": {
+          "text": "Password SSO",
+          "desc": "for connecting to the internet TUNE"
+        },
+        "problem": {
+          "text": "Problems on personal device",
+          "desc": "Please write down the problems experienced on your personal device and include the proof in PDF form"
+        }
+      }
+    }
+  },
   "menuitems": {
     "menu": {
       "text": "Menu"
