@@ -5,7 +5,7 @@ import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
 import Multiselect from "vue-multiselect";
-import i18n from '@/i18n'
+import i18n from '@/i18n';
 
 /**
  * Orders Component
@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       //input course
-      title: i18n.t('praktikan.ticketing.remotepc.text'),
+      title: i18n.t('student.ticketing.remotepc.text'),
       dataInput: {
         name: store.getters.getLoggedUser.name,
         nim: store.getters.getLoggedUser.nim,
@@ -183,10 +183,10 @@ export default {
           class="tab-pane"
         >
           <h4 class="card-title">
-            {{ $t('praktikan.ticketing.remotepc.text') }}
+            {{ $t('student.ticketing.remotepc.text') }}
           </h4>
           <p class="card-title-desc">
-            {{ $t('praktikan.ticketing.remotepc.desc') }}<br>
+            {{ $t('student.ticketing.remotepc.desc') }}<br>
             Line : <a href="http://line.me/ti/p/~@FIFLAB">@FIFLAB</a><br>
             Instagram : <a href="https://www.instagram.com/informaticslab_telu/">informaticslab_telu</a><br>
             Website : <a href="https://informatics.labs.telkomuniversity.ac.id/">https://informatics.labs.telkomuniversity.ac.id/</a><br>
@@ -234,7 +234,7 @@ export default {
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="nama">{{ $t('praktikan.ticketing.remotepc.name.text') }}</label>
+                <label for="nama">{{ $t('student.ticketing.remotepc.name.text') }}</label>
                 <input
                   id="nama"
                   v-model="dataInput.name"
@@ -247,13 +247,13 @@ export default {
                   v-if="submitted && !$v.dataInput.name.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.name.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.name.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="nim">{{ $t('praktikan.ticketing.remotepc.nim.text') }}</label>
+                <label for="nim">{{ $t('student.ticketing.remotepc.nim.text') }}</label>
                 <input
                   id="nim"
                   v-model="dataInput.nim"
@@ -266,7 +266,7 @@ export default {
                   v-if="submitted && !$v.dataInput.nim.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.nim.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.nim.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
@@ -278,9 +278,9 @@ export default {
                 <label
                   style="margin-bottom:0!important;"
                   for="class"
-                >{{ $t('praktikan.ticketing.remotepc.course.text') }}</label>
+                >{{ $t('student.ticketing.remotepc.course.text') }}</label>
                 <br>
-                <span class="text-muted font-size-13">{{ $t('praktikan.ticketing.remotepc.course.desc') }}</span>
+                <span class="text-muted font-size-13">{{ $t('student.ticketing.remotepc.course.desc') }}</span>
                 <input
                   id="course"
                   v-model="dataInput.course"
@@ -293,7 +293,7 @@ export default {
                   v-if="submitted && !$v.dataInput.course.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.course.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.course.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
@@ -302,9 +302,9 @@ export default {
                 <label
                   style="margin-bottom:0!important;"
                   for="class"
-                >{{ $t('praktikan.ticketing.remotepc.class.text') }}</label>
+                >{{ $t('student.ticketing.remotepc.class.text') }}</label>
                 <br>
-                <span class="text-muted font-size-13">{{ $t('praktikan.ticketing.remotepc.class.desc') }}</span>
+                <span class="text-muted font-size-13">{{ $t('student.ticketing.remotepc.class.desc') }}</span>
                 <input
                   id="class"
                   v-model="dataInput.class"
@@ -317,7 +317,7 @@ export default {
                   v-if="submitted && !$v.dataInput.class.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.class.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.class.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
@@ -326,10 +326,10 @@ export default {
           <div class="row">
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="day">{{ $t('praktikan.ticketing.remotepc.schedule-day.text') }}</label>
+                <label for="day">{{ $t('student.ticketing.remotepc.schedule-day.text') }}</label>
                 <multiselect
                   v-model="dataInput.day"
-                  :options="$t('praktikan.ticketing.remotepc.data-day')"
+                  :options="$t('student.ticketing.remotepc.data-day')"
                   select-label=""
                   selected-label="x"
                   deselect-label="x"
@@ -339,13 +339,13 @@ export default {
                   v-if="submitted && !$v.dataInput.day.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.schedule-day.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.schedule-day.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
             <div class="col-sm-6">
               <div class="form-group">
-                <label for="semester">{{ $t('praktikan.ticketing.remotepc.schedule-session.text') }}</label>
+                <label for="semester">{{ $t('student.ticketing.remotepc.schedule-session.text') }}</label>
                 <multiselect
                   v-model="dataInput.session"
                   :options="dataSession"
@@ -358,7 +358,7 @@ export default {
                   v-if="submitted && !$v.dataInput.session.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.schedule-session.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.schedule-session.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
@@ -370,9 +370,9 @@ export default {
                 <label
                   style="margin-bottom:0!important;"
                   for="class"
-                >{{ $t('praktikan.ticketing.remotepc.username.text') }}</label>
+                >{{ $t('student.ticketing.remotepc.username.text') }}</label>
                 <br>
-                <span class="text-muted font-size-13">{{ $t('praktikan.ticketing.remotepc.username.desc') }}</span>
+                <span class="text-muted font-size-13">{{ $t('student.ticketing.remotepc.username.desc') }}</span>
                 <input
                   id="username"
                   v-model="dataInput.username"
@@ -385,7 +385,7 @@ export default {
                   v-if="submitted && !$v.dataInput.username.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.username.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.username.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
@@ -394,9 +394,9 @@ export default {
                 <label
                   style="margin-bottom:0!important;"
                   for="class"
-                >{{ $t('praktikan.ticketing.remotepc.password.text') }}</label>
+                >{{ $t('student.ticketing.remotepc.password.text') }}</label>
                 <br>
-                <span class="text-muted font-size-13">{{ $t('praktikan.ticketing.remotepc.password.desc') }}</span>
+                <span class="text-muted font-size-13">{{ $t('student.ticketing.remotepc.password.desc') }}</span>
                 <input
                   id="password"
                   v-model="dataInput.password"
@@ -409,7 +409,7 @@ export default {
                   v-if="submitted && !$v.dataInput.password.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.password.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.password.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>
@@ -421,9 +421,9 @@ export default {
                 <label
                   style="margin-bottom:0!important;"
                   for="class"
-                >{{ $t('praktikan.ticketing.remotepc.problem.text') }}</label>
+                >{{ $t('student.ticketing.remotepc.problem.text') }}</label>
                 <br>
-                <span class="text-muted font-size-13">{{ $t('praktikan.ticketing.remotepc.problem.desc') }}</span>
+                <span class="text-muted font-size-13">{{ $t('student.ticketing.remotepc.problem.desc') }}</span>
                 <br>
                 <input
                   id="file"
@@ -438,7 +438,7 @@ export default {
                   v-if="submitted && !$v.dataInput.file.required"
                   class="invalid-feedback"
                 >
-                  {{ $t('praktikan.ticketing.remotepc.problem.text') }} {{ $t('component.form.blank-notification') }}
+                  {{ $t('student.ticketing.remotepc.problem.text') }} {{ $t('component.form.blank-notification') }}
                 </div>
               </div>
             </div>

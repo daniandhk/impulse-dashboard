@@ -12,41 +12,41 @@ export const praktikanItems = [
     },
     {
         id: 3,
-        label: "menuitems.praktikan.text",
+        label: "menuitems.student.text",
         isTitle: true
     },
     {
         id: 4,
-        label: 'menuitems.praktikan.list.jadwal',
+        label: 'menuitems.student.list.jadwal',
         icon: 'ri-calendar-todo-fill',
         subItems: [
             {
                 id: 5,
-                label: 'menuitems.praktikan.list.kalender',
-                link: 'praktikan-schedule-calendar'
+                label: 'menuitems.student.list.kalender',
+                link: 'student-schedule-calendar'
             },
             {
                 id: 6,
-                label: 'menuitems.praktikan.list.matakuliah',
-                link: 'praktikan-schedule-list'
+                label: 'menuitems.student.list.matakuliah',
+                link: 'student-schedule-list'
             }
         ]
     },
     {
         id: 7,
-        label: 'menuitems.praktikan.list.presensi',
+        label: 'menuitems.student.list.presensi',
         icon: 'ri-bar-chart-grouped-fill',
-        link: 'praktikan-presence'
+        link: 'student-presence'
     },
     {
         id: 8,
-        label: "praktikan.ticketing.text",
+        label: "student.ticketing.text",
         isTitle: true
     },
     {
         id: 9,
-        label: 'praktikan.ticketing.remotepc.text',
+        label: 'student.ticketing.remotepc.text',
         icon: 'ri-remote-control-line',
-        link: 'praktikan-remotepc'
+        link: 'student-remotepc'
     },
 ]

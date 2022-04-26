@@ -3,6 +3,7 @@ import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import $ from 'jquery';
+import store from '@/store';
 
 export default {
   data() {
@@ -67,6 +68,7 @@ export default {
               this.isAuthError = false;
               this.loginSuccess = true;
 
+              this.setLanguage('id');
               this.$store.commit('LOGGED_USER', response.data.data);
               loading();
               // Redirect to the originally requested page, or to the home page
@@ -82,7 +84,14 @@ export default {
             })
         );
       }
-    }
+    },
+
+    setLanguage(locale) {
+      if(this.current_language != locale){
+        store.commit('APP_LANGUAGE', locale)
+        this.current_language = store.getters.getAppLanguage
+      }
+    },
   }
 };
 function loading() {

@@ -1,10 +1,10 @@
 import store from '@/store'
 
 export default [
-    //path praktikan
+    //path student
     {
-        path: '/praktikan/schedule/calendar',
-        name: 'praktikan-schedule-calendar',
+        path: '/student/schedule/calendar',
+        name: 'student-schedule-calendar',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -20,8 +20,8 @@ export default [
         component: () => import('../../views/pages/student/schedule/schedule-calendar')
     },
     {
-        path: '/praktikan/schedule/list',
-        name: 'praktikan-schedule-list',
+        path: '/student/schedule/list',
+        name: 'student-schedule-list',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -37,8 +37,8 @@ export default [
         component: () => import('../../views/pages/student/schedule/schedule-list')
     },
     {
-        path: '/praktikan/schedule/detail/:id',
-        name: 'praktikan-schedule-detail',
+        path: '/student/schedule/detail/:id',
+        name: 'student-schedule-detail',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -54,8 +54,8 @@ export default [
         component: () => import('../../views/pages/student/schedule/schedule-detail')
     },
     {
-        path: '/praktikan/:type/:schedule_test_id/:id',
-        name: 'praktikan-schedule-test',
+        path: '/student/:type/:schedule_test_id/:id',
+        name: 'student-schedule-test',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -71,8 +71,8 @@ export default [
         component: () => import('../../views/pages/student/schedule/schedule-test')
     },
     {
-        path: '/praktikan/presence',
-        name: 'praktikan-presence',
+        path: '/student/presence',
+        name: 'student-presence',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {
@@ -88,8 +88,8 @@ export default [
         component: () => import('../../views/pages/student/presence/presence-list')
     },
     {
-        path: '/praktikan/remote-pc',
-        name: 'praktikan-remotepc',
+        path: '/student/remote-pc',
+        name: 'student-remotepc',
         meta: {
             authRequired: true,
             beforeResolve(routeTo, routeFrom, next) {

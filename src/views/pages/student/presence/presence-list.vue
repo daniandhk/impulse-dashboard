@@ -5,13 +5,14 @@ import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
+import i18n from '@/i18n';
 
 /**
  * Orders Component
  */
 export default {
   page: {
-    title: "Nilai / Presensi",
+    title: i18n.t('student.presence-list.text'),
     meta: [{ name: "description" }],
   },
   components: {
@@ -20,14 +21,14 @@ export default {
   },
   data() {
     return {
-      title: "Nilai / Presensi",
+      title: i18n.t('student.presence-list.text'),
       items: [
         {
-          text: "Praktikan",
+          text: i18n.t('student.text'),
           href: "/"
         },
         {
-          text: "Nilai / Presensi",
+          text: i18n.t('student.presence-list.text'),
           active: true,
         },
       ],
@@ -41,12 +42,12 @@ export default {
       sortDesc: false,
       dataPresences: [],
       fields: [
-        { key: "grade.index", sortable: true, label: "Modul", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "grade.pretest.grade", label: "Nilai Tes Awal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.journal.grade", label: "Nilai Jurnal", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.posttest.grade", label: "Nilai Tes Akhir", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "grade.total_grade", label: "Nilai Total", thClass: 'text-center', tdClass: 'text-center', },
-        { key: "presence", label: "Kehadiran", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "grade.index", sortable: true, label: i18n.t('student.presence-list.table.module.text'), thClass: 'text-center', tdClass: 'text-center' },
+        { key: "grade.pretest.grade", label: i18n.t('student.presence-list.table.pretest-grade.text'), thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.journal.grade", label: i18n.t('student.presence-list.table.journal-grade.text'), thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.posttest.grade", label: i18n.t('student.presence-list.table.posttest-grade.text'), thClass: 'text-center', tdClass: 'text-center', },
+        { key: "grade.total_grade", label: i18n.t('student.presence-list.table.total-grade.text'), thClass: 'text-center', tdClass: 'text-center', },
+        { key: "presence", label: i18n.t('student.presence-list.table.presence.text'), thClass: 'text-center', tdClass: 'text-center' },
       ],
 
       student_id: store.getters.getLoggedUser.id,
@@ -119,7 +120,7 @@ export default {
                   Swal.fire({
                       icon: 'error',
                       title: 'Oops...',
-                      text: 'Terjadi kesalahan!',
+                      text: i18n.t('component.swal.error.text'),
                       footer: error.response.data.message
                   })
                 }
@@ -160,7 +161,7 @@ export default {
                   Swal.fire({
                       icon: 'error',
                       title: 'Oops...',
-                      text: 'Terjadi kesalahan!',
+                      text: i18n.t('component.swal.error.text'),
                       footer: error.response.data.message
                   })
                 }
@@ -236,7 +237,7 @@ export default {
                 <div class="row mt-4">
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label>Kelas</label>
+                      <label>{{ $t('practicum.class.text') }}</label>
                       <input
                         v-model="class_course_data.class_name"
                         type="text"
@@ -249,7 +250,7 @@ export default {
 
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label>Mata Kuliah</label>
+                      <label>{{ $t('practicum.course.text') }}</label>
                       <input
                         v-model="class_course_data.course_name"
                         type="text"
@@ -262,7 +263,7 @@ export default {
 
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label>Kode Dosen</label>
+                      <label>{{ $t('practicum.staff-code.text') }}</label>
                       <input
                         v-model="class_course_data.staff_code"
                         type="text"
@@ -275,7 +276,7 @@ export default {
 
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label>Tahun / Semester</label>
+                      <label>{{ $t('practicum.year-semester.text') }}</label>
                       <input
                         v-model="class_course_data.academic_year"
                         type="text"
@@ -333,7 +334,7 @@ export default {
                         size="sm" 
                         style="min-width: 125px;"
                       >
-                        Hadir
+                        {{ $t('student.presence-list.table.present.text') }}
                       </b-button>
                       <b-button
                         v-if="!data.item.presence"
@@ -342,7 +343,7 @@ export default {
                         size="sm" 
                         style="min-width: 125px;"
                       >
-                        Tidak Hadir
+                        {{ $t('student.presence-list.table.not-present.text') }}
                       </b-button>
                     </template>
                   </b-table>

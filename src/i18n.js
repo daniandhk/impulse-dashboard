@@ -18,7 +18,7 @@ function loadLocaleMessages () {
 }
 
 export default new VueI18n({
-  locale: store.getters.getAppLanguage || 'en',
-  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'en',
+  locale: store.getters.getAppLanguage || 'id',
+  fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || 'id',
   messages: loadLocaleMessages()
 })

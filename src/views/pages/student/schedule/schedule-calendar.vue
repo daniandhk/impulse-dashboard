@@ -5,39 +5,38 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import bootstrapPlugin from "@fullcalendar/bootstrap";
 import listPlugin from "@fullcalendar/list";
-import idLocale from "@fullcalendar/core/locales/id";
-
+import allLocales from '@fullcalendar/core/locales-all';
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
-
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
-
 import moment from 'moment';
+import i18n from '@/i18n';
 
 /**
  * Calendar component
  */
 export default {
   page: {
-    title: "Kalender",
+    title: i18n.t('student.schedule.calendar.text'),
   },
   components: { FullCalendar, Layout, PageHeader, },
   data() {
     return {
-      title: "Kalender",
+      title: i18n.t('student.schedule.calendar.text'),
       items: [
         {
-          text: "Praktikan",
+          text: i18n.t('student.text'),
           href: "/"
         },
         {
-          text: "Jadwal",
+          text: i18n.t('student.schedule.text'),
           active: true,
         }
       ],
       user: store.getters.getLoggedUser,
+      current_language: store.getters.getAppLanguage,
       //list schedule
       isFetchingData: false,
       dataSchedules: [],
@@ -110,7 +109,8 @@ export default {
         selectable: true,
         selectMirror: true,
         dayMaxEvents: true,
-        locale: idLocale,
+        locales: allLocales,
+        locale: 'id',
         dayHeaderFormat: { weekday: 'long' },
       },
       currentEvents: [],
@@ -197,7 +197,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -212,6 +212,7 @@ export default {
       await this.getSchedules();
       //await sleep(1000);
       this.calendarOptions.events = this.datas;
+      this.calendarOptions.locale = String(this.current_language);
       this.isFetchingData = false;
     },
 
@@ -234,7 +235,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -310,7 +311,7 @@ export default {
 
     detailModal(){
       this.$router.push({
-          name: 'praktikan-schedule-detail', 
+          name: 'student-schedule-detail', 
           params: { id: this.schedule_data.id }
       });
     },
@@ -337,7 +338,7 @@ export default {
                   Swal.fire({
                       icon: 'error',
                       title: 'Oops...',
-                      text: 'Terjadi kesalahan!',
+                      text: i18n.t('component.swal.error.text'),
                       footer: error.response.data.message
                   })
                 }
@@ -386,7 +387,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).locale(String(this.current_language)).format('LL');
       }
       else{
         return "-";
@@ -395,7 +396,7 @@ export default {
 
     timeFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LT');
+        return moment(date).locale(String(this.current_language)).format('LT');
       }
       else{
         return "-";
@@ -459,7 +460,7 @@ function sleep(ms) {
     <b-modal
       v-model="eventModal"
       size="lg"
-      title="Detail Jadwal"
+      :title="$t('student.schedule.popup-schedule')"
       hide-footer 
       title-class="font-18"
     >
@@ -470,7 +471,7 @@ function sleep(ms) {
         <div class="row">
           <div class="col-sm-9">
             <div class="form-group">
-              <label>Kelas</label>
+              <label>{{ $t('practicum.class.text') }}</label>
               <input
                 v-model="class_course_data.class.name"
                 type="text"
@@ -481,7 +482,7 @@ function sleep(ms) {
           </div>
           <div class="col-sm-3">
             <div class="form-group">
-              <label>Tahun / Semester</label>
+              <label>{{ $t('practicum.year-semester.text') }}</label>
               <input
                 v-model="class_course_data.academic_year.name"
                 type="text"
@@ -494,7 +495,7 @@ function sleep(ms) {
         <div class="row">
           <div class="col-sm-9">
             <div class="form-group">
-              <label>Mata Kuliah</label>
+              <label>{{ $t('practicum.course.text') }}</label>
               <input
                 v-model="class_course_data.course.name"
                 type="text"
@@ -505,7 +506,7 @@ function sleep(ms) {
           </div>
           <div class="col-sm-3">
             <div class="form-group">
-              <label>Modul</label>
+              <label>{{ $t('practicum.module.text') }}</label>
               <input
                 v-model="schedule_data.module.index"
                 type="text"
@@ -517,7 +518,7 @@ function sleep(ms) {
         </div>
         <div>
           <div class="form-group">
-            <label>Tanggal</label>
+            <label>{{ $t('practicum.date.text') }}</label>
             <input
               v-model="schedule_data.date"
               type="text"
@@ -529,7 +530,7 @@ function sleep(ms) {
         <div class="row">
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Jam Mulai</label>
+              <label>{{ $t('practicum.time-start.text') }}</label>
               <input
                 v-model="schedule_data.start"
                 type="text"
@@ -540,7 +541,7 @@ function sleep(ms) {
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Jam Terakhir</label>
+              <label>{{ $t('practicum.time-end.text') }}</label>
               <input
                 v-model="schedule_data.end"
                 type="text"
@@ -556,7 +557,7 @@ function sleep(ms) {
               class="row"
               style="margin:0!important;"
             >
-              <label class="mr-4">Ruangan</label>
+              <label class="mr-4">{{ $t('practicum.room.text') }}</label>
               <a
                 v-if="!isRuanganShowed"
                 href="javascript:void(0)"
@@ -580,7 +581,7 @@ function sleep(ms) {
         </div>
         <div v-if="isRuanganShowed">
           <div class="form-group">
-            <label>Deskripsi Ruangan</label>
+            <label>{{ $t('practicum.room.desc.text') }}</label>
             <textarea
               v-model="schedule_data.room.desc"
               rows="2"
@@ -592,7 +593,7 @@ function sleep(ms) {
         </div>
         <div v-if="isRuanganShowed">
           <div class="form-group">
-            <label>MS Teams Link</label>
+            <label>{{ $t('practicum.room.msteams-link.text') }}</label>
             <input
               v-model="schedule_data.room.msteam_link"
               type="text"
@@ -603,7 +604,7 @@ function sleep(ms) {
         </div>
         <div v-if="isRuanganShowed">
           <div class="form-group">
-            <label>MS Teams Code</label>
+            <label>{{ $t('practicum.room.msteams-code.text') }}</label>
             <input
               v-model="schedule_data.room.msteam_code"
               type="text"
@@ -619,14 +620,14 @@ function sleep(ms) {
             :disabled="isNow == false"
             @click="detailModal"
           >
-            Mulai Praktikum
+            {{ $t('student.schedule.practicum.button.start-practicum') }}
           </button>
           <button
             type="button"
             class="btn btn-light waves-effect"
             @click="closeModal"
           >
-            Batalkan
+            {{ $t('component.button.cancel') }}
           </button>
         </div>
       </div>

@@ -1,7 +1,6 @@
 <script>
 import * as api from '@/api';
 import Swal from "sweetalert2";
-
 import { notificationMethods } from "@/state/helpers";
 import Multiselect from "vue-multiselect";
 import moment from 'moment';

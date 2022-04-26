@@ -9,8 +9,8 @@ import StaffDashboard from "./dashboard-staff";
 import AslabDashboard from "./dashboard-aslab";
 import StudentDashboard from "./dashboard-student";
 import AsprakDashboard from "./dashboard-asprak";
-
 import store from '@/store';
+import i18n from '@/i18n';
 
 export default {
   page: {
@@ -96,15 +96,15 @@ export default {
     setRole(role){
       switch(role) {
         case "staff":
-          return "Staff"
+          return i18n.t('staff.text')
         case "aslab":
-          return "Asisten Lab"
+          return i18n.t('aslab.text')
         case "asprak":
-          return "Asisten Praktikum"
+          return i18n.t('asprak.text')
         case "student":
-          return "Praktikan"
+          return i18n.t('student.text')
         case "laboran":
-          return "Laboran"
+          return i18n.t('laboran.text')
         default:
           return role
       }

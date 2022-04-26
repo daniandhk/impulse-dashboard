@@ -8,7 +8,7 @@ import i18n from '@/i18n'
 
 export default {
   page: {
-    title: i18n.t('praktikan.ticketing.remotepc.text'),
+    title: i18n.t('student.ticketing.remotepc.text'),
   },
   components: {
     Layout,
@@ -18,13 +18,13 @@ export default {
   },
   data() {
     return {
-      title: i18n.t('praktikan.ticketing.remotepc.text'),
+      title: i18n.t('student.ticketing.remotepc.text'),
       items: [
         {
-          text: i18n.t('praktikan.text')
+          text: i18n.t('student.text')
         },
         {
-          text: i18n.t('praktikan.ticketing.remotepc.text'),
+          text: i18n.t('student.ticketing.remotepc.text'),
           active: true
         }
       ],
@@ -71,7 +71,7 @@ export default {
               </b-tab>
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">{{ $t('praktikan.ticketing.remotepc.title-list.text') }}</a>
+                  <a class="font-weight-bold active">{{ $t('student.ticketing.remotepc.title-list.text') }}</a>
                 </template>
                 <ListRemotepc
                   ref="ListRemotepc"

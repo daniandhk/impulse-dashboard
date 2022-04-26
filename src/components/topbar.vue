@@ -25,8 +25,8 @@ export default {
       user: store.getters.getLoggedUser,
 
       interval: null,
-      time: moment().locale('id').format('HH:mm:ss'),
-      date: moment().locale('id').format('dddd, LL'),
+      time: moment().locale(String(this.current_language)).format('HH:mm:ss'),
+      date: moment().locale(String(this.current_language)).format('dddd, LL'),
       time_end: "",
       is_late: false,
       
@@ -56,9 +56,8 @@ export default {
   created() {
     // update the time every second
     this.interval = setInterval(() => {
-      console.log(store.getters.getAppLanguage)
       // Concise way to format time according to system locale.
-      this.time = moment().locale('id').format('HH:mm:ss')
+      this.time = moment().locale(String(this.current_language)).format('HH:mm:ss')
       if(this.timeEnd){
         this.setTimeEnd()
       }
@@ -106,20 +105,21 @@ export default {
     setRole(role){
       switch(role) {
         case "staff":
-          return "Staff"
+          return i18n.t('staff.text')
         case "aslab":
-          return this.isSmallScreen ? "Aslab" : "Asisten Lab"
+          return this.isSmallScreen ? "Aslab" : i18n.t('aslab.text')
         case "asprak":
-          return this.isSmallScreen ? "Asprak" : "Asisten Praktikum"
+          return this.isSmallScreen ? "Asprak" : i18n.t('asprak.text')
         case "student":
-          return "Praktikan"
+          return i18n.t('student.text')
         case "laboran":
-          return "Laboran"
+          return i18n.t('laboran.text')
         default:
           return role
       }
     },
     changeRole(role){
+      this.setLanguage('id');
       if(role != this.getRole){
         store.commit('ROLE_USER', role)
 
@@ -135,8 +135,8 @@ export default {
     },
 
     setTimeEnd(){
-      let now = moment().locale('id')
-      let date_now = moment().locale('id').format('MM/DD/YYYY')
+      let now = moment().locale(String(this.current_language))
+      let date_now = moment().locale(String(this.current_language)).format('MM/DD/YYYY')
       let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
 
       let range = moment().range(now, schedule_time_end)
@@ -144,7 +144,7 @@ export default {
       let sec = range.diff('seconds')
 
       if(sec > 0){
-        this.time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+        this.time_end = moment.utc(time_diff).locale(String(this.current_language)).format('HH:mm:ss');
         this.is_late = false;
       }
       else if(sec == 0){
@@ -154,7 +154,7 @@ export default {
       else{
         range = moment().range(schedule_time_end, now)
         time_diff = range.diff()
-        this.time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+        this.time_end = moment.utc(time_diff).locale(String(this.current_language)).format('HH:mm:ss');
         this.is_late = true;
       }
     },
@@ -258,17 +258,18 @@ export default {
             {{ time }}
           </div>
           <div v-if="timeEnd && !isDone && !is_late">
-            Sisa waktu: {{ time_end }}
+            {{ $t('navbar.dropdown.test.time-remaining') + time_end }}
           </div>
           <div
             v-if="timeEnd && !isDone && is_late"
             style="color:red;"
           >
-            Terlambat: {{ time_end }}
+            {{ $t('navbar.dropdown.test.time-late') + time_end }}
           </div>
         </div>
         <b-tooltip
           v-if="timeEnd"
+          :key="current_language"
           target="div-time"
           variant="dark"
         >
@@ -276,6 +277,7 @@ export default {
         </b-tooltip>
         <b-tooltip
           v-if="!timeEnd"
+          :key="current_language"
           target="div-time"
           variant="dark"
         >
@@ -306,10 +308,11 @@ export default {
             class="dropdown-item d-block"
             href="/settings/change-password"
           >
-            <i class="ri-settings-2-line align-middle mr-2" />Ubah Password
+            <i class="ri-settings-2-line align-middle mr-2" />{{ $t('navbar.dropdown.change-password.text') }}
           </a>
           <div class="dropdown-divider" />
           <b-dropdown-group
+            v-if="getRole == 'student'"
             id="dropdown-group-1"
             :header="$t('navbar.dropdown.language.text')"
           >

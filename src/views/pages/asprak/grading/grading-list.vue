@@ -2,11 +2,9 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import Multiselect from "vue-multiselect";
-
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import moment from 'moment';
-
 import { notificationMethods } from "@/state/helpers";
 
 /**

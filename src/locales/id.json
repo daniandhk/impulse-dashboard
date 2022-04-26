@@ -6,6 +6,13 @@
         },
         "language": {
           "text": "Bahasa"
+        },
+        "change-password": {
+          "text": "Ubah Password"
+        },
+        "test": {
+          "time-remaining": "Sisa waktu: ",
+          "time-late": "Terlambat: "
         }
       }
     },
@@ -16,10 +23,173 @@
       "button": {
         "submit": "Submit",
         "cancel": "Batalkan"
+      },
+      "swal": {
+        "error": {
+          "text": "Terjadi kesalahan!",
+          "invalid-id": "ID tidak valid!"
+        },
+        "redirect-schedule": "Anda dialihkan ke Menu Jadwal"
       }
     },
-    "praktikan": {
+    "practicum": {
+      "module": {
+        "text": "Modul"
+      },
+      "calendar-name": {
+        "text": "Nama Kalender"
+      },
+      "list-course": {
+        "text": "List Mata Kuliah"
+      },
+      "class-course": {
+        "text": "Kelas Mata Kuliah"
+      },
+      "class": {
+        "text": "Kelas"
+      },
+      "course": {
+        "text": "Mata Kuliah"
+      },
+      "staff-code": {
+        "text": "Kode Dosen"
+      },
+      "year-semester": {
+        "text": "Tahun / Semester"
+      },
+      "date": {
+        "text": "Tanggal"
+      },
+      "time-start": {
+        "text": "Jam Mulai"
+      },
+      "time-end": {
+        "text": "Jam Berakhir"
+      },
+      "room": {
+        "text": "Ruangan",
+        "desc": {
+          "text": "Deskripsi Ruangan"
+        },
+        "msteams-link": {
+          "text": "Tautan MS Teams"
+        },
+        "msteams-code": {
+          "text": "Kode MS Teams"
+        }
+      },
+      "start": {
+        "text": "Mulai"
+      },
+      "end": {
+        "text": "Berakhir"
+      },
+      "auth": {
+        "text": "Auth"
+      },
+      "information": {
+        "text": "Infomasi"
+      }
+    },
+    "student": {
       "text": "Praktikan",
+      "schedule": {
+        "text": "Jadwal",
+        "popup-schedule": "Detail Jadwal",
+        "popup-room": "Detail Ruangan",
+        "calendar": {
+          "text": "Kalender"
+        },
+        "practicum": {
+          "text": "Praktikum",
+          "test": {
+            "text": "Tes",
+            "placeholder-answer": "Masukkan jawaban disini",
+            "placeholder-upload": "Masukkan URL (GDrive, GForms, atau lainnya)",
+            "submit": {
+              "confirm-text": "Ya, lanjut submit!",
+              "confirm-upload": "Ya, akhiri tes sekarang!",
+              "check-text": "Jawaban yang kosong akan tetap disimpan!",
+              "check-upload": "Pastikan jawaban diunggah ke URL yang telah disediakan!",
+              "confirm-swal": "Yakin akan menyelesaikan test ini?",
+              "success": "Berhasil submit!",
+              "success-desc": "Anda telah menyelesaikan test ini!",
+              "uploaded": "Berhasil diunduh!",
+              "uploaded-desc": "File telah terunduh."
+            },
+            "question": "Soal",
+            "answer": "Jawaban",
+            "url-upload": "URL Upload Jawaban Jurnal",
+            "file-journal": "File Jurnal",
+            "warning": {
+              "submit": "Harap submit jawaban sebelum waktu berakhir.",
+              "upload": "Harap konfirmasi upload jawaban sebelum waktu berakhir.",
+              "swal-desc": "Waktu pengerjaan tersisa ",
+              "swal-minute": " menit lagi!"
+            }
+          },
+          "pretest": {
+            "text": "Tes Awal",
+            "desc": "Merupakan tahapan pertama dalam praktikum."
+          },
+          "journal": {
+            "text": "Jurnal",
+            "desc": "Merupakan tahapan utama dalam praktikum."
+          },
+          "posttest": {
+            "text": "Tes Akhir",
+            "desc": "Merupakan tahapan terakhir dalam praktikum."
+          },
+          "button": {
+            "start-practicum": "Mulai Praktikum",
+            "start-pretest": "Mulai Tes Awal",
+            "start-journal": "Mulai Jurnal",
+            "start-posttest": "Mulai Tes Akhir",
+            "view-answer": "Lihat Jawaban",
+            "submit-answer": "Submit Jawaban",
+            "submitted-answer": "Jawaban tes sudah tersimpan!",
+            "upload-answer": "Konfirmasi Upload Jawaban",
+            "uploaded-answer": "Upload jawaban sudah terkonfirmasi!"
+          },
+          "error": {
+            "auth-invalid": "Auth salah, harap coba kembali!",
+            "auth-empty": "Auth harus diisi!",
+            "pretest-notstarted": "Tes Awal belum dimulai!",
+            "journal-notstarted": "Jurnal belum dimulai!",
+            "posttest-notstarted": "Tes Akhir belum dimulai!",
+            "test-notstarted": "Tes belum dimulai!"
+          }
+        }
+      },
+      "presence-list": {
+        "text": "Nilai / Presensi",
+        "table": {
+          "module": {
+            "text": "Modul"
+          },
+          "pretest-grade": {
+            "text": "Nilai Tes Awal"
+          },
+          "journal-grade": {
+            "text": "Nilai Jurnal"
+          },
+          "posttest-grade": {
+            "text": "Nilai Tes Akhir"
+          },
+          "total-grade": {
+            "text": "Nilai Total"
+          },
+          "presence": {
+            "text": "Kehadiran"
+          },
+          "present": {
+            "text": "Hadir"
+          },
+          "not-present": {
+            "text": "Tidak Hadir"
+          }
+        }
+      },
       "ticketing": {
         "text": "Ticketing",
         "remotepc": {
@@ -63,6 +233,18 @@
           }
         }
       }
+    },
+    "aslab": {
+      "text": "Asisten Lab"
+    },
+    "asprak": {
+      "text": "Asisten Praktikum"
+    },
+    "laboran": {
+      "text": "Laboran"
+    },
+    "staff": {
+      "text": "Staff"
     },
     "menuitems": {
       "menu": {
@@ -119,7 +301,7 @@
           "grading": "Penilaian"
         }
       },
-      "praktikan": {
+      "student": {
         "text": "Praktikan",
         "list": {
           "jadwal": "Jadwal",
@@ -128,10 +310,7 @@
           "matakuliah":"List Mata Kuliah",
           "praktikum":"Praktikum",
           "pengaturan":"Pengaturan",
-          "presensi":"Nilai / Presensi",
-          "jurnal":"1. Jurnal",
-          "tes_awal":"2. Tes Awal",
-          "tes_akhir":"3. Tes Akhir"
+          "presensi":"Nilai / Presensi"
         }
       }
     }

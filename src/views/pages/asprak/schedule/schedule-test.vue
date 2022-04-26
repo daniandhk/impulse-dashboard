@@ -1306,7 +1306,7 @@ export default {
                           style="font-size: 14px; margin: 0 !important;"
                         >
                           - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
-                          - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
+                          - Form <b>URL Upload Jawaban</b> digunakan untuk student mengunggah jawaban tes Jurnal,<br>
                           - <b>File Soal Jurnal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
                           - Batas ukuran <b>File Soal Jurnal</b> adalah <b>2 MB</b>,<br>
                           - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>

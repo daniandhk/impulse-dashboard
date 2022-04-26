@@ -3,13 +3,11 @@ import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import Multiselect from "vue-multiselect";
 import DatePicker from "vue2-datepicker";
-
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
-
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 
