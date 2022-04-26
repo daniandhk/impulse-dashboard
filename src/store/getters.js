@@ -18,8 +18,17 @@ const getRoleUser = (state) => {
 	return role
 }
 
+const getAppLanguage = (state) => {
+    let appLanguage = state.appLanguage
+    if(appLanguage) {
+        appLanguage = JSON.parse(appLanguage)
+    }
+	return appLanguage
+}
+
 export default {
     getDisplayLoader,
     getLoggedUser,
-    getRoleUser
+    getRoleUser,
+    getAppLanguage
 }

@@ -4,13 +4,11 @@ import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import Multiselect from "vue-multiselect";
 import vue2Dropzone from "vue2-dropzone";
-
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import moment from 'moment';
 import Vue from 'vue';
 import store from '@/store';
-
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 
@@ -172,7 +170,6 @@ export default {
             }
           });
           this.on('error', function(file, response){
-            // console.log(response)
             Swal.fire({
                 icon: 'error',
                 title: 'Gagal mengunggah file!',
@@ -678,7 +675,6 @@ export default {
                 }
             })
             .catch(error => {
-                // console.log(error)
                 if(error.response.status == 401){
                   this.$router.replace({
                       name: 'login', params: { tokenExpired: true }
@@ -1693,7 +1689,7 @@ export default {
                                 style="font-size: 14px; margin: 0 !important;"
                               >
                                 - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
-                                - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
+                                - Form <b>URL Upload Jawaban</b> digunakan untuk student mengunggah jawaban tes Jurnal,<br>
                                 - <b>File Soal Jurnal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
                                 - Batas ukuran <b>File Soal Jurnal</b> adalah <b>2 MB</b>,<br>
                                 - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>

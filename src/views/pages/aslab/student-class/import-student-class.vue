@@ -16,7 +16,7 @@ export default {
       //dropzone
       seen: false,
       dropzoneOptions: {
-        url: process.env.VUE_APP_BACKEND_URL + "/laboran/asprak/import",
+        url: process.env.VUE_APP_BACKEND_URL + "/laboran/student/import",
         thumbnailWidth: 150,
         maxFilesize: 5,
         
@@ -88,26 +88,29 @@ export default {
             class="card-title-desc"
             style="font-size: 14px; margin: 0 !important;"
           >
-            - Pastikan NIM yang digunakan tersedia di <a href="/laboran/student"><b>Data Mahasiswa</b></a>,<br>
-            - Pastikan kode mata kuliah yang digunakan tersedia di <a href="/laboran/class-course"><b>Kelas Mata Kuliah</b></a>,<br>
+            - Pastikan kode dosen yang digunakan tersedia di 
+            <a
+              v-b-tooltip.hover
+              title="Hubungi Laboran"
+              href="javascript:void(0);"
+            ><b>Data Staff</b></a>,<br>
             - Pastikan file bertipe <b>.CSV</b> atau <b>.XSLX</b>,<br>
             - Pastikan hanya ada <b>satu sheet</b>,<br>
             - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br>
           </p>
           <img
-            class="mt-2 mb-2"
-            src="@/assets/images/asprak-excel-example.png"
-            style="box-sizing: border-box;  width: 25%; margin: auto;"
+            src="@/assets/images/student-excel-example.png"
+            style="box-sizing: border-box; width: 100%;"
           >
-          <div class="mb-4 mt-4">
+          <div class="mb-4 mt-2">
             <p
               class="card-title-desc"
               style="font-size: 14px; margin: 0 !important;"
             >
               Contoh file Excel: <a
-                href="/files/asprakdummy.xlsx"
+                href="/files/studentdummy.xlsx"
                 download
-              >asprakdummy.xlsx</a><br>
+              >studentdummy.xlsx</a><br>
             </p>
           </div>
           <!-- file upload -->

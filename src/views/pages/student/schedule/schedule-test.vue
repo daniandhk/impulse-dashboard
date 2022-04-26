@@ -5,14 +5,13 @@ import * as api from '@/api';
 import Swal from "sweetalert2";
 import { notificationMethods } from "@/state/helpers";
 import store from '@/store';
+import i18n from '@/i18n';
 import Moment from 'moment';
 import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
-
 import Quill from 'quill';
 import ImageResize from "../../../modules/image-resize.min";
 import { ImageDrop } from 'quill-image-drop-module';
-
 Quill.register('modules/imageResize', ImageResize);
 Quill.register('modules/imageDrop', ImageDrop);
 // import theme style
@@ -21,7 +20,7 @@ import 'quill/dist/quill.snow.css';
 
 export default {
     page: {
-        title: "Tes",
+        title: i18n.t('student.schedule.practicum.test.text'),
         meta: [{ name: "description" }],
     },
     components: {
@@ -30,27 +29,28 @@ export default {
     },
     data() {
         return {
-            title: "Tes",
+            title: i18n.t('student.schedule.practicum.test.text'),
             items: [
                 {
-                    text: "Praktikan",
+                    text: i18n.t('student.text'),
                     href: "/"
                 },
                 {
-                    text: "Jadwal",
-                    href: "/praktikan/schedule/calendar"
+                    text: i18n.t('student.schedule.text'),
+                    href: "/student/schedule/calendar"
                 },
                 {
-                    text: "Praktikum",
-                    href: "/praktikan/schedule/calendar"
+                    text: i18n.t('student.schedule.practicum.text'),
+                    href: "/student/schedule/calendar"
                 },
                 {
-                    text: "Tes",
+                    text: i18n.t('student.schedule.practicum.test.text'),
                     active: true,
                 }
             ],
 
             user_id:"",
+            current_language: store.getters.getAppLanguage,
 
             test_data: {
                 test: {
@@ -81,7 +81,7 @@ export default {
             isFileAnswersAvailable: false,
 
             editorJawaban: {
-                placeholder: "Masukkan jawaban disini",
+                placeholder: i18n.t('student.schedule.practicum.test.placeholder-answer'),
                 modules: {
                     imageDrop: true,
                     imageResize: {
@@ -177,20 +177,20 @@ export default {
 
         setType(){
             if(this.$route.params.type == 'pretest'){
-                this.title = "Tes Awal";
-                this.items[3].text = "Tes Awal";
+                this.title = i18n.t('student.schedule.practicum.pretest.text');
+                this.items[3].text = i18n.t('student.schedule.practicum.pretest.text');
             }
             else if(this.$route.params.type == 'journal'){
-                this.title = "Jurnal";
-                this.items[3].text = "Jurnal";
+                this.title = i18n.t('student.schedule.practicum.journal.text');
+                this.items[3].text = i18n.t('student.schedule.practicum.journal.text');
             }
             else if(this.$route.params.type == 'posttest'){
-                this.title = "Tes Akhir";
-                this.items[3].text = "Tes Akhir";
+                this.title = i18n.t('student.schedule.practicum.posttest.text');
+                this.items[3].text = i18n.t('student.schedule.practicum.posttest.text');
             }
             else{
-                this.title = "Tes";
-                this.items[3].text = "Tes";
+                this.title = i18n.t('student.schedule.practicum.test.text');
+                this.items[3].text = i18n.t('student.schedule.practicum.test.text');
             }
         },
 
@@ -203,10 +203,10 @@ export default {
             //         icon: 'error',
             //         title: 'Oops...',
             //         text: 'You need input Auth first!',
-            //         footer: 'Anda dialihkan ke menu Jadwal',
+            //         footer: i18n.t('component.swal.redirect-schedule'),
             //     })
             //     this.$router.replace({
-            //         name: 'praktikan-schedule-detail', 
+            //         name: 'student-schedule-detail', 
             //         params: { id: this.schedule_test_data.schedule.id }
             //     });
             // }
@@ -218,11 +218,11 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Tes saat ini belum dimulai!',
-                    footer: 'Anda dialihkan ke menu Jadwal',
+                    text: i18n.t('student.schedule.practicum.error.test-notstarted'),
+                    footer: i18n.t('component.swal.redirect-schedule'),
                 })
                 this.$router.replace({
-                    name: 'praktikan-schedule-detail', 
+                    name: 'student-schedule-detail', 
                     params: { id: this.schedule_test_data.schedule.id }
                 });
             }
@@ -292,7 +292,7 @@ export default {
                       Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Terjadi kesalahan!',
+                          text: i18n.t('component.swal.error.text'),
                           footer: error.response.data.message
                       })
                     }
@@ -307,7 +307,7 @@ export default {
                     this.isIdValid(response.data.data);
                     if(response.data.data){
                         this.schedule_test_data = response.data.data;
-                        this.items[2].href = "/praktikan/schedule/detail/" + this.schedule_test_data.schedule.id;
+                        this.items[2].href = "/student/schedule/detail/" + this.schedule_test_data.schedule.id;
                     }
                 })
                 .catch(error => {
@@ -320,7 +320,7 @@ export default {
                       Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Terjadi kesalahan!',
+                          text: i18n.t('component.swal.error.text'),
                           footer: error.response.data.message
                       })
                     }
@@ -363,7 +363,7 @@ export default {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Terjadi kesalahan!',
+                                text: i18n.t('component.swal.error.text'),
                                 footer: error.response.data.message
                             })
                         }
@@ -399,7 +399,7 @@ export default {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Terjadi kesalahan!',
+                                text: i18n.t('component.swal.error.text'),
                                 footer: error.response.data.message
                             })
                         }
@@ -416,8 +416,8 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'ID tidak valid!',
-                    footer: 'Anda dialihkan ke menu Jadwal',
+                    text: i18n.t('component.swal.error.invalid-id'),
+                    footer: i18n.t('component.swal.redirect-schedule'),
                     timer: 4000
                 })
                 this.$router.back();
@@ -425,14 +425,14 @@ export default {
         },
 
         onClickSubmit(){
-            let text = "Jawaban yang kosong akan tetap disimpan!";
-            let confirm = "Ya, lanjut submit!";
+            let text = i18n.t('student.schedule.practicum.test.submit.check-text');
+            let confirm = i18n.t('student.schedule.practicum.test.submit.confirm-text');
             if(this.isFile){
-                text = "Pastikan jawaban diunggah ke URL yang telah disediakan!"
-                confirm = "Ya, akhiri tes sekarang!"
+                text = i18n.t('student.schedule.practicum.test.submit.check-upload');
+                confirm = i18n.t('student.schedule.practicum.test.submit.confirm-upload');
             }
             Swal.fire({
-                title: "Yakin akan menyelesaikan test ini?",
+                title: i18n.t('student.schedule.practicum.test.submit.confirm-swal'),
                 text: text,
                 icon: "warning",
                 showCancelButton: true,
@@ -458,9 +458,9 @@ export default {
                     // return (
                     //     api.updateEssay(this.dataInput)
                     //     .then(response => {
-                    //         Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
+                    //         Swal.fire(i18n.t('student.schedule.practicum.test.submit.success'), i18n.t('student.schedule.practicum.test.submit.success-desc'), "success");
                     //         this.$router.push({
-                    //             name: 'praktikan-schedule-detail', 
+                    //             name: 'student-schedule-detail', 
                     //             params: { id: this.schedule_test_data.schedule.id }
                     //         });
                     //     })
@@ -468,7 +468,7 @@ export default {
                     //         Swal.fire({
                     //             icon: 'error',
                     //             title: 'Oops...',
-                    //             text: 'Terjadi kesalahan!',
+                    //             text: i18n.t('component.swal.error.text'),
                     //             footer: error
                     //         })
                     //     })
@@ -478,9 +478,9 @@ export default {
                     return (
                         api.storeEssay(this.dataInput)
                         .then(response => {
-                            Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
+                            Swal.fire(i18n.t('student.schedule.practicum.test.submit.success'), i18n.t('student.schedule.practicum.test.submit.success-desc'), "success");
                             this.$router.push({
-                                name: 'praktikan-schedule-detail', 
+                                name: 'student-schedule-detail', 
                                 params: { id: this.schedule_test_data.schedule.id }
                             });
                         })
@@ -494,7 +494,7 @@ export default {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Terjadi kesalahan!',
+                                    text: i18n.t('component.swal.error.text'),
                                     footer: error.response.data.message
                                 })
                             }
@@ -507,9 +507,9 @@ export default {
                     // return (
                     //     api.updateMultipleChoice(this.dataInput)
                     //     .then(response => {
-                    //         Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
+                    //         Swal.fire(i18n.t('student.schedule.practicum.test.submit.success'), i18n.t('student.schedule.practicum.test.submit.success-desc'), "success");
                     //         this.$router.push({
-                    //             name: 'praktikan-schedule-detail', 
+                    //             name: 'student-schedule-detail', 
                     //             params: { id: this.schedule_test_data.schedule.id }
                     //         });
                     //     })
@@ -517,7 +517,7 @@ export default {
                     //         Swal.fire({
                     //             icon: 'error',
                     //             title: 'Oops...',
-                    //             text: 'Terjadi kesalahan!',
+                    //             text: i18n.t('component.swal.error.text'),
                     //             footer: error
                     //         })
                     //     })
@@ -527,9 +527,9 @@ export default {
                     return (
                         api.storeMultipleChoice(this.dataInput)
                         .then(response => {
-                            Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
+                            Swal.fire(i18n.t('student.schedule.practicum.test.submit.success'), i18n.t('student.schedule.practicum.test.submit.success-desc'), "success");
                             this.$router.push({
-                                name: 'praktikan-schedule-detail', 
+                                name: 'student-schedule-detail', 
                                 params: { id: this.schedule_test_data.schedule.id }
                             });
                         })
@@ -543,7 +543,7 @@ export default {
                                 Swal.fire({
                                     icon: 'error',
                                     title: 'Oops...',
-                                    text: 'Terjadi kesalahan!',
+                                    text: i18n.t('component.swal.error.text'),
                                     footer: error.response.data.message
                                 })
                             }
@@ -558,9 +558,9 @@ export default {
                 return (
                     api.storeEssay(this.dataInput)
                     .then(response => {
-                        Swal.fire("Berhasil submit!", "Anda telah menyelesaikan test ini!", "success");
+                        Swal.fire(i18n.t('student.schedule.practicum.test.submit.success'), i18n.t('student.schedule.practicum.test.submit.success-desc'), "success");
                         this.$router.push({
-                            name: 'praktikan-schedule-detail', 
+                            name: 'student-schedule-detail', 
                             params: { id: this.schedule_test_data.schedule.id }
                         });
                     })
@@ -574,7 +574,7 @@ export default {
                             Swal.fire({
                                 icon: 'error',
                                 title: 'Oops...',
-                                text: 'Terjadi kesalahan!',
+                                text: i18n.t('component.swal.error.text'),
                                 footer: error.response.data.message
                             })
                         }
@@ -595,7 +595,7 @@ export default {
                     link.click()
                     
                     this.loading(false);
-                    Swal.fire("Berhasil diunduh!", "File telah terunduh.", "success");
+                    Swal.fire(i18n.t('student.schedule.practicum.test.submit.uploaded'), i18n.t('student.schedule.practicum.test.submit.uploaded-desc'), "success");
                 })
                 .catch(error => {
                     this.loading(false);
@@ -608,7 +608,7 @@ export default {
                       Swal.fire({
                           icon: 'error',
                           title: 'Oops...',
-                          text: 'Terjadi kesalahan!',
+                          text: i18n.t('component.swal.error.text'),
                           footer: error.response.data.message
                       })
                     }
@@ -617,15 +617,15 @@ export default {
         },
 
         setTimeEnd(){
-            let now = moment().locale('id')
-            let date_now = moment().locale('id').format('MM/DD/YYYY')
+            let now = moment()
+            let date_now = moment().format('MM/DD/YYYY')
             let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
 
             let range = moment().range(now, schedule_time_end)
             let time_diff = range.diff()
 
             if(time_diff >= 0){
-                let time_end = moment.utc(time_diff).locale('id');
+                let time_end = moment.utc(time_diff);
                 
                 if(time_end.second() == 0 && (time_end.minute() == 5 || time_end.minute() == 2 || time_end.minute() == 1)){
                     this.onTimeWarningPopup(time_end.minute())
@@ -634,21 +634,21 @@ export default {
             // else{
             //     range = moment().range(schedule_time_end, now)
             //     time_diff = range.diff()
-            //     let time_end = moment.utc(time_diff).locale('id').format('HH:mm:ss');
+            //     let time_end = moment.utc(time_diff).format('HH:mm:ss');
             // }
         },
 
         onTimeWarningPopup(minute){
-            let text = "Harap submit jawaban sebelum waktu berakhir."
+            let text = i18n.t('student.schedule.practicum.test.warning.submit')
             if(this.isMultipleChoice || this.isEssay){
-                text = "Harap submit jawaban sebelum waktu berakhir."
+                text = i18n.t('student.schedule.practicum.test.warning.submit')
             }
             if(this.isFile){
-                text = "Harap konfirmasi upload jawaban sebelum waktu berakhir."
+                text = i18n.t('student.schedule.practicum.test.warning.upload')
             }
             Swal.fire({
                 icon: 'info',
-                title: 'Waktu pengerjaan tersisa ' + minute + " menit lagi!",
+                title: i18n.t('student.schedule.practicum.test.warning.swal-desc') + minute + i18n.t('student.schedule.practicum.test.warning.swal-minute'),
                 text: text,
             })
         },
@@ -714,7 +714,7 @@ export default {
             >
               <div class="card-body">
                 <div class="col-12">
-                  <label>Soal</label>
+                  <label>{{ $t('student.schedule.practicum.test.question') }}</label>
                   <quill-editor
                     ref="myQuillEditor"
                     v-model="question.question"
@@ -727,7 +727,7 @@ export default {
             <div class="card col-12">
               <div class="card-body">
                 <div class="col-12">
-                  <label>Jawaban</label>
+                  <label>{{ $t('student.schedule.practicum.test.answer') }}</label>
                   <div v-if="isEssay">
                     <div>
                       <quill-editor
@@ -780,7 +780,7 @@ export default {
             style="min-width: 250px;"
             @click="onClickSubmit"
           >
-            Submit Jawaban
+            {{ $t('student.schedule.practicum.button.submit-answer') }}
           </b-button>
         </div>
       </div>
@@ -791,7 +791,7 @@ export default {
             :disabled="true"
             style="min-width: 250px;"
           >
-            Jawaban tes sudah tersimpan!
+            {{ $t('student.schedule.practicum.button.submitted-answer') }}
           </b-button>
         </div>
       </div>
@@ -800,7 +800,7 @@ export default {
       <div class="card">
         <div class="card-body">
           <div class="text-center">
-            <label>File Jurnal</label>
+            <label>{{ $t('student.schedule.practicum.test.file-journal') }}</label>
           </div>
           <div class="text-center">
             <b-button
@@ -819,7 +819,7 @@ export default {
       <div class="card">
         <div class="card-body">
           <div class="text-center">
-            <label>URL Upload Jawaban Jurnal</label>
+            <label>{{ $t('student.schedule.practicum.test.url-upload') }}</label>
           </div>
           <div class="text-center">
             <div class="form-group">
@@ -828,7 +828,7 @@ export default {
                 :disabled="true"
                 type="text" 
                 class="form-control text-center"
-                placeholder="Masukkan URL (GDrive, GForms, atau lainnya)"
+                :placeholder="$t('student.schedule.practicum.test.placeholder-upload')"
               >
             </div>
           </div>
@@ -839,7 +839,7 @@ export default {
                 style="min-width: 350px;"
                 @click="onClickSubmit"
               >
-                Konfirmasi Upload Jawaban
+                {{ $t('student.schedule.practicum.button.upload-answer') }}
               </b-button>
             </div>
           </div>
@@ -850,7 +850,7 @@ export default {
                 :disabled="true"
                 style="min-width: 350px;"
               >
-                Upload jawaban sudah terkonfirmasi!
+                {{ $t('student.schedule.practicum.button.uploaded-answer') }}
               </b-button>
             </div>
           </div>

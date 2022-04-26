@@ -7,13 +7,14 @@ import Swal from "sweetalert2";
 import moment from 'moment';
 import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
+import i18n from '@/i18n';
 
 /**
  * Advanced-form component
  */
 export default {
   page: {
-    title: "Praktikum",
+    title: i18n.t('student.schedule.practicum.text'),
   },
   components: {
     Layout,
@@ -28,21 +29,23 @@ export default {
   },
   data() {
     return {
-      title: "Praktikum",
+      title: i18n.t('student.schedule.practicum.text'),
       items: [
         {
-          text: "Praktikan",
+          text: i18n.t('student.text'),
           href: "/"
         },
         {
-          text: "Jadwal",
-          href: "/praktikan/schedule/calendar"
+          text: i18n.t('student.schedule.text'),
+          href: "/student/schedule/calendar"
         },
         {
-          text: "Praktikum",
+          text: i18n.t('student.schedule.practicum.text'),
           active: true,
         }
       ],
+      current_language: store.getters.getAppLanguage,
+
       schedule_data: {
         id: "",
         title: "",
@@ -97,20 +100,20 @@ export default {
       inputError: null,
 
       text: {
-        start: "Mulai",
-        end: "Berakhir",
-        auth: "Auth",
-        kelas: "Kelas",
-        matkul: "Mata Kuliah",
-        tahun: "Tahun / Smt",
-        modul: "Modul",
-        nama_ruangan: "Nama",
-        detail_ruangan: "Deskripsi",
-        msteam_link: "MS Teams Link",
-        msteam_code: "MS Teams Code",
-        tanggal: "Tanggal",
-        mulai: "Jam Mulai",
-        terakhir: "Jam Terakhir",
+        start: i18n.t('practicum.start.text'),
+        end: i18n.t('practicum.end.text'),
+        auth: i18n.t('practicum.auth.text'),
+        kelas: i18n.t('practicum.class.text'),
+        matkul: i18n.t('practicum.course.text'),
+        tahun: i18n.t('practicum.year-semester.text'),
+        modul: i18n.t('practicum.module.text'),
+        nama_ruangan: i18n.t('practicum.room.text'),
+        detail_ruangan: i18n.t('practicum.room.desc.text'),
+        msteam_link: i18n.t('practicum.room.msteams-link.text'),
+        msteam_code: i18n.t('practicum.room.msteams-code.text'),
+        tanggal: i18n.t('practicum.date.text'),
+        mulai: i18n.t('practicum.time-start.text'),
+        terakhir: i18n.t('practicum.time-end.text'),
       },
 
       //data module
@@ -244,7 +247,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -270,12 +273,12 @@ export default {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
-            text: 'ID tidak valid!',
-            footer: 'Anda dialihkan ke Menu Jadwal',
+            text: i18n.t('component.swal.error.invalid-id'),
+            footer: i18n.t('component.swal.redirect-schedule'),
             timer: 4000
         })
         this.$router.replace({
-          name: 'praktikan-schedule-calendar'
+          name: 'student-schedule-calendar'
         });
       }
     },
@@ -299,7 +302,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -325,7 +328,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -360,7 +363,7 @@ export default {
             if(response.data.data){
               let schedule_id = response.data.data[0].id;
               this.$router.push({
-                  name: 'praktikan-schedule-detail', 
+                  name: 'student-schedule-detail', 
                   params: { id: schedule_id }
               });
             }
@@ -375,7 +378,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -441,7 +444,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -516,7 +519,7 @@ export default {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
-                    text: 'Terjadi kesalahan!',
+                    text: i18n.t('component.swal.error.text'),
                     footer: error.response.data.message
                 })
               }
@@ -590,7 +593,7 @@ export default {
         if(this.pretest_data.is_active){
           if(this.isPretestSubmitted){
             this.$router.push({
-                name: 'praktikan-schedule-test', 
+                name: 'student-schedule-test', 
                 params: { 
                   id: this.pretest_data.test.id, 
                   schedule_test_id: this.pretest_data.id, 
@@ -609,7 +612,7 @@ export default {
             if(this.dataInput.auth_pretest == this.pretest_data.auth){
               this.isAuthPretestWrong = false;
               this.$router.push({
-                  name: 'praktikan-schedule-test', 
+                  name: 'student-schedule-test', 
                   params: { 
                     id: this.pretest_data.test.id, 
                     schedule_test_id: this.pretest_data.id, 
@@ -630,7 +633,7 @@ export default {
           Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Tes Awal belum dimulai!'
+              text: i18n.t('student.schedule.practicum.error.pretest-notstarted')
           })
         }
       }
@@ -638,7 +641,7 @@ export default {
         if(this.journal_data.is_active){
           if(this.isJournalSubmitted){
             this.$router.push({
-                name: 'praktikan-schedule-test', 
+                name: 'student-schedule-test', 
                 params: { 
                   id: this.journal_data.test.id, 
                   schedule_test_id: this.journal_data.id, 
@@ -657,7 +660,7 @@ export default {
             if(this.dataInput.auth_journal == this.journal_data.auth){
               this.isAuthJournalWrong = false;
               this.$router.push({
-                  name: 'praktikan-schedule-test', 
+                  name: 'student-schedule-test', 
                   params: { 
                     id: this.journal_data.test.id, 
                     schedule_test_id: this.journal_data.id, 
@@ -678,7 +681,7 @@ export default {
           Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Jurnal belum dimulai!'
+              text: i18n.t('student.schedule.practicum.error.journal-notstarted')
           })
         }
       }
@@ -686,7 +689,7 @@ export default {
         if(this.posttest_data.is_active){
           if(this.isPosttestSubmitted){
             this.$router.push({
-                name: 'praktikan-schedule-test', 
+                name: 'student-schedule-test', 
                 params: { 
                   id: this.posttest_data.test.id, 
                   schedule_test_id: this.posttest_data.id, 
@@ -705,7 +708,7 @@ export default {
             if(this.dataInput.auth_posttest == this.posttest_data.auth){
               this.isAuthPosttestWrong = false;
               this.$router.push({
-                  name: 'praktikan-schedule-test', 
+                  name: 'student-schedule-test', 
                   params: { 
                     id: this.posttest_data.test.id, 
                     schedule_test_id: this.posttest_data.id, 
@@ -726,7 +729,7 @@ export default {
           Swal.fire({
               icon: 'error',
               title: 'Oops...',
-              text: 'Tes Akhir belum dimulai!'
+              text: i18n.t('student.schedule.practicum.error.posttest-notstarted')
           })
         }
       }
@@ -738,7 +741,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";
@@ -784,7 +787,7 @@ export default {
         <div class="card-body">
           <div class="text-center">
             <h5 class="text-center font-size-15 text-uppercase">
-              INFORMASI
+              {{ ($t('practicum.information.text')).toUpperCase() }}
             </h5>
             <a
               v-if="!isJadwalShowed"
@@ -810,7 +813,7 @@ export default {
                     <div class="text-center form-group mb-0">
                       <div>
                         <h5 class="text-center font-size-15 text-uppercase">
-                          Kelas Mata Kuliah
+                          {{ $t('practicum.class-course.text') }}
                         </h5>
                         <hr
                           style="margin-left: -20px; 
@@ -915,7 +918,7 @@ export default {
                     <div class="text-center form-group mb-0">
                       <div>
                         <h5 class="text-center font-size-15 text-uppercase">
-                          Ruangan
+                          {{ $t('practicum.room.text') }}
                         </h5>
                         <hr
                           style="margin-left: -20px; 
@@ -1022,7 +1025,7 @@ export default {
                     <div class="text-center form-group mb-0">
                       <div>
                         <h5 class="text-center font-size-15 text-uppercase">
-                          Jadwal
+                          {{ $t('student.schedule.text') }}
                         </h5>
                         <hr
                           style="margin-left: -20px; 
@@ -1110,10 +1113,10 @@ export default {
               <div class="text-center form-group mb-0">
                 <div>
                   <h5 class="text-left font-size-15 text-uppercase">
-                    Tes Awal
+                    {{ $t('student.schedule.practicum.pretest.text') }}
                   </h5>
                   <p class="text-left mb-0">
-                    Merupakan tahapan pertama dalam praktikum.
+                    {{ $t('student.schedule.practicum.pretest.desc') }}
                   </p>
                   <hr
                     style="margin-left: -28px; 
@@ -1187,7 +1190,7 @@ export default {
                         v-if="submitted && !$v.dataInput.auth_pretest.required"
                         class="invalid-feedback"
                       >
-                        Auth harus diisi!
+                        {{ $t('student.schedule.practicum.error.auth-empty') }}
                       </div>
                     </div>
                   </div>
@@ -1203,13 +1206,13 @@ export default {
                     <b-icon
                       icon="play-fill"
                       aria-hidden="true"
-                    /> Mulai Tes Awal
+                    /> {{ $t('student.schedule.practicum.button.start-pretest') }}
                   </button>
                   <div
                     v-if="isAuthPretestWrong"
                     class="invalid-feedback"
                   >
-                    Auth salah, harap coba kembali!
+                    {{ $t('student.schedule.practicum.error.auth-invalid') }}
                   </div>
                   <button 
                     v-if="isPretestSubmitted"
@@ -1218,7 +1221,7 @@ export default {
                     style="min-width: 100%;"
                     @click="checkAuth('pretest')" 
                   >
-                    Lihat Jawaban
+                    {{ $t('student.schedule.practicum.button.view-answer') }}
                   </button>
                 </div>
               </div>
@@ -1233,10 +1236,10 @@ export default {
               <div class="text-center form-group mb-0">
                 <div>
                   <h5 class="text-left font-size-15 text-uppercase">
-                    Jurnal
+                    {{ $t('student.schedule.practicum.journal.text') }}
                   </h5>
                   <p class="text-left mb-0">
-                    Merupakan tahapan utama dalam praktikum.
+                    {{ $t('student.schedule.practicum.journal.desc') }}
                   </p>
                   <hr
                     style="margin-left: -28px; 
@@ -1310,7 +1313,7 @@ export default {
                         v-if="submitted && !$v.dataInput.auth_journal.required"
                         class="invalid-feedback"
                       >
-                        Auth harus diisi!
+                        {{ $t('student.schedule.practicum.error.auth-empty') }}
                       </div>
                     </div>
                   </div>
@@ -1326,13 +1329,13 @@ export default {
                     <b-icon
                       icon="play-fill"
                       aria-hidden="true"
-                    /> Mulai Jurnal
+                    /> {{ $t('student.schedule.practicum.button.start-journal') }}
                   </button>
                   <div
                     v-if="isAuthJournalWrong"
                     class="invalid-feedback"
                   >
-                    Auth salah, harap coba kembali!
+                    {{ $t('student.schedule.practicum.error.auth-invalid') }}
                   </div>
                   <button 
                     v-if="isJournalSubmitted"
@@ -1341,7 +1344,7 @@ export default {
                     style="min-width: 100%;"
                     @click="checkAuth('journal')" 
                   >
-                    Lihat Jawaban
+                    {{ $t('student.schedule.practicum.button.view-answer') }}
                   </button>
                 </div>
               </div>
@@ -1356,10 +1359,10 @@ export default {
               <div class="text-center form-group mb-0">
                 <div>
                   <h5 class="text-left font-size-15 text-uppercase">
-                    Tes Akhir
+                    {{ $t('student.schedule.practicum.posttest.text') }}
                   </h5>
                   <p class="text-left mb-0">
-                    Merupakan tahapan terakhir dalam praktikum.
+                    {{ $t('student.schedule.practicum.posttest.desc') }}
                   </p>
                   <hr
                     style="margin-left: -28px; 
@@ -1433,7 +1436,7 @@ export default {
                         v-if="submitted && !$v.dataInput.auth_posttest.required"
                         class="invalid-feedback"
                       >
-                        Auth harus diisi!
+                        {{ $t('student.schedule.practicum.error.auth-empty') }}
                       </div>
                     </div>
                   </div>
@@ -1449,13 +1452,13 @@ export default {
                     <b-icon
                       icon="play-fill"
                       aria-hidden="true"
-                    /> Mulai Tes Akhir
+                    /> {{ $t('student.schedule.practicum.button.start-posttest') }}
                   </button>
                   <div
                     v-if="isAuthPosttestWrong"
                     class="invalid-feedback"
                   >
-                    Auth salah, harap coba kembali!
+                    {{ $t('student.schedule.practicum.error.auth-invalid') }}
                   </div>
                   <button 
                     v-if="isPosttestSubmitted"
@@ -1464,7 +1467,7 @@ export default {
                     style="min-width: 100%;"
                     @click="checkAuth('posttest')" 
                   >
-                    Lihat Jawaban
+                    {{ $t('student.schedule.practicum.button.view-answer') }}
                   </button>
                 </div>
               </div>

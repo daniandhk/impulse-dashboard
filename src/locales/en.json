@@ -3,8 +3,278 @@
     "dropdown": {
       "roles": {
         "text": "Available Roles"
+      },
+      "language": {
+        "text": "Language"
+      },
+      "change-password": {
+        "text": "Change Password"
+      },
+      "test": {
+        "time-remaining": "Remaining time: ",
+        "time-late": "Overdue: "
       }
     }
+  },
+  "component": {
+    "form": {
+      "blank-notification": "must be filled!"
+    },
+    "button": {
+      "submit": "Submit",
+      "save": "Save",
+      "cancel": "Cancel"
+    },
+    "swal": {
+      "error": {
+        "text": "An error occurred!",
+        "invalid-id": "Invalid ID!"
+      },
+      "redirect-schedule": "You are redirected to the Schedule Menu"
+    }
+  },
+  "settings": {
+    "text": "Settings",
+    "change-password": {
+      "text": "Change Password",
+      "updated-text": "Updated!",
+      "updated-desc": "You password has been updated.",
+      "label": {
+        "old": {
+          "text": "Enter Your Old Password",
+          "placeholder": "Old Password"
+        },
+        "new": {
+          "text": "Enter Your New Password",
+          "desc": "- Minimum 6 characters.",
+          "placeholder": "New Password"
+        },
+        "retype": {
+          "placeholder": "Re-Type New Password"
+        }
+      },
+      "error": {
+        "empty-old": "Old Password is required!",
+        "empty-new": "New Password is required!",
+        "empty-retype": "New Password must be re-entered!",
+        "char": "Password must consist of at least 6 characters.",
+        "retype": "Re-enter the New Password correctly."
+      }
+    }
+  },
+  "practicum": {
+    "module": {
+      "text": "Modul"
+    },
+    "calendar-name": {
+      "text": "Calendar Name"
+    },
+    "list-course": {
+      "text": "Course List"
+    },
+    "class-course": {
+      "text": "Class Course"
+    },
+    "class": {
+      "text": "Class"
+    },
+    "course": {
+      "text": "Course"
+    },
+    "staff-code": {
+      "text": "Staff Code"
+    },
+    "year-semester": {
+      "text": "Year / Semester"
+    },
+    "date": {
+      "text": "Date"
+    },
+    "time-start": {
+      "text": "Time Start"
+    },
+    "time-end": {
+      "text": "Time End"
+    },
+    "room": {
+      "text": "Room",
+      "desc": {
+        "text": "Room Description"
+      },
+      "msteams-link": {
+        "text": "MS Teams Link"
+      },
+      "msteams-code": {
+        "text": "MS Teams Code"
+      }
+    },
+    "start": {
+      "text": "Start"
+    },
+    "end": {
+      "text": "End"
+    },
+    "auth": {
+      "text": "Auth"
+    },
+    "information": {
+      "text": "Information"
+    }
+  },
+  "student": {
+    "text": "Student",
+    "schedule": {
+      "text": "Schedule",
+      "popup-schedule": "Schedule Detail",
+      "popup-room": "Room Detail",
+      "calendar": {
+        "text": "Calendar"
+      },
+      "practicum": {
+        "text": "Practicum",
+        "test": {
+          "text": "Test",
+          "placeholder-answer": "Enter your answer here",
+          "placeholder-upload": "Enter the URL (GDrive, GForms, or others)",
+          "submit": {
+            "confirm-text": "Yes, continue to submit!",
+            "confirm-upload": "Yes, end this test now!",
+            "check-text": "Blank answers will also be saved!",
+            "check-upload": "Make sure the answers are uploaded to the URL provided!",
+            "confirm-swal": "Are you sure you want to finish this test?",
+            "success": "Successfully submitted!",
+            "success-desc": "You have completed this test!",
+            "uploaded": "Downloaded successfully!",
+            "uploaded-desc": "The file has been downloaded."
+          },
+          "question": "Question",
+          "answer": "Answer(s)",
+          "url-upload": "Journal Answers Upload URL",
+          "file-journal": "Journal File",
+          "warning": {
+            "submit": "Please submit your answers before the time expires.",
+            "upload": "Please confirm your uploaded answers before the time expires.",
+            "swal-desc": "",
+            "swal-minute": " minutes remaining!"
+          }
+        },
+        "pretest": {
+          "text": "Pretest",
+          "desc": "The first stage in the practicum."
+        },
+        "journal": {
+          "text": "Journal",
+          "desc": "The main stage in the practicum."
+        },
+        "posttest": {
+          "text": "Posttest",
+          "desc": "The last stage in the practicum."
+        },
+        "button": {
+          "start-practicum": "Start Practicum",
+          "start-pretest": "Start Pretest",
+          "start-journal": "Start Journal",
+          "start-posttest": "Start Posttest",
+          "view-answer": "View Answers",
+          "submit-answer": "Submit Your Answers",
+          "submitted-answer": "Your test answers are already saved!",
+          "upload-answer": "Confirm Your Uploaded Answers",
+          "uploaded-answer": "Your uploaded answers has been confirmed!"
+        },
+        "error": {
+          "auth-invalid": "Wrong auth, please try again!",
+          "auth-empty": "Auth is required!",
+          "pretest-notstarted": "Pretest hasn't started yet!",
+          "journal-notstarted": "Journal hasn't started yet!",
+          "posttest-notstarted": "Posttest hasn't started yet!",
+          "test-notstarted": "Test hasn't started yet!"
+        }
+      }
+    },
+    "presence-list": {
+      "text": "Score / Presence",
+      "table": {
+        "module": {
+          "text": "Module"
+        },
+        "pretest-grade": {
+          "text": "Pretest Score"
+        },
+        "journal-grade": {
+          "text": "Journal Score"
+        },
+        "posttest-grade": {
+          "text": "Posttest Score"
+        },
+        "total-grade": {
+          "text": "Total Score"
+        },
+        "presence": {
+          "text": "Presence"
+        },
+        "present": {
+          "text": "Present"
+        },
+        "not-present": {
+          "text": "Not Present"
+        }
+      }
+    },
+    "ticketing": {
+      "text": "Ticketing",
+      "remotepc": {
+        "text": "Request Remote PC IFLAB",
+        "desc": "After filling out the following form, please confirm to LABORAN, ASLAB, or OA IFLAB.",
+          "title-list": {
+            "text": "Your Ticketing"
+          },
+        "data-day": ["Monday", "Tuesday", "Wednesday", "Thrusday", "Friday", "Saturday"],
+        "name": {
+          "text": "Name"
+        },
+        "nim": {
+          "text": "NIM"
+        },
+        "course": {
+          "text": "Practicum Course",
+          "desc": "e.g Jaringan Komputer"
+        },
+        "class": {
+          "text": "Practicum Class",
+          "desc": "e.g IF-42-03"
+        },
+        "schedule-day": {
+          "text": "Practicum Schedule (Day)"
+        },
+        "schedule-session": {
+          "text": "Practicum Schedule (Session)"
+        },
+        "username": {
+          "text": "Username SSO",
+          "desc": "for connecting to the internet TUNE"
+        },
+        "password": {
+          "text": "Password SSO",
+          "desc": "for connecting to the internet TUNE"
+        },
+        "problem": {
+          "text": "Problems on personal device",
+          "desc": "Please write down the problems experienced on your personal device and include the proof in PDF form"
+        }
+      }
+    }
+  },
+  "aslab": {
+    "text": "Lab Assistant"
+  },
+  "asprak": {
+    "text": "Practicum Assistant"
+  },
+  "laboran": {
+    "text": "Laboran"
+  },
+  "staff": {
+    "text": "Staff"
   },
   "menuitems": {
     "menu": {
@@ -20,9 +290,6 @@
       "absensi-data": "Data BAP",
       "account-data": "Data Akun",
       "list": {
-        "student": "Data Mahasiswa",
-        "studentclass": "Kelas Praktikan",
-        "asprakclass": "Kelas Asisten Praktikum",
         "staff": "Data Staff",
         "course": "Data Mata Kuliah",
         "classroom": "Data Kelas",
@@ -38,11 +305,15 @@
     },
     "aslab": {
       "text": "Asisten Lab",
+      "main-data": "Data Utama",
+      "combined-data": "Data Kelas",
       "list":{
+        "student": "Data Praktikan",
+        "studentclass": "Kelas Praktikan",
+        "asprakclass": "Kelas Asisten Praktikum",
         "jadwal": "Jadwal",
         "kalender": "Kalender",
-        "list": "List Jadwal",
-        "bap": "Berita Acara Praktikum"
+        "list": "List Jadwal"
       }
     },
     "asprak": {
@@ -60,19 +331,16 @@
         "grading": "Penilaian"
       }
     },
-    "praktikan": {
+    "student": {
       "text": "Praktikan",
       "list": {
-        "jadwal": "Jadwal",
-        "nilai": "Nilai",
-        "kalender": "Kalender",
-        "matakuliah":"List Mata Kuliah",
-        "praktikum":"Praktikum",
-        "pengaturan":"Pengaturan",
-        "presensi":"Nilai / Presensi",
-        "jurnal":"1. Jurnal",
-        "tes_awal":"2. Tes Awal",
-        "tes_akhir":"3. Tes Akhir"
+        "jadwal": "Schedule",
+        "nilai": "Score",
+        "kalender": "Calendar",
+        "matakuliah":"Course List",
+        "praktikum":"Practicum",
+        "pengaturan":"Settings",
+        "presensi":"Score / Presence"
       }
     }
   }

@@ -5,6 +5,7 @@ import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
+import i18n from '@/i18n';
 
 /**
  * Orders Component
@@ -23,7 +24,7 @@ export default {
       title: "Nilai",
       items: [
         {
-          text: "Praktikan",
+          text: i18n.t('student.text'),
           href: "/"
         },
         {
@@ -103,7 +104,6 @@ export default {
         return (
             api.getStudentCourseScore(this.student_id)
             .then(response => {
-                // console.log(response.data.data.result)
                 if(response.data.data){
                     this.dataClassCourses = response.data.data.result;
                 }

@@ -1,0 +1,348 @@
+{
+    "navbar": {
+      "dropdown": {
+        "roles": {
+          "text": "Pilihan Role"
+        },
+        "language": {
+          "text": "Bahasa"
+        },
+        "change-password": {
+          "text": "Ubah Password"
+        },
+        "test": {
+          "time-remaining": "Sisa waktu: ",
+          "time-late": "Terlambat: "
+        }
+      }
+    },
+    "component": {
+      "form": {
+        "blank-notification": "harus diisi!"
+      },
+      "button": {
+        "submit": "Submit",
+        "save": "Simpan",
+        "cancel": "Batalkan"
+      },
+      "swal": {
+        "error": {
+          "text": "Terjadi kesalahan!",
+          "invalid-id": "ID tidak valid!"
+        },
+        "redirect-schedule": "Anda dialihkan ke Menu Jadwal"
+      }
+    },
+    "settings": {
+      "text": "Pengaturan",
+      "change-password": {
+        "text": "Ubah Password",
+        "updated-text": "Berhasil diubah!",
+        "updated-desc": "Password Anda telah berubah.",
+        "label": {
+          "old": {
+            "text": "Masukkan Password Lama",
+            "placeholder": "Password Lama"
+          },
+          "new": {
+            "text": "Masukkan Password Baru",
+            "desc": "- Minimal terdiri dari 6 karakter.",
+            "placeholder": "Password Baru"
+          },
+          "retype": {
+            "placeholder": "Ketik Ulang Password Baru"
+          }
+        },
+        "error": {
+          "empty-old": "Password Lama harus diisi!",
+          "empty-new": "Password Baru harus diisi!",
+          "empty-retype": "Password Baru harus diisi kembali!",
+          "char": "Password minimal terdiri dari 6 karakter.",
+          "retype": "Masukkan kembali Password Baru dengan benar."
+        }
+      }
+    },
+    "practicum": {
+      "module": {
+        "text": "Modul"
+      },
+      "calendar-name": {
+        "text": "Nama Kalender"
+      },
+      "list-course": {
+        "text": "List Mata Kuliah"
+      },
+      "class-course": {
+        "text": "Kelas Mata Kuliah"
+      },
+      "class": {
+        "text": "Kelas"
+      },
+      "course": {
+        "text": "Mata Kuliah"
+      },
+      "staff-code": {
+        "text": "Kode Dosen"
+      },
+      "year-semester": {
+        "text": "Tahun / Semester"
+      },
+      "date": {
+        "text": "Tanggal"
+      },
+      "time-start": {
+        "text": "Jam Mulai"
+      },
+      "time-end": {
+        "text": "Jam Berakhir"
+      },
+      "room": {
+        "text": "Ruangan",
+        "desc": {
+          "text": "Deskripsi Ruangan"
+        },
+        "msteams-link": {
+          "text": "Tautan MS Teams"
+        },
+        "msteams-code": {
+          "text": "Kode MS Teams"
+        }
+      },
+      "start": {
+        "text": "Mulai"
+      },
+      "end": {
+        "text": "Berakhir"
+      },
+      "auth": {
+        "text": "Auth"
+      },
+      "information": {
+        "text": "Infomasi"
+      }
+    },
+    "student": {
+      "text": "Praktikan",
+      "schedule": {
+        "text": "Jadwal",
+        "popup-schedule": "Detail Jadwal",
+        "popup-room": "Detail Ruangan",
+        "calendar": {
+          "text": "Kalender"
+        },
+        "practicum": {
+          "text": "Praktikum",
+          "test": {
+            "text": "Tes",
+            "placeholder-answer": "Masukkan jawaban disini",
+            "placeholder-upload": "Masukkan URL (GDrive, GForms, atau lainnya)",
+            "submit": {
+              "confirm-text": "Ya, lanjut submit!",
+              "confirm-upload": "Ya, akhiri tes sekarang!",
+              "check-text": "Jawaban yang kosong akan tetap disimpan!",
+              "check-upload": "Pastikan jawaban diunggah ke URL yang telah disediakan!",
+              "confirm-swal": "Yakin akan menyelesaikan test ini?",
+              "success": "Berhasil submit!",
+              "success-desc": "Anda telah menyelesaikan test ini!",
+              "uploaded": "Berhasil diunduh!",
+              "uploaded-desc": "File telah terunduh."
+            },
+            "question": "Soal",
+            "answer": "Jawaban",
+            "url-upload": "URL Upload Jawaban Jurnal",
+            "file-journal": "File Jurnal",
+            "warning": {
+              "submit": "Harap submit jawaban sebelum waktu berakhir.",
+              "upload": "Harap konfirmasi upload jawaban sebelum waktu berakhir.",
+              "swal-desc": "Waktu pengerjaan tersisa ",
+              "swal-minute": " menit lagi!"
+            }
+          },
+          "pretest": {
+            "text": "Tes Awal",
+            "desc": "Merupakan tahapan pertama dalam praktikum."
+          },
+          "journal": {
+            "text": "Jurnal",
+            "desc": "Merupakan tahapan utama dalam praktikum."
+          },
+          "posttest": {
+            "text": "Tes Akhir",
+            "desc": "Merupakan tahapan terakhir dalam praktikum."
+          },
+          "button": {
+            "start-practicum": "Mulai Praktikum",
+            "start-pretest": "Mulai Tes Awal",
+            "start-journal": "Mulai Jurnal",
+            "start-posttest": "Mulai Tes Akhir",
+            "view-answer": "Lihat Jawaban",
+            "submit-answer": "Submit Jawaban",
+            "submitted-answer": "Jawaban tes sudah tersimpan!",
+            "upload-answer": "Konfirmasi Upload Jawaban",
+            "uploaded-answer": "Upload jawaban sudah terkonfirmasi!"
+          },
+          "error": {
+            "auth-invalid": "Auth salah, harap coba kembali!",
+            "auth-empty": "Auth harus diisi!",
+            "pretest-notstarted": "Tes Awal belum dimulai!",
+            "journal-notstarted": "Jurnal belum dimulai!",
+            "posttest-notstarted": "Tes Akhir belum dimulai!",
+            "test-notstarted": "Tes belum dimulai!"
+          }
+        }
+      },
+      "presence-list": {
+        "text": "Nilai / Presensi",
+        "table": {
+          "module": {
+            "text": "Modul"
+          },
+          "pretest-grade": {
+            "text": "Nilai Tes Awal"
+          },
+          "journal-grade": {
+            "text": "Nilai Jurnal"
+          },
+          "posttest-grade": {
+            "text": "Nilai Tes Akhir"
+          },
+          "total-grade": {
+            "text": "Nilai Total"
+          },
+          "presence": {
+            "text": "Kehadiran"
+          },
+          "present": {
+            "text": "Hadir"
+          },
+          "not-present": {
+            "text": "Tidak Hadir"
+          }
+        }
+      },
+      "ticketing": {
+        "text": "Ticketing",
+        "remotepc": {
+          "text": "Request Remote PC IFLAB",
+          "desc": "Setelah mengisi form berikut, harap konfirmasi ke LABORAN, ASLAB, atau OA IFLAB.",
+          "title-list": {
+            "text": "Ticketing Anda"
+          },
+          "data-day": ["Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
+          "name": {
+            "text": "Nama"
+          },
+          "nim": {
+            "text": "NIM"
+          },
+          "course": {
+            "text": "MK Praktikum",
+            "desc": "contoh: Jaringan Komputer"
+          },
+          "class": {
+            "text": "Kelas Praktikum",
+            "desc": "contoh: IF-42-03"
+          },
+          "schedule-day": {
+            "text": "Jadwal Praktikum (Hari)"
+          },
+          "schedule-session": {
+            "text": "Jadwal Praktikum (Sesi)"
+          },
+          "username": {
+            "text": "Username SSO",
+            "desc": "untuk kepentingan connect internet TUNE"
+          },
+          "password": {
+            "text": "Password SSO",
+            "desc": "untuk kepentingan connect internet TUNE"
+          },
+          "problem": {
+            "text": "Kendala pada device pribadi",
+            "desc": "Silakan tulis kendala yang dialami pada device pribadi dan sertakan buktinya dalam bentuk PDF"
+          }
+        }
+      }
+    },
+    "aslab": {
+      "text": "Asisten Lab"
+    },
+    "asprak": {
+      "text": "Asisten Praktikum"
+    },
+    "laboran": {
+      "text": "Laboran"
+    },
+    "staff": {
+      "text": "Staff"
+    },
+    "menuitems": {
+      "menu": {
+        "text": "Menu"
+      },
+      "dashboard": {
+        "text": "Dashboard"
+      },
+      "laboran": {
+        "text": "Laboran",
+        "main-data": "Data Utama",
+        "combined-data": "Data Kelas",
+        "absensi-data": "Data BAP",
+        "account-data": "Data Akun",
+        "list": {
+          "staff": "Data Staff",
+          "course": "Data Mata Kuliah",
+          "classroom": "Data Kelas",
+          "room": "Data Ruangan",
+          "class-course": "Kelas Mata Kuliah",
+          "academic-year": "Data Tahun Akademik",
+          "bap": "Berita Acara Praktikum",
+          "manage-account": "Kelola Akun"
+        }
+      },
+      "staff": {
+        "text": "Staff"
+      },
+      "aslab": {
+        "text": "Asisten Lab",
+        "main-data": "Data Utama",
+        "combined-data": "Data Kelas",
+        "list":{
+          "student": "Data Praktikan",
+          "studentclass": "Kelas Praktikan",
+          "asprakclass": "Kelas Asisten Praktikum",
+          "jadwal": "Jadwal",
+          "kalender": "Kalender",
+          "list": "List Jadwal"
+        }
+      },
+      "asprak": {
+        "text": "Asisten Praktikum",
+        "list": {
+          "praktikum": "Praktikum",
+          "input-soal": "Input Soal",
+          "input-tesawal": "Input Tes Awal",
+          "input-jurnal": "Input Jurnal",
+          "input-tesakhir": "Input Tes Akhir",
+          "lihat-feedback": "Lihat Feedback",
+          "absensi-asprak": "Berita Acara Praktikum",
+          "start-practicum": "Praktikum",
+          "schedule": "Jadwal",
+          "grading": "Penilaian"
+        }
+      },
+      "student": {
+        "text": "Praktikan",
+        "list": {
+          "jadwal": "Jadwal",
+          "nilai": "Nilai",
+          "kalender": "Kalender",
+          "matakuliah":"List Mata Kuliah",
+          "praktikum":"Praktikum",
+          "pengaturan":"Pengaturan",
+          "presensi":"Nilai / Presensi"
+        }
+      }
+    }
+  }
+  

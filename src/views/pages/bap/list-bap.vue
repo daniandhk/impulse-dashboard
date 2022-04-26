@@ -1,7 +1,6 @@
 <script>
 import * as api from '@/api';
 import Swal from "sweetalert2";
-
 import { notificationMethods } from "@/state/helpers";
 import Multiselect from "vue-multiselect";
 import moment from 'moment';
@@ -293,7 +292,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";
@@ -302,7 +301,7 @@ export default {
 
     timeFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LT');
+        return moment(date).format('LT');
       }
       else{
         return "-";

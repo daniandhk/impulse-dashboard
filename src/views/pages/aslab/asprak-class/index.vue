@@ -2,30 +2,30 @@
 import Layout from "../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableStudent from "./table-student-class";
-import InputStudent from "./input-student-class";
-import ImportStudent from "./import-student-class";
+import TableAsprak from "./table-asprak-class";
+import InputAsprak from "./input-asprak-class";
+import ImportAsprak from "./import-asprak-class";
 
 export default {
   page: {
-    title: "Kelas Praktikan",
+    title: "Kelas Asisten Praktikum",
   },
   components: {
     Layout,
     PageHeader,
-    TableStudent,
-    InputStudent,
-    ImportStudent
+    TableAsprak,
+    InputAsprak,
+    ImportAsprak,
   },
   data() {
     return {
-      title: "Kelas Praktikan",
+      title: "Kelas Asisten Praktikum",
       items: [
         {
-          text: "Laboran"
+          text: "Asisten Lab"
         },
         {
-          text: "Kelas Praktikan",
+          text: "Kelas Asisten Praktikum",
           active: true
         }
       ],
@@ -43,7 +43,7 @@ export default {
     ...notificationMethods,
 
     refreshData(){
-        this.$refs.TableStudent.refreshData();
+        this.$refs.TableAsprak.refreshData();
     }
   }
 };
@@ -68,19 +68,19 @@ export default {
                 <template v-slot:title>
                   <a class="font-weight-bold active">Data</a>
                 </template>
-                <TableStudent ref="TableStudent" />
+                <TableAsprak ref="TableAsprak" />
               </b-tab>
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
                   <a class="font-weight-bold active">Input</a>
                 </template>
-                <InputStudent />
+                <InputAsprak />
               </b-tab>
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
                   <a class="font-weight-bold active">Import Excel</a>
                 </template>
-                <ImportStudent />
+                <ImportAsprak />
               </b-tab>
             </b-tabs>
           </div>

@@ -115,7 +115,7 @@ export default {
                 }
             },
 
-            isKunjawShowed: false,
+            isKunjawShowed: [],
         }
     },
     computed: {
@@ -364,7 +364,6 @@ export default {
                     });
                 })
                 .catch(error => {
-                    // console.log(error)
                     this.submitted = false;
                     this.tryingToInput = false;
                     this.isInputError = true;
@@ -467,8 +466,9 @@ export default {
             }
         },
 
-        onKunjawClick(){
-          this.isKunjawShowed = !this.isKunjawShowed
+        onKunjawClick(index){
+          this.$set(this.isKunjawShowed, index, !this.isKunjawShowed[index]);
+          // this.isKunjawShowed[index] ? this.isKunjawShowed[index] = !this.isKunjawShowed[index] : this.isKunjawShowed[index] = true
         },
 
         formatTime(time){
@@ -699,13 +699,13 @@ export default {
                 <b-button
                   variant="outline-info"
                   style="min-width: 150px;"
-                  @click="onKunjawClick"
+                  @click="onKunjawClick(index)"
                 >
                   Kunci Jawaban
                 </b-button>
               </div>
               <div
-                v-if="isKunjawShowed"
+                v-if="isKunjawShowed[index]"
                 class="card col-sm-11"
               >
                 <div class="card-body">

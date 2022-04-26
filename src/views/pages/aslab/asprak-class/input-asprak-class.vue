@@ -361,7 +361,6 @@ export default {
         this.dataStudent.staff_code = value.staff.code;
         this.dataStudent.staff_name = value.staff.name;
         await this.getDataClassCourse().then(response=>{
-            // console.log(this.classCourseData)
             this.dataInput.class_course_id = this.classCourseData.id;
         });
 
@@ -498,7 +497,7 @@ export default {
             class="card-title-desc"
             style="font-size: 14px; margin: 0 !important;"
           >
-            NIM sebagai Asprak dapat diatur di menu Data Mahasiswa.
+            NIM sebagai Asprak dapat diatur di menu Data Praktikan.
           </p>
                     
           <div class="mt-4">
@@ -508,7 +507,7 @@ export default {
               variant="success"
               dismissible
             >
-              Input data completed successfully!
+              Input data telah berhasil!
             </b-alert>
 
             <b-alert

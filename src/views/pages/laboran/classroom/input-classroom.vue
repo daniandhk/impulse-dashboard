@@ -144,7 +144,7 @@ export default {
               variant="success"
               dismissible
             >
-              Input data completed successfully!
+              Input data telah berhasil!
             </b-alert>
 
             <b-alert
@@ -191,7 +191,7 @@ export default {
                   class="form-control"
                   :class="{ 'is-invalid': submitted && $v.dataClassroom.name.$error }"
                 >
-                <span class="text-muted">e.g IF-42-03</span>
+                <span class="text-muted">contoh: IF-42-03</span>
                 <div
                   v-if="submitted && !$v.dataClassroom.name.required"
                   class="invalid-feedback"

@@ -3,6 +3,7 @@ import { required } from "vuelidate/lib/validators";
 import { notificationMethods } from "@/state/helpers";
 import * as api from '@/api';
 import $ from 'jquery';
+import store from '@/store';
 
 export default {
   data() {
@@ -82,7 +83,7 @@ export default {
             })
         );
       }
-    }
+    },
   }
 };
 function loading() {

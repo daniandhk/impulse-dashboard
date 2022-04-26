@@ -44,7 +44,6 @@ router.beforeEach((routeTo, routeFrom, next) => {
     // If auth is required and the user is logged in...
     if (loggedUser){
       return api.validateUser().then(response => {
-        // console.log(response.data.data)
         response.data.data.token = store.getters.getLoggedUser.token
         store.commit('LOGGED_USER', response.data.data)
         
@@ -56,7 +55,6 @@ router.beforeEach((routeTo, routeFrom, next) => {
       })
       .catch(error => {
         store.dispatch('logOut')
-        //console.log(error)
         redirectToLogin("expired")
       })
     }

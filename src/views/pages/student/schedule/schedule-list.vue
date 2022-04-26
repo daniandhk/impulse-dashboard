@@ -6,13 +6,14 @@ import * as api from '@/api';
 import Swal from "sweetalert2";
 import store from '@/store';
 import moment from 'moment';
+import i18n from '@/i18n';
 
 /**
  * Orders Component
  */
 export default {
   page: {
-    title: "List Mata Kuliah",
+    title: i18n.t('practicum.list-course.text'),
     meta: [{ name: "description" }],
   },
   components: {
@@ -21,18 +22,18 @@ export default {
   },
   data() {
     return {
-      title: "List Mata Kuliah",
+      title: i18n.t('practicum.list-course.text'),
       items: [
         {
-          text: "Praktikan",
+          text: i18n.t('student.text'),
           href: "/"
         },
         {
-          text: "Jadwal",
-          href: "/praktikan/schedule/calendar"
+          text: i18n.t('student.schedule.text'),
+          href: "/student/schedule/calendar"
         },
         {
-          text: "Mata Kuliah",
+          text: i18n.t('practicum.course.text'),
           active: true,
         },
       ],
@@ -46,13 +47,13 @@ export default {
       sortDesc: false,
       dataSchedules: [],
       fields: [
-        { key: "module.index", sortable: true, label: "Modul" },
-        { key: "title", label: "Nama Kalender" },
-        { key: "date", sortable: true, label: "Tanggal" },
-        { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "practicum", sortable: false, label: "Praktikum", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "module.index", sortable: true, label: i18n.t('practicum.module.text') },
+        { key: "title", label: i18n.t('practicum.calendar-name.text') },
+        { key: "date", sortable: true, label: i18n.t('practicum.date.text') },
+        { key: "start", sortable: true, label: i18n.t('practicum.time-start.text'), thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: i18n.t('practicum.time-end.text'), thClass: 'text-center', tdClass: 'text-center' },
+        { key: "room", sortable: false, label: i18n.t('practicum.room.text'), thClass: 'text-center', tdClass: 'text-center' },
+        { key: "practicum", sortable: false, label: i18n.t('student.schedule.practicum.text'), thClass: 'text-center', tdClass: 'text-center' },
       ],
 
       student_id: store.getters.getLoggedUser.id,
@@ -133,7 +134,7 @@ export default {
                   Swal.fire({
                       icon: 'error',
                       title: 'Oops...',
-                      text: 'Terjadi kesalahan!',
+                      text: i18n.t('component.swal.error.text'),
                       footer: error.response.data.message
                   })
                 }
@@ -147,7 +148,6 @@ export default {
             .then(response => {
                 if(response.data.data){
                     this.dataSchedules = response.data.data;
-                    // console.log(this.dataSchedules)
                 }
             })
             .catch(error => {
@@ -160,7 +160,7 @@ export default {
                   Swal.fire({
                       icon: 'error',
                       title: 'Oops...',
-                      text: 'Terjadi kesalahan!',
+                      text: i18n.t('component.swal.error.text'),
                       footer: error.response.data.message
                   })
                 }
@@ -189,7 +189,7 @@ export default {
       let schedule_id = data.item.id;
 
       this.$router.push({
-          name: 'praktikan-schedule-detail', 
+          name: 'student-schedule-detail', 
           params: { id: schedule_id }
       });
     },
@@ -212,7 +212,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";
@@ -221,7 +221,7 @@ export default {
 
     timeFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LT');
+        return moment(date).format('LT');
       }
       else{
         return "-";
@@ -296,7 +296,7 @@ export default {
 
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label>Mata Kuliah</label>
+                      <label>{{ $t('practicum.course.text') }}</label>
                       <input
                         v-model="class_course_data.course_name"
                         type="text"
@@ -309,7 +309,7 @@ export default {
 
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label>Kode Dosen</label>
+                      <label>{{ $t('practicum.staff-code.text') }}</label>
                       <input
                         v-model="class_course_data.staff_code"
                         type="text"
@@ -322,7 +322,7 @@ export default {
 
                   <div class="col-sm-3">
                     <div class="form-group">
-                      <label>Tahun / Semester</label>
+                      <label>{{ $t('practicum.year-semester.text') }}</label>
                       <input
                         v-model="class_course_data.academic_year"
                         type="text"
@@ -401,7 +401,7 @@ export default {
                         style="min-width: 125px;"
                         @click="onClickPracticum(data)" 
                       >
-                        Mulai Praktikum
+                        {{ $t('student.schedule.practicum.button.start-practicum') }}
                       </b-button>
                       <b-button
                         v-if="!isNow(data)" 
@@ -439,7 +439,7 @@ export default {
     <b-modal
       v-model="eventModal"
       size="lg"
-      title="Detail Ruangan"
+      :title="$t('student.schedule.popup-room')"
       hide-footer 
       title-class="font-18"
     >
@@ -449,7 +449,7 @@ export default {
       >
         <div>
           <div class="form-group">
-            <label>Ruangan</label>
+            <label>{{ $t('practicum.room.text') }}</label>
             <input
               v-model="room.name"
               type="text"
@@ -460,7 +460,7 @@ export default {
         </div>
         <div>
           <div class="form-group">
-            <label>Deskripsi Ruangan</label>
+            <label>{{ $t('practicum.room.desc.text') }}</label>
             <textarea
               v-model="room.desc"
               rows="2"
@@ -472,7 +472,7 @@ export default {
         </div>
         <div>
           <div class="form-group">
-            <label>MS Teams Link</label>
+            <label>{{ $t('practicum.room.msteams-link.text') }}</label>
             <input
               v-model="room.msteam_link"
               type="text"
@@ -483,7 +483,7 @@ export default {
         </div>
         <div>
           <div class="form-group">
-            <label>MS Teams Code</label>
+            <label>{{ $t('practicum.room.msteams-code.text') }}</label>
             <input
               v-model="room.msteam_code"
               type="text"

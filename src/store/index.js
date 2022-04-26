@@ -11,7 +11,8 @@ import modules from '@/state/modules'
 const state = {
 	displayLoader: false,
 	loggedUser: localStorage.getItem('loggedUser') || null,
-	roleUser: localStorage.getItem('roleUser') || null
+	roleUser: localStorage.getItem('roleUser') || null,
+	appLanguage: localStorage.getItem("appLanguage") || process.env.VUE_APP_I18N_LOCALE || 'id'
 }
 
 export default new Vuex.Store({

@@ -494,7 +494,7 @@ export default {
               variant="success"
               dismissible
             >
-              Input data completed successfully!
+              Input data telah berhasil!
             </b-alert>
 
             <b-alert

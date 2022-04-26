@@ -14,9 +14,14 @@ const roleUser = (context, role) => {
 	context.commit('ROLE_USER', role)
 }
 
+const appLanguage = (context, language) => {
+	context.commit('APP_LANGUAGE', language)
+}
+
 export default {
 	displayLoader,
 	loggedUser,
 	logOut,
-	roleUser
+	roleUser,
+	appLanguage
 }

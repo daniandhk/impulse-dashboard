@@ -24,9 +24,15 @@ const REMOVE_LOGGED_USER = (state) => {
     localStorage.removeItem('roleUser')
 }
 
+const APP_LANGUAGE = (state, language) => {
+    localStorage.setItem('appLanguage', JSON.stringify(language))
+    state.appLanguage = JSON.stringify(language)
+}
+
 export default {
     DISPLAY_LOADER,
     LOGGED_USER,
     REMOVE_LOGGED_USER,
-    ROLE_USER
+    ROLE_USER,
+    APP_LANGUAGE
 }

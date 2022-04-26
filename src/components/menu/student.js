@@ -12,60 +12,41 @@ export const praktikanItems = [
     },
     {
         id: 3,
-        label: "menuitems.praktikan.text",
+        label: "menuitems.student.text",
         isTitle: true
     },
     {
         id: 4,
-        label: 'menuitems.praktikan.list.jadwal',
+        label: 'menuitems.student.list.jadwal',
         icon: 'ri-calendar-todo-fill',
         subItems: [
             {
                 id: 5,
-                label: 'menuitems.praktikan.list.kalender',
-                link: 'praktikan-schedule-calendar'
+                label: 'menuitems.student.list.kalender',
+                link: 'student-schedule-calendar'
             },
             {
                 id: 6,
-                label: 'menuitems.praktikan.list.matakuliah',
-                link: 'praktikan-schedule-list'
+                label: 'menuitems.student.list.matakuliah',
+                link: 'student-schedule-list'
             }
         ]
     },
-    // {
-    //     id: 7,
-    //     label: 'menuitems.praktikan.list.nilai',
-    //     icon: 'ri-bar-chart-grouped-fill',
-    //     link: 'praktikan-score'
-    // },
     {
         id: 7,
-        label: 'menuitems.praktikan.list.presensi',
+        label: 'menuitems.student.list.presensi',
         icon: 'ri-bar-chart-grouped-fill',
-        link: 'praktikan-presence'
+        link: 'student-presence'
     },
     // {
     //     id: 8,
-    //     label: 'menuitems.praktikan.list.praktikum',
-    //     icon: ' ri-suitcase-line',
-    //     subItems: [
-    //         {
-    //             id: 9,
-    //             label: 'menuitems.praktikan.list.jurnal',
-    //             icon: 'ri-checkbox-blank-circle-line',
-    //             link: 'praktikan-jurnal'
-    //         },
-    //         {
-    //             id: 10,
-    //             label: 'menuitems.praktikan.list.tes_awal',
-    //             link: 'praktikan-tes_awal'
-    //         },
-    //         {
-    //             id: 11,
-    //             label: 'menuitems.praktikan.list.tes_akhir',
-    //             link: 'praktikan-tes_akhir'
-    //         }
-    //     ]
+    //     label: "student.ticketing.text",
+    //     isTitle: true
     // },
-   
+    // {
+    //     id: 9,
+    //     label: 'student.ticketing.remotepc.text',
+    //     icon: 'ri-remote-control-line',
+    //     link: 'student-remotepc'
+    // },
 ]

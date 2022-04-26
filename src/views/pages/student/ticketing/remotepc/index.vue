@@ -1,31 +1,30 @@
 <script>
-import Layout from "../../../layouts/main";
+import Layout from "../../../../layouts/main";
 import PageHeader from "@/components/page-header";
 import { notificationMethods } from "@/state/helpers";
-import TableAsprak from "./table-asprak-class";
-import InputAsprak from "./input-asprak-class";
-import ImportAsprak from "./import-asprak-class";
+import ListRemotepc from "../../../../pages/ticketing/remotepc/list-remotepc";
+import InputRemotepc from "./input-remotepc";
+import i18n from '@/i18n'
 
 export default {
   page: {
-    title: "Kelas Asisten Praktikum",
+    title: i18n.t('student.ticketing.remotepc.text'),
   },
   components: {
     Layout,
     PageHeader,
-    TableAsprak,
-    InputAsprak,
-    ImportAsprak,
+    ListRemotepc,
+    InputRemotepc,
   },
   data() {
     return {
-      title: "Kelas Asisten Praktikum",
+      title: i18n.t('student.ticketing.remotepc.text'),
       items: [
         {
-          text: "Laboran"
+          text: i18n.t('student.text')
         },
         {
-          text: "Kelas Asisten Praktikum",
+          text: i18n.t('student.ticketing.remotepc.text'),
           active: true
         }
       ],
@@ -43,7 +42,7 @@ export default {
     ...notificationMethods,
 
     refreshData(){
-        this.$refs.TableAsprak.refreshData();
+        this.$refs.ListRemotepc.refreshData();
     }
   }
 };
@@ -66,21 +65,18 @@ export default {
             >
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">Data</a>
-                </template>
-                <TableAsprak ref="TableAsprak" />
-              </b-tab>
-              <b-tab title-link-class="p-3">
-                <template v-slot:title>
                   <a class="font-weight-bold active">Input</a>
                 </template>
-                <InputAsprak />
+                <InputRemotepc />
               </b-tab>
               <b-tab title-link-class="p-3">
                 <template v-slot:title>
-                  <a class="font-weight-bold active">Import Excel</a>
+                  <a class="font-weight-bold active">{{ $t('student.ticketing.remotepc.title-list.text') }}</a>
                 </template>
-                <ImportAsprak />
+                <ListRemotepc
+                  ref="ListRemotepc"
+                  status="student"
+                />
               </b-tab>
             </b-tabs>
           </div>

@@ -47,7 +47,7 @@ export const staffItems = [
     },
     {
         id: 9,
-        label: 'menuitems.laboran.list.student',
+        label: 'menuitems.aslab.list.student',
         icon: 'ri-team-fill',
         link: 'laboran-student'
     },
@@ -64,34 +64,22 @@ export const staffItems = [
     },
     {
         id: 12,
-        label: 'menuitems.laboran.list.asprakclass',
-        icon: 'mdi mdi-assistant',
-        link: 'laboran-asprakclass'
-    },
-    {
-        id: 13,
-        label: 'menuitems.laboran.list.studentclass',
-        icon: 'mdi mdi-school',
-        link: 'laboran-studentclass'
-    },
-    {
-        id: 14,
         label: "menuitems.laboran.absensi-data",
         isTitle: true
     },
     {
-        id: 15,
+        id: 13,
         label: 'menuitems.laboran.list.bap',
         icon: 'ri-account-circle-line',
         link: 'laboran-bap'
     },
     {
-        id: 16,
+        id: 14,
         label: "menuitems.laboran.account-data",
         isTitle: true
     },
     {
-        id: 17,
+        id: 15,
         label: 'menuitems.laboran.list.manage-account',
         icon: 'ri-user-settings-fill',
         link: 'laboran-manage-account'
