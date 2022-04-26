@@ -68,7 +68,6 @@ export default {
               this.isAuthError = false;
               this.loginSuccess = true;
 
-              this.setLanguage('id');
               this.$store.commit('LOGGED_USER', response.data.data);
               loading();
               // Redirect to the originally requested page, or to the home page
@@ -83,13 +82,6 @@ export default {
               this.isAuthError = true;
             })
         );
-      }
-    },
-
-    setLanguage(locale) {
-      if(this.current_language != locale){
-        store.commit('APP_LANGUAGE', locale)
-        this.current_language = store.getters.getAppLanguage
       }
     },
   }

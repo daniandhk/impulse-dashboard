@@ -741,7 +741,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale(String(this.current_language)).format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";

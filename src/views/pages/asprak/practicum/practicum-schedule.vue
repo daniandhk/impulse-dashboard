@@ -387,7 +387,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";
@@ -396,7 +396,7 @@ export default {
 
     timeFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LT');
+        return moment(date).format('LT');
       }
       else{
         return "-";

@@ -945,7 +945,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale('id').format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";

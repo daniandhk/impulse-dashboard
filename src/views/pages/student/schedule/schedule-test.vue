@@ -617,15 +617,15 @@ export default {
         },
 
         setTimeEnd(){
-            let now = moment().locale(String(this.current_language))
-            let date_now = moment().locale(String(this.current_language)).format('MM/DD/YYYY')
+            let now = moment()
+            let date_now = moment().format('MM/DD/YYYY')
             let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
 
             let range = moment().range(now, schedule_time_end)
             let time_diff = range.diff()
 
             if(time_diff >= 0){
-                let time_end = moment.utc(time_diff).locale(String(this.current_language));
+                let time_end = moment.utc(time_diff);
                 
                 if(time_end.second() == 0 && (time_end.minute() == 5 || time_end.minute() == 2 || time_end.minute() == 1)){
                     this.onTimeWarningPopup(time_end.minute())
@@ -634,7 +634,7 @@ export default {
             // else{
             //     range = moment().range(schedule_time_end, now)
             //     time_diff = range.diff()
-            //     let time_end = moment.utc(time_diff).locale(String(this.current_language)).format('HH:mm:ss');
+            //     let time_end = moment.utc(time_diff).format('HH:mm:ss');
             // }
         },
 

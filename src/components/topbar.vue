@@ -3,6 +3,7 @@ import simplebar from "simplebar-vue";
 import i18n from "../i18n";
 import store from '@/store';
 import Moment from 'moment';
+import 'moment/locale/id'
 import { extendMoment } from 'moment-range';
 const moment = extendMoment(Moment);
 
@@ -25,8 +26,8 @@ export default {
       user: store.getters.getLoggedUser,
 
       interval: null,
-      time: moment().locale(String(this.current_language)).format('HH:mm:ss'),
-      date: moment().locale(String(this.current_language)).format('dddd, LL'),
+      time: moment().format('HH:mm:ss'),
+      date: moment().format('dddd, LL'),
       time_end: "",
       is_late: false,
       
@@ -57,7 +58,7 @@ export default {
     // update the time every second
     this.interval = setInterval(() => {
       // Concise way to format time according to system locale.
-      this.time = moment().locale(String(this.current_language)).format('HH:mm:ss')
+      this.time = moment().format('HH:mm:ss')
       if(this.timeEnd){
         this.setTimeEnd()
       }
@@ -98,6 +99,10 @@ export default {
       if(this.current_language != locale){
         store.commit('APP_LANGUAGE', locale)
         this.current_language = store.getters.getAppLanguage
+        
+        moment().locale(String(locale))
+        console.log(moment().locale())
+
         location.reload()
       }
       this.$refs.dropdown.visible = false
@@ -135,8 +140,8 @@ export default {
     },
 
     setTimeEnd(){
-      let now = moment().locale(String(this.current_language))
-      let date_now = moment().locale(String(this.current_language)).format('MM/DD/YYYY')
+      let now = moment()
+      let date_now = moment().format('MM/DD/YYYY')
       let schedule_time_end = moment(date_now + ' ' + moment(this.timeEnd).format('HH:mm:ss'), 'MM/DD/YYYY HH:mm:ss')
 
       let range = moment().range(now, schedule_time_end)
@@ -144,7 +149,7 @@ export default {
       let sec = range.diff('seconds')
 
       if(sec > 0){
-        this.time_end = moment.utc(time_diff).locale(String(this.current_language)).format('HH:mm:ss');
+        this.time_end = moment.utc(time_diff).format('HH:mm:ss');
         this.is_late = false;
       }
       else if(sec == 0){
@@ -154,7 +159,7 @@ export default {
       else{
         range = moment().range(schedule_time_end, now)
         time_diff = range.diff()
-        this.time_end = moment.utc(time_diff).locale(String(this.current_language)).format('HH:mm:ss');
+        this.time_end = moment.utc(time_diff).format('HH:mm:ss');
         this.is_late = true;
       }
     },
@@ -269,7 +274,6 @@ export default {
         </div>
         <b-tooltip
           v-if="timeEnd"
-          :key="current_language"
           target="div-time"
           variant="dark"
         >
@@ -277,7 +281,6 @@ export default {
         </b-tooltip>
         <b-tooltip
           v-if="!timeEnd"
-          :key="current_language"
           target="div-time"
           variant="dark"
         >

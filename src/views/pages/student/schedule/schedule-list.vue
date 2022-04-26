@@ -212,7 +212,7 @@ export default {
 
     dateFormatted(date){
       if(date){
-        return moment(date).locale(String(this.current_language)).format('LL');
+        return moment(date).format('LL');
       }
       else{
         return "-";
@@ -221,7 +221,7 @@ export default {
 
     timeFormatted(date){
       if(date){
-        return moment(date).locale(String(this.current_language)).format('LT');
+        return moment(date).format('LT');
       }
       else{
         return "-";
@@ -357,10 +357,7 @@ export default {
                   </div>
                   End search
                 </div> -->
-                <div
-                  :key="current_language"
-                  class="table-responsive mt-2"
-                >
+                <div class="table-responsive mt-2">
                   <b-table
                     class="table-centered"
                     :items="dataSchedules"
