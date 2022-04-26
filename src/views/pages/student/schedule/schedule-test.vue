@@ -50,7 +50,6 @@ export default {
             ],
 
             user_id:"",
-            current_language: store.getters.getAppLanguage,
 
             test_data: {
                 test: {

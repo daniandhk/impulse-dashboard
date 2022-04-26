@@ -44,7 +44,6 @@ export default {
           active: true,
         }
       ],
-      current_language: store.getters.getAppLanguage,
 
       schedule_data: {
         id: "",

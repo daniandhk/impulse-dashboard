@@ -40,7 +40,7 @@ export default {
           active: true,
         }
       ],
-      current_language: store.getters.getAppLanguage,
+      // current_language: store.getters.getAppLanguage,
       //list schedule
       isFetchingData: false,
       dataSchedules: [],
@@ -150,6 +150,12 @@ export default {
     notification() {
       return this.$store ? this.$store.state.notification : null;
     },
+    current_language() {
+      let locale = store.getters.getAppLanguage
+      // moment.locale(String(locale))
+      // moment().locale()
+      return locale
+    }
   },
   mounted: async function() {
     this.loading(true);

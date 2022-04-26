@@ -21,7 +21,7 @@ export default {
   },
   data() {
     return {
-      current_language: store.getters.getAppLanguage,
+      // current_language: store.getters.getAppLanguage,
       getRole: store.getters.getRoleUser,
       user: store.getters.getLoggedUser,
 
@@ -33,14 +33,14 @@ export default {
       
       languages: [
         {
-          flag: require("@/assets/images/flags/us.jpg"),
-          language: "en",
-          title: "English"
-        },
-        {
           flag: require("@/assets/images/flags/id.png"),
           language: "id",
           title: "Indonesian"
+        },
+        {
+          flag: require("@/assets/images/flags/us.jpg"),
+          language: "en",
+          title: "English"
         },
       ],
     };
@@ -49,6 +49,12 @@ export default {
     isSmallScreen() {
       return this.$screen.breakpoint == 'xs' || this.$screen.breakpoint == 'sm';
     },
+    current_language() {
+      let locale = store.getters.getAppLanguage
+      moment.locale(String(locale))
+      // moment().locale()
+      return locale
+    }
   },
   beforeDestroy() {
     // prevent memory leak
@@ -59,6 +65,7 @@ export default {
     this.interval = setInterval(() => {
       // Concise way to format time according to system locale.
       this.time = moment().format('HH:mm:ss')
+      this.date = moment().format('dddd, LL')
       if(this.timeEnd){
         this.setTimeEnd()
       }
@@ -98,11 +105,6 @@ export default {
     setLanguage(locale) {
       if(this.current_language != locale){
         store.commit('APP_LANGUAGE', locale)
-        this.current_language = store.getters.getAppLanguage
-        
-        moment().locale(String(locale))
-        console.log(moment().locale())
-
         location.reload()
       }
       this.$refs.dropdown.visible = false
