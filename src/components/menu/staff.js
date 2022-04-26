@@ -47,33 +47,39 @@ export const staffItems = [
     },
     {
         id: 9,
+        label: 'menuitems.aslab.list.student',
+        icon: 'ri-team-fill',
+        link: 'laboran-student'
+    },
+    {
+        id: 10,
         label: "menuitems.laboran.combined-data",
         isTitle: true
     },
     {
-        id: 10,
+        id: 11,
         label: 'menuitems.laboran.list.class-course',
         icon: 'ri-book-read-fill',
         link: 'laboran-classcourse'
     },
     {
-        id: 11,
+        id: 12,
         label: "menuitems.laboran.absensi-data",
         isTitle: true
     },
     {
-        id: 12,
+        id: 13,
         label: 'menuitems.laboran.list.bap',
         icon: 'ri-account-circle-line',
         link: 'laboran-bap'
     },
     {
-        id: 13,
+        id: 14,
         label: "menuitems.laboran.account-data",
         isTitle: true
     },
     {
-        id: 14,
+        id: 15,
         label: 'menuitems.laboran.list.manage-account',
         icon: 'ri-user-settings-fill',
         link: 'laboran-manage-account'

@@ -20,6 +20,23 @@ export default [
         component: () => import('../../views/pages/laboran/staff/index')
     },
     {
+        path: '/laboran/student',
+        name: 'laboran-student',
+        meta: {
+            authRequired: true,
+            beforeResolve(routeTo, routeFrom, next) {
+                let role = store.getters.getRoleUser
+                if(role && (role == 'laboran' || role == 'staff')){
+                    next()
+                }
+                else{
+                    next({ name: 'error-404' })
+                }
+            },
+        },
+        component: () => import('../../views/pages/laboran/student/index')
+    },
+    {
         path: '/laboran/course',
         name: 'laboran-course',
         meta: {

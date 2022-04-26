@@ -38,15 +38,15 @@ export const praktikanItems = [
         icon: 'ri-bar-chart-grouped-fill',
         link: 'student-presence'
     },
-    {
-        id: 8,
-        label: "student.ticketing.text",
-        isTitle: true
-    },
-    {
-        id: 9,
-        label: 'student.ticketing.remotepc.text',
-        icon: 'ri-remote-control-line',
-        link: 'student-remotepc'
-    },
+    // {
+    //     id: 8,
+    //     label: "student.ticketing.text",
+    //     isTitle: true
+    // },
+    // {
+    //     id: 9,
+    //     label: 'student.ticketing.remotepc.text',
+    //     icon: 'ri-remote-control-line',
+    //     link: 'student-remotepc'
+    // },
 ]
