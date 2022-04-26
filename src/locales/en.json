@@ -22,6 +22,7 @@
     },
     "button": {
       "submit": "Submit",
+      "save": "Save",
       "cancel": "Cancel"
     },
     "swal": {
@@ -30,6 +31,35 @@
         "invalid-id": "Invalid ID!"
       },
       "redirect-schedule": "You are redirected to the Schedule Menu"
+    }
+  },
+  "settings": {
+    "text": "Settings",
+    "change-password": {
+      "text": "Change Password",
+      "updated-text": "Updated!",
+      "updated-desc": "You password has been updated.",
+      "label": {
+        "old": {
+          "text": "Enter Your Old Password",
+          "placeholder": "Old Password"
+        },
+        "new": {
+          "text": "Enter Your New Password",
+          "desc": "- Minimum 6 characters.",
+          "placeholder": "New Password"
+        },
+        "retype": {
+          "placeholder": "Re-Type New Password"
+        }
+      },
+      "error": {
+        "empty-old": "Old Password is required!",
+        "empty-new": "New Password is required!",
+        "empty-retype": "New Password must be re-entered!",
+        "char": "Password must consist of at least 6 characters.",
+        "retype": "Re-enter the New Password correctly."
+      }
     }
   },
   "practicum": {

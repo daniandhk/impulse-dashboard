@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import Layout from "../../layouts/main";
 import PageHeader from "@/components/page-header";
 import appConfig from "@/app.config";
-
+import i18n from '@/i18n';
 import { required, minLength, sameAs } from "vuelidate/lib/validators";
 
 /**
@@ -18,14 +18,14 @@ export default {
   components: { Layout, PageHeader },
   data() {
     return {
-      title: "Ubah Password",
+      title: i18n.t('settings.change-password.text'),
       items: [
         {
-          text: "Pengaturan",
+          text: i18n.t('settings.text'),
           href: "/settings/change-password"
         },
         {
-          text: "Ubah Password",
+          text: i18n.t('settings.change-password.text'),
           active: true
         }
       ],
@@ -57,7 +57,7 @@ export default {
         return (
           api.changePassword(this.typeform)
               .then(response => {
-                Swal.fire("Updated!", "You password has been updated.", "success");
+                Swal.fire(i18n.t('settings.change-password.updated-text'), i18n.t('settings.change-password.updated-desc'), "success");
               })
               .catch(error => {
                   if(error.response.status == 401){
@@ -69,7 +69,7 @@ export default {
                     Swal.fire({
                         icon: 'error',
                         title: 'Oops...',
-                        text: 'Terjadi kesalahan!',
+                        text: i18n.t('component.swal.error.text'),
                         footer: error.response.data.message
                     })
                   }
@@ -97,12 +97,12 @@ export default {
               @submit.prevent="formSubmit"
             >
               <div class="form-group">
-                <label>Masukkan Password Lama</label>
+                <label>{{ $t('settings.change-password.label.old.text') }}</label>
                 <input
                   v-model="typeform.old_password"
                   type="password"
                   class="form-control"
-                  placeholder="Password"
+                  :placeholder="$t('settings.change-password.label.old.placeholder')"
                   name="old_password"
                   :class="{ 'is-invalid': typesubmit && $v.typeform.old_password.$error }"
                 >
@@ -110,17 +110,17 @@ export default {
                   v-if="typesubmit && $v.typeform.old_password.$error"
                   class="invalid-feedback"
                 >
-                  <span v-if="!$v.typeform.old_password.required">Password Lama harus diisi!</span>
+                  <span v-if="!$v.typeform.old_password.required">{{ $t('settings.change-password.error.empty-old') }}</span>
                 </div>
               </div>
 
               <div class="form-group">
-                <label>Masukkan Password Baru</label>
+                <label>{{ $t('settings.change-password.label.new.text') }}</label>
                 <p
                   class="card-title-desc"
                   style="font-size: 14px; margin: 0 !important;"
                 >
-                  - Minimal terdiri dari 6 karakter.<br>
+                  {{ $t('settings.change-password.label.new.desc') }}<br>
                 </p>
                 <div class="mt-4">
                   <input
@@ -129,16 +129,16 @@ export default {
                     name="new_password"
                     class="form-control"
                     :class="{ 'is-invalid': typesubmit && $v.typeform.new_password.$error }"
-                    placeholder="Password"
+                    :placeholder="$t('settings.change-password.label.new.placeholder')"
                   >
                   <div
                     v-if="typesubmit && $v.typeform.new_password.$error"
                     class="invalid-feedback"
                   >
-                    <span v-if="!$v.typeform.new_password.required">Password Baru harus diisi!</span>
+                    <span v-if="!$v.typeform.new_password.required">{{ $t('settings.change-password.error.empty-new') }}</span>
                     <span
                       v-if="!$v.typeform.new_password.minLength"
-                    >Password must be at least 6 characters.</span>
+                    >{{ $t('settings.change-password.error.char') }}</span>
                   </div>
                 </div>
                 <div class="mt-2">
@@ -148,16 +148,16 @@ export default {
                     name="new_password_confirmation"
                     class="form-control"
                     :class="{ 'is-invalid': typesubmit && $v.typeform.new_password_confirmation.$error }"
-                    placeholder="Re-Type Password"
+                    :placeholder="$t('settings.change-password.label.retype.placeholder')"
                   >
                   <div
                     v-if="typesubmit && $v.typeform.new_password_confirmation.$error"
                     class="invalid-feedback"
                   >
-                    <span v-if="!$v.typeform.new_password_confirmation.required">Password Baru harus diisi kembali!</span>
+                    <span v-if="!$v.typeform.new_password_confirmation.required">{{ $t('settings.change-password.error.empty-retype') }}</span>
                     <span
                       v-else-if="!$v.typeform.new_password_confirmation.sameAsPassword"
-                    >Masukkan kembali Password Baru dengan benar.</span>
+                    >{{ $t('settings.change-password.error.retype') }}</span>
                   </div>
                 </div>
               </div>
@@ -168,7 +168,7 @@ export default {
                     type="submit"
                     class="btn btn-primary"
                   >
-                    Simpan
+                    {{ $t('component.button.save') }}
                   </button>
                 </div>
               </div>

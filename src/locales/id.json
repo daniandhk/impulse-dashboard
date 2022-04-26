@@ -22,6 +22,7 @@
       },
       "button": {
         "submit": "Submit",
+        "save": "Simpan",
         "cancel": "Batalkan"
       },
       "swal": {
@@ -30,6 +31,35 @@
           "invalid-id": "ID tidak valid!"
         },
         "redirect-schedule": "Anda dialihkan ke Menu Jadwal"
+      }
+    },
+    "settings": {
+      "text": "Pengaturan",
+      "change-password": {
+        "text": "Ubah Password",
+        "updated-text": "Berhasil diubah!",
+        "updated-desc": "Password Anda telah berubah.",
+        "label": {
+          "old": {
+            "text": "Masukkan Password Lama",
+            "placeholder": "Password Lama"
+          },
+          "new": {
+            "text": "Masukkan Password Baru",
+            "desc": "- Minimal terdiri dari 6 karakter.",
+            "placeholder": "Password Baru"
+          },
+          "retype": {
+            "placeholder": "Ketik Ulang Password Baru"
+          }
+        },
+        "error": {
+          "empty-old": "Password Lama harus diisi!",
+          "empty-new": "Password Baru harus diisi!",
+          "empty-retype": "Password Baru harus diisi kembali!",
+          "char": "Password minimal terdiri dari 6 karakter.",
+          "retype": "Masukkan kembali Password Baru dengan benar."
+        }
       }
     },
     "practicum": {
