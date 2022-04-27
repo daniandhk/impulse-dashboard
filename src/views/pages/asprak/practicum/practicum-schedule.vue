@@ -77,7 +77,7 @@ export default {
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: "Jam Berakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "room", sortable: false, label: "Ruangan", thClass: 'text-center', tdClass: 'text-center' },
         { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center' },
       ],
@@ -798,7 +798,7 @@ export default {
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Jam Terakhir</label>
+              <label>Jam Berakhir</label>
               <input
                 v-model="schedule_data.end"
                 type="text"

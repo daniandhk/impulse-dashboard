@@ -130,7 +130,7 @@ export default {
         msteam_code: "MS Teams Code",
         tanggal: "Tanggal",
         mulai: "Jam Mulai",
-        terakhir: "Jam Terakhir",
+        terakhir: "Jam Berakhir",
       },
 
       //data module

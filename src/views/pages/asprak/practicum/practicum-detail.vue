@@ -138,7 +138,7 @@ export default {
         msteam_code: "MS Teams Code",
         tanggal: "Tanggal",
         mulai: "Jam Mulai",
-        terakhir: "Jam Terakhir",
+        terakhir: "Jam Berakhir",
       },
 
       //data module
@@ -1597,7 +1597,7 @@ export default {
                         v-if="isPretestTimeInvalid"
                         class="invalid-feedback"
                       >
-                        Durasi tes melebihi Jam Terakhir di Jadwal!
+                        Durasi tes melebihi Jam Berakhir di Jadwal!
                       </div>
                       <div
                         v-if="isPretestDurationBelowZero"
@@ -1800,7 +1800,7 @@ export default {
                         v-if="isJournalTimeInvalid"
                         class="invalid-feedback"
                       >
-                        Durasi tes melebihi Jam Terakhir di Jadwal!
+                        Durasi tes melebihi Jam Berakhir di Jadwal!
                       </div>
                       <div
                         v-if="isJournalDurationBelowZero"
@@ -2003,7 +2003,7 @@ export default {
                         v-if="isPosttestTimeInvalid"
                         class="invalid-feedback"
                       >
-                        Durasi tes melebihi Jam Terakhir di Jadwal!
+                        Durasi tes melebihi Jam Berakhir di Jadwal!
                       </div>
                       <div
                         v-if="isPosttestDurationBelowZero"

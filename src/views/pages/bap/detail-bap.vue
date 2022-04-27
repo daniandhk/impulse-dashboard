@@ -422,7 +422,7 @@ export default {
           <b-form-group
             label-cols-sm="2"
             label-cols-lg="2"
-            label="Jam Terakhir"
+            label="Jam Berakhir"
           >
             <b-form-input 
               v-model="bap_data.schedule.time_end" 

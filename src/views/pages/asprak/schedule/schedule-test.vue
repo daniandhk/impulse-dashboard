@@ -917,6 +917,25 @@ export default {
       </div>
       <div class="card">
         <div class="card-body pt-0">
+          <div
+            id="metadata"
+            class="tab-pane pb-2 pt-2 mt-3"
+          >
+            <p style="color: black; font-size: 14px; margin-bottom: 0 !important;">
+              Deskripsi input soal:
+            </p>
+            <p
+              class="card-title-desc"
+              style="font-size: 14px; margin: 0 !important;"
+            >
+              - Input soal <b>pertama kali</b> akan mengisi soal di modul dan <b>seluruh kelas</b> dengan mata kuliah yang sama,<br>
+              - Edit soal hanya akan mengubah soal di <b>kelas yang dipilih</b>.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body pt-0">
           <div class="form-horizontal mt-4">
             <div>
               <div class="row">
@@ -1301,18 +1320,18 @@ export default {
                           class="mt-2"
                           style="color: black; font-size: 14px; margin-bottom: 0 !important;"
                         >
-                          Deskripsi upload soal Jurnal:
+                          Deskripsi upload file soal:
                         </p>
                         <p
                           class="card-title-desc"
                           style="font-size: 14px; margin: 0 !important;"
                         >
                           - Pastikan mengisi form <b>Bobot Nilai</b> dan <b>URL Upload Jawaban</b> terlebih dahulu,<br>
-                          - Form <b>URL Upload Jawaban</b> digunakan untuk student mengunggah jawaban tes Jurnal,<br>
-                          - <b>File Soal Jurnal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
-                          - Batas ukuran <b>File Soal Jurnal</b> adalah <b>2 MB</b>,<br>
-                          - Data tersimpan setelah <b>Upload File Soal Jurnal</b> berhasil tanpa error,<br>
-                          - Unggah file kembali untuk memperbarui <b>Bobot Nilai</b>, <b>URL Upload Jawaban</b>, dan <b>File Soal Jurnal</b>.
+                          - Form <b>URL Upload Jawaban</b> digunakan untuk praktikan mengunggah jawaban tes Jurnal,<br>
+                          - <b>File Soal</b> yang dapat diunggah bertipe <b>.PDF</b>, <b>.DOC</b>, <b>.DOCX</b>, <b>.RAR</b>, atau <b>.ZIP</b>,<br>
+                          - Perkiraan batas ukuran <b>File Soal</b> adalah <b>2 MB</b>. Dapat dicoba lebih,<br>
+                          - Data tersimpan setelah <b>Upload File Soal</b> berhasil tanpa error,<br>
+                          - Unggah file kembali untuk memperbarui <b>Bobot Nilai</b>, <b>URL Upload Jawaban</b>, dan <b>File Soal</b>.
                           <!-- - Pastikan hanya ada <b>satu sheet</b>,<br>
                                               - Pastikan Header / Row ke 1 dan urutan data di dalam file sama seperti berikut ini:<br> -->
                         </p>
@@ -1360,7 +1379,7 @@ export default {
                               v-if="dataTest.questions[0].text"
                               class="col-4"
                             >
-                              <label>File Soal Jurnal</label>
+                              <label>File Soal</label>
                               <div class="form-group">
                                 <input 
                                   v-model="dataTest.questions[0].text"
@@ -1381,7 +1400,7 @@ export default {
                           </div>
                         </div>
                         <!-- file upload -->
-                        <label for="text">Upload File Soal Jurnal</label>
+                        <label for="text">Upload File Soal</label>
                         <vue-dropzone
                           id="dropzone"
                           ref="myVueDropzone"

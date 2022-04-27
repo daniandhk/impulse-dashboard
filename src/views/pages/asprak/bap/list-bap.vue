@@ -77,7 +77,7 @@ export default {
         { key: "class_course.course.name", sortable: true, label: "Mata Kuliah" },
         { key: "date", sortable: true, label: "Tanggal" },
         { key: "start", sortable: true, label: "Jam Mulai", thClass: 'text-center', tdClass: 'text-center' },
-        { key: "end", sortable: true, label: "Jam Terakhir", thClass: 'text-center', tdClass: 'text-center' },
+        { key: "end", sortable: true, label: "Jam Berakhir", thClass: 'text-center', tdClass: 'text-center' },
         { key: "class_course.staff.code", sortable: true, label: "Kode Dosen" },
         { key: "action", label: "Aksi", sortable: false, thClass: 'text-center', tdClass: 'text-center', }
       ],

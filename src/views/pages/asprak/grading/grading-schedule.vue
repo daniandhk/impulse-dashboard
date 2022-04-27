@@ -944,7 +944,7 @@ export default {
           </div>
           <div class="col-sm-6">
             <div class="form-group">
-              <label>Jam Terakhir</label>
+              <label>Jam Berakhir</label>
               <input
                 v-model="schedule_data.end"
                 type="text"

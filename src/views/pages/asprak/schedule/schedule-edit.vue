@@ -686,7 +686,7 @@ export default {
               </div>
                     
               <div class="form-group col-sm-4">
-                <label>Jam Terakhir</label>
+                <label>Jam Berakhir</label>
                 <br>
                 <date-picker
                   v-model="time_end"
@@ -701,7 +701,7 @@ export default {
                   v-if="submitted && !$v.time_end.required"
                   class="invalid-feedback"
                 >
-                  Jam Terakhir harus diisi!
+                  Jam Berakhir harus diisi!
                 </div>
               </div>
             </div>
