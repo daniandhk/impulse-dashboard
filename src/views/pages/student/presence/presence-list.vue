@@ -128,26 +128,26 @@ export default {
         );
     },
 
-    getRequestParams(class_course_id) {
-      let params = {};
+    // getRequestParams(class_course_id) {
+    //   let params = {};
 
-      if (class_course_id) {
-        params["class_course_id"] = class_course_id;
-      }
+    //   if (class_course_id) {
+    //     params["class_course_id"] = class_course_id;
+    //   }
 
-      return params;
-    },
+    //   return params;
+    // },
 
     async getPresences(class_course_id){
-        const params = this.getRequestParams(
-            class_course_id
-        );
+        // const params = this.getRequestParams(
+        //     class_course_id
+        // );
         return (
-            api.getPresence(params)
+            api.getPresence(class_course_id)
             .then(response => {
                 if(response.data){
-                    if(response.data.class_course.length){
-                        this.dataPresences = response.data.class_course[0].modules;
+                    if(response.data.class_course){
+                        this.dataPresences = response.data.class_course.modules;
                     }
                 }
             })

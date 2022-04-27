@@ -68,6 +68,6 @@ export function getStudentCourseScore(student_id) {
     return httpAxios.get(`/grade/all/${student_id}`);
 }
 
-export function getPresence(params) {
-    return httpAxios.get('/student/presence', { params });
+export function getPresence(class_course_id) {
+    return httpAxios.get(`/student/presence/${class_course_id}`);
 }
