@@ -2,9 +2,10 @@
 
 ## Installation
 ```
+Inside terminal:
 - yarn install
 - copy .env.example .env
-- set your .env settings
+--- change your VUE_APP_BACKEND_URL
 - yarn serve
 ```
 
