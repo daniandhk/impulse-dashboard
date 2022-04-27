@@ -1040,6 +1040,7 @@ export default {
                         {{ index+1 }}
                       </b-button>
                       <b-button 
+                        v-if="dataTest.questions.length > 1"
                         class="m-1" 
                         size="sm" 
                         style="width: 85%; text-align: center; vertical-align: middle;" 
@@ -1195,6 +1196,7 @@ export default {
                         {{ index+1 }}
                       </b-button>
                       <b-button 
+                        v-if="dataTest.questions.length > 1"
                         class="m-1" 
                         size="sm" 
                         style="width: 85%; text-align: center; vertical-align: middle;" 
