@@ -1,5 +1,13 @@
 # impulse-dashboard
 
+## Installation
+```
+- yarn install
+- copy .env.example .env
+- set your .env settings
+- yarn serve
+```
+
 ## Project setup
 ```
 yarn install
