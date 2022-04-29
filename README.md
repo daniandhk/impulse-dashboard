@@ -3,10 +3,14 @@
 ## Installation
 ```
 Inside terminal:
-- yarn install
-- copy .env.example .env
+1. yarn install
+
+2. copy .env.example .env
 --- change your VUE_APP_BACKEND_URL
-- yarn serve
+--- VUE_APP_I18N_LOCALE= '"id"'
+--- VUE_APP_I18N_FALLBACK_LOCALE= '"id"'
+
+3. yarn serve
 ```
 
 ## Project setup
