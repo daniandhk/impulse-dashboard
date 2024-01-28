@@ -1,5 +1,8 @@
 # impulse-dashboard
 
+## Configuration
+- NodeJS v11.15.0
+
 ## Installation
 ```
 Inside terminal:
