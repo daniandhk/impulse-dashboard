@@ -3,6 +3,9 @@
 ## Configuration
 - NodeJS v11.15.0
 
+## Notes
+- Perlu update semua save timestamp untuk migrasi ke MySQL
+
 ## Installation
 ```
 Inside terminal:
